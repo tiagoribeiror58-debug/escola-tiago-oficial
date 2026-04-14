@@ -8,6 +8,7 @@ import { ArrowUp } from 'lucide-react';
 interface Props {
   materia: MateriaConfig;
   ultimaSessao: Sessao | null;
+  onMessagesChange?: (messages: ChatMessage[]) => void;
 }
 
 /**
@@ -44,7 +45,7 @@ async function sendToAPI(_messages: ChatMessage[], _systemPrompt: string): Promi
   return respostas[Math.floor(Math.random() * respostas.length)];
 }
 
-export default function ChatWindow({ materia, ultimaSessao }: Props) {
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: Props) {
   const systemPrompt = buildSystemPrompt(materia, ultimaSessao);
   const firstMsg = buildFirstMessage(materia, ultimaSessao);
 
@@ -58,7 +59,8 @@ export default function ChatWindow({ materia, ultimaSessao }: Props) {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    onMessagesChange?.(messages);
+  }, [messages, onMessagesChange]);
 
   const send = useCallback(async () => {
     const text = input.trim();
