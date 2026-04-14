@@ -4,11 +4,10 @@ import { getMateriaBySlug } from '@/lib/materias';
 import { useUltimaSessao } from '@/hooks/useSessoes';
 import ChatWindow from '@/components/ChatWindow';
 import ContextCard from '@/components/ContextCard';
-import MiniEncerramentoModal from '@/components/MiniEncerramentoModal';
 import { ArrowLeft, Square, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatMessage } from '@/types';
-import { extractSession, MIN_MESSAGES_FOR_EXTRACTION } from '@/lib/extractSession';
+import { extractSession } from '@/lib/extractSession';
 import { supabase } from '@/integrations/supabase/client';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -22,75 +21,54 @@ export default function Sessao() {
 
   const messagesRef = useRef<ChatMessage[]>([]);
   const [saving, setSaving] = useState(false);
-  const [showMiniModal, setShowMiniModal] = useState(false);
-
-  const saveSession = useCallback(async (sessionData: {
-    topico: string;
-    erros: number;
-    dificuldade: string;
-    nivel: number;
-    proximo_topico: string;
-    decisao_proxima: string;
-    observacoes: string;
-  }) => {
-    const hoje = new Date().toISOString().split('T')[0];
-    const { error } = await supabase.from('sessoes').insert({
-      materia: slug!,
-      topico: sessionData.topico,
-      data: hoje,
-      erros: sessionData.erros,
-      dificuldade: sessionData.dificuldade,
-      nivel: sessionData.nivel,
-      proximo_topico: sessionData.proximo_topico || null,
-      decisao_proxima: sessionData.decisao_proxima,
-      observacoes: sessionData.observacoes || null,
-    });
-
-    if (error) throw error;
-
-    queryClient.invalidateQueries({ queryKey: ['sessoes'] });
-    toast.success('Sessão salva ✓');
-    setTimeout(() => navigate('/'), 1500);
-  }, [slug, queryClient, navigate]);
 
   const handleEncerrar = useCallback(async () => {
     const messages = messagesRef.current;
-
-    // Fallback: short session
-    if (messages.length < MIN_MESSAGES_FOR_EXTRACTION) {
-      setShowMiniModal(true);
-      return;
-    }
-
     setSaving(true);
-    try {
-      const extracted = await extractSession(messages, slug!, ultimaSessao?.nivel || 1);
-      await saveSession(extracted);
-    } catch (err) {
-      console.error(err);
-      toast.error('Erro ao salvar — tente novamente');
-      setSaving(false);
-    }
-  }, [slug, ultimaSessao, saveSession]);
 
-  const handleMiniConfirm = useCallback(async (erros: number, dificuldade: string) => {
-    setSaving(true);
     try {
-      await saveSession({
-        topico: ultimaSessao?.proximo_topico || ultimaSessao?.topico || 'Sessão curta',
-        erros,
-        dificuldade,
-        nivel: ultimaSessao?.nivel || 1,
-        proximo_topico: ultimaSessao?.proximo_topico || '',
-        decisao_proxima: 'A definir',
-        observacoes: 'Sessão curta',
+      let sessionData;
+      const hoje = new Date().toISOString().split('T')[0];
+
+      if (messages.length < 4) {
+        // Very short session — use defaults, no modal, no API call
+        sessionData = {
+          topico: ultimaSessao?.proximo_topico || ultimaSessao?.topico || 'Sessão curta',
+          erros: 0,
+          dificuldade: 'medio',
+          nivel: ultimaSessao?.nivel || 1,
+          proximo_topico: ultimaSessao?.proximo_topico || '',
+          decisao_proxima: 'A definir',
+          observacoes: 'Sessão curta — dados insuficientes para extração automática',
+        };
+      } else {
+        // Extract via AI
+        sessionData = await extractSession(messages, slug!, ultimaSessao?.nivel || 1);
+      }
+
+      const { error } = await supabase.from('sessoes').insert({
+        materia: slug!,
+        topico: sessionData.topico,
+        data: hoje,
+        erros: sessionData.erros,
+        dificuldade: sessionData.dificuldade,
+        nivel: sessionData.nivel,
+        proximo_topico: sessionData.proximo_topico || null,
+        decisao_proxima: sessionData.decisao_proxima,
+        observacoes: sessionData.observacoes || null,
       });
+
+      if (error) throw error;
+
+      queryClient.invalidateQueries({ queryKey: ['sessoes'] });
+      toast.success('Sessão salva ✓');
+      setTimeout(() => navigate('/'), 1500);
     } catch (err) {
       console.error(err);
       toast.error('Erro ao salvar — tente novamente');
       setSaving(false);
     }
-  }, [ultimaSessao, saveSession]);
+  }, [slug, ultimaSessao, queryClient, navigate]);
 
   const handleMessagesChange = useCallback((messages: ChatMessage[]) => {
     messagesRef.current = messages;
@@ -160,13 +138,6 @@ export default function Sessao() {
           onMessagesChange={handleMessagesChange}
         />
       </div>
-
-      <MiniEncerramentoModal
-        open={showMiniModal}
-        onClose={() => setShowMiniModal(false)}
-        onConfirm={handleMiniConfirm}
-        saving={saving}
-      />
     </div>
   );
 }
