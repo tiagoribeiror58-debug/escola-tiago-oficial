@@ -33,5 +33,3 @@ export async function extractSession(
 
   return res.json();
 }
-
-export const MIN_MESSAGES_FOR_EXTRACTION = 6;
