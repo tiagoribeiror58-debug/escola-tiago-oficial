@@ -8,6 +8,7 @@ import { ArrowUp } from 'lucide-react';
 interface Props {
   materia: MateriaConfig;
   ultimaSessao: Sessao | null;
+  onMessagesChange?: (messages: ChatMessage[]) => void;
 }
 
 /**
