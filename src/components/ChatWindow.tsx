@@ -45,7 +45,7 @@ async function sendToAPI(_messages: ChatMessage[], _systemPrompt: string): Promi
   return respostas[Math.floor(Math.random() * respostas.length)];
 }
 
-export default function ChatWindow({ materia, ultimaSessao }: Props) {
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: Props) {
   const systemPrompt = buildSystemPrompt(materia, ultimaSessao);
   const firstMsg = buildFirstMessage(materia, ultimaSessao);
 
