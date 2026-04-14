@@ -11,39 +11,7 @@ interface Props {
   onMessagesChange?: (messages: ChatMessage[]) => void;
 }
 
-/**
- * ============================================================
- * INTEGRAÇÃO COM ANTHROPIC API
- * ============================================================
- * Para conectar a API real, substitua a função `sendToAPI` abaixo.
- * Ela recebe o array de mensagens e o system prompt,
- * e deve retornar um ReadableStream ou string com a resposta.
- * 
- * Exemplo com Edge Function:
- * 
- * async function sendToAPI(messages: ChatMessage[], systemPrompt: string) {
- *   const res = await fetch(`https://nzfhsjmcbsigwhxzwfov.supabase.co/functions/v1/chat`, {
- *     method: 'POST',
- *     headers: { 'Content-Type': 'application/json' },
- *     body: JSON.stringify({ messages, systemPrompt }),
- *   });
- *   return res.body; // ReadableStream para streaming
- * }
- * ============================================================
- */
-
-// MOCK: simula resposta do professor
-async function sendToAPI(_messages: ChatMessage[], _systemPrompt: string): Promise<string> {
-  await new Promise(r => setTimeout(r, 800));
-  const respostas = [
-    'Boa pergunta! Vamos pensar juntos sobre isso.',
-    'Exatamente! Você está no caminho certo. Agora tente resolver este próximo exercício.',
-    'Hmm, não é bem assim. Veja: o conceito principal aqui é...',
-    'Ótimo progresso, Tiago! Vamos para o próximo nível.',
-    'Pense assim: se A implica B, e B implica C, então...',
-  ];
-  return respostas[Math.floor(Math.random() * respostas.length)];
-}
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
 export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: Props) {
   const systemPrompt = buildSystemPrompt(materia, ultimaSessao);
@@ -72,11 +40,71 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
     setInput('');
     setIsLoading(true);
 
+    let assistantContent = '';
+
     try {
-      const response = await sendToAPI(newMessages, systemPrompt);
-      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+      const resp = await fetch(CHAT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: newMessages, systemPrompt }),
+      });
+
+      if (!resp.ok || !resp.body) {
+        throw new Error('Stream failed');
+      }
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        let newlineIdx: number;
+        while ((newlineIdx = buffer.indexOf('\n')) !== -1) {
+          let line = buffer.slice(0, newlineIdx);
+          buffer = buffer.slice(newlineIdx + 1);
+
+          if (line.endsWith('\r')) line = line.slice(0, -1);
+          if (line.startsWith(':') || line.trim() === '') continue;
+          if (!line.startsWith('data: ')) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === '[DONE]') break;
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const delta = parsed.choices?.[0]?.delta?.content;
+            if (delta) {
+              assistantContent += delta;
+              setMessages(prev => {
+                const last = prev[prev.length - 1];
+                if (last?.role === 'assistant' && prev.length > newMessages.length) {
+                  return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: assistantContent } : m);
+                }
+                return [...prev.slice(0, newMessages.length), { role: 'assistant', content: assistantContent }];
+              });
+            }
+          } catch {
+            // partial JSON, wait for more
+          }
+        }
+      }
+
+      // Final flush
+      if (!assistantContent) {
+        throw new Error('No response received');
+      }
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Desculpe, houve um erro. Tente novamente.' }]);
+      setMessages(prev => {
+        const filtered = prev.filter((_, i) => i < newMessages.length);
+        return [...filtered, { role: 'assistant', content: 'Desculpe, houve um erro. Tente novamente.' }];
+      });
     } finally {
       setIsLoading(false);
       inputRef.current?.focus();
@@ -92,7 +120,6 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
 
   return (
     <div className="flex flex-col h-full">
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.map((msg, i) => (
           <div
@@ -114,7 +141,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
           </div>
         ))}
 
-        {isLoading && (
+        {isLoading && !messages[messages.length - 1]?.content?.length && (
           <div className="flex gap-1 py-2">
             <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce" style={{ animationDelay: '0ms' }} />
             <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -125,7 +152,6 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
       <div className="border-t border-border p-3">
         <div className="flex items-end gap-2 max-w-3xl mx-auto">
           <textarea

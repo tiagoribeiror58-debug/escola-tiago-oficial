@@ -6,12 +6,13 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const EXTRACT_PROMPT = `Analise o histórico desta sessão de estudo e retorne APENAS um JSON válido, sem texto adicional, sem markdown, sem explicação.
+const EXTRACT_PROMPT = `Analise o histórico desta sessão de estudo e retorne APENAS um JSON válido,
+sem texto adicional, sem markdown, sem explicação.
 
 {
   "topico": "string — tópico principal estudado nesta sessão",
   "erros": number — total de erros cometidos pelo aluno (0 se nenhum),
-  "dificuldade": "baixa" | "media" | "alta",
+  "dificuldade": "facil" | "medio" | "dificil",
   "nivel": number — nível de domínio ao final (1, 2 ou 3),
   "proximo_topico": "string — próximo tópico lógico a estudar",
   "decisao_proxima": "string — decisão de progressão baseada nas regras",
@@ -19,9 +20,9 @@ const EXTRACT_PROMPT = `Analise o histórico desta sessão de estudo e retorne A
 }
 
 Regras de progressão para decisao_proxima:
-- erros=0 e dificuldade baixa → "Avança para nível X" ou "Abre próximo tópico"
-- erros=0 e dificuldade média → "Repete nível com nova abordagem"
-- erros>0 e dificuldade alta → "Mini-revisão + reforço antes de avançar"
+- erros=0 e dificuldade facil → "Avança para nível X" ou "Abre próximo tópico"
+- erros=0 e dificuldade medio → "Repete nível com nova abordagem"
+- erros>0 e dificuldade dificil → "Mini-revisão + reforço antes de avançar"
 - erros>1 → "Exercício dedicado obrigatório"`;
 
 serve(async (req) => {
@@ -39,9 +40,9 @@ serve(async (req) => {
       );
     }
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    const XAI_API_KEY = Deno.env.get("XAI_API_KEY");
+    if (!XAI_API_KEY) {
+      throw new Error("XAI_API_KEY is not configured");
     }
 
     const chatHistory = messages
@@ -50,59 +51,33 @@ serve(async (req) => {
 
     const systemMessage = `${EXTRACT_PROMPT}\n\nMatéria: ${materia}\nNível atual do aluno: ${nivel_atual || 1}`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.x.ai/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${XAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-5-mini",
+        model: "grok-3",
         messages: [
           { role: "system", content: systemMessage },
           { role: "user", content: `Histórico da sessão:\n\n${chatHistory}` },
         ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "extract_session",
-              description: "Extract structured session data from chat history",
-              parameters: {
-                type: "object",
-                properties: {
-                  topico: { type: "string", description: "Main topic studied" },
-                  erros: { type: "number", description: "Total errors made by student" },
-                  dificuldade: { type: "string", description: "Difficulty level: baixa, media, or alta" },
-                  nivel: { type: "number", description: "Mastery level 1-3" },
-                  proximo_topico: { type: "string", description: "Next logical topic" },
-                  decisao_proxima: { type: "string", description: "Progression decision" },
-                  observacoes: { type: "string", description: "Objective observation about performance" },
-                },
-                required: ["topico", "erros", "dificuldade", "nivel", "proximo_topico", "decisao_proxima", "observacoes"],
-              },
-            },
-          },
-        ],
-        tool_choice: { type: "function", function: { name: "extract_session" } },
+        response_format: { type: "json_object" },
       }),
     });
 
     if (!response.ok) {
+      const t = await response.text();
+      console.error("xAI API error:", response.status, t);
+
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
           status: 429,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Payment required" }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      const t = await response.text();
-      console.error("AI gateway error:", response.status, t);
+
       return new Response(JSON.stringify({ error: "AI extraction failed" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -110,31 +85,19 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    
-    // Extract from tool call response
-    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+    const content = data.choices?.[0]?.message?.content || "";
+
     let extracted;
-    
-    if (toolCall?.function?.arguments) {
-      extracted = JSON.parse(toolCall.function.arguments);
-    } else {
-      // Fallback: try to parse content directly
-      const content = data.choices?.[0]?.message?.content || "";
+    try {
+      extracted = JSON.parse(content);
+    } catch {
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         extracted = JSON.parse(jsonMatch[0]);
       } else {
-        throw new Error("Could not extract session data from AI response");
+        throw new Error("Could not parse extraction response");
       }
     }
-
-    // Map dificuldade values
-    const dificuldadeMap: Record<string, string> = {
-      baixa: "facil",
-      media: "medio",
-      alta: "dificil",
-    };
-    extracted.dificuldade = dificuldadeMap[extracted.dificuldade] || extracted.dificuldade;
 
     return new Response(JSON.stringify(extracted), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
