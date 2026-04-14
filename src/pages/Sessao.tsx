@@ -1,19 +1,100 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
 import { useUltimaSessao } from '@/hooks/useSessoes';
 import ChatWindow from '@/components/ChatWindow';
 import ContextCard from '@/components/ContextCard';
-import EncerramentoModal from '@/components/EncerramentoModal';
-import { ArrowLeft, Square } from 'lucide-react';
+import MiniEncerramentoModal from '@/components/MiniEncerramentoModal';
+import { ArrowLeft, Square, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ChatMessage } from '@/types';
+import { extractSession, MIN_MESSAGES_FOR_EXTRACTION } from '@/lib/extractSession';
+import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 export default function Sessao() {
   const { materia: slug } = useParams<{ materia: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const materiaConfig = getMateriaBySlug(slug || '');
   const { data: ultimaSessao, isLoading } = useUltimaSessao(slug || '');
-  const [showEncerramento, setShowEncerramento] = useState(false);
+
+  const messagesRef = useRef<ChatMessage[]>([]);
+  const [saving, setSaving] = useState(false);
+  const [showMiniModal, setShowMiniModal] = useState(false);
+
+  const saveSession = useCallback(async (sessionData: {
+    topico: string;
+    erros: number;
+    dificuldade: string;
+    nivel: number;
+    proximo_topico: string;
+    decisao_proxima: string;
+    observacoes: string;
+  }) => {
+    const hoje = new Date().toISOString().split('T')[0];
+    const { error } = await supabase.from('sessoes').insert({
+      materia: slug!,
+      topico: sessionData.topico,
+      data: hoje,
+      erros: sessionData.erros,
+      dificuldade: sessionData.dificuldade,
+      nivel: sessionData.nivel,
+      proximo_topico: sessionData.proximo_topico || null,
+      decisao_proxima: sessionData.decisao_proxima,
+      observacoes: sessionData.observacoes || null,
+    });
+
+    if (error) throw error;
+
+    queryClient.invalidateQueries({ queryKey: ['sessoes'] });
+    toast.success('Sessão salva ✓');
+    setTimeout(() => navigate('/'), 1500);
+  }, [slug, queryClient, navigate]);
+
+  const handleEncerrar = useCallback(async () => {
+    const messages = messagesRef.current;
+
+    // Fallback: short session
+    if (messages.length < MIN_MESSAGES_FOR_EXTRACTION) {
+      setShowMiniModal(true);
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const extracted = await extractSession(messages, slug!, ultimaSessao?.nivel || 1);
+      await saveSession(extracted);
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro ao salvar — tente novamente');
+      setSaving(false);
+    }
+  }, [slug, ultimaSessao, saveSession]);
+
+  const handleMiniConfirm = useCallback(async (erros: number, dificuldade: string) => {
+    setSaving(true);
+    try {
+      await saveSession({
+        topico: ultimaSessao?.proximo_topico || ultimaSessao?.topico || 'Sessão curta',
+        erros,
+        dificuldade,
+        nivel: ultimaSessao?.nivel || 1,
+        proximo_topico: ultimaSessao?.proximo_topico || '',
+        decisao_proxima: 'A definir',
+        observacoes: 'Sessão curta',
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro ao salvar — tente novamente');
+      setSaving(false);
+    }
+  }, [ultimaSessao, saveSession]);
+
+  const handleMessagesChange = useCallback((messages: ChatMessage[]) => {
+    messagesRef.current = messages;
+  }, []);
 
   if (!materiaConfig) {
     return (
@@ -33,7 +114,6 @@ export default function Sessao() {
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Header */}
       <header className="flex items-center gap-3 px-4 py-3 border-b border-border">
         <button
           onClick={() => navigate('/')}
@@ -46,34 +126,46 @@ export default function Sessao() {
           <span className="text-sm font-medium truncate">{materiaConfig.nome}</span>
         </div>
         <button
-          onClick={() => setShowEncerramento(true)}
+          onClick={handleEncerrar}
+          disabled={saving}
           className={cn(
             'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium',
             'bg-foreground text-background',
-            'hover:opacity-90 transition-opacity'
+            'hover:opacity-90 transition-opacity',
+            'disabled:opacity-50'
           )}
         >
-          <Square className="w-3 h-3 fill-current" />
-          Encerrar
+          {saving ? (
+            <>
+              <Loader2 className="w-3 h-3 animate-spin" />
+              Salvando...
+            </>
+          ) : (
+            <>
+              <Square className="w-3 h-3 fill-current" />
+              Encerrar
+            </>
+          )}
         </button>
       </header>
 
-      {/* Context */}
       <div className="px-4 pt-3">
         <ContextCard ultimaSessao={ultimaSessao} />
       </div>
 
-      {/* Chat */}
       <div className="flex-1 min-h-0">
-        <ChatWindow materia={materiaConfig} ultimaSessao={ultimaSessao} />
+        <ChatWindow
+          materia={materiaConfig}
+          ultimaSessao={ultimaSessao}
+          onMessagesChange={handleMessagesChange}
+        />
       </div>
 
-      {/* Modal */}
-      <EncerramentoModal
-        materia={materiaConfig}
-        nivelAtual={ultimaSessao?.nivel || 1}
-        open={showEncerramento}
-        onClose={() => setShowEncerramento(false)}
+      <MiniEncerramentoModal
+        open={showMiniModal}
+        onClose={() => setShowMiniModal(false)}
+        onConfirm={handleMiniConfirm}
+        saving={saving}
       />
     </div>
   );
