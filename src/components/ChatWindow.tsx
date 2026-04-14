@@ -59,7 +59,8 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    onMessagesChange?.(messages);
+  }, [messages, onMessagesChange]);
 
   const send = useCallback(async () => {
     const text = input.trim();
