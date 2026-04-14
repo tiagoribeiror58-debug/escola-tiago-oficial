@@ -57,6 +57,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        model: "openai/gpt-5-mini",
         messages: [
           { role: "system", content: systemMessage },
           { role: "user", content: `Histórico da sessão:\n\n${chatHistory}` },
@@ -70,16 +71,15 @@ serve(async (req) => {
               parameters: {
                 type: "object",
                 properties: {
-                  topico: { type: "string" },
-                  erros: { type: "number" },
-                  dificuldade: { type: "string", enum: ["baixa", "media", "alta"] },
-                  nivel: { type: "number", enum: [1, 2, 3] },
-                  proximo_topico: { type: "string" },
-                  decisao_proxima: { type: "string" },
-                  observacoes: { type: "string" },
+                  topico: { type: "string", description: "Main topic studied" },
+                  erros: { type: "number", description: "Total errors made by student" },
+                  dificuldade: { type: "string", description: "Difficulty level: baixa, media, or alta" },
+                  nivel: { type: "number", description: "Mastery level 1-3" },
+                  proximo_topico: { type: "string", description: "Next logical topic" },
+                  decisao_proxima: { type: "string", description: "Progression decision" },
+                  observacoes: { type: "string", description: "Objective observation about performance" },
                 },
                 required: ["topico", "erros", "dificuldade", "nivel", "proximo_topico", "decisao_proxima", "observacoes"],
-                additionalProperties: false,
               },
             },
           },
