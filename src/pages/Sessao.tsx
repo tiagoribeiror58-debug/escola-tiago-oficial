@@ -46,12 +46,18 @@ export default function Sessao() {
         sessionData = await extractSession(messages, slug!, ultimaSessao?.nivel || 1);
       }
 
+      // Sanitize dificuldade — API sometimes returns "medio" but DB requires "media"
+      const validDificuldades = ['baixa', 'media', 'alta'];
+      let dif = (sessionData.dificuldade || 'media').toLowerCase();
+      if (dif === 'medio' || dif === 'média' || dif === 'médio') dif = 'media';
+      if (!validDificuldades.includes(dif)) dif = 'media';
+
       const { error } = await supabase.from('sessoes').insert({
         materia: slug!,
         topico: sessionData.topico,
         data: hoje,
         erros: sessionData.erros,
-        dificuldade: sessionData.dificuldade,
+        dificuldade: dif,
         nivel: sessionData.nivel,
         proximo_topico: sessionData.proximo_topico || null,
         decisao_proxima: sessionData.decisao_proxima,
