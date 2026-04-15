@@ -16,9 +16,9 @@ export default function MateriaCard({ estado }: Props) {
 
   const urgenciaLabel: Record<string, string> = {
     nova: 'Nova',
-    ok: `${diasParada}d`,
-    atencao: `${diasParada}d`,
-    urgente: `${diasParada}d`,
+    ok: `${diasParada}d atrás`,
+    atencao: `${diasParada}d atrás`,
+    urgente: `${diasParada}d atrás`,
   };
 
   const urgenciaBg: Record<string, string> = {
@@ -28,15 +28,27 @@ export default function MateriaCard({ estado }: Props) {
     urgente: 'bg-red-500/10 text-red-600 dark:text-red-400',
   };
 
+  const urgenciaBorder: Record<string, string> = {
+    nova: 'border-border',
+    ok: 'border-border',
+    atencao: 'border-amber-500/20',
+    urgente: 'border-red-500/20',
+  };
+
+  // What to show: próximo tópico (more useful) or last tópico
+  const displayTopic = ultimaSessao?.proximo_topico || ultimaSessao?.topico;
+  const topicLabel = ultimaSessao?.proximo_topico ? 'Próximo' : 'Último';
+
   return (
     <button
       onClick={() => navigate(`/sessao/${config.slug}`)}
       className={cn(
-        'group relative flex flex-col items-start gap-3 rounded-2xl border border-border bg-card p-5',
+        'group relative flex flex-col items-start gap-3 rounded-2xl border bg-card p-5',
         'transition-all duration-200 ease-out',
         'hover:shadow-md hover:border-foreground/10 hover:-translate-y-0.5',
         'active:translate-y-0 active:shadow-sm',
-        'text-left w-full cursor-pointer'
+        'text-left w-full cursor-pointer',
+        urgenciaBorder[urg]
       )}
     >
       {/* Emoji + Name */}
@@ -69,16 +81,20 @@ export default function MateriaCard({ estado }: Props) {
           <span className="text-[11px] text-muted-foreground">
             {totalSessoes} {totalSessoes === 1 ? 'sessão' : 'sessões'}
           </span>
-          {ultimaSessao.erros && ultimaSessao.erros > 1 && (
-            <span className="text-[11px] text-amber-500 ml-auto">reforço</span>
+          {ultimaSessao.decisao_proxima === 'reforcar' && (
+            <span className="text-[11px] text-amber-500 font-medium ml-auto">⟳ reforço</span>
+          )}
+          {ultimaSessao.erros !== null && ultimaSessao.erros > 2 && ultimaSessao.decisao_proxima !== 'reforcar' && (
+            <span className="text-[11px] text-amber-500 ml-auto">{ultimaSessao.erros} erros</span>
           )}
         </div>
       )}
 
-      {/* Last topic */}
-      {ultimaSessao && (
+      {/* Topic preview */}
+      {ultimaSessao && displayTopic && (
         <p className="text-[12px] text-muted-foreground truncate w-full">
-          {ultimaSessao.topico}
+          <span className="text-muted-foreground/60">{topicLabel}:</span>{' '}
+          {displayTopic}
         </p>
       )}
     </button>
