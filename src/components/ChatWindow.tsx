@@ -3,7 +3,7 @@ import { ChatMessage, MateriaConfig, Sessao } from '@/types';
 import { buildSystemPrompt, buildFirstMessage } from '@/lib/buildPrompt';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Loader2 } from 'lucide-react';
 
 interface Props {
   materia: MateriaConfig;
@@ -29,6 +29,18 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     onMessagesChange?.(messages);
   }, [messages, onMessagesChange]);
+
+  // Auto-grow textarea
+  const autoResize = useCallback(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 128) + 'px';
+  }, []);
+
+  useEffect(() => {
+    autoResize();
+  }, [input, autoResize]);
 
   const send = useCallback(async () => {
     const text = input.trim();
@@ -96,7 +108,6 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
         }
       }
 
-      // Final flush
       if (!assistantContent) {
         throw new Error('No response received');
       }
@@ -125,7 +136,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
           <div
             key={i}
             className={cn(
-              'max-w-[85%] text-sm leading-relaxed',
+              'max-w-[85%] text-sm leading-relaxed animate-in fade-in-0 slide-in-from-bottom-2 duration-300',
               msg.role === 'user'
                 ? 'ml-auto bg-foreground text-background rounded-2xl rounded-br-md px-4 py-2.5'
                 : 'text-foreground'
@@ -141,11 +152,10 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
           </div>
         ))}
 
-        {isLoading && !messages[messages.length - 1]?.content?.length && (
-          <div className="flex gap-1 py-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce" style={{ animationDelay: '0ms' }} />
-            <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce" style={{ animationDelay: '150ms' }} />
-            <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40 animate-bounce" style={{ animationDelay: '300ms' }} />
+        {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
+          <div className="flex items-center gap-2 py-2 text-muted-foreground">
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            <span className="text-xs">Pensando...</span>
           </div>
         )}
 
@@ -165,23 +175,26 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
               'flex-1 resize-none bg-muted/50 rounded-xl px-4 py-2.5 text-sm',
               'placeholder:text-muted-foreground/50',
               'focus:outline-none focus:ring-1 focus:ring-ring',
-              'max-h-32'
+              'transition-all duration-150'
             )}
-            style={{ minHeight: '40px' }}
+            style={{ minHeight: '40px', maxHeight: '128px' }}
           />
           <button
             onClick={send}
             disabled={!input.trim() || isLoading}
             className={cn(
-              'flex items-center justify-center w-9 h-9 rounded-full',
-              'bg-foreground text-background transition-opacity',
-              'disabled:opacity-30',
-              'hover:opacity-80'
+              'flex items-center justify-center w-9 h-9 rounded-full shrink-0',
+              'bg-foreground text-background transition-all',
+              'disabled:opacity-30 disabled:scale-95',
+              'hover:opacity-80 active:scale-95'
             )}
           >
             <ArrowUp className="w-4 h-4" />
           </button>
         </div>
+        <p className="text-[10px] text-muted-foreground/40 text-center mt-1.5">
+          Enter para enviar · Shift+Enter para quebra de linha
+        </p>
       </div>
     </div>
   );

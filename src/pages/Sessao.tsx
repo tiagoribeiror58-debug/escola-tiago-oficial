@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
 import { useUltimaSessao } from '@/hooks/useSessoes';
@@ -20,7 +20,20 @@ export default function Sessao() {
   const { data: ultimaSessao, isLoading } = useUltimaSessao(slug || '');
 
   const messagesRef = useRef<ChatMessage[]>([]);
+  const startTimeRef = useRef(Date.now());
   const [saving, setSaving] = useState(false);
+
+  // Prevent accidental navigation
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (messagesRef.current.length > 1) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, []);
 
   const handleEncerrar = useCallback(async () => {
     const messages = messagesRef.current;
@@ -29,9 +42,9 @@ export default function Sessao() {
     try {
       let sessionData;
       const hoje = new Date().toISOString().split('T')[0];
+      const duracaoMin = Math.round((Date.now() - startTimeRef.current) / 60000);
 
       if (messages.length < 4) {
-        // Very short session — use defaults, no modal, no API call
         sessionData = {
           topico: ultimaSessao?.proximo_topico || ultimaSessao?.topico || 'Sessão curta',
           erros: 0,
@@ -42,11 +55,10 @@ export default function Sessao() {
           observacoes: 'Sessão curta — dados insuficientes para extração automática',
         };
       } else {
-        // Extract via AI
         sessionData = await extractSession(messages, slug!, ultimaSessao?.nivel || 1);
       }
 
-      // Sanitize dificuldade — API sometimes returns "medio" but DB requires "media"
+      // Sanitize dificuldade
       const validDificuldades = ['baixa', 'media', 'alta'];
       let dif = (sessionData.dificuldade || 'media').toLowerCase();
       if (dif === 'medio' || dif === 'média' || dif === 'médio') dif = 'media';
@@ -62,6 +74,7 @@ export default function Sessao() {
         proximo_topico: sessionData.proximo_topico || null,
         decisao_proxima: sessionData.decisao_proxima,
         observacoes: sessionData.observacoes || null,
+        duracao_min: duracaoMin > 0 ? duracaoMin : 1,
       });
 
       if (error) throw error;
@@ -100,7 +113,12 @@ export default function Sessao() {
     <div className="h-screen flex flex-col">
       <header className="flex items-center gap-3 px-4 py-3 border-b border-border">
         <button
-          onClick={() => navigate('/')}
+          onClick={() => {
+            if (messagesRef.current.length > 2 && !saving) {
+              if (!window.confirm('Sair sem salvar a sessão?')) return;
+            }
+            navigate('/');
+          }}
           className="p-1.5 -ml-1.5 rounded-lg hover:bg-muted transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -115,7 +133,7 @@ export default function Sessao() {
           className={cn(
             'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium',
             'bg-foreground text-background',
-            'hover:opacity-90 transition-opacity',
+            'hover:opacity-90 transition-all active:scale-95',
             'disabled:opacity-50'
           )}
         >
