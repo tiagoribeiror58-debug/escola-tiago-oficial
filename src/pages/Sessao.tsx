@@ -35,7 +35,7 @@ export default function Sessao() {
         sessionData = {
           topico: ultimaSessao?.proximo_topico || ultimaSessao?.topico || 'Sessão curta',
           erros: 0,
-          dificuldade: 'medio',
+          dificuldade: 'media',
           nivel: ultimaSessao?.nivel || 1,
           proximo_topico: ultimaSessao?.proximo_topico || '',
           decisao_proxima: 'A definir',
