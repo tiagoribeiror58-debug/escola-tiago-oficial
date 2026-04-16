@@ -1,7 +1,8 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
 import { useUltimaSessao } from '@/hooks/useSessoes';
+import { useChatHistory } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 import ContextCard from '@/components/ContextCard';
 import { ArrowLeft, Square, Loader2 } from 'lucide-react';
@@ -14,16 +15,23 @@ import { toast } from 'sonner';
 
 export default function Sessao() {
   const { materia: slug } = useParams<{ materia: string }>();
+  const [searchParams] = useSearchParams();
+  const resumeKey = searchParams.get('resume');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const materiaConfig = getMateriaBySlug(slug || '');
   const { data: ultimaSessao, isLoading } = useUltimaSessao(slug || '');
+  const { data: resumeMessages, isLoading: loadingResume } = useChatHistory(slug || '', resumeKey);
+
+  const sessionKey = useMemo(() => {
+    if (resumeKey) return resumeKey;
+    return `${slug}-${Date.now()}`;
+  }, [slug, resumeKey]);
 
   const messagesRef = useRef<ChatMessage[]>([]);
   const startTimeRef = useRef(Date.now());
   const [saving, setSaving] = useState(false);
 
-  // Prevent accidental navigation
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
       if (messagesRef.current.length > 1) {
@@ -58,7 +66,6 @@ export default function Sessao() {
         sessionData = await extractSession(messages, slug!, ultimaSessao?.nivel || 1);
       }
 
-      // Sanitize dificuldade
       const validDificuldades = ['baixa', 'media', 'alta'];
       let dif = (sessionData.dificuldade || 'media').toLowerCase();
       if (dif === 'medio' || dif === 'média' || dif === 'médio') dif = 'media';
@@ -79,7 +86,11 @@ export default function Sessao() {
 
       if (error) throw error;
 
+      // Clean up chat messages for this session after saving
+      await supabase.from('chat_messages').delete().eq('session_key', sessionKey);
+
       queryClient.invalidateQueries({ queryKey: ['sessoes'] });
+      queryClient.invalidateQueries({ queryKey: ['chat-sessions', slug] });
       toast.success('Sessão salva ✓');
       setTimeout(() => navigate('/'), 1500);
     } catch (err) {
@@ -87,7 +98,7 @@ export default function Sessao() {
       toast.error('Erro ao salvar — tente novamente');
       setSaving(false);
     }
-  }, [slug, ultimaSessao, queryClient, navigate]);
+  }, [slug, ultimaSessao, queryClient, navigate, sessionKey]);
 
   const handleMessagesChange = useCallback((messages: ChatMessage[]) => {
     messagesRef.current = messages;
@@ -101,7 +112,7 @@ export default function Sessao() {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || (resumeKey && loadingResume)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-5 h-5 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin" />
@@ -115,7 +126,9 @@ export default function Sessao() {
         <button
           onClick={() => {
             if (messagesRef.current.length > 2 && !saving) {
-              if (!window.confirm('Sair sem salvar a sessão?')) return;
+              // Messages are already persisted, just go back
+              navigate('/');
+              return;
             }
             navigate('/');
           }}
@@ -126,6 +139,11 @@ export default function Sessao() {
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <span className="text-lg">{materiaConfig.emoji}</span>
           <span className="text-sm font-medium truncate">{materiaConfig.nome}</span>
+          {resumeKey && (
+            <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+              continuando
+            </span>
+          )}
         </div>
         <button
           onClick={handleEncerrar}
@@ -151,15 +169,19 @@ export default function Sessao() {
         </button>
       </header>
 
-      <div className="px-4 pt-3">
-        <ContextCard ultimaSessao={ultimaSessao} />
-      </div>
+      {!resumeKey && (
+        <div className="px-4 pt-3">
+          <ContextCard ultimaSessao={ultimaSessao} />
+        </div>
+      )}
 
       <div className="flex-1 min-h-0">
         <ChatWindow
           materia={materiaConfig}
           ultimaSessao={ultimaSessao}
           onMessagesChange={handleMessagesChange}
+          sessionKey={sessionKey}
+          initialMessages={resumeKey ? resumeMessages || undefined : undefined}
         />
       </div>
     </div>

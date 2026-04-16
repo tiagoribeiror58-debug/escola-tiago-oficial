@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { ChatMessage, MateriaConfig, Sessao } from '@/types';
 import { buildSystemPrompt, buildFirstMessage } from '@/lib/buildPrompt';
+import { useSaveChatMessage } from '@/hooks/useChatMessages';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
 import { ArrowUp, Loader2 } from 'lucide-react';
@@ -9,28 +10,48 @@ interface Props {
   materia: MateriaConfig;
   ultimaSessao: Sessao | null;
   onMessagesChange?: (messages: ChatMessage[]) => void;
+  sessionKey: string;
+  initialMessages?: ChatMessage[];
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
-export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: Props) {
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, sessionKey, initialMessages }: Props) {
   const systemPrompt = buildSystemPrompt(materia, ultimaSessao);
   const firstMsg = buildFirstMessage(materia, ultimaSessao);
+  const saveMutation = useSaveChatMessage();
 
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'assistant', content: firstMsg },
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>(
+    initialMessages && initialMessages.length > 0
+      ? initialMessages
+      : [{ role: 'assistant', content: firstMsg }]
+  );
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const savedInitial = useRef(false);
+
+  // Save the initial assistant message if it's a new session
+  useEffect(() => {
+    if (!savedInitial.current && (!initialMessages || initialMessages.length === 0)) {
+      savedInitial.current = true;
+      saveMutation.mutate({
+        sessao_materia: materia.slug,
+        session_key: sessionKey,
+        role: 'assistant',
+        content: firstMsg,
+      });
+    } else {
+      savedInitial.current = true;
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     onMessagesChange?.(messages);
   }, [messages, onMessagesChange]);
 
-  // Auto-grow textarea
   const autoResize = useCallback(() => {
     const el = inputRef.current;
     if (!el) return;
@@ -51,6 +72,14 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
     setMessages(newMessages);
     setInput('');
     setIsLoading(true);
+
+    // Save user message to DB
+    saveMutation.mutate({
+      sessao_materia: materia.slug,
+      session_key: sessionKey,
+      role: 'user',
+      content: text,
+    });
 
     let assistantContent = '';
 
@@ -111,16 +140,25 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange }: 
       if (!assistantContent) {
         throw new Error('No response received');
       }
+
+      // Save assistant message to DB
+      saveMutation.mutate({
+        sessao_materia: materia.slug,
+        session_key: sessionKey,
+        role: 'assistant',
+        content: assistantContent,
+      });
     } catch {
+      const errorMsg = 'Desculpe, houve um erro. Tente novamente.';
       setMessages(prev => {
         const filtered = prev.filter((_, i) => i < newMessages.length);
-        return [...filtered, { role: 'assistant', content: 'Desculpe, houve um erro. Tente novamente.' }];
+        return [...filtered, { role: 'assistant', content: errorMsg }];
       });
     } finally {
       setIsLoading(false);
       inputRef.current?.focus();
     }
-  }, [input, isLoading, messages, systemPrompt]);
+  }, [input, isLoading, messages, systemPrompt, materia.slug, sessionKey, saveMutation]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {

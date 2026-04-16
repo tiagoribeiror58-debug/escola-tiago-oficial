@@ -1,14 +1,13 @@
-import { useNavigate } from 'react-router-dom';
 import { MateriaEstado } from '@/types';
 import { urgencia } from '@/lib/materias';
 import { cn } from '@/lib/utils';
 
 interface Props {
   estado: MateriaEstado;
+  onClick: () => void;
 }
 
-export default function MateriaCard({ estado }: Props) {
-  const navigate = useNavigate();
+export default function MateriaCard({ estado, onClick }: Props) {
   const { config, ultimaSessao, totalSessoes, diasParada } = estado;
   const urg = urgencia(diasParada);
 
@@ -35,13 +34,12 @@ export default function MateriaCard({ estado }: Props) {
     urgente: 'border-red-500/20',
   };
 
-  // What to show: próximo tópico (more useful) or last tópico
   const displayTopic = ultimaSessao?.proximo_topico || ultimaSessao?.topico;
   const topicLabel = ultimaSessao?.proximo_topico ? 'Próximo' : 'Último';
 
   return (
     <button
-      onClick={() => navigate(`/sessao/${config.slug}`)}
+      onClick={onClick}
       className={cn(
         'group relative flex flex-col items-start gap-3 rounded-2xl border bg-card p-5',
         'transition-all duration-200 ease-out',
@@ -51,7 +49,6 @@ export default function MateriaCard({ estado }: Props) {
         urgenciaBorder[urg]
       )}
     >
-      {/* Emoji + Name */}
       <div className="flex items-center gap-3 w-full">
         <span className="text-2xl leading-none select-none">{config.emoji}</span>
         <span className="text-sm font-medium text-foreground">{config.nome}</span>
@@ -63,10 +60,8 @@ export default function MateriaCard({ estado }: Props) {
         </span>
       </div>
 
-      {/* Level + Sessions */}
       {ultimaSessao && (
         <div className="flex items-center gap-3 w-full">
-          {/* Level dots */}
           <div className="flex gap-1">
             {[1, 2, 3].map(i => (
               <div
@@ -90,7 +85,6 @@ export default function MateriaCard({ estado }: Props) {
         </div>
       )}
 
-      {/* Topic preview */}
       {ultimaSessao && displayTopic && (
         <p className="text-[12px] text-muted-foreground truncate w-full">
           <span className="text-muted-foreground/60">{topicLabel}:</span>{' '}
