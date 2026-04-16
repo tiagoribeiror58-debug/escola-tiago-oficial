@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { useMateriasEstado, useSessoes } from '@/hooks/useSessoes';
 import MateriaCard from '@/components/MateriaCard';
+import MateriaDetailModal from '@/components/MateriaDetailModal';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookOpen, Flame, Target } from 'lucide-react';
+import { MateriaEstado } from '@/types';
 
 function getGreeting(): string {
   const h = new Date().getHours();
@@ -32,6 +35,8 @@ function calcStreak(sessoes: { data: string }[]): number {
 export default function Index() {
   const { estados, isLoading } = useMateriasEstado();
   const { data: sessoes } = useSessoes();
+  const [selectedMateria, setSelectedMateria] = useState<MateriaEstado | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const hoje = new Date().toLocaleDateString('pt-BR', {
     weekday: 'long',
@@ -42,6 +47,11 @@ export default function Index() {
   const totalSessoes = sessoes?.length || 0;
   const streak = calcStreak(sessoes || []);
   const materiasAtivas = estados.filter(e => e.totalSessoes > 0).length;
+
+  const handleCardClick = (estado: MateriaEstado) => {
+    setSelectedMateria(estado);
+    setModalOpen(true);
+  };
 
   return (
     <div className="min-h-screen">
@@ -89,11 +99,21 @@ export default function Index() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {estados.map(estado => (
-              <MateriaCard key={estado.config.slug} estado={estado} />
+              <MateriaCard
+                key={estado.config.slug}
+                estado={estado}
+                onClick={() => handleCardClick(estado)}
+              />
             ))}
           </div>
         )}
       </div>
+
+      <MateriaDetailModal
+        estado={selectedMateria}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+      />
     </div>
   );
 }
