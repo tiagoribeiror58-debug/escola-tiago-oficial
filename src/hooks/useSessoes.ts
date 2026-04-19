@@ -18,6 +18,17 @@ export function useSessoes() {
   });
 }
 
+// Calcula quantos dias faltam (ou atrasaram) para a próxima revisão SM-2
+// Retorna negativo se a revisão já passou (atrasada), positivo se ainda falta
+function calcularDiasAteRevisao(proxima_revisao: string | null): number | null {
+  if (!proxima_revisao) return null;
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const revisao = new Date(proxima_revisao);
+  const diff = Math.floor((revisao.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
+  return diff;
+}
+
 export function useMateriasEstado() {
   const { data: sessoes, isLoading, error } = useSessoes();
 
@@ -25,21 +36,25 @@ export function useMateriasEstado() {
     const sessoesMateria = (sessoes || []).filter(s => s.materia === config.slug);
     const ultimaSessao = sessoesMateria.length > 0 ? sessoesMateria[0] : null;
     const diasParada = ultimaSessao ? calcularDiasParada(ultimaSessao.data) : null;
+    const diasAteRevisao = ultimaSessao ? calcularDiasAteRevisao(ultimaSessao.proxima_revisao) : null;
 
     return {
       config,
       ultimaSessao,
       totalSessoes: sessoesMateria.length,
       diasParada,
+      diasAteRevisao,
     };
   });
 
-  // Sort: urgente first, then atencao, then ok, then nova
+  // Ordenação SM-2: matérias com revisão mais atrasada primeiro
+  // Sem sessão (nova) vai para o final
+  // Dentro das com sessão: ordena por diasAteRevisao crescente (mais negativo = mais atrasada)
   estados.sort((a, b) => {
-    const order = { urgente: 0, atencao: 1, ok: 2, nova: 3 };
-    const ua = a.diasParada === null ? 3 : a.diasParada > 7 ? 0 : a.diasParada > 3 ? 1 : 2;
-    const ub = b.diasParada === null ? 3 : b.diasParada > 7 ? 0 : b.diasParada > 3 ? 1 : 2;
-    return ua - ub;
+    if (a.diasAteRevisao === null && b.diasAteRevisao === null) return 0;
+    if (a.diasAteRevisao === null) return 1;  // nova vai para o fim
+    if (b.diasAteRevisao === null) return -1;
+    return a.diasAteRevisao - b.diasAteRevisao; // mais atrasada primeiro
   });
 
   return { estados, isLoading, error };
@@ -61,3 +76,4 @@ export function useUltimaSessao(materia: string) {
     },
   });
 }
+

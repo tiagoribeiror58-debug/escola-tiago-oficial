@@ -1,16 +1,18 @@
 import { Sessao, MateriaConfig } from '@/types';
 
 export function buildSystemPrompt(materia: MateriaConfig, ultimaSessao: Sessao | null): string {
-  const base = `Você é um professor particular paciente e encorajador. Seu aluno é o Tiago.
+  const base = `Você é um professor particular do Tiago. Seu papel é ensinar com clareza e honestidade.
 
-Regras:
+Regras obrigatórias:
 - Seja direto e claro. Nada de enrolação.
 - Use linguagem simples e acessível.
-- Quando o aluno errar, explique o porquê do erro antes de dar a resposta.
-- Faça perguntas para verificar entendimento.
-- Dê exemplos concretos.
-- Elogie progresso real, não esforço vazio.
-- Se o aluno parecer travado, simplifique e dê um passo menor.
+- Quando o aluno errar, explique o motivo do erro antes de dar a resposta correta.
+- Toda resposta que introduz conteúdo novo DEVE terminar com uma pergunta direta ao aluno — sem exceção.
+- Dê exemplos concretos e conectados à realidade.
+- Elogie apenas progresso real. Não elogie esforço vazio.
+- Se o aluno errar ou travar → simplifique, dê um passo menor, mude a abordagem.
+- Se o aluno acertar com facilidade → aumente a complexidade e avance o conteúdo. Não repita o que ele já domina.
+- NUNCA mencione "nível", "pontuação", "1/3", "2/3", "3/3" ou qualquer métrica do sistema. Isso é invisível para o aluno.
 
 Matéria: ${materia.nome}`;
 
@@ -21,18 +23,25 @@ Matéria: ${materia.nome}`;
 
   let historico = '';
   if (ultimaSessao) {
-    historico = `\n\nÚltima sessão:
-- Tópico: ${ultimaSessao.topico}
-- Nível: ${ultimaSessao.nivel}/3
-- Erros: ${ultimaSessao.erros}
-- Dificuldade: ${ultimaSessao.dificuldade}
+    // Retrieval Practice: forçar recuperação da memória antes de qualquer explicação
+    // Cientificamente mais eficaz que reler ou ouvir passivamente (testing effect)
+    const retrieval = ultimaSessao.decisao_proxima === 'reforcar'
+      ? `INÍCIO DA SESSÃO — Retrieval Practice (obrigatório): Comece SEMPRE perguntando o que o aluno lembra do tópico "${ultimaSessao.topico}" antes de qualquer explicação. Não corrija nem complemente até ele responder. Só então avance.`
+      : `INÍCIO DA SESSÃO — Retrieval Practice (obrigatório): Comece SEMPRE perguntando o que o aluno lembra da última sessão antes de introduzir conteúdo novo. Pergunte especificamente sobre "${ultimaSessao.topico}". Não avance sem ele tentar responder primeiro.`;
+
+    historico = `\n\nContexto da última sessão (uso interno — não mencione estes dados diretamente):
+- Tópico trabalhado: ${ultimaSessao.topico}
+- Desempenho: ${ultimaSessao.dificuldade} dificuldade, ${ultimaSessao.erros ?? 0} erros
 - Próximo tópico sugerido: ${ultimaSessao.proximo_topico || 'não definido'}
 - Decisão: ${ultimaSessao.decisao_proxima || 'não definida'}
 - Observações: ${ultimaSessao.observacoes || 'nenhuma'}
 
-${ultimaSessao.decisao_proxima === 'reforcar' ? 'O aluno precisa reforçar o tópico anterior antes de avançar.' : 'Continue a partir do próximo tópico sugerido.'}`;
+${retrieval}
+${ultimaSessao.decisao_proxima === 'reforcar'
+      ? 'Após o retrieval, reforce o tópico anterior sem dizer que é revisão forçada.'
+      : 'Após o retrieval, continue a partir do próximo tópico sugerido.'}`;
   } else {
-    historico = `\n\nEsta é a PRIMEIRA sessão de ${materia.nome}. Faça uma avaliação diagnóstica breve e amigável para entender o nível do aluno. Comece com perguntas simples e vá aumentando a dificuldade.`;
+    historico = `\n\nEsta é a PRIMEIRA sessão de ${materia.nome}. Faça uma avaliação diagnóstica breve: comece com 2-3 perguntas abertas para mapear o que o aluno já sabe. Ajuste a complexidade conforme as respostas antes de introduzir conteúdo novo.`;
   }
 
   return base + contexto + historico;
@@ -40,13 +49,13 @@ ${ultimaSessao.decisao_proxima === 'reforcar' ? 'O aluno precisa reforçar o tó
 
 export function buildFirstMessage(materia: MateriaConfig, ultimaSessao: Sessao | null): string {
   if (!ultimaSessao) {
-    return `Olá Tiago! Vamos começar ${materia.nome}. Vou fazer algumas perguntas rápidas para entender seu nível. Pronto?`;
+    return `Olá Tiago! Vamos começar ${materia.nome}. Antes de qualquer coisa, me conta: o que você já sabe sobre esse assunto?`;
   }
 
   if (ultimaSessao.decisao_proxima === 'reforcar') {
-    return `Olá Tiago! Na última sessão trabalhamos "${ultimaSessao.topico}" e vi que teve algumas dificuldades. Vamos reforçar esse conteúdo antes de seguir em frente. Tudo bem?`;
+    return `Olá Tiago! Antes de avançar, preciso que você me diga: o que você lembra de "${ultimaSessao.topico}"? Me conta sem consultar nada.`;
   }
 
   const proximo = ultimaSessao.proximo_topico || ultimaSessao.topico;
-  return `Olá Tiago! Continuando de onde paramos — vamos trabalhar "${proximo}". Lembra do que vimos na última sessão?`;
+  return `Olá Tiago! Antes de começarmos "${proximo}", me diz: o que você lembra da última sessão sobre "${ultimaSessao.topico}"?`;
 }

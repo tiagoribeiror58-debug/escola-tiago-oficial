@@ -11,6 +11,7 @@ export interface Sessao {
   created_at: string | null;
   nivel: number | null;
   decisao_proxima: string | null;
+  proxima_revisao: string | null; // calculado pelo banco via SM-2
 }
 
 export interface MateriaConfig {
@@ -25,7 +26,9 @@ export interface MateriaEstado {
   ultimaSessao: Sessao | null;
   totalSessoes: number;
   diasParada: number | null;
+  diasAteRevisao: number | null; // negativo = revisão atrasada, positivo = dias restantes
 }
+
 
 export interface ChatMessage {
   role: 'user' | 'assistant';

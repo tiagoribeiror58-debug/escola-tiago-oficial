@@ -3,7 +3,7 @@ import { urgencia } from '@/lib/materias';
 import { useChatSessions } from '@/hooks/useChatMessages';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Plus, MessageSquare, Clock, TrendingUp, AlertTriangle, ChevronRight, X } from 'lucide-react';
+import { Plus, MessageSquare, ChevronRight } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 interface Props {
@@ -58,21 +58,22 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             </div>
           </div>
 
-          {/* Stats row */}
+          {/* Progresso narrativo */}
           {ultimaSessao && (
-            <div className="grid grid-cols-3 gap-2 mb-1">
-              <div className="flex flex-col items-center py-2 rounded-xl bg-muted/50">
-                <span className="text-base font-semibold">{totalSessoes}</span>
-                <span className="text-[10px] text-muted-foreground">sessões</span>
-              </div>
-              <div className="flex flex-col items-center py-2 rounded-xl bg-muted/50">
-                <span className="text-base font-semibold">{ultimaSessao.nivel || 1}/3</span>
-                <span className="text-[10px] text-muted-foreground">nível</span>
-              </div>
-              <div className="flex flex-col items-center py-2 rounded-xl bg-muted/50">
-                <span className="text-base font-semibold">{ultimaSessao.erros ?? 0}</span>
-                <span className="text-[10px] text-muted-foreground">erros (últ.)</span>
-              </div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className={cn(
+                'text-[11px] font-medium px-2.5 py-1 rounded-full',
+                urg === 'ok' ? 'bg-emerald-500/10 text-emerald-500' :
+                urg === 'atencao' ? 'bg-amber-500/10 text-amber-500' :
+                'bg-red-500/10 text-red-500'
+              )}>
+                {ultimaSessao.nivel === 3 ? 'Conhecimento sólido' :
+                 ultimaSessao.nivel === 2 ? 'Avançando' :
+                 'Iniciando'}
+              </span>
+              <span className="text-[11px] text-muted-foreground">
+                {totalSessoes} {totalSessoes === 1 ? 'sessão' : 'sessões'}
+              </span>
             </div>
           )}
 

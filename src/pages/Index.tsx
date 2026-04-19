@@ -3,8 +3,9 @@ import { useMateriasEstado, useSessoes } from '@/hooks/useSessoes';
 import MateriaCard from '@/components/MateriaCard';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen, Flame, Target } from 'lucide-react';
+import { BookOpen, Flame, Target, Zap } from 'lucide-react';
 import { MateriaEstado } from '@/types';
+import { useNavigate } from 'react-router-dom';
 
 function getGreeting(): string {
   const h = new Date().getHours();
@@ -37,6 +38,7 @@ export default function Index() {
   const { data: sessoes } = useSessoes();
   const [selectedMateria, setSelectedMateria] = useState<MateriaEstado | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const hoje = new Date().toLocaleDateString('pt-BR', {
     weekday: 'long',
@@ -47,6 +49,11 @@ export default function Index() {
   const totalSessoes = sessoes?.length || 0;
   const streak = calcStreak(sessoes || []);
   const materiasAtivas = estados.filter(e => e.totalSessoes > 0).length;
+
+  // Sugestão SM-2: materia com revisão mais atrasada que já tenha sido estudada
+  const sugestao = estados.find(
+    e => e.ultimaSessao !== null && e.diasAteRevisao !== null && e.diasAteRevisao <= 0
+  ) || null;
 
   const handleCardClick = (estado: MateriaEstado) => {
     setSelectedMateria(estado);
@@ -61,6 +68,25 @@ export default function Index() {
           <h1 className="text-xl font-semibold tracking-tight">{getGreeting()}</h1>
           <p className="text-sm text-muted-foreground mt-0.5 capitalize">{hoje}</p>
         </div>
+        {/* Sugestão SM-2 */}
+        {sugestao && !isLoading && (
+          <button
+            onClick={() => navigate(`/sessao/${sugestao.config.slug}`)}
+            className="w-full flex items-center gap-3 mb-5 px-4 py-3 rounded-xl bg-foreground text-background hover:opacity-90 transition-all active:scale-[0.98]"
+          >
+            <Zap className="w-4 h-4 shrink-0" />
+            <div className="flex-1 text-left">
+              <p className="text-[13px] font-medium leading-none">
+                {sugestao.config.emoji} {sugestao.config.nome} — hora de revisar
+              </p>
+              <p className="text-[11px] opacity-60 mt-0.5">
+                {sugestao.diasAteRevisao === 0
+                  ? 'Revisão programada para hoje'
+                  : `${Math.abs(sugestao.diasAteRevisao!)} dia${Math.abs(sugestao.diasAteRevisao!) > 1 ? 's' : ''} em atraso`}
+              </p>
+            </div>
+          </button>
+        )}
 
         {/* Stats */}
         {totalSessoes > 0 && (
