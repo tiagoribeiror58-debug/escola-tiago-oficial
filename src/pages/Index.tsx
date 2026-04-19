@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useMateriasEstado, useSessoes } from '@/hooks/useSessoes';
 import MateriaCard from '@/components/MateriaCard';
-import MateriaDetailModal from '@/components/MateriaDetailModal';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookOpen, Flame, Target, Zap } from 'lucide-react';
 import { MateriaEstado } from '@/types';
@@ -36,8 +35,7 @@ function calcStreak(sessoes: { data: string }[]): number {
 export default function Index() {
   const { estados, isLoading } = useMateriasEstado();
   const { data: sessoes } = useSessoes();
-  const [selectedMateria, setSelectedMateria] = useState<MateriaEstado | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const navigate = useNavigate();
 
   const hoje = new Date().toLocaleDateString('pt-BR', {
@@ -56,9 +54,10 @@ export default function Index() {
   ) || null;
 
   const handleCardClick = (estado: MateriaEstado) => {
-    setSelectedMateria(estado);
-    setModalOpen(true);
+    navigate(`/sessao/${estado.config.slug}`);
   };
+
+  const displayedEstados = showAll ? estados : estados.slice(0, 6);
 
   return (
     <div className="min-h-screen">
@@ -124,7 +123,7 @@ export default function Index() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {estados.map(estado => (
+            {displayedEstados.map(estado => (
               <MateriaCard
                 key={estado.config.slug}
                 estado={estado}
@@ -133,13 +132,16 @@ export default function Index() {
             ))}
           </div>
         )}
-      </div>
 
-      <MateriaDetailModal
-        estado={selectedMateria}
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-      />
+        {!isLoading && estados.length > 6 && !showAll && (
+          <button
+            onClick={() => setShowAll(true)}
+            className="w-full mt-6 py-3 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Ver todas as {estados.length} matérias
+          </button>
+        )}
+      </div>
     </div>
   );
 }

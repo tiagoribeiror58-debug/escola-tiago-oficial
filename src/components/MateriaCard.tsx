@@ -61,26 +61,21 @@ export default function MateriaCard({ estado, onClick }: Props) {
       </div>
 
       {ultimaSessao && (
-        <div className="flex items-center gap-3 w-full">
-          <div className="flex gap-1">
-            {[1, 2, 3].map(i => (
-              <div
-                key={i}
-                className={cn(
-                  'w-1.5 h-1.5 rounded-full transition-colors',
-                  i <= nivelDots ? 'bg-foreground' : 'bg-border'
-                )}
-              />
-            ))}
-          </div>
+        <div className="flex flex-wrap items-center gap-2 w-full">
+          <span className={cn(
+            'text-[11px] font-medium px-2 py-0.5 rounded-full',
+            ultimaSessao.nivel === 3 ? 'bg-emerald-500/10 text-emerald-500' :
+            ultimaSessao.nivel === 2 ? 'bg-amber-500/10 text-amber-500' :
+            'bg-foreground/10 text-foreground'
+          )}>
+            {ultimaSessao.nivel === 3 ? 'Conhecimento sólido' :
+             ultimaSessao.nivel === 2 ? 'Avançando' : 'Iniciando'}
+          </span>
           <span className="text-[11px] text-muted-foreground">
             {totalSessoes} {totalSessoes === 1 ? 'sessão' : 'sessões'}
           </span>
           {ultimaSessao.decisao_proxima === 'reforcar' && (
-            <span className="text-[11px] text-amber-500 font-medium ml-auto">⟳ reforço</span>
-          )}
-          {ultimaSessao.erros !== null && ultimaSessao.erros > 2 && ultimaSessao.decisao_proxima !== 'reforcar' && (
-            <span className="text-[11px] text-amber-500 ml-auto">{ultimaSessao.erros} erros</span>
+            <span className="text-[11px] text-amber-500 font-medium ml-auto">⟳ reforço pendente</span>
           )}
         </div>
       )}
