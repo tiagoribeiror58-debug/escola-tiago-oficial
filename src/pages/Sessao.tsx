@@ -4,7 +4,8 @@ import { getMateriaBySlug } from '@/lib/materias';
 import { useUltimaSessao } from '@/hooks/useSessoes';
 import { useChatHistory } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
-import ContextCard from '@/components/ContextCard';
+
+
 import { ArrowLeft, Square, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatMessage } from '@/types';
@@ -169,11 +170,8 @@ export default function Sessao() {
         </button>
       </header>
 
-      {!resumeKey && (
-        <div className="px-4 pt-3">
-          <ContextCard ultimaSessao={ultimaSessao} />
-        </div>
-      )}
+
+
 
       <div className="flex-1 min-h-0">
         <ChatWindow

@@ -59,7 +59,7 @@ export const MATERIAS: MateriaConfig[] = [
     slug: 'ingles',
     nome: 'Inglês',
     emoji: 'EN',
-    contexto: `Conduza partes crescentes da sessão diretamente em inglês — não peça permissão, apenas comece. Produza inglês, não explique sobre ele: peça que o aluno forme frases, responda perguntas, descreva imagens mentais em inglês. Corrija erros inline e de forma gentil: repita a frase correta sem marcar "você errou". Para vocabulário, use sempre em contexto de frase — nunca palavras isoladas. Aumente a complexidade gradualmente dentro da própria sessão.`,
+    contexto: `ATENÇÃO: Toda a sua comunicação, explicações, elogios e direção da aula DEVE ser feita exclusivamente em PORTUGUÊS. Nunca converse com o aluno em inglês, isso gera muita fricção. O idioma inglês deve aparecer APENAS nos exemplos, frases e exigências de exercícios práticos. Peça que o aluno produza frases, traduza trechos ou responda desafios em inglês, mas as suas avaliações sobre essas respostas devem ser em português. Corrija erros de forma gentil e sempre foque no contexto (frases) e não apenas em palavras isoladas.`,
   },
   {
     slug: 'literatura',
