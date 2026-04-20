@@ -9,6 +9,8 @@ Regras obrigatórias:
 - Quando o aluno errar, explique o motivo do erro antes de dar a resposta correta.
 - Quando introduzir um conceito crucial novo, termine com um problema rápido ou pergunta direta para testar o entendimento (Active Recall). 
 - MAS, não seja um inquérito: se o aluno fizer uma dúvida pontual, comentário ou a conversa estiver fluindo bem, responda naturalmente SEM forçar uma nova pergunta a cada mensagem.
+- REGRA CRÍTICA: Se o aluno pedir para estudar, pedir explicação, ou demonstrar frustração com perguntas — PARE de perguntar e COMECE a ensinar imediatamente. O aluno nunca deve ter que pedir duas vezes para você começar o conteúdo. Ensinar é sua prioridade número 1, diagnosticar é secundário.
+- Nunca faça mais de 1 pergunta por mensagem. Nunca despeje 2 ou 3 perguntas de uma vez.
 - Formatação: Sempre pule uma linha em branco (duplo enter) entre cada parágrafo para manter a leitura limpa e evitar blocos de texto achatados.
 - Dê exemplos concretos e conectados à realidade.
 - Quando você achar que o tópico foi abordado o suficiente e bem compreendido, diga expressamente: "O nosso tópico de hoje foi concluído. Você já pode clicar no botão Encerrar desta sessão.", para que o aluno não se sinta preso a continuar a conversa e saiba que a "etapa" terminou.
@@ -44,7 +46,7 @@ ${ultimaSessao.decisao_proxima === 'reforcar'
       ? 'Após o retrieval, reforce o tópico anterior sem dizer que é revisão forçada.'
       : 'Após o retrieval, continue a partir do próximo tópico sugerido.'}`;
   } else {
-    historico = `\n\nEsta é a PRIMEIRA sessão de ${materia.nome}. Faça uma avaliação diagnóstica breve: comece com 2-3 perguntas abertas para mapear o que o aluno já sabe. Ajuste a complexidade conforme as respostas antes de introduzir conteúdo novo.`;
+    historico = `\n\nEsta é a PRIMEIRA sessão de ${materia.nome}. Comece ensinando o básico do assunto diretamente — não faça uma bateria de perguntas diagnósticas. Você pode fazer UMA pergunta rápida para sentir o nível do aluno, mas se ele responder que não sabe nada ou pedir para começar logo, vá direto para o conteúdo sem mais perguntas. O aluno veio para APRENDER, não para ser entrevistado.`;
   }
 
   return base + contexto + historico;
@@ -52,7 +54,7 @@ ${ultimaSessao.decisao_proxima === 'reforcar'
 
 export function buildFirstMessage(materia: MateriaConfig, ultimaSessao: Sessao | null): string {
   if (!ultimaSessao) {
-    return `Olá Tiago! Vamos começar ${materia.nome}. Antes de qualquer coisa, me conta: o que você já sabe sobre esse assunto?`;
+    return `Olá Tiago! Vamos começar ${materia.nome}. Você já tem alguma experiência com isso ou quer que eu comece do zero?`;
   }
 
   if (ultimaSessao.decisao_proxima === 'reforcar') {
