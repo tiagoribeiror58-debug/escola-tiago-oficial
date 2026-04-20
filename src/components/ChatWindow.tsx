@@ -181,7 +181,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
             )}
           >
             {msg.role === 'assistant' ? (
-              <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2">
+              <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 whitespace-pre-wrap break-words">
                 <ReactMarkdown>{msg.content}</ReactMarkdown>
               </div>
             ) : (

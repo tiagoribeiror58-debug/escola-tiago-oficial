@@ -45,6 +45,11 @@ export default function Sessao() {
   }, []);
 
   const handleEncerrar = useCallback(async () => {
+    if (resumeKey) {
+      navigate('/');
+      return;
+    }
+
     const messages = messagesRef.current;
     setSaving(true);
 
@@ -83,12 +88,10 @@ export default function Sessao() {
         decisao_proxima: sessionData.decisao_proxima,
         observacoes: sessionData.observacoes || null,
         duracao_min: duracaoMin > 0 ? duracaoMin : 1,
+        session_key: sessionKey,
       });
 
       if (error) throw error;
-
-      // Clean up chat messages for this session after saving
-      await supabase.from('chat_messages').delete().eq('session_key', sessionKey);
 
       queryClient.invalidateQueries({ queryKey: ['sessoes'] });
       queryClient.invalidateQueries({ queryKey: ['chat-sessions', slug] });

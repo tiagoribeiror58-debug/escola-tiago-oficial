@@ -1,0 +1,1 @@
+ALTER TABLE sessoes ADD COLUMN session_key TEXT;

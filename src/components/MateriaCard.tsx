@@ -38,18 +38,24 @@ export default function MateriaCard({ estado, onClick }: Props) {
   const topicLabel = ultimaSessao?.proximo_topico ? 'Próximo' : 'Último';
 
   return (
-    <button
-      onClick={onClick}
+    <div
       className={cn(
         'group relative flex flex-col items-start gap-3 rounded-2xl border bg-card p-5',
         'transition-all duration-200 ease-out',
         'hover:shadow-md hover:border-foreground/10 hover:-translate-y-0.5',
-        'active:translate-y-0 active:shadow-sm',
-        'text-left w-full cursor-pointer',
+        'text-left w-full',
         urgenciaBorder[urg]
       )}
     >
-      <div className="flex items-center gap-3 w-full">
+      <div 
+        role="button"
+        tabIndex={0}
+        onClick={onClick}
+        onKeyDown={(e) => e.key === 'Enter' && onClick()}
+        className="absolute inset-0 z-0 rounded-2xl cursor-pointer"
+      />
+
+      <div className="flex items-center gap-3 w-full relative z-10 pointer-events-none">
         <span className="text-2xl leading-none select-none">{config.emoji}</span>
         <span className="text-sm font-medium text-foreground">{config.nome}</span>
         <span className={cn(
@@ -61,7 +67,7 @@ export default function MateriaCard({ estado, onClick }: Props) {
       </div>
 
       {ultimaSessao && (
-        <div className="flex flex-wrap items-center gap-2 w-full">
+        <div className="flex flex-wrap items-center gap-2 w-full relative z-10 pointer-events-none">
           <span className={cn(
             'text-[11px] font-medium px-2 py-0.5 rounded-full',
             ultimaSessao.nivel === 3 ? 'bg-emerald-500/10 text-emerald-500' :
@@ -81,11 +87,23 @@ export default function MateriaCard({ estado, onClick }: Props) {
       )}
 
       {ultimaSessao && displayTopic && (
-        <p className="text-[12px] text-muted-foreground truncate w-full">
-          <span className="text-muted-foreground/60">{topicLabel}:</span>{' '}
-          {displayTopic}
-        </p>
+        <div className="flex items-center justify-between gap-3 w-full relative z-10 mt-1">
+          <p className="text-[12px] text-muted-foreground truncate flex-1 pointer-events-none">
+            <span className="text-muted-foreground/60">{topicLabel}:</span>{' '}
+            {displayTopic}
+          </p>
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              window.location.href = `/historico/${config.slug}`;
+            }}
+            className="flex items-center text-[11px] font-medium text-foreground/60 hover:text-foreground bg-muted/50 hover:bg-muted px-2 py-1 rounded-md transition-colors whitespace-nowrap"
+          >
+            Histórico
+          </button>
+        </div>
       )}
-    </button>
+    </div>
   );
 }

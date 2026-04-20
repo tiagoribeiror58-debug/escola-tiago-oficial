@@ -12,6 +12,7 @@ export interface Sessao {
   nivel: number | null;
   decisao_proxima: string | null;
   proxima_revisao: string | null; // calculado pelo banco via SM-2
+  session_key?: string | null;
 }
 
 export interface MateriaConfig {
