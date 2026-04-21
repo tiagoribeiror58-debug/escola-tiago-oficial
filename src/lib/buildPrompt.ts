@@ -53,23 +53,16 @@ Matéria: ${materia.nome}`;
 ${retrieval}
 ${ultimaSessao.decisao_proxima === 'reforcar'
       ? 'Após o retrieval, reforce o tópico anterior sem dizer que é revisão forçada.'
-      : 'Após o retrieval, continue a partir do próximo tópico sugerido.'}`;
+      : 'Após o retrieval, continue a partir do próximo tópico sugerido.'}
+
+A sua primeira interação nesta sessão vai acontecer agora. A primeira mensagem do usuário será um gatilho oculto escrito "Inicie a sessão.". NÃO RESPONDA a esse gatilho com saudações robóticas como "Entendi". Ao invés disso, inicie imediatamente o seu papel de tutor: cumprimente o aluno pelo nome (Tiago) e comece o Retrieval Practice ou a revisão conforme as instruções acima.`;
   } else {
-    historico = `\n\nEsta é a PRIMEIRA sessão de ${materia.nome}. Comece ensinando o básico do assunto diretamente — não faça uma bateria de perguntas diagnósticas. Você pode fazer UMA pergunta rápida para sentir o nível do aluno, mas se ele responder que não sabe nada ou pedir para começar logo, vá direto para o conteúdo sem mais perguntas. O aluno veio para APRENDER, não para ser entrevistado.`;
+    historico = `\n\nEsta é a PRIMEIRA sessão de ${materia.nome}. Comece ensinando o básico do assunto diretamente — não faça uma bateria de perguntas diagnósticas. O aluno veio para APRENDER, não para ser entrevistado.
+
+A sua primeira interação nesta sessão vai acontecer agora. A primeira mensagem do usuário será um gatilho oculto escrito "Inicie a sessão.". NÃO RESPONDA a esse gatilho dizendo que entendeu a regra. Ao invés disso, inicie imediatamente o seu papel de professor: "Olá Tiago! Vamos começar... [insira conteúdo do básico da matéria]".`;
   }
 
   return base + contexto + historico;
 }
 
-export function buildFirstMessage(materia: MateriaConfig, ultimaSessao: Sessao | null): string {
-  if (!ultimaSessao) {
-    return `Olá Tiago! Vamos começar ${materia.nome}. Você já tem alguma experiência com isso ou quer que eu comece do zero?`;
-  }
 
-  if (ultimaSessao.decisao_proxima === 'reforcar') {
-    return `Olá Tiago! Antes de avançar, preciso que você me diga: o que você lembra de "${ultimaSessao.topico}"? Me conta sem consultar nada.`;
-  }
-
-  const proximo = ultimaSessao.proximo_topico || ultimaSessao.topico;
-  return `Olá Tiago! Antes de começarmos "${proximo}", me diz: o que você lembra da última sessão sobre "${ultimaSessao.topico}"?`;
-}

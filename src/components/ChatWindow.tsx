@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { ChatMessage, MateriaConfig, Sessao } from '@/types';
-import { buildSystemPrompt, buildFirstMessage } from '@/lib/buildPrompt';
+import { buildSystemPrompt } from '@/lib/buildPrompt';
 import { useSaveChatMessage } from '@/hooks/useChatMessages';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
@@ -19,13 +19,12 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, sessionKey, initialMessages }: Props) {
   const isContinuation = !!(initialMessages && initialMessages.length > 0);
   const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation);
-  const firstMsg = buildFirstMessage(materia, ultimaSessao);
   const saveMutation = useSaveChatMessage();
 
   const [messages, setMessages] = useState<ChatMessage[]>(
     initialMessages && initialMessages.length > 0
       ? initialMessages
-      : [{ role: 'assistant', content: firstMsg }]
+      : []
   );
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,18 +32,10 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const savedInitial = useRef(false);
 
-  // Save the initial assistant message if it's a new session
+  // Auto-start the session if it's new
   useEffect(() => {
-    if (!savedInitial.current && (!initialMessages || initialMessages.length === 0)) {
-      savedInitial.current = true;
-      saveMutation.mutate({
-        sessao_materia: materia.slug,
-        session_key: sessionKey,
-        role: 'assistant',
-        content: firstMsg,
-      });
-    } else {
-      savedInitial.current = true;
+    if (!isContinuation && messages.length === 0 && !isLoading) {
+      handleSend("Inicie a sessão.", true);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -64,25 +55,27 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
     autoResize();
   }, [input, autoResize]);
 
-  const handleSend = useCallback(async (textToSubmit?: string) => {
+  const handleSend = useCallback(async (textToSubmit?: string, isSilentTrigger = false) => {
     const text = typeof textToSubmit === 'string' ? textToSubmit.trim() : input.trim();
     if (!text || isLoading) return;
 
     const userMsg: ChatMessage = { role: 'user', content: text };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
-    if (!textToSubmit || typeof textToSubmit !== 'string') {
+    const newMessages = isSilentTrigger ? [...messages, userMsg] : [...messages, userMsg];
+    
+    if (!isSilentTrigger) {
+      setMessages(newMessages);
       setInput('');
+      
+      // Save user message to DB
+      saveMutation.mutate({
+        sessao_materia: materia.slug,
+        session_key: sessionKey,
+        role: 'user',
+        content: text,
+      });
     }
-    setIsLoading(true);
 
-    // Save user message to DB
-    saveMutation.mutate({
-      sessao_materia: materia.slug,
-      session_key: sessionKey,
-      role: 'user',
-      content: text,
-    });
+    setIsLoading(true);
 
     let assistantContent = '';
 
