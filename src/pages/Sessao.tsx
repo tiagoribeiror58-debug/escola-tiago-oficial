@@ -6,7 +6,7 @@ import { useChatHistory } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 
 
-import { ArrowLeft, Square, Loader2 } from 'lucide-react';
+import { ArrowLeft, Square, Loader2, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatMessage } from '@/types';
 import { extractSession } from '@/lib/extractSession';
@@ -32,6 +32,7 @@ export default function Sessao() {
   const messagesRef = useRef<ChatMessage[]>([]);
   const startTimeRef = useRef(Date.now());
   const [saving, setSaving] = useState(false);
+  const [showSuccessMenu, setShowSuccessMenu] = useState(false);
 
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
@@ -46,7 +47,7 @@ export default function Sessao() {
 
   const handleEncerrar = useCallback(async () => {
     if (resumeKey) {
-      navigate('/');
+      setShowSuccessMenu(true);
       return;
     }
 
@@ -96,7 +97,8 @@ export default function Sessao() {
       queryClient.invalidateQueries({ queryKey: ['sessoes'] });
       queryClient.invalidateQueries({ queryKey: ['chat-sessions', slug] });
       toast.success('Sessão salva ✓');
-      setTimeout(() => navigate('/'), 1500);
+      setSaving(false);
+      setShowSuccessMenu(true);
     } catch (err) {
       console.error(err);
       toast.error('Erro ao salvar — tente novamente');
@@ -125,7 +127,36 @@ export default function Sessao() {
   }
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col relative">
+      {/* Success Modal Overlay */}
+      {showSuccessMenu && (
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-card border border-border p-6 rounded-2xl shadow-xl max-w-[320px] w-full space-y-6 text-center animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto">
+              <Check className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-2">Sessão Encerrada!</h3>
+              <p className="text-sm text-muted-foreground">O que você deseja fazer agora?</p>
+            </div>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => window.location.href = `/sessao/${slug}`}
+                className="w-full bg-foreground text-background py-2.5 rounded-lg font-medium hover:opacity-90 active:scale-95 transition-all text-sm"
+              >
+                Começar Nova Sessão
+              </button>
+              <button
+                onClick={() => navigate('/')}
+                className="w-full bg-muted text-muted-foreground py-2.5 rounded-lg font-medium hover:bg-muted/80 active:scale-95 transition-all text-sm"
+              >
+                Voltar ao Menu Principal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="flex items-center gap-3 px-4 py-3 border-b border-border">
         <button
           onClick={() => {
