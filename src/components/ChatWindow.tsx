@@ -16,13 +16,6 @@ interface Props {
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
-const QUICK_ACTIONS = [
-  "Explique de outra forma",
-  "Me dê um exemplo prático",
-  "Não entendi muito bem",
-  "Tudo certo, pode avançar!"
-];
-
 export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, sessionKey, initialMessages }: Props) {
   const isContinuation = !!(initialMessages && initialMessages.length > 0);
   const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation);
@@ -190,11 +183,14 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
                 : 'text-foreground'
             )}
           >
-            {msg.role === 'assistant' ? (
-              <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 whitespace-pre-wrap break-words">
-                <ReactMarkdown>{msg.content}</ReactMarkdown>
-              </div>
-            ) : (
+            {msg.role === 'assistant' ? (() => {
+              const cleanedContent = msg.content.replace(/<chips>[\s\S]*?(?:<\/chips>|$)/ig, '');
+              return (
+                <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 whitespace-pre-wrap break-words">
+                  <ReactMarkdown>{cleanedContent}</ReactMarkdown>
+                </div>
+              );
+            })() : (
               msg.content
             )}
           </div>
@@ -213,19 +209,25 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
       <div className="border-t border-border p-3">
         <div className="flex items-end gap-2 max-w-3xl mx-auto flex-col w-full">
           {/* Quick Action Chips */}
-          {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
-            <div className="flex flex-wrap gap-2 mb-2 w-full">
-              {QUICK_ACTIONS.map((action, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSend(action)}
-                  className="text-[11px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-foreground hover:text-background transition-colors active:scale-95"
-                >
-                  {action}
-                </button>
-              ))}
-            </div>
-          )}
+          {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (() => {
+            const lastMsg = messages[messages.length - 1];
+            const match = lastMsg.content.match(/<chips>([\s\S]*?)<\/chips>/i);
+            const dynamicChips = match ? match[1].split('|').map(c => c.trim()).filter(Boolean) : [];
+            if (dynamicChips.length === 0) return null;
+            return (
+              <div className="flex flex-wrap gap-2 mb-2 w-full">
+                {dynamicChips.map((action, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleSend(action)}
+                    className="text-[11px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-foreground hover:text-background transition-colors active:scale-95"
+                  >
+                    {action}
+                  </button>
+                ))}
+              </div>
+            );
+          })()}
 
           <div className="flex items-end gap-2 w-full">
             <textarea
