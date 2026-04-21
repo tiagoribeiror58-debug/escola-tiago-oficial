@@ -103,32 +103,7 @@ export default function Index() {
           </div>
         )}
 
-        {/* Stats */}
-        {totalSessoes > 0 && (
-          <div className="grid grid-cols-3 gap-3 mb-6">
-            <div className="flex items-center gap-2.5 rounded-xl bg-muted/50 px-4 py-3">
-              <Flame className="w-4 h-4 text-orange-500" />
-              <div>
-                <p className="text-lg font-semibold leading-none">{streak}</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">dias seguidos</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5 rounded-xl bg-muted/50 px-4 py-3">
-              <BookOpen className="w-4 h-4 text-blue-500" />
-              <div>
-                <p className="text-lg font-semibold leading-none">{totalSessoes}</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">sessões</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5 rounded-xl bg-muted/50 px-4 py-3">
-              <Target className="w-4 h-4 text-emerald-500" />
-              <div>
-                <p className="text-lg font-semibold leading-none">{materiasAtivas}</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">matérias</p>
-              </div>
-            </div>
-          </div>
-        )}
+
 
         {/* Separador de Outras Disciplinas */}
         {outrosEstados.length > 0 && !isLoading && (
