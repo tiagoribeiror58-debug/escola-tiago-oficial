@@ -47,14 +47,9 @@ export function useMateriasEstado() {
     };
   });
 
-  // Ordenação SM-2: matérias com revisão mais atrasada primeiro
-  // Sem sessão (nova) vai para o final
-  // Dentro das com sessão: ordena por diasAteRevisao crescente (mais negativo = mais atrasada)
+  // Ordenação: matérias mais acessadas (maior total de sessões) primeiro
   estados.sort((a, b) => {
-    if (a.diasAteRevisao === null && b.diasAteRevisao === null) return 0;
-    if (a.diasAteRevisao === null) return 1;  // nova vai para o fim
-    if (b.diasAteRevisao === null) return -1;
-    return a.diasAteRevisao - b.diasAteRevisao; // mais atrasada primeiro
+    return b.totalSessoes - a.totalSessoes;
   });
 
   return { estados, isLoading, error };
