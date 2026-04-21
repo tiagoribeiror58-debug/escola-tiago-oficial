@@ -48,16 +48,20 @@ export default function Index() {
   const streak = calcStreak(sessoes || []);
   const materiasAtivas = estados.filter(e => e.totalSessoes > 0).length;
 
-  // Sugestão SM-2: materia com revisão mais atrasada que já tenha sido estudada
-  const sugestao = estados.find(
+  // Sugestão SM-2 (Matéria mais atrasada)
+  const sugestaoSM2 = estados.find(
     e => e.ultimaSessao !== null && e.diasAteRevisao !== null && e.diasAteRevisao <= 0
-  ) || null;
+  );
+
+  // Hero Card é a Sugestão SM-2 ou a matéria de maior acesso
+  const heroEstado = sugestaoSM2 || (estados.length > 0 ? estados[0] : null);
 
   const handleCardClick = (estado: MateriaEstado) => {
     navigate(`/sessao/${estado.config.slug}`);
   };
 
-  const displayedEstados = showAll ? estados : estados.slice(0, 6);
+  const outrosEstados = heroEstado ? estados.filter(e => e.config.slug !== heroEstado.config.slug) : estados;
+  const displayedEstados = showAll ? outrosEstados : outrosEstados.slice(0, 4);
 
   return (
     <div className="min-h-screen">
@@ -67,24 +71,36 @@ export default function Index() {
           <h1 className="text-xl font-semibold tracking-tight">{getGreeting()}</h1>
           <p className="text-sm text-muted-foreground mt-0.5 capitalize">{hoje}</p>
         </div>
-        {/* Sugestão SM-2 */}
-        {sugestao && !isLoading && (
-          <button
-            onClick={() => navigate(`/sessao/${sugestao.config.slug}`)}
-            className="w-full flex items-center gap-3 mb-5 px-4 py-3 rounded-xl bg-foreground text-background hover:opacity-90 transition-all active:scale-[0.98]"
-          >
-            <Zap className="w-4 h-4 shrink-0" />
-            <div className="flex-1 text-left">
-              <p className="text-[13px] font-medium leading-none">
-                {sugestao.config.emoji} {sugestao.config.nome} — hora de revisar
-              </p>
-              <p className="text-[11px] opacity-60 mt-0.5">
-                {sugestao.diasAteRevisao === 0
-                  ? 'Revisão programada para hoje'
-                  : `${Math.abs(sugestao.diasAteRevisao!)} dia${Math.abs(sugestao.diasAteRevisao!) > 1 ? 's' : ''} em atraso`}
-              </p>
+        {/* Hero Card Absoluto */}
+        {heroEstado && !isLoading && (
+          <div className="mb-8 relative overflow-hidden rounded-[2rem] border border-border/50 bg-gradient-to-b from-card to-background p-6 sm:p-8 shadow-2xl transition-all hover:border-border/80">
+            <div className="absolute inset-0 bg-foreground/5 opacity-50 blur-3xl pointer-events-none" />
+            
+            <div className="relative z-10 flex flex-col gap-6 sm:gap-8">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h2 className="text-3xl font-semibold tracking-tight text-foreground">
+                    {heroEstado.config.nome}
+                  </h2>
+                  <p className="text-muted-foreground mt-1 text-sm sm:text-base pr-8">
+                    {sugestaoSM2 === heroEstado 
+                      ? 'Você tem uma revisão inteligente pendente para hoje.'
+                      : 'Sua matéria de maior foco. Retome sua jornada.'}
+                  </p>
+                </div>
+                <div className="w-14 h-14 rounded-full bg-foreground/5 flex items-center justify-center text-2xl shrink-0">
+                  {heroEstado.config.emoji}
+                </div>
+              </div>
+              
+              <button
+                onClick={() => navigate(`/sessao/${heroEstado.config.slug}`)}
+                className="w-full sm:w-auto self-start px-8 py-3.5 rounded-xl bg-foreground text-background font-medium hover:opacity-90 active:scale-95 transition-all text-sm shadow-xl shadow-foreground/10"
+              >
+                Retomar Foco
+              </button>
             </div>
-          </button>
+          </div>
         )}
 
         {/* Stats */}
@@ -114,10 +130,19 @@ export default function Index() {
           </div>
         )}
 
-        {/* Grid */}
+        {/* Separador de Outras Disciplinas */}
+        {outrosEstados.length > 0 && !isLoading && (
+          <div className="mt-12 mb-6 border-t border-border pt-8 flex items-center justify-between">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+              Explorar biblioteca
+            </h3>
+          </div>
+        )}
+
+        {/* Grid Residual */}
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {Array.from({ length: 6 }).map((_, i) => (
+            {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-24 rounded-2xl" />
             ))}
           </div>
@@ -133,12 +158,12 @@ export default function Index() {
           </div>
         )}
 
-        {!isLoading && estados.length > 6 && !showAll && (
+        {!isLoading && outrosEstados.length > 4 && !showAll && (
           <button
             onClick={() => setShowAll(true)}
-            className="w-full mt-6 py-3 text-[13px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="w-full mt-6 py-3 px-4 rounded-xl text-[13px] font-medium text-foreground bg-muted/50 hover:bg-muted transition-colors"
           >
-            Ver todas as {estados.length} matérias
+            Ver todas as {outrosEstados.length} matérias
           </button>
         )}
       </div>
