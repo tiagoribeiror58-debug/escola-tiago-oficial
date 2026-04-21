@@ -21,30 +21,30 @@ serve(async (req) => {
       );
     }
 
-    const XAI_API_KEY = Deno.env.get("XAI_API_KEY");
-    if (!XAI_API_KEY) {
-      throw new Error("XAI_API_KEY is not configured");
+    const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
+    if (!ANTHROPIC_API_KEY) {
+      throw new Error("ANTHROPIC_API_KEY is not configured");
     }
 
-    const response = await fetch("https://api.x.ai/v1/chat/completions", {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${XAI_API_KEY}`,
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "grok-4.20-0309-reasoning",
-        messages: [
-          { role: "system", content: systemPrompt || "You are a helpful assistant." },
-          ...messages,
-        ],
+        model: "claude-sonnet-4-6",
+        system: systemPrompt || "You are a helpful assistant.",
+        messages: messages,
+        max_tokens: 4096,
         stream: true,
       }),
     });
 
     if (!response.ok) {
       const t = await response.text();
-      console.error("xAI API error:", response.status, t);
+      console.error("Anthropic API error:", response.status, t);
 
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {

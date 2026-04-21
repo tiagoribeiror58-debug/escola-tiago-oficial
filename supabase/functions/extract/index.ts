@@ -40,9 +40,9 @@ serve(async (req) => {
       );
     }
 
-    const XAI_API_KEY = Deno.env.get("XAI_API_KEY");
-    if (!XAI_API_KEY) {
-      throw new Error("XAI_API_KEY is not configured");
+    const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
+    if (!ANTHROPIC_API_KEY) {
+      throw new Error("ANTHROPIC_API_KEY is not configured");
     }
 
     const chatHistory = messages
@@ -51,25 +51,26 @@ serve(async (req) => {
 
     const systemMessage = `${EXTRACT_PROMPT}\n\nMatéria: ${materia}\nNível atual do aluno: ${nivel_atual || 1}`;
 
-    const response = await fetch("https://api.x.ai/v1/chat/completions", {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${XAI_API_KEY}`,
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "grok-4.20-0309-non-reasoning",
+        model: "claude-sonnet-4-6",
+        system: systemMessage,
         messages: [
-          { role: "system", content: systemMessage },
-          { role: "user", content: `Histórico da sessão:\n\n${chatHistory}` },
+          { role: "user", content: `Aja como o avaliador silêncioso e extraia os dados. Histórico da sessão:\n\n${chatHistory}` },
         ],
-        response_format: { type: "json_object" },
+        max_tokens: 1024,
       }),
     });
 
     if (!response.ok) {
       const t = await response.text();
-      console.error("xAI API error:", response.status, t);
+      console.error("Anthropic API error:", response.status, t);
 
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
@@ -85,7 +86,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "";
+    const content = data.content?.[0]?.text || "";
 
     let extracted;
     try {

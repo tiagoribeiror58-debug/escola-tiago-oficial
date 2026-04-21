@@ -123,7 +123,13 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
 
           try {
             const parsed = JSON.parse(jsonStr);
-            const delta = parsed.choices?.[0]?.delta?.content;
+            let delta = parsed.choices?.[0]?.delta?.content;
+            
+            // Suporte para Anthropic Claude Stream
+            if (!delta && parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
+              delta = parsed.delta.text;
+            }
+
             if (delta) {
               assistantContent += delta;
               setMessages(prev => {
