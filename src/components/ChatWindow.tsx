@@ -16,8 +16,16 @@ interface Props {
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
+const QUICK_ACTIONS = [
+  "Explique de outra forma",
+  "Me dê um exemplo prático",
+  "Não entendi muito bem",
+  "Tudo certo, pode avançar!"
+];
+
 export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, sessionKey, initialMessages }: Props) {
-  const systemPrompt = buildSystemPrompt(materia, ultimaSessao);
+  const isContinuation = !!(initialMessages && initialMessages.length > 0);
+  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation);
   const firstMsg = buildFirstMessage(materia, ultimaSessao);
   const saveMutation = useSaveChatMessage();
 
@@ -63,14 +71,16 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
     autoResize();
   }, [input, autoResize]);
 
-  const send = useCallback(async () => {
-    const text = input.trim();
+  const handleSend = useCallback(async (textToSubmit?: string) => {
+    const text = typeof textToSubmit === 'string' ? textToSubmit.trim() : input.trim();
     if (!text || isLoading) return;
 
     const userMsg: ChatMessage = { role: 'user', content: text };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
-    setInput('');
+    if (!textToSubmit || typeof textToSubmit !== 'string') {
+      setInput('');
+    }
     setIsLoading(true);
 
     // Save user message to DB
@@ -163,7 +173,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      send();
+      handleSend();
     }
   };
 
@@ -201,34 +211,51 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
       </div>
 
       <div className="border-t border-border p-3">
-        <div className="flex items-end gap-2 max-w-3xl mx-auto">
-          <textarea
-            ref={inputRef}
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Escreva sua resposta..."
-            rows={1}
-            className={cn(
-              'flex-1 resize-none bg-muted/50 rounded-xl px-4 py-2.5 text-sm',
-              'placeholder:text-muted-foreground/50',
-              'focus:outline-none focus:ring-1 focus:ring-ring',
-              'transition-all duration-150'
-            )}
-            style={{ minHeight: '40px', maxHeight: '128px' }}
-          />
-          <button
-            onClick={send}
-            disabled={!input.trim() || isLoading}
-            className={cn(
-              'flex items-center justify-center w-9 h-9 rounded-full shrink-0',
-              'bg-foreground text-background transition-all',
-              'disabled:opacity-30 disabled:scale-95',
-              'hover:opacity-80 active:scale-95'
-            )}
-          >
-            <ArrowUp className="w-4 h-4" />
-          </button>
+        <div className="flex items-end gap-2 max-w-3xl mx-auto flex-col w-full">
+          {/* Quick Action Chips */}
+          {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
+            <div className="flex flex-wrap gap-2 mb-2 w-full">
+              {QUICK_ACTIONS.map((action, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleSend(action)}
+                  className="text-[11px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-foreground hover:text-background transition-colors active:scale-95"
+                >
+                  {action}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="flex items-end gap-2 w-full">
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Escreva sua resposta..."
+              rows={1}
+              className={cn(
+                'flex-1 resize-none bg-muted/50 rounded-xl px-4 py-2.5 text-sm',
+                'placeholder:text-muted-foreground/50',
+                'focus:outline-none focus:ring-1 focus:ring-ring',
+                'transition-all duration-150'
+              )}
+              style={{ minHeight: '40px', maxHeight: '128px' }}
+            />
+            <button
+              onClick={() => handleSend()}
+              disabled={!input.trim() || isLoading}
+              className={cn(
+                'flex items-center justify-center w-9 h-9 rounded-full shrink-0',
+                'bg-foreground text-background transition-all',
+                'disabled:opacity-30 disabled:scale-95',
+                'hover:opacity-80 active:scale-95'
+              )}
+            >
+              <ArrowUp className="w-4 h-4" />
+            </button>
+          </div>
         </div>
         <p className="text-[10px] text-muted-foreground/40 text-center mt-1.5">
           Enter para enviar · Shift+Enter para quebra de linha
