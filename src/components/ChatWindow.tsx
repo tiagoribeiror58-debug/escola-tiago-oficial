@@ -82,7 +82,10 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
           'Content-Type': 'application/json',
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: newMessagesForAI, systemPrompt }),
+        body: JSON.stringify({ 
+          messages: newMessagesForAI.map(({ role, content }) => ({ role, content })), 
+          systemPrompt 
+        }),
       });
 
       if (!resp.ok || !resp.body) {
@@ -171,12 +174,16 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
         role: 'assistant',
         content: assistantContent,
       });
-    } catch {
+    } catch (e) {
+      console.error(e);
       const errorMsg = 'Desculpe, houve um erro. Tente novamente.';
       setMessages(prev => {
-        const userMessageCount = isSilentTrigger ? prev.length : newMessagesForAI.length;
-        const filtered = prev.filter((_, i) => i < userMessageCount);
-        return [...filtered, { role: 'assistant', content: errorMsg }];
+        const last = prev[prev.length - 1];
+        if (last?.id === messageId) {
+          return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: errorMsg } : m);
+        } else {
+          return [...prev, { id: messageId, role: 'assistant', content: errorMsg }];
+        }
       });
     } finally {
       setIsLoading(false);
