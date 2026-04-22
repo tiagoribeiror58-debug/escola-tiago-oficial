@@ -141,30 +141,41 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
         <div className="px-4 py-3">
           {/* New session button */}
           {/* Start Actions */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex flex-col gap-2.5">
             <button
               onClick={() => handleNewSession('estudar')}
               className={cn(
-                'flex flex-col items-center justify-center gap-2 p-3 rounded-xl',
-                'bg-foreground text-background',
-                'hover:opacity-90 transition-all active:scale-[0.98]'
+                'flex items-center gap-4 w-full p-4 rounded-2xl border',
+                'bg-emerald-500/10 border-emerald-500/20 text-emerald-500',
+                'hover:bg-emerald-500/20 transition-all active:scale-[0.98]'
               )}
             >
-              <BookOpen className="w-5 h-5" />
-              <span className="text-[13px] font-semibold">Estudar Novo</span>
-              <span className="text-[10px] text-background/70 leading-tight">Avançar conteúdo</span>
+              <div className="bg-emerald-500/20 p-2.5 rounded-xl">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <div className="text-left flex-1">
+                <span className="block text-[15px] font-semibold">Estudar Novo</span>
+                <span className="block text-[12px] opacity-80 leading-tight mt-0.5">Avançar no conteúdo com a IA</span>
+              </div>
+              <ChevronRight className="w-4 h-4 opacity-50" />
             </button>
+
             <button
               onClick={() => handleNewSession('revisar')}
               className={cn(
-                'flex flex-col items-center justify-center gap-2 p-3 rounded-xl',
-                'bg-muted/50 text-foreground',
-                'hover:bg-muted transition-all active:scale-[0.98]'
+                'flex items-center gap-4 w-full p-4 rounded-2xl border',
+                'bg-blue-500/10 border-blue-500/20 text-blue-500',
+                'hover:bg-blue-500/20 transition-all active:scale-[0.98]'
               )}
             >
-              <BrainCircuit className="w-5 h-5 text-emerald-500" />
-              <span className="text-[13px] font-semibold">Revisar</span>
-              <span className="text-[10px] text-muted-foreground leading-tight">Retrieval practice</span>
+              <div className="bg-blue-500/20 p-2.5 rounded-xl">
+                <BrainCircuit className="w-5 h-5" />
+              </div>
+              <div className="text-left flex-1">
+                <span className="block text-[15px] font-semibold">Revisar Tópico</span>
+                <span className="block text-[12px] opacity-80 leading-tight mt-0.5">Prática de lembrança (Active Recall)</span>
+              </div>
+              <ChevronRight className="w-4 h-4 opacity-50" />
             </button>
           </div>
 
