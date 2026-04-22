@@ -92,6 +92,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
       const reader = resp.body.getReader();
       const decoder = new TextDecoder();
       let buffer = '';
+      const messageId = Math.random().toString(36).substring(7);
 
       while (true) {
         const { done, value } = await reader.read();
@@ -138,13 +139,19 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
 
             if (delta) {
               assistantContent += delta;
+              
+              // Evitamos closures instáveis guardando o conteúdo atual
+              const currentContent = assistantContent; 
+              
               setMessages(prev => {
-                const userMessageCount = isSilentTrigger ? prev.length : newMessagesForAI.length;
                 const last = prev[prev.length - 1];
-                if (last?.role === 'assistant' && prev.length > userMessageCount) {
-                  return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: assistantContent } : m);
+                if (last?.id === messageId) {
+                  // Se a última mensagem for a nossa mensagem da stream atual, atualiza o conteúdo
+                  return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: currentContent } : m);
+                } else {
+                  // Se não for, cria a nova mensagem usando o messageId único
+                  return [...prev, { id: messageId, role: 'assistant', content: currentContent }];
                 }
-                return [...prev.slice(0, userMessageCount), { role: 'assistant', content: assistantContent }];
               });
             }
           } catch {
