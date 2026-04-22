@@ -32,14 +32,6 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
   const [isLoading, setIsLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const savedInitial = useRef(false);
-
-  // Auto-start the session if it's new
-  useEffect(() => {
-    if (!isContinuation && messages.length === 0 && !isLoading) {
-      handleSend("Inicie a sessão.", true);
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -62,10 +54,12 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
     if (!text || isLoading) return;
 
     const userMsg: ChatMessage = { role: 'user', content: text };
-    const newMessages = isSilentTrigger ? [...messages, userMsg] : [...messages, userMsg];
+    
+    // Se for silent, não adiciona a mensagem do usuário no state, mas manda pra IA
+    const newMessagesForAI = [...messages, userMsg];
     
     if (!isSilentTrigger) {
-      setMessages(newMessages);
+      setMessages(newMessagesForAI);
       setInput('');
       
       // Save user message to DB
@@ -88,7 +82,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
           'Content-Type': 'application/json',
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: newMessages, systemPrompt }),
+        body: JSON.stringify({ messages: newMessagesForAI, systemPrompt }),
       });
 
       if (!resp.ok || !resp.body) {
@@ -128,11 +122,12 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
             if (delta) {
               assistantContent += delta;
               setMessages(prev => {
+                const userMessageCount = isSilentTrigger ? prev.length : newMessagesForAI.length;
                 const last = prev[prev.length - 1];
-                if (last?.role === 'assistant' && prev.length > newMessages.length) {
+                if (last?.role === 'assistant' && prev.length > userMessageCount) {
                   return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: assistantContent } : m);
                 }
-                return [...prev.slice(0, newMessages.length), { role: 'assistant', content: assistantContent }];
+                return [...prev.slice(0, userMessageCount), { role: 'assistant', content: assistantContent }];
               });
             }
           } catch {
@@ -155,7 +150,8 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
     } catch {
       const errorMsg = 'Desculpe, houve um erro. Tente novamente.';
       setMessages(prev => {
-        const filtered = prev.filter((_, i) => i < newMessages.length);
+        const userMessageCount = isSilentTrigger ? prev.length : newMessagesForAI.length;
+        const filtered = prev.filter((_, i) => i < userMessageCount);
         return [...filtered, { role: 'assistant', content: errorMsg }];
       });
     } finally {
@@ -163,6 +159,13 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
       inputRef.current?.focus();
     }
   }, [input, isLoading, messages, systemPrompt, materia.slug, sessionKey, saveMutation]);
+
+  // Auto-start the session if it's new
+  useEffect(() => {
+    if (!isContinuation && messages.length === 0 && !isLoading) {
+      handleSend("Inicie a sessão.", true);
+    }
+  }, [isContinuation, messages.length, isLoading, handleSend]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {

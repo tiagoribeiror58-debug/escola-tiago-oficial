@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { useMateriasEstado, useSessoes } from '@/hooks/useSessoes';
 import MateriaCard from '@/components/MateriaCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen, Flame, Target, Zap } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate } from 'react-router-dom';
+import MateriaDetailModal from '@/components/MateriaDetailModal';
 
 function getGreeting(): string {
   const h = new Date().getHours();
@@ -13,24 +14,6 @@ function getGreeting(): string {
   return 'Boa noite, Tiago';
 }
 
-function calcStreak(sessoes: { data: string }[]): number {
-  if (!sessoes.length) return 0;
-  const uniqueDays = [...new Set(sessoes.map(s => s.data))].sort().reverse();
-  const today = new Date().toISOString().split('T')[0];
-  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
-  if (uniqueDays[0] !== today && uniqueDays[0] !== yesterday) return 0;
-
-  let streak = 1;
-  for (let i = 1; i < uniqueDays.length; i++) {
-    const prev = new Date(uniqueDays[i - 1]);
-    const curr = new Date(uniqueDays[i]);
-    const diff = (prev.getTime() - curr.getTime()) / 86400000;
-    if (diff === 1) streak++;
-    else break;
-  }
-  return streak;
-}
 
 export default function Index() {
   const { estados, isLoading } = useMateriasEstado();
@@ -45,8 +28,10 @@ export default function Index() {
   });
 
   const totalSessoes = sessoes?.length || 0;
-  const streak = calcStreak(sessoes || []);
   const materiasAtivas = estados.filter(e => e.totalSessoes > 0).length;
+  
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
 
   // Sugestão SM-2 (Matéria mais atrasada)
   const sugestaoSM2 = estados.find(
@@ -57,7 +42,8 @@ export default function Index() {
   const heroEstado = sugestaoSM2 || (estados.length > 0 ? estados[0] : null);
 
   const handleCardClick = (estado: MateriaEstado) => {
-    navigate(`/sessao/${estado.config.slug}`);
+    setSelectedEstado(estado);
+    setModalOpen(true);
   };
 
   const outrosEstados = heroEstado ? estados.filter(e => e.config.slug !== heroEstado.config.slug) : estados;
@@ -94,7 +80,7 @@ export default function Index() {
               </div>
               
               <button
-                onClick={() => navigate(`/sessao/${heroEstado.config.slug}`)}
+                onClick={() => handleCardClick(heroEstado)}
                 className="w-full sm:w-auto self-start px-8 py-3.5 rounded-xl bg-foreground text-background font-medium hover:opacity-90 active:scale-95 transition-all text-sm shadow-xl shadow-foreground/10"
               >
                 Retomar Foco
@@ -142,6 +128,12 @@ export default function Index() {
           </button>
         )}
       </div>
+
+      <MateriaDetailModal 
+        estado={selectedEstado} 
+        open={modalOpen} 
+        onOpenChange={setModalOpen} 
+      />
     </div>
   );
 }

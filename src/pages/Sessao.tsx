@@ -143,7 +143,7 @@ export default function Sessao() {
             </div>
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => window.location.href = `/sessao/${slug}`}
+                onClick={() => navigate(`/sessao/${slug}`)}
                 className="w-full bg-foreground text-background py-2.5 rounded-lg font-medium hover:opacity-90 active:scale-95 transition-all text-sm"
               >
                 Começar Nova Sessão

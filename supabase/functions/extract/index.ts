@@ -12,7 +12,7 @@ sem texto adicional, sem markdown, sem explicação.
 {
   "topico": "string — tópico principal estudado nesta sessão",
   "erros": number — total de erros cometidos pelo aluno (0 se nenhum),
-  "dificuldade": "facil" | "medio" | "dificil",
+  "dificuldade": "baixa" | "media" | "alta",
   "nivel": number — nível de domínio ao final (1, 2 ou 3),
   "proximo_topico": "string — próximo tópico lógico a estudar",
   "decisao_proxima": "string — decisão de progressão baseada nas regras",
@@ -20,9 +20,9 @@ sem texto adicional, sem markdown, sem explicação.
 }
 
 Regras de progressão para decisao_proxima:
-- erros=0 e dificuldade facil → "Avança para nível X" ou "Abre próximo tópico"
-- erros=0 e dificuldade medio → "Repete nível com nova abordagem"
-- erros>0 e dificuldade dificil → "Mini-revisão + reforço antes de avançar"
+- erros=0 e dificuldade baixa → "Avança para nível X" ou "Abre próximo tópico"
+- erros=0 e dificuldade media → "Repete nível com nova abordagem"
+- erros>0 e dificuldade alta → "Mini-revisão + reforço antes de avançar"
 - erros>1 → "Exercício dedicado obrigatório"`;
 
 serve(async (req) => {
