@@ -1,6 +1,6 @@
 import { Sessao, MateriaConfig } from '@/types';
 
-export function buildSystemPrompt(materia: MateriaConfig, ultimaSessao: Sessao | null, isContinuation?: boolean): string {
+export function buildSystemPrompt(materia: MateriaConfig, ultimaSessao: Sessao | null, isContinuation?: boolean, mode?: 'estudar' | 'revisar' | null, sub?: string | null): string {
   const base = `Você é um professor particular do Tiago. Seu papel é ensinar com clareza e honestidade.
 
 Regras obrigatórias:
@@ -30,6 +30,11 @@ Matéria: ${materia.nome}`;
   if (materia.contexto) {
     contexto = `\n\nContexto especial para ${materia.nome}:\n${materia.contexto}`;
   }
+  
+  if (sub) {
+    const subNome = materia.subTopicos?.find(s => s.slug === sub)?.nome || sub;
+    contexto += `\n\nATENÇÃO: O aluno escolheu focar exclusivamente no EIXO: **${subNome}**. Todas as suas explicações, perguntas e currículo hoje devem ser limitados a esta subcategoria de ${materia.nome}.`;
+  }
 
   if (isContinuation) {
     return base + contexto + `\n\nContexto: Nós estamos retomando uma conversa anterior. Continue o papo naturalmente de onde paramos baseado nas mensagens acima. Não faça introduções longas.`;
@@ -37,11 +42,18 @@ Matéria: ${materia.nome}`;
 
   let historico = '';
   if (ultimaSessao) {
-    // Retrieval Practice: forçar recuperação da memória antes de qualquer explicação
-    // Cientificamente mais eficaz que reler ou ouvir passivamente (testing effect)
-    const retrieval = ultimaSessao.decisao_proxima === 'reforcar'
-      ? `INÍCIO DA SESSÃO — Retrieval Practice (obrigatório): Comece SEMPRE perguntando o que o aluno lembra do tópico "${ultimaSessao.topico}" antes de qualquer explicação. Não corrija nem complemente até ele responder. Só então avance.`
-      : `INÍCIO DA SESSÃO — Retrieval Practice (obrigatório): Comece SEMPRE perguntando o que o aluno lembra da última sessão antes de introduzir conteúdo novo. Pergunte especificamente sobre "${ultimaSessao.topico}". Não avance sem ele tentar responder primeiro.`;
+    let modoInstrucao = '';
+    
+    if (mode === 'estudar') {
+      modoInstrucao = `INÍCIO DA SESSÃO — MODO ESTUDO: O aluno escolheu focar em AVANÇAR o conteúdo. Não faça perguntas de revisão inicial (Retrieval Practice). Apenas cumprimente o aluno (Tiago) e comece a ensinar o próximo tópico ("${ultimaSessao.proximo_topico || 'novo conteúdo'}") ou retome de onde ele parou ("${ultimaSessao.topico}").`;
+    } else {
+      // mode === 'revisar' ou default (fallback)
+      const retrieval = ultimaSessao.decisao_proxima === 'reforcar'
+        ? `INÍCIO DA SESSÃO — MODO REVISÃO (Retrieval Practice): Comece SEMPRE perguntando o que o aluno lembra do tópico "${ultimaSessao.topico}" antes de qualquer explicação. Não corrija nem complemente até ele responder.`
+        : `INÍCIO DA SESSÃO — MODO REVISÃO (Retrieval Practice): Comece SEMPRE perguntando o que o aluno lembra da última sessão ("${ultimaSessao.topico}") antes de introduzir conteúdo novo.`;
+      
+      modoInstrucao = `${retrieval}\n${ultimaSessao.decisao_proxima === 'reforcar' ? 'Após o retrieval, reforce o tópico anterior.' : 'Após o retrieval, continue a partir do próximo tópico sugerido.'}`;
+    }
 
     historico = `\n\nContexto da última sessão (uso interno — não mencione estes dados diretamente):
 - Tópico trabalhado: ${ultimaSessao.topico}
@@ -50,16 +62,15 @@ Matéria: ${materia.nome}`;
 - Decisão: ${ultimaSessao.decisao_proxima || 'não definida'}
 - Observações: ${ultimaSessao.observacoes || 'nenhuma'}
 
-${retrieval}
-${ultimaSessao.decisao_proxima === 'reforcar'
-      ? 'Após o retrieval, reforce o tópico anterior sem dizer que é revisão forçada.'
-      : 'Após o retrieval, continue a partir do próximo tópico sugerido.'}
+${modoInstrucao}
 
-A sua primeira interação nesta sessão vai acontecer agora. A primeira mensagem do usuário será um gatilho oculto escrito "Inicie a sessão.". NÃO RESPONDA a esse gatilho com saudações robóticas como "Entendi". Ao invés disso, inicie imediatamente o seu papel de tutor: cumprimente o aluno pelo nome (Tiago) e comece o Retrieval Practice ou a revisão conforme as instruções acima.`;
+A sua primeira interação nesta sessão vai acontecer agora. A primeira mensagem do usuário será um gatilho oculto escrito "Inicie a sessão.". 
+ATENÇÃO: NÃO repita o seu prompt, não escreva "Entendi" e não use formatações estranhas com asteriscos isolados. Apenas assuma a sua persona de professor de forma humana e natural: cumprimente o aluno (Tiago) com entusiasmo e siga a instrução do Modo de Sessão acima. Não narre o que você está fazendo.`;
   } else {
     historico = `\n\nEsta é a PRIMEIRA sessão de ${materia.nome}. Comece ensinando o básico do assunto diretamente — não faça uma bateria de perguntas diagnósticas. O aluno veio para APRENDER, não para ser entrevistado.
 
-A sua primeira interação nesta sessão vai acontecer agora. A primeira mensagem do usuário será um gatilho oculto escrito "Inicie a sessão.". NÃO RESPONDA a esse gatilho dizendo que entendeu a regra. Ao invés disso, inicie imediatamente o seu papel de professor: "Olá Tiago! Vamos começar... [insira conteúdo do básico da matéria]".`;
+A sua primeira interação nesta sessão vai acontecer agora. A primeira mensagem do usuário será um gatilho oculto escrito "Inicie a sessão.". 
+ATENÇÃO: NÃO repita regras do sistema, não escreva "Entendi" e não use formatações estranhas (evite asteriscos soltos). Apenas assuma a sua persona de professor de forma humana e natural: cumprimente o aluno (Tiago) com entusiasmo e comece a ensinar o conteúdo básico imediatamente.`;
   }
 
   return base + contexto + historico;

@@ -72,6 +72,12 @@ export const MATERIAS: MateriaConfig[] = [
     nome: 'Programação',
     emoji: '<>',
     contexto: `Abordagem: código primeiro, explicação depois. Apresente um problema pequeno e concreto, peça ao aluno para tentar resolver — mesmo que quebre. Só depois de ele tentar é que você explica. NUNCA escreva a solução completa: máximo um trecho por vez. Para bugs, não corrija — faça perguntas que levem o aluno a encontrar o erro. Foque em lógica e raciocínio antes de sintaxe. A sintaxe pode ser consultada; o raciocínio tem que ser desenvolvido.`,
+    subTopicos: [
+      { slug: 'frontend', nome: 'Frontend (React/UI)' },
+      { slug: 'backend', nome: 'Backend & APIs' },
+      { slug: 'logica', nome: 'Lógica & Algoritmos' },
+      { slug: 'banco-de-dados', nome: 'Banco de Dados' }
+    ]
   },
   {
     slug: 'design',

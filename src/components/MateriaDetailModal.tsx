@@ -1,9 +1,10 @@
+import { useState, useEffect } from 'react';
 import { MateriaEstado, Sessao } from '@/types';
 import { urgencia } from '@/lib/materias';
 import { useChatSessions } from '@/hooks/useChatMessages';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Plus, MessageSquare, ChevronRight } from 'lucide-react';
+import { Plus, MessageSquare, ChevronRight, BookOpen, BrainCircuit } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 interface Props {
@@ -16,6 +17,13 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const navigate = useNavigate();
   const materia = estado?.config.slug || '';
   const { data: chatSessions, isLoading } = useChatSessions(materia);
+  const [selectedSub, setSelectedSub] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (open) {
+      setSelectedSub(null);
+    }
+  }, [open]);
 
   if (!estado) return null;
 
@@ -29,9 +37,13 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
     urgente: 'text-red-500',
   };
 
-  const handleNewSession = () => {
+  const handleNewSession = (mode: 'estudar' | 'revisar') => {
     onOpenChange(false);
-    navigate(`/sessao/${config.slug}`);
+    let url = `/sessao/${config.slug}?mode=${mode}`;
+    if (selectedSub) {
+      url += `&sub=${selectedSub}`;
+    }
+    navigate(url);
   };
 
   const handleResumeSession = (sessionKey: string) => {
@@ -99,25 +111,62 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
           )}
         </div>
 
+        {/* Sub-tópicos */}
+        {config.subTopicos && config.subTopicos.length > 0 && (
+          <div className="px-6 pb-2">
+            <p className="text-[12px] font-medium text-muted-foreground mb-2">Eixo de foco (Opcional):</p>
+            <div className="flex flex-wrap gap-2">
+              {config.subTopicos.map(sub => (
+                <button
+                  key={sub.slug}
+                  onClick={() => setSelectedSub(selectedSub === sub.slug ? null : sub.slug)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors border",
+                    selectedSub === sub.slug 
+                      ? "bg-foreground text-background border-foreground" 
+                      : "bg-transparent text-muted-foreground border-border hover:bg-muted"
+                  )}
+                >
+                  {sub.nome}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Divider */}
         <div className="border-t border-border" />
 
         {/* Actions */}
         <div className="px-4 py-3">
           {/* New session button */}
-          <button
-            onClick={handleNewSession}
-            className={cn(
-              'flex items-center gap-3 w-full px-4 py-3 rounded-xl',
-              'bg-foreground text-background',
-              'hover:opacity-90 transition-all active:scale-[0.98]',
-              'text-sm font-medium'
-            )}
-          >
-            <Plus className="w-4 h-4" />
-            <span className="flex-1 text-left">Nova sessão</span>
-            <ChevronRight className="w-4 h-4 opacity-50" />
-          </button>
+          {/* Start Actions */}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => handleNewSession('estudar')}
+              className={cn(
+                'flex flex-col items-center justify-center gap-2 p-3 rounded-xl',
+                'bg-foreground text-background',
+                'hover:opacity-90 transition-all active:scale-[0.98]'
+              )}
+            >
+              <BookOpen className="w-5 h-5" />
+              <span className="text-[13px] font-semibold">Estudar Novo</span>
+              <span className="text-[10px] text-background/70 leading-tight">Avançar conteúdo</span>
+            </button>
+            <button
+              onClick={() => handleNewSession('revisar')}
+              className={cn(
+                'flex flex-col items-center justify-center gap-2 p-3 rounded-xl',
+                'bg-muted/50 text-foreground',
+                'hover:bg-muted transition-all active:scale-[0.98]'
+              )}
+            >
+              <BrainCircuit className="w-5 h-5 text-emerald-500" />
+              <span className="text-[13px] font-semibold">Revisar</span>
+              <span className="text-[10px] text-muted-foreground leading-tight">Retrieval practice</span>
+            </button>
+          </div>
 
           {/* Chat history */}
           {chatSessions && chatSessions.length > 0 && (

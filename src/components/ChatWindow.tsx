@@ -12,13 +12,15 @@ interface Props {
   onMessagesChange?: (messages: ChatMessage[]) => void;
   sessionKey: string;
   initialMessages?: ChatMessage[];
+  mode?: 'estudar' | 'revisar' | null;
+  sub?: string | null;
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
-export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, sessionKey, initialMessages }: Props) {
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, sessionKey, initialMessages, mode, sub }: Props) {
   const isContinuation = !!(initialMessages && initialMessages.length > 0);
-  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation);
+  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, mode, sub);
   const saveMutation = useSaveChatMessage();
 
   const [messages, setMessages] = useState<ChatMessage[]>(

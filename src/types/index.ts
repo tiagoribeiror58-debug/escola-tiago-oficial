@@ -20,6 +20,7 @@ export interface MateriaConfig {
   nome: string;
   emoji: string;
   contexto?: string;
+  subTopicos?: { slug: string; nome: string }[];
 }
 
 export interface MateriaEstado {

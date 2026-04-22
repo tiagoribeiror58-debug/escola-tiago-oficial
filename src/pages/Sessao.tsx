@@ -18,6 +18,8 @@ export default function Sessao() {
   const { materia: slug } = useParams<{ materia: string }>();
   const [searchParams] = useSearchParams();
   const resumeKey = searchParams.get('resume');
+  const mode = searchParams.get('mode') as 'estudar' | 'revisar' | null;
+  const sub = searchParams.get('sub');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const materiaConfig = getMateriaBySlug(slug || '');
@@ -214,6 +216,8 @@ export default function Sessao() {
           onMessagesChange={handleMessagesChange}
           sessionKey={sessionKey}
           initialMessages={resumeKey ? resumeMessages || undefined : undefined}
+          mode={mode}
+          sub={sub}
         />
       </div>
     </div>
