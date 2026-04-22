@@ -167,12 +167,17 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
         throw new Error('No response received');
       }
 
+      const contentToSave = assistantContent
+        .replace(/<details[\s\S]*?<\/details>/ig, '')
+        .replace(/<chips>[\s\S]*?(?:<\/chips>|$)/ig, '')
+        .trim();
+
       // Save assistant message to DB
       saveMutation.mutate({
         sessao_materia: materia.slug,
         session_key: sessionKey,
         role: 'assistant',
-        content: assistantContent,
+        content: contentToSave,
       });
     } catch (e) {
       console.error(e);
