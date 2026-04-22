@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
 import { useUltimaSessao } from '@/hooks/useSessoes';
 import { useChatHistory } from '@/hooks/useChatMessages';
@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 export default function Sessao() {
   const { materia: slug } = useParams<{ materia: string }>();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const resumeKey = searchParams.get('resume');
   const mode = searchParams.get('mode') as 'estudar' | 'revisar' | null;
   const sub = searchParams.get('sub');
@@ -29,7 +30,7 @@ export default function Sessao() {
   const sessionKey = useMemo(() => {
     if (resumeKey) return resumeKey;
     return `${slug}-${Date.now()}`;
-  }, [slug, resumeKey]);
+  }, [slug, resumeKey, location.key]);
 
   const messagesRef = useRef<ChatMessage[]>([]);
   const startTimeRef = useRef(Date.now());
@@ -143,7 +144,10 @@ export default function Sessao() {
             </div>
             <div className="flex flex-col gap-3">
               <button
-                onClick={() => navigate(`/sessao/${slug}`)}
+                onClick={() => {
+                  setShowSuccessMenu(false);
+                  navigate(`/sessao/${slug}`);
+                }}
                 className="w-full bg-foreground text-background py-2.5 rounded-lg font-medium hover:opacity-90 active:scale-95 transition-all text-sm"
               >
                 Começar Nova Sessão
@@ -211,6 +215,7 @@ export default function Sessao() {
 
       <div className="flex-1 min-h-0">
         <ChatWindow
+          key={sessionKey}
           materia={materiaConfig}
           ultimaSessao={ultimaSessao}
           onMessagesChange={handleMessagesChange}
