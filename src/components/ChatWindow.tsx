@@ -112,11 +112,28 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
 
           try {
             const parsed = JSON.parse(jsonStr);
-            let delta = parsed.choices?.[0]?.delta?.content;
+            let delta = '';
             
-            // Suporte para Anthropic Claude Stream
-            if (!delta && parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
-              delta = parsed.delta.text;
+            // Suporte OpenAI
+            if (parsed.choices?.[0]?.delta?.content) {
+              delta = parsed.choices[0].delta.content;
+            }
+            
+            // Suporte para Anthropic Claude Stream & Thinking
+            if (parsed.type === 'content_block_start') {
+              if (parsed.content_block?.type === 'thinking' || parsed.content_block?.type === 'redacted_thinking') {
+                delta = '<details className="mb-4 text-xs text-muted-foreground bg-muted/20 border border-border p-3 rounded-xl"><summary className="cursor-pointer font-medium opacity-80 hover:opacity-100">Raciocínio da IA (Pensando...)</summary>\n\n';
+              }
+            } else if (parsed.type === 'content_block_delta') {
+              if (parsed.delta?.type === 'text_delta') {
+                delta = parsed.delta.text;
+              } else if (parsed.delta?.type === 'thinking_delta') {
+                delta = parsed.delta.thinking;
+              }
+            } else if (parsed.type === 'content_block_stop') {
+              if (parsed.index === 0 && assistantContent.includes('<details')) {
+                delta = '\n\n</details>\n\n';
+              }
             }
 
             if (delta) {
