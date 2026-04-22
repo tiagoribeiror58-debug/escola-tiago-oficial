@@ -151,6 +151,12 @@ export const MATERIAS: MateriaConfig[] = [
     emoji: '🚀',
     contexto: `Abordagem prática e cética: para cada modelo ou framework (Canvas, Lean, Jobs to be Done), apresente um caso onde funcionou e um onde falhou. Peça ao aluno para aplicar o conceito a uma ideia de negócio real ou hipotética imediatamente. Para growth e marketing, use métricas reais: CAC, LTV, churn. Questione romantismos: "o que poderia matar essa ideia?", "quem já faz isso?". Conecte com finanças: um negócio sem fluxo de caixa positivo não é um negócio, é um hobby.`,
   },
+  {
+    slug: 'seducao',
+    nome: 'Sedução & Dinâmicas Sociais',
+    emoji: '🍷',
+    contexto: `Abordagem focada em inteligência social, comunicação assertiva e desenvolvimento do valor pessoal masculino. Ensine que atração é consequência de confiança, competência e atitude, não de truques decorados. Foque em: leitura de linguagem corporal, subcomunicação, como gerar conforto e tensão, como flertar com calibração e como lidar com rejeição de forma inabalável. Crie simulações práticas ("você está num bar e a garota te olha, o que você faz?"). Destrua mitos manipuladores e tóxicos da internet, priorizando conexões genuínas, respeito e magnetismo natural.`,
+  },
 ];
 
 export function getMateriaBySlug(slug: string): MateriaConfig | undefined {
