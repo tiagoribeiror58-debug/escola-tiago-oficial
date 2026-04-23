@@ -5,6 +5,7 @@ import { useSaveChatMessage } from '@/hooks/useChatMessages';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
 import { ArrowUp, Loader2 } from 'lucide-react';
+import { playPopSound, playThinkingDoneSound } from '@/lib/audioUtils';
 
 interface Props {
   materia: MateriaConfig;
@@ -137,6 +138,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
             } else if (parsed.type === 'content_block_stop') {
               if (parsed.index === 0 && assistantContent.includes('<details')) {
                 delta = '\n\n</details>\n\n';
+                playThinkingDoneSound(); // Sound effect when thinking finishes
               }
             }
 
@@ -282,7 +284,10 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
                 {dynamicChips.map((action, idx) => (
                   <button
                     key={idx}
-                    onClick={() => handleSend(action)}
+                    onClick={() => {
+                      playPopSound();
+                      handleSend(action);
+                    }}
                     className="text-[11px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-foreground hover:text-background transition-colors active:scale-95"
                   >
                     {action}
@@ -309,7 +314,10 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
               style={{ minHeight: '40px', maxHeight: '128px' }}
             />
             <button
-              onClick={() => handleSend()}
+              onClick={() => {
+                playPopSound();
+                handleSend();
+              }}
               disabled={!input.trim() || isLoading}
               className={cn(
                 'flex items-center justify-center w-9 h-9 rounded-full shrink-0',

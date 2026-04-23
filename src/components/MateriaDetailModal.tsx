@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Plus, MessageSquare, ChevronRight, BookOpen, BrainCircuit } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { playPopSound } from '@/lib/audioUtils';
 
 interface Props {
   estado: MateriaEstado | null;
@@ -38,6 +39,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   };
 
   const handleNewSession = (mode: 'estudar' | 'revisar') => {
+    playPopSound();
     onOpenChange(false);
     let url = `/sessao/${config.slug}?mode=${mode}`;
     if (selectedSub) {
@@ -47,6 +49,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   };
 
   const handleResumeSession = (sessionKey: string) => {
+    playPopSound();
     onOpenChange(false);
     navigate(`/sessao/${config.slug}?resume=${sessionKey}`);
   };
@@ -74,14 +77,14 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
           {ultimaSessao && (
             <div className="flex items-center gap-2 mb-1">
               <span className={cn(
-                'text-[11px] font-medium px-2.5 py-1 rounded-full',
-                urg === 'ok' ? 'bg-emerald-500/10 text-emerald-500' :
-                urg === 'atencao' ? 'bg-amber-500/10 text-amber-500' :
-                'bg-red-500/10 text-red-500'
+                'text-[11px] font-medium px-2.5 py-1 rounded-full border',
+                ultimaSessao.nivel === 3 ? 'bg-amber-500/10 text-amber-500 border-amber-500/30 shadow-[0_0_8px_rgba(245,158,11,0.2)]' :
+                ultimaSessao.nivel === 2 ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' :
+                'bg-muted/50 text-muted-foreground border-border'
               )}>
-                {ultimaSessao.nivel === 3 ? 'Conhecimento sólido' :
-                 ultimaSessao.nivel === 2 ? 'Avançando' :
-                 'Iniciando'}
+                {ultimaSessao.nivel === 3 ? 'Mestre do Tópico' :
+                 ultimaSessao.nivel === 2 ? 'Conceitos em Construção' :
+                 'Sementes Plantadas'}
               </span>
               <span className="text-[11px] text-muted-foreground">
                 {totalSessoes} {totalSessoes === 1 ? 'sessão' : 'sessões'}

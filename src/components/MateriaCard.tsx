@@ -69,13 +69,13 @@ export default function MateriaCard({ estado, onClick }: Props) {
       {ultimaSessao && (
         <div className="flex flex-wrap items-center gap-2 w-full relative z-10 pointer-events-none">
           <span className={cn(
-            'text-[11px] font-medium px-2 py-0.5 rounded-full',
-            ultimaSessao.nivel === 3 ? 'bg-emerald-500/10 text-emerald-500' :
-            ultimaSessao.nivel === 2 ? 'bg-amber-500/10 text-amber-500' :
-            'bg-foreground/10 text-foreground'
+            'text-[11px] font-medium px-2 py-0.5 rounded-full border',
+            ultimaSessao.nivel === 3 ? 'bg-amber-500/10 text-amber-500 border-amber-500/30 shadow-[0_0_8px_rgba(245,158,11,0.2)]' :
+            ultimaSessao.nivel === 2 ? 'bg-blue-500/10 text-blue-500 border-blue-500/20' :
+            'bg-muted/50 text-muted-foreground border-border'
           )}>
-            {ultimaSessao.nivel === 3 ? 'Conhecimento sólido' :
-             ultimaSessao.nivel === 2 ? 'Avançando' : 'Iniciando'}
+            {ultimaSessao.nivel === 3 ? 'Mestre do Tópico' :
+             ultimaSessao.nivel === 2 ? 'Conceitos em Construção' : 'Sementes Plantadas'}
           </span>
           <span className="text-[11px] text-muted-foreground">
             {totalSessoes} {totalSessoes === 1 ? 'sessão' : 'sessões'}

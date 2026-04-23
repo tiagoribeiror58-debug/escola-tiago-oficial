@@ -13,6 +13,7 @@ import { extractSession } from '@/lib/extractSession';
 import { supabase } from '@/integrations/supabase/client';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { playSuccessSound } from '@/lib/audioUtils';
 
 export default function Sessao() {
   const { materia: slug } = useParams<{ materia: string }>();
@@ -97,11 +98,22 @@ export default function Sessao() {
 
       if (error) throw error;
 
+      // Rule: Após encerrar com sucesso: deletar chat_messages da sessão (evitar acúmulo)
+      const { error: delError } = await supabase
+        .from('chat_messages')
+        .delete()
+        .eq('session_key', sessionKey);
+        
+      if (delError) {
+        console.error('Falha ao deletar chat_messages da sessão', delError);
+      }
+
       queryClient.invalidateQueries({ queryKey: ['sessoes'] });
       queryClient.invalidateQueries({ queryKey: ['chat-sessions', slug] });
       toast.success('Sessão salva ✓');
       setSaving(false);
       setShowSuccessMenu(true);
+      playSuccessSound();
     } catch (err) {
       console.error(err);
       toast.error('Erro ao salvar — tente novamente');
