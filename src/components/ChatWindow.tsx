@@ -75,6 +75,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
     setIsLoading(true);
 
     let assistantContent = '';
+    const messageId = Math.random().toString(36).substring(7);
 
     try {
       const resp = await fetch(CHAT_URL, {
@@ -96,7 +97,6 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
       const reader = resp.body.getReader();
       const decoder = new TextDecoder();
       let buffer = '';
-      const messageId = Math.random().toString(36).substring(7);
 
       while (true) {
         const { done, value } = await reader.read();
