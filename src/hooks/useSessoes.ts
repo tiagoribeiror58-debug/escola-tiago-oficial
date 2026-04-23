@@ -10,7 +10,7 @@ export function useSessoes() {
       const { data, error } = await supabase
         .from('sessoes')
         .select('*')
-        .order('data', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data as Sessao[];
@@ -63,7 +63,7 @@ export function useUltimaSessao(materia: string) {
         .from('sessoes')
         .select('*')
         .eq('materia', materia)
-        .order('data', { ascending: false })
+        .order('created_at', { ascending: false })
         .limit(1);
 
       if (error) throw error;
