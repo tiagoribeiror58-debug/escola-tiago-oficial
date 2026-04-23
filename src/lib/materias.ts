@@ -142,8 +142,34 @@ export const MATERIAS: MateriaConfig[] = [
       {
         slug: 'violao', nome: 'Violão', emoji: '🎸', isCategory: true, parent: 'musica',
         children: [
-          { slug: 'violao-acordes', nome: 'Acordes Básicos', emoji: '🎸', parent: 'violao', contexto: 'Ensine acordes abertos (Am, Em, G, C, D) via músicas que o aluno quer tocar. Foque na transição entre acordes — é o maior obstáculo. Critério de aprovação: acorde soa limpo sem buzinar.' },
-          { slug: 'violao-tecnica', nome: 'Técnica & Postura', emoji: '🎸', parent: 'violao', contexto: 'Ensine postura, pressão dos dedos, posição do polegar e ataque de palheta. Use analogias físicas. Corrija um problema de cada vez, nunca vários simultaneamente.' },
+          { 
+            slug: 'violao-acordes', 
+            nome: 'Acordes Básicos', 
+            emoji: '🎸', 
+            parent: 'violao', 
+            contexto: 'Ensine acordes abertos (Am, Em, G, C, D) via músicas que o aluno quer tocar. Foque na transição entre acordes — é o maior obstáculo. Critério de aprovação: acorde soa limpo sem buzinar.',
+            ementa: [
+              '1. Postura da mão esquerda e polegar (sem tocar)',
+              '2. Acorde Mi Menor (Em): formação e som limpo',
+              '3. Acorde Lá Menor (Am): formação e som limpo',
+              '4. Transição fluida entre Em e Am',
+              '5. Acorde Sol Maior (G)',
+              '6. Transição fluida entre G, Em e Am'
+            ]
+          },
+          { 
+            slug: 'violao-tecnica', 
+            nome: 'Técnica & Postura', 
+            emoji: '🎸', 
+            parent: 'violao', 
+            contexto: 'Ensine postura, pressão dos dedos, posição do polegar e ataque de palheta. Use analogias físicas. Corrija um problema de cada vez, nunca vários simultaneamente.',
+            ementa: [
+              '1. Postura do corpo e do violão (3 pontos de contato)',
+              '2. Posicionamento do polegar esquerdo (trilho nas costas do braço)',
+              '3. Pressão mínima viável (não apertar demais)',
+              '4. Uso da palheta (ângulo e pinça)'
+            ]
+          },
           { slug: 'violao-cifra', nome: 'Cifra & Leitura', emoji: '🎸', parent: 'violao', contexto: 'Ensine cifras como linguagem: número de traste e nome do acorde. Peça que o aluno toque o que leu imediatamente. Critique o que soa errado antes de explicar o porquê.' },
           { slug: 'violao-repertorio', nome: 'Repertório', emoji: '🎸', parent: 'violao', contexto: 'Escolha 1 música que o aluno quer aprender. Quebre em 1 seção por sessão. Priorize musicalidade (ritmo, dinâmica) sobre perfeição de notas.' },
         ],

@@ -25,6 +25,7 @@ export interface MateriaConfig {
   isCategory?: boolean;           // se true, clique navega para /categoria/:slug
   children?: MateriaConfig[];     // sub-matérias dentro desta categoria
   parent?: string;                // slug da categoria pai
+  ementa?: string[];              // lista estruturada e rigorosa de micro-tópicos
 }
 
 export interface MateriaEstado {

@@ -36,6 +36,11 @@ Matéria: ${materia.nome}`;
     contexto += `\n\nATENÇÃO: O aluno escolheu focar exclusivamente no EIXO: **${subNome}**. Todas as suas explicações, perguntas e o tópico desta sessão devem ser limitados a esta subcategoria de ${materia.nome}.`;
   }
 
+  if (materia.ementa && materia.ementa.length > 0) {
+    contexto += `\n\nEMENTA RIGOROSA (Passo a Passo):\nEsta matéria possui uma ementa estrita. Você não pode pular passos. Baseando-se no histórico, identifique em qual passo o aluno parou e ensine EXATAMENTE O PRÓXIMO PASSO. Não improvise tópicos fora desta lista.\n` + 
+    materia.ementa.map(step => `- ${step}`).join('\n');
+  }
+
   if (isContinuation) {
     return base + contexto + `\n\nContexto: Nós estamos retomando uma conversa anterior. Continue o papo naturalmente de onde paramos baseado nas mensagens acima. Não faça introduções longas.`;
   }

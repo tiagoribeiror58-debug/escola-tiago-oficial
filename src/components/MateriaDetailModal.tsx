@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { MateriaEstado } from '@/types';
-import { urgencia } from '@/lib/materias';
+import { MateriaEstado, ChatMessage } from '@/types';
+import { urgencia, getMateriaBySlug } from '@/lib/materias';
+import { useSessoes } from '@/hooks/useSessoes';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Plus, ChevronRight, BookOpen } from 'lucide-react';
+import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { playPopSound } from '@/lib/audioUtils';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface Props {
   estado: MateriaEstado | null;
@@ -13,12 +16,37 @@ interface Props {
   onOpenChange: (open: boolean) => void;
 }
 
+function ChatBubbles({ messages }: { messages: ChatMessage[] }) {
+  const filtered = messages.filter(m => m.content !== 'Inicie a sessão.');
+  return (
+    <div className="space-y-2 max-h-56 overflow-y-auto pr-1 py-2">
+      {filtered.map((msg, i) => (
+        <div key={i} className={cn('flex', msg.role === 'user' ? 'justify-end' : 'justify-start')}>
+          <div className={cn(
+            'max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed',
+            msg.role === 'user'
+              ? 'bg-foreground text-background rounded-br-sm'
+              : 'bg-muted text-foreground rounded-bl-sm'
+          )}>
+            {msg.content}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function MateriaDetailModal({ estado, open, onOpenChange }: Props) {
   const navigate = useNavigate();
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
+  const [expandedSessaoId, setExpandedSessaoId] = useState<number | null>(null);
+  const { data: todasSessoes } = useSessoes();
 
   useEffect(() => {
-    if (open) setSelectedSub(null);
+    if (open) {
+      setSelectedSub(null);
+      setExpandedSessaoId(null);
+    }
   }, [open]);
 
   if (!estado) return null;
@@ -33,6 +61,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
     urgente: 'text-red-500',
   };
 
+  // Busca sessões desta matéria ordenadas desc
+  const sessoesMateria = (todasSessoes || [])
+    .filter(s => s.materia === config.slug)
+    .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime());
+
   const handleNewSession = () => {
     playPopSound();
     onOpenChange(false);
@@ -43,11 +76,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md p-0 gap-0 overflow-hidden rounded-2xl">
+      <DialogContent className="max-w-md p-0 gap-0 overflow-hidden rounded-2xl max-h-[90vh] flex flex-col">
         <DialogTitle className="sr-only">{config.nome}</DialogTitle>
 
         {/* Header */}
-        <div className="px-6 pt-6 pb-4">
+        <div className="px-6 pt-6 pb-4 shrink-0">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-3xl select-none">{config.emoji}</span>
             <div className="flex-1">
@@ -61,20 +94,40 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             </div>
           </div>
 
-          {/* Próximo tópico */}
-          {ultimaSessao?.proximo_topico && (
-            <div className="mt-2 px-3 py-2 rounded-xl bg-muted/50 border border-border">
-              <p className="text-[12px] text-muted-foreground">Próximo</p>
-              <p className="text-sm font-medium text-foreground mt-0.5">
-                {ultimaSessao.proximo_topico}
-              </p>
+          {/* Tópico anterior + próximo */}
+          {ultimaSessao && (
+            <div className="flex gap-2">
+              {/* Anterior */}
+              {ultimaSessao.topico && (
+                <div className="flex-1 px-3 py-2 rounded-xl bg-muted/30 border border-border">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Anterior</p>
+                  <p className="text-xs font-medium text-muted-foreground mt-0.5 line-clamp-2">
+                    {ultimaSessao.topico}
+                  </p>
+                </div>
+              )}
+              {/* Seta */}
+              {ultimaSessao.topico && ultimaSessao.proximo_topico && (
+                <div className="flex items-center shrink-0">
+                  <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/40" />
+                </div>
+              )}
+              {/* Próximo */}
+              {ultimaSessao.proximo_topico && (
+                <div className="flex-1 px-3 py-2 rounded-xl bg-muted/50 border border-border">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Próximo</p>
+                  <p className="text-xs font-semibold text-foreground mt-0.5 line-clamp-2">
+                    {ultimaSessao.proximo_topico}
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </div>
 
         {/* Sub-tópicos */}
         {config.subTopicos && config.subTopicos.length > 0 && (
-          <div className="px-6 pb-2">
+          <div className="px-6 pb-2 shrink-0">
             <p className="text-[12px] font-medium text-muted-foreground mb-2">Foco (opcional):</p>
             <div className="flex flex-wrap gap-2">
               {config.subTopicos.map(sub => (
@@ -96,10 +149,10 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
         )}
 
         {/* Divider */}
-        <div className="border-t border-border" />
+        <div className="border-t border-border shrink-0" />
 
         {/* Action */}
-        <div className="px-4 py-3">
+        <div className="px-4 py-3 shrink-0">
           <button
             onClick={handleNewSession}
             className={cn(
@@ -120,6 +173,58 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </button>
         </div>
+
+        {/* Histórico de Sessões */}
+        {sessoesMateria.length > 0 && (
+          <>
+            <div className="border-t border-border shrink-0" />
+            <div className="px-4 py-3 overflow-y-auto">
+              <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+                Sessões anteriores
+              </p>
+              <div className="space-y-2">
+                {sessoesMateria.map(sessao => {
+                  const isExpanded = expandedSessaoId === sessao.id;
+                  const hasChat = sessao.messages_json && sessao.messages_json.length > 0;
+                  return (
+                    <div
+                      key={sessao.id}
+                      className="bg-muted/30 rounded-xl border border-border overflow-hidden"
+                    >
+                      <div
+                        className={cn(
+                          "flex items-center justify-between px-3 py-2.5",
+                          hasChat && "cursor-pointer hover:bg-muted/50 transition-colors"
+                        )}
+                        onClick={() => hasChat && setExpandedSessaoId(isExpanded ? null : sessao.id)}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-foreground truncate">{sessao.topico}</p>
+                          <p className="text-[10px] text-muted-foreground mt-0.5 capitalize">
+                            {format(new Date(sessao.created_at || sessao.data), "d 'de' MMM", { locale: ptBR })}
+                          </p>
+                        </div>
+                        {hasChat && (
+                          <div className="text-muted-foreground shrink-0 ml-2">
+                            {isExpanded
+                              ? <ChevronUp className="w-3.5 h-3.5" />
+                              : <ChevronDown className="w-3.5 h-3.5" />
+                            }
+                          </div>
+                        )}
+                      </div>
+                      {isExpanded && hasChat && (
+                        <div className="border-t border-border px-3 pb-2">
+                          <ChatBubbles messages={sessao.messages_json as ChatMessage[]} />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

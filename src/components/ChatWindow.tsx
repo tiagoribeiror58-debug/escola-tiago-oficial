@@ -4,7 +4,7 @@ import { buildSystemPrompt } from '@/lib/buildPrompt';
 import { useSaveChatMessage } from '@/hooks/useChatMessages';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
-import { ArrowUp, Loader2 } from 'lucide-react';
+import { ArrowUp, Loader2, Zap, ZapOff } from 'lucide-react';
 import { playPopSound, playThinkingDoneSound } from '@/lib/audioUtils';
 
 interface Props {
@@ -31,6 +31,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   );
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [chipsEnabled, setChipsEnabled] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -283,26 +284,43 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
 
       <div className="border-t border-border p-3">
         <div className="flex items-end gap-2 max-w-3xl mx-auto flex-col w-full">
-          {/* Quick Action Chips */}
+          {/* Quick Action Chips + Toggle */}
           {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (() => {
             const lastMsg = messages[messages.length - 1];
             const match = lastMsg.content.match(/<chips>([\s\S]*?)<\/chips>/i);
             const dynamicChips = match ? match[1].split('|').map(c => c.trim()).filter(Boolean) : [];
-            if (dynamicChips.length === 0) return null;
+            if (dynamicChips.length === 0 && !chipsEnabled) return null;
             return (
-              <div className="flex flex-wrap gap-2 mb-2 w-full">
-                {dynamicChips.map((action, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      playPopSound();
-                      handleSend(action);
-                    }}
-                    className="text-[11px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-foreground hover:text-background transition-colors active:scale-95"
-                  >
-                    {action}
-                  </button>
-                ))}
+              <div className="flex items-center gap-2 mb-2 w-full">
+                {/* Chips visíveis apenas se enabled */}
+                {chipsEnabled && (
+                  <div className="flex flex-wrap gap-2 flex-1">
+                    {dynamicChips.map((action, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          playPopSound();
+                          handleSend(action);
+                        }}
+                        className="text-[11px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-foreground hover:text-background transition-colors active:scale-95"
+                      >
+                        {action}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {!chipsEnabled && <div className="flex-1" />}
+                {/* Toggle button */}
+                <button
+                  onClick={() => setChipsEnabled(v => !v)}
+                  title={chipsEnabled ? 'Desativar sugestões' : 'Ativar sugestões'}
+                  className="shrink-0 p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted transition-colors"
+                >
+                  {chipsEnabled
+                    ? <Zap className="w-3.5 h-3.5" />
+                    : <ZapOff className="w-3.5 h-3.5" />
+                  }
+                </button>
               </div>
             );
           })()}
