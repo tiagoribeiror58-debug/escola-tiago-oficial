@@ -10,11 +10,11 @@ const EXTRACT_PROMPT = `Analise o histórico desta sessão de estudo e retorne A
 sem texto adicional, sem markdown, sem explicação.
 
 {
-  "topico": "string — tópico principal estudado nesta sessão",
+  "topico": "string — tópico principal exato que foi ensinado nesta sessão",
   "erros": number — total de erros cometidos pelo aluno (0 se nenhum),
   "dificuldade": "baixa" | "media" | "alta",
   "nivel": number — nível de domínio ao final (1, 2 ou 3),
-  "proximo_topico": "string — próximo tópico lógico a estudar",
+  "proximo_topico": "string — próximo tópico lógico. OBRIGATÓRIO: Deve ser um assunto NOVO e AVANÇADO, NUNCA repita o tópico atual!",
   "decisao_proxima": "string — decisão de progressão baseada nas regras",
   "observacoes": "string — observação objetiva sobre o desempenho do aluno"
 }

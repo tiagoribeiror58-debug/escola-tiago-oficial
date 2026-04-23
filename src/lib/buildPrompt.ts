@@ -45,21 +45,21 @@ Matéria: ${materia.nome}`;
     let modoInstrucao = '';
     
     if (mode === 'estudar') {
-      modoInstrucao = `INÍCIO DA SESSÃO — MODO ESTUDO: O aluno escolheu focar em AVANÇAR o conteúdo. Não faça perguntas de revisão inicial (Retrieval Practice). Apenas cumprimente o aluno (Tiago) e comece a ensinar o próximo tópico ("${ultimaSessao.proximo_topico || 'novo conteúdo'}") ou retome de onde ele parou ("${ultimaSessao.topico}").`;
+      modoInstrucao = `INÍCIO DA SESSÃO — MODO ESTUDO: O aluno escolheu focar em AVANÇAR o conteúdo. Não faça perguntas de revisão inicial (Retrieval Practice). Apenas cumprimente o aluno (Tiago) e comece a ensinar o próximo tópico ("${ultimaSessao.proximo_topico || 'novo conteúdo'}"). ATENÇÃO ABSOLUTA: Verifique se este tópico já foi ensinado ("${ultimaSessao.topico}"). Se for o mesmo ou muito parecido, IGNORE a sugestão e invente o próximo passo lógico e avançado da matéria. NUNCA dê a mesma aula duas vezes.`;
     } else {
       // mode === 'revisar' ou default (fallback)
       const retrieval = ultimaSessao.decisao_proxima === 'reforcar'
         ? `INÍCIO DA SESSÃO — MODO REVISÃO (Retrieval Practice): Comece SEMPRE perguntando o que o aluno lembra do tópico "${ultimaSessao.topico}" antes de qualquer explicação. Não corrija nem complemente até ele responder.`
         : `INÍCIO DA SESSÃO — MODO REVISÃO (Retrieval Practice): Comece SEMPRE perguntando o que o aluno lembra da última sessão ("${ultimaSessao.topico}") antes de introduzir conteúdo novo.`;
       
-      modoInstrucao = `${retrieval}\n${ultimaSessao.decisao_proxima === 'reforcar' ? 'Após o retrieval, reforce o tópico anterior.' : 'Após o retrieval, continue a partir do próximo tópico sugerido.'}`;
+      modoInstrucao = `${retrieval}\n${ultimaSessao.decisao_proxima === 'reforcar' ? 'Após o retrieval, reforce o tópico anterior.' : 'Após o retrieval, avance obrigatoriamente para um conteúdo INÉDITO.'}`;
     }
 
     historico = `\n\nContexto da última sessão (uso interno — não mencione estes dados diretamente):
 - Tópico trabalhado: ${ultimaSessao.topico}
 - Desempenho: ${ultimaSessao.dificuldade} dificuldade, ${ultimaSessao.erros ?? 0} erros
 - Próximo tópico sugerido: ${ultimaSessao.proximo_topico || 'não definido'}
-- Decisão: ${ultimaSessao.decisao_proxima || 'não definida'}
+- Decisão da extração: ${ultimaSessao.decisao_proxima || 'não definida'}
 - Observações: ${ultimaSessao.observacoes || 'nenhuma'}
 
 ${modoInstrucao}
