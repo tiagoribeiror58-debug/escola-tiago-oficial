@@ -11,17 +11,17 @@ interface Props {
   materia: MateriaConfig;
   ultimaSessao: Sessao | null;
   onMessagesChange?: (messages: ChatMessage[]) => void;
+  onTopicComplete?: () => void;
   sessionKey: string;
   initialMessages?: ChatMessage[];
-  mode?: 'estudar' | 'revisar' | null;
   sub?: string | null;
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
-export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, sessionKey, initialMessages, mode, sub }: Props) {
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, sub }: Props) {
   const isContinuation = !!(initialMessages && initialMessages.length > 0);
-  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, mode, sub);
+  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub);
   const saveMutation = useSaveChatMessage();
 
   const [messages, setMessages] = useState<ChatMessage[]>(
@@ -167,6 +167,16 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
 
       if (!assistantContent) {
         throw new Error('No response received');
+      }
+
+      // Detect session_done signal — strips tag and notifies parent
+      if (assistantContent.includes('<session_done/>')) {
+        assistantContent = assistantContent.replace(/<session_done\/>/gi, '').trimEnd();
+        // Update the displayed message without the tag
+        setMessages(prev => prev.map((m, i) =>
+          i === prev.length - 1 ? { ...m, content: assistantContent } : m
+        ));
+        onTopicComplete?.();
       }
 
       const contentToSave = assistantContent

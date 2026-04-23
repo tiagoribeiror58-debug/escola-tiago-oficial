@@ -11,8 +11,9 @@ export interface Sessao {
   created_at: string | null;
   nivel: number | null;
   decisao_proxima: string | null;
-  proxima_revisao: string | null; // calculado pelo banco via SM-2
+  proxima_revisao: string | null;
   session_key?: string | null;
+  messages_json?: ChatMessage[] | null; // snapshot da conversa salvo ao encerrar
 }
 
 export interface MateriaConfig {
@@ -21,6 +22,9 @@ export interface MateriaConfig {
   emoji: string;
   contexto?: string;
   subTopicos?: { slug: string; nome: string }[];
+  isCategory?: boolean;           // se true, clique navega para /categoria/:slug
+  children?: MateriaConfig[];     // sub-matérias dentro desta categoria
+  parent?: string;                // slug da categoria pai
 }
 
 export interface MateriaEstado {
@@ -28,9 +32,8 @@ export interface MateriaEstado {
   ultimaSessao: Sessao | null;
   totalSessoes: number;
   diasParada: number | null;
-  diasAteRevisao: number | null; // negativo = revisão atrasada, positivo = dias restantes
+  diasAteRevisao: number | null;
 }
-
 
 export interface ChatMessage {
   id?: string;

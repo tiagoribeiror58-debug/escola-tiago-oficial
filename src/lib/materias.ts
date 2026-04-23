@@ -137,7 +137,63 @@ export const MATERIAS: MateriaConfig[] = [
     slug: 'musica',
     nome: 'Música',
     emoji: '♪',
-    contexto: `Use exemplos sonoros descritos em texto quando possível — "pense no ritmo de...", "imagine o contraponto de uma fuga". Para teoria, conecte sempre com músicas que o aluno conhece: "esse acorde que você reconhece é um Dm7". Para harmonia, construa do mais simples (tríade) para o complexo. Peça que o aluno solfeje, marque tempo ou descreva o que ouve em músicas que você indica. Não separe teoria de apreciação — ensine teoria que torna a escuta mais rica.`,
+    isCategory: true,
+    children: [
+      {
+        slug: 'violao', nome: 'Violão', emoji: '🎸', isCategory: true, parent: 'musica',
+        children: [
+          { slug: 'violao-acordes', nome: 'Acordes Básicos', emoji: '🎸', parent: 'violao', contexto: 'Ensine acordes abertos (Am, Em, G, C, D) via músicas que o aluno quer tocar. Foque na transição entre acordes — é o maior obstáculo. Critério de aprovação: acorde soa limpo sem buzinar.' },
+          { slug: 'violao-tecnica', nome: 'Técnica & Postura', emoji: '🎸', parent: 'violao', contexto: 'Ensine postura, pressão dos dedos, posição do polegar e ataque de palheta. Use analogias físicas. Corrija um problema de cada vez, nunca vários simultaneamente.' },
+          { slug: 'violao-cifra', nome: 'Cifra & Leitura', emoji: '🎸', parent: 'violao', contexto: 'Ensine cifras como linguagem: número de traste e nome do acorde. Peça que o aluno toque o que leu imediatamente. Critique o que soa errado antes de explicar o porquê.' },
+          { slug: 'violao-repertorio', nome: 'Repertório', emoji: '🎸', parent: 'violao', contexto: 'Escolha 1 música que o aluno quer aprender. Quebre em 1 seção por sessão. Priorize musicalidade (ritmo, dinâmica) sobre perfeição de notas.' },
+        ],
+      },
+      {
+        slug: 'piano', nome: 'Piano', emoji: '🎹', isCategory: true, parent: 'musica',
+        children: [
+          { slug: 'piano-tecnica', nome: 'Técnica & Postura', emoji: '🎹', parent: 'piano', contexto: 'Ensine posição de mãos em cúpula, numeração dos dedos (1-5) e articulação básica. Corrija tensão muscular antes de qualquer outra coisa — causa 80% dos erros de iniciantes.' },
+          { slug: 'piano-partitura', nome: 'Leitura de Partitura', emoji: '🎹', parent: 'piano', contexto: 'Ensine uma nota por vez. Comece com clave de sol, notas C4-C5. Use mnemônicos para as linhas. Peça que o aluno solfejar antes de tocar.' },
+          { slug: 'piano-harmonia', nome: 'Harmonia no Piano', emoji: '🎹', parent: 'piano', contexto: 'Ensine tríades em estado fundamental (C, F, G) antes de inversões. Mostre como I-IV-V-I formam a base de centenas de músicas. Conecte com músicas que o aluno reconhece.' },
+          { slug: 'piano-repertorio', nome: 'Repertório', emoji: '🎹', parent: 'piano', contexto: 'Mão direita → mão esquerda → juntas. Nunca queime essa etapa. 1 compasso por sessão é suficiente para começar com qualidade.' },
+        ],
+      },
+      {
+        slug: 'bateria', nome: 'Bateria', emoji: '🥁', isCategory: true, parent: 'musica',
+        children: [
+          { slug: 'bateria-ritmos', nome: 'Ritmos Base', emoji: '🥁', parent: 'bateria', contexto: 'Ensine ritmo base: bumbo no 1 e 3, caixa no 2 e 4, chimbal em semínimas. Use onomatopeias (bum-tch-bum-tch). Peça que o aluno bata na mesa antes de tocar.' },
+          { slug: 'bateria-rudimentos', nome: 'Rudimentos', emoji: '🥁', parent: 'bateria', contexto: 'Ensine single stroke, double stroke e paradiddle. Comece devagar com metrônomo — sem metrônomo não há prática real. Aumente velocidade apenas com qualidade.' },
+          { slug: 'bateria-groove', nome: 'Groove & Feel', emoji: '🥁', parent: 'bateria', contexto: 'Ensine que groove é sentir o balanço entre as peças, não apenas executar o ritmo. Use referências de músicos reais. Peça que o aluno ouça e imite antes de criar.' },
+          { slug: 'bateria-fills', nome: 'Fills & Transições', emoji: '🥁', parent: 'bateria', contexto: 'Ensine fills simples de 1 compasso que terminam em tempos fortes. Regra: um fill ruim é pior que nenhum fill. Conecte fills com transições musicais reais.' },
+        ],
+      },
+      {
+        slug: 'voz', nome: 'Voz', emoji: '🎤', isCategory: true, parent: 'musica',
+        children: [
+          { slug: 'voz-tecnica', nome: 'Técnica Vocal', emoji: '🎤', parent: 'voz', contexto: 'Ensine apoio diafragmático, ressonância e projeção. Use analogia: voz que cai vs voz que flui. Nunca force — se dói, está errado.' },
+          { slug: 'voz-respiracao', nome: 'Respiração', emoji: '🎤', parent: 'voz', contexto: 'Ensine respiração costal expandida, não clavicular. Exercício: inspirar 4 tempos, segurar 4, expirar 8. Conecte com como cantores controlam frases longas.' },
+          { slug: 'voz-afinacao', nome: 'Afinação', emoji: '🎤', parent: 'voz', contexto: 'Ensine que afinação é habilidade treinável. Use instrumento ou afinador como referência. Exercício: cantar uma nota, ouvir referência, ajustar. Identifique se o aluno canta antes de ouvir.' },
+          { slug: 'voz-interpretacao', nome: 'Interpretação', emoji: '🎤', parent: 'voz', contexto: 'Ensine que interpretação é sobre intenção, não volume. Peça que o aluno cante a mesma frase com 3 emoções diferentes. Conecte com o significado da letra antes de cantar.' },
+        ],
+      },
+      {
+        slug: 'teoria-musical', nome: 'Teoria Musical', emoji: '🎵', isCategory: true, parent: 'musica',
+        children: [
+          { slug: 'teoria-escalas', nome: 'Escalas & Modos', emoji: '🎵', parent: 'teoria-musical', contexto: 'Ensine a escala maior com fórmula T-T-ST-T-T-T-ST. Comece em Dó Maior. Conecte com como toda melodia usa uma escala. Peça que o aluno identifique a escala de uma música que conhece.' },
+          { slug: 'teoria-harmonia', nome: 'Harmonia & Acordes', emoji: '🎵', parent: 'teoria-musical', contexto: 'Ensine graus da escala e acordes naturais de cada grau. I-IV-V-I como progressão fundamental. Conecte com músicas reais — Wonderwall usa I-V-VI-IV.' },
+          { slug: 'teoria-ritmica', nome: 'Rítmica', emoji: '🎵', parent: 'teoria-musical', contexto: 'Ensine figuras rítmicas (semibreve, mínima, semínima, colcheia) e compasso 4/4 como base. Peça que o aluno bata o ritmo antes de tocar as alturas. Ritmo é mais importante que melodia no início.' },
+          { slug: 'teoria-leitura', nome: 'Leitura Musical', emoji: '🎵', parent: 'teoria-musical', contexto: 'Ensine notação como uma língua — leia em contexto, não decore. Comece com melodias simples em Dó Maior. Use solfejo (Dó-Ré-Mi) antes de nomes em inglês.' },
+        ],
+      },
+      {
+        slug: 'producao-musical', nome: 'Produção Musical', emoji: '🎛', isCategory: true, parent: 'musica',
+        children: [
+          { slug: 'producao-daw', nome: 'Fundamentos de DAW', emoji: '🎛', parent: 'producao-musical', contexto: 'Ensine conceitos de DAW: trilhas, clips, mixer, tempo/BPM. Não ensine atalhos — ensine o fluxo de trabalho. O aluno deve gravar e ouvir um som antes de qualquer outro passo.' },
+          { slug: 'producao-mixagem', nome: 'Mixagem', emoji: '🎛', parent: 'producao-musical', contexto: 'Ensine os 3 controles mais importantes: volume, EQ e pan. Use analogia: cada instrumento tem seu próprio espaço na foto. Ensine a ouvir problemas antes de corrigi-los.' },
+          { slug: 'producao-composicao', nome: 'Composição', emoji: '🎛', parent: 'producao-musical', contexto: 'Ensine a compor a partir de 1 loop de 4 compassos. Restrições criam criatividade — use apenas 3 notas. Conecte com como músicas favoritas do aluno foram construídas.' },
+          { slug: 'producao-sound-design', nome: 'Sound Design', emoji: '🎛', parent: 'producao-musical', contexto: 'Ensine síntese subtrativa básica: oscilador → filtro → envelope (ADSR). Use analogias físicas: ADSR = comportamento de uma vela acendendo. Peça que o aluno modifique um preset existente antes de criar do zero.' },
+        ],
+      },
+    ],
   },
   {
     slug: 'logica',
@@ -159,8 +215,21 @@ export const MATERIAS: MateriaConfig[] = [
   },
 ];
 
-export function getMateriaBySlug(slug: string): MateriaConfig | undefined {
-  return MATERIAS.find(m => m.slug === slug);
+export function getMateriaBySlug(slug: string, list: MateriaConfig[] = MATERIAS): MateriaConfig | undefined {
+  for (const m of list) {
+    if (m.slug === slug) return m;
+    if (m.children) {
+      const found = getMateriaBySlug(slug, m.children);
+      if (found) return found;
+    }
+  }
+  return undefined;
+}
+
+/** Retorna todos os slugs-folha (sem filhos) de uma config, para agregar sessões de categorias */
+export function getAllLeafSlugs(config: MateriaConfig): string[] {
+  if (!config.children || config.children.length === 0) return [config.slug];
+  return config.children.flatMap(child => getAllLeafSlugs(child));
 }
 
 export function calcularDiasParada(dataUltimaSessao: string): number {

@@ -1,16 +1,44 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSessoes } from '@/hooks/useSessoes';
 import { getMateriaBySlug } from '@/lib/materias';
-import { ArrowLeft, Clock, MessageCircle, AlertTriangle } from 'lucide-react';
+import { ChatMessage } from '@/types';
+import { ArrowLeft, Clock, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+
+function ChatBubbles({ messages }: { messages: ChatMessage[] }) {
+  return (
+    <div className="mt-3 space-y-2 max-h-96 overflow-y-auto pr-1">
+      {messages.map((msg, i) => (
+        <div
+          key={i}
+          className={cn(
+            'flex',
+            msg.role === 'user' ? 'justify-end' : 'justify-start'
+          )}
+        >
+          <div className={cn(
+            'max-w-[85%] px-3 py-2 rounded-xl text-sm leading-relaxed',
+            msg.role === 'user'
+              ? 'bg-foreground text-background rounded-br-sm'
+              : 'bg-muted text-foreground rounded-bl-sm'
+          )}>
+            {msg.content}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function Historico() {
   const { materia: slug } = useParams<{ materia: string }>();
   const navigate = useNavigate();
   const { data: sessoes, isLoading } = useSessoes();
   const materiaConfig = getMateriaBySlug(slug || '');
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   if (!materiaConfig) {
     return (
@@ -22,7 +50,7 @@ export default function Historico() {
 
   const sessoesMateria = (sessoes || [])
     .filter(s => s.materia === slug)
-    .sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
+    .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime());
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -36,10 +64,10 @@ export default function Historico() {
         <div>
           <h1 className="font-semibold flex items-center gap-2">
             <span className="text-xl leading-none">{materiaConfig.emoji}</span>
-            Histórico: {materiaConfig.nome}
+            {materiaConfig.nome}
           </h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {sessoesMateria.length} sessões registradas
+            {sessoesMateria.length} {sessoesMateria.length === 1 ? 'sessão' : 'sessões'}
           </p>
         </div>
       </header>
@@ -55,56 +83,47 @@ export default function Historico() {
             <p>Nenhuma sessão salva ainda.</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {sessoesMateria.map((sessao) => (
-              <div 
-                key={sessao.id} 
-                className="bg-card border border-border rounded-xl p-4 flex flex-col gap-3 transition-colors hover:border-foreground/20"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="font-medium text-foreground">{sessao.topico}</h3>
-                    <p className="text-xs text-muted-foreground mt-1 capitalize">
-                      {format(new Date(sessao.data), "eeee, d 'de' MMMM", { locale: ptBR })}
-                    </p>
+          <div className="space-y-3">
+            {sessoesMateria.map((sessao) => {
+              const isExpanded = expandedId === sessao.id;
+              const hasChat = sessao.messages_json && sessao.messages_json.length > 0;
+
+              return (
+                <div
+                  key={sessao.id}
+                  className="bg-card border border-border rounded-xl overflow-hidden transition-colors hover:border-foreground/20"
+                >
+                  <div className="p-4 flex flex-col gap-2">
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <h3 className="font-medium text-foreground">{sessao.topico}</h3>
+                        <p className="text-xs text-muted-foreground mt-1 capitalize">
+                          {format(new Date(sessao.created_at || sessao.data), "eeee, d 'de' MMMM", { locale: ptBR })}
+                        </p>
+                      </div>
+                      {hasChat && (
+                        <button
+                          onClick={() => setExpandedId(isExpanded ? null : sessao.id)}
+                          className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted px-2.5 py-1.5 rounded-lg transition-colors shrink-0"
+                        >
+                          {isExpanded ? (
+                            <>Fechar <ChevronUp className="w-3.5 h-3.5" /></>
+                          ) : (
+                            <>Ver conversa <ChevronDown className="w-3.5 h-3.5" /></>
+                          )}
+                        </button>
+                      )}
+                    </div>
                   </div>
-                  
-                  {sessao.nivel && (
-                    <span className={cn(
-                      'text-[10px] uppercase tracking-wider font-semibold px-2 py-1 rounded-md shrink-0',
-                      sessao.nivel === 3 ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' :
-                      sessao.nivel === 2 ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' :
-                      'bg-muted text-muted-foreground'
-                    )}>
-                      Nível {sessao.nivel}
-                    </span>
+
+                  {isExpanded && hasChat && (
+                    <div className="border-t border-border px-4 pb-4">
+                      <ChatBubbles messages={sessao.messages_json as ChatMessage[]} />
+                    </div>
                   )}
                 </div>
-
-                {sessao.observacoes && (
-                  <div className="bg-muted/50 rounded-lg p-3 text-sm text-foreground/80 leading-relaxed border border-border/50">
-                    {sessao.observacoes}
-                  </div>
-                )}
-
-                <div className="flex items-center gap-2 mt-1 pt-1">
-                  {sessao.session_key ? (
-                    <button
-                      onClick={() => navigate(`/sessao/${slug}?resume=${sessao.session_key}`)}
-                      className="flex items-center gap-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 hover:opacity-80 transition-opacity bg-blue-500/10 px-3 py-1.5 rounded-full"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      Retomar Bate-papo
-                    </button>
-                  ) : (
-                    <span className="flex items-center gap-1.5 text-xs text-muted-foreground opacity-60">
-                      <AlertTriangle className="w-3.5 h-3.5" />
-                      Chat não foi mantido
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Sessao, MateriaEstado } from '@/types';
-import { MATERIAS, calcularDiasParada } from '@/lib/materias';
+import { MATERIAS, calcularDiasParada, getAllLeafSlugs } from '@/lib/materias';
 
 export function useSessoes() {
   return useQuery({
@@ -33,7 +33,9 @@ export function useMateriasEstado() {
   const { data: sessoes, isLoading, error } = useSessoes();
 
   const estados: MateriaEstado[] = MATERIAS.map(config => {
-    const sessoesMateria = (sessoes || []).filter(s => s.materia === config.slug);
+    // Para categorias (isCategory), agrega sessões de todos os filhos recursivamente
+    const slugsAlvo = config.isCategory ? getAllLeafSlugs(config) : [config.slug];
+    const sessoesMateria = (sessoes || []).filter(s => slugsAlvo.includes(s.materia));
     const ultimaSessao = sessoesMateria.length > 0 ? sessoesMateria[0] : null;
     const diasParada = ultimaSessao ? calcularDiasParada(ultimaSessao.data) : null;
     const diasAteRevisao = ultimaSessao ? calcularDiasAteRevisao(ultimaSessao.proxima_revisao) : null;

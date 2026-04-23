@@ -42,6 +42,10 @@ export default function Index() {
   const heroEstado = sugestaoSM2 || (estados.length > 0 ? estados[0] : null);
 
   const handleCardClick = (estado: MateriaEstado) => {
+    if (estado.config.isCategory) {
+      navigate(`/categoria/${estado.config.slug}`);
+      return;
+    }
     setSelectedEstado(estado);
     setModalOpen(true);
   };
@@ -83,7 +87,7 @@ export default function Index() {
                 onClick={() => handleCardClick(heroEstado)}
                 className="w-full sm:w-auto self-start px-8 py-3.5 rounded-xl bg-foreground text-background font-medium hover:opacity-90 active:scale-95 transition-all text-sm shadow-xl shadow-foreground/10"
               >
-                Retomar Foco
+                {heroEstado.config.isCategory ? 'Explorar' : 'Retomar Foco'}
               </button>
             </div>
           </div>
