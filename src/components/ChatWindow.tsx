@@ -126,7 +126,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
             // Suporte para Anthropic Claude Stream & Thinking
             if (parsed.type === 'content_block_start') {
               if (parsed.content_block?.type === 'thinking' || parsed.content_block?.type === 'redacted_thinking') {
-                delta = '<details className="mb-4 text-xs text-muted-foreground bg-muted/20 border border-border p-3 rounded-xl"><summary className="cursor-pointer font-medium opacity-80 hover:opacity-100">Raciocínio da IA (Pensando...)</summary>\n\n';
+                delta = '<details><summary>Raciocínio da IA</summary>\n\n';
               }
             } else if (parsed.type === 'content_block_delta') {
               if (parsed.delta?.type === 'text_delta') {
@@ -224,10 +224,33 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, se
             )}
           >
             {msg.role === 'assistant' ? (() => {
-              const cleanedContent = msg.content.replace(/<chips>[\s\S]*?(?:<\/chips>|$)/ig, '');
+              const contentWithoutChips = msg.content.replace(/<chips>[\s\S]*?(?:<\/chips>|$)/ig, '');
+              
+              // Handle both closed and unclosed details tags (for streaming)
+              const thinkingMatch = contentWithoutChips.match(/<details><summary>Raciocínio da IA<\/summary>([\s\S]*?)(?:<\/details>|$)/i);
+              const hasThinking = !!thinkingMatch;
+              const thinkingContent = hasThinking ? thinkingMatch[1].trim() : '';
+              
+              // Main content is everything after the thinking block (if closed), or empty if still thinking
+              const mainContent = contentWithoutChips.replace(/<details><summary>Raciocínio da IA<\/summary>[\s\S]*?(?:<\/details>|$)/i, '').trim();
+
               return (
-                <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 whitespace-pre-wrap break-words">
-                  <ReactMarkdown>{cleanedContent}</ReactMarkdown>
+                <div className="space-y-3">
+                  {hasThinking && (
+                    <details className="mb-4 text-[11px] text-muted-foreground bg-muted/30 border border-border p-3 rounded-xl open:pb-4">
+                      <summary className="cursor-pointer font-medium opacity-80 hover:opacity-100 outline-none">
+                        Raciocínio da IA (Pensando...)
+                      </summary>
+                      <div className="mt-3 whitespace-pre-wrap font-mono leading-relaxed opacity-70">
+                        {thinkingContent}
+                      </div>
+                    </details>
+                  )}
+                  {mainContent && (
+                    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 whitespace-pre-wrap break-words">
+                      <ReactMarkdown>{mainContent}</ReactMarkdown>
+                    </div>
+                  )}
                 </div>
               );
             })() : (
