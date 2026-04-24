@@ -42,3 +42,24 @@ Este documento define as regras mandatórias de comportamento da IA e princípio
 - Após encerrar com sucesso: deletar `chat_messages` da sessão (evitar acúmulo desnecessário no banco).
 - Redirecionar para dashboard após 1.5s com toast de confirmação visível.
 - O botão "Encerrar" deve estar sempre acessível durante a sessão — nunca escondido.
+
+## 6. Protocolo de Atualização de Documentação (OBRIGATÓRIO)
+
+Toda vez que o agente implementar uma feature, alterar arquitetura, modificar o schema do banco, mudar o comportamento da IA ou adicionar uma nova matéria/categoria, ele **DEVE** verificar e atualizar os documentos afetados antes de fazer o commit:
+
+| O que mudou | Documento a atualizar |
+|---|---|
+| Nova rota ou página | `README.md` (tabela de rotas) + `docs/architecture.md` |
+| Nova coluna ou tabela no DB | `docs/database.md` |
+| Mudança na edge function `/chat` ou `/extract` | `docs/edge-functions.md` |
+| Nova matéria, categoria ou ementa | `docs/materias.md` |
+| Mudança no `buildPrompt.ts` ou tags da IA | `docs/ai-protocol.md` |
+| Mudança em qualquer princípio de arquitetura | `docs/architecture.md` |
+| Nova dependência ou variável de ambiente | `README.md` |
+
+**Regra de ouro:** Se um dev novo ler a documentação depois da sua mudança e ficar confuso, a documentação está desatualizada — e isso é falha do agente, não do dev.
+
+- Docs desatualizados são dívida técnica invisível. Não deixar acumular.
+- Se a mudança for pequena (ex: renomear um botão), basta uma linha de atualização no doc relevante.
+- Commits que alteram código sem atualizar documentação afetada são considerados **incompletos**.
+
