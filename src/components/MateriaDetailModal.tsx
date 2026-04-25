@@ -123,7 +123,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   Trilha de Conhecimento
                 </p>
                 <span className="text-[10px] font-medium bg-foreground/10 text-foreground px-2 py-0.5 rounded-full">
-                  {Math.min(estado.totalSessoes, config.ementa.length)}/{config.ementa.length}
+                  {estado.totalSessoes >= config.ementa.length 
+                    ? `Base concluída ${estado.totalSessoes > config.ementa.length ? `(+${estado.totalSessoes - config.ementa.length})` : ''}` 
+                    : `${estado.totalSessoes}/${config.ementa.length}`}
                 </span>
               </div>
               <div className="space-y-1">
@@ -158,6 +160,18 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     </button>
                   );
                 })}
+
+                {/* Infinite Curriculum Extension */}
+                {estado.totalSessoes >= config.ementa.length && (
+                  <div className="flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl text-foreground font-medium mt-2 opacity-90">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors bg-primary/10 border-primary/30 text-primary">
+                      ∞
+                    </div>
+                    <span className="line-clamp-1 flex-1">
+                      Fronteira do Conhecimento
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           )}
