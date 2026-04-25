@@ -21,11 +21,13 @@ interface Props {
 export default function MateriaDetailModal({ estado, open, onOpenChange }: Props) {
   const navigate = useNavigate();
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
+  const [expandedSession, setExpandedSession] = useState<number | null>(null);
   const { data: todasSessoes } = useSessoes();
 
   useEffect(() => {
     if (open) {
       setSelectedSub(null);
+      setExpandedSession(null);
     }
   }, [open]);
 
@@ -75,13 +77,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
           </div>
 
           {/* Introdução / Contexto */}
-          {config.contexto && (
-            <div className="mb-4 text-sm text-muted-foreground/90 bg-muted/30 p-3 rounded-xl border border-border/50">
-              <p className="line-clamp-3 hover:line-clamp-none transition-all cursor-default">
-                {config.contexto}
-              </p>
-            </div>
-          )}
+          <div className="mb-4 text-sm text-muted-foreground/90 bg-muted/30 p-3 rounded-xl border border-border/50">
+            <p className="line-clamp-3 hover:line-clamp-none transition-all cursor-default">
+              {config.descricao || `Um caminho contínuo de evolução em ${config.nome}, onde você começará do absoluto zero e será guiado organicamente até a maestria avançada por meio de nossa inteligência interativa.`}
+            </p>
+          </div>
 
           {/* Tópico anterior + próximo */}
           {ultimaSessao && (
@@ -113,6 +113,50 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             </div>
           )}
         </div>
+
+        {/* Ementa / Trilha */}
+          {config.ementa && config.ementa.length > 0 && (
+            <div className="px-6 pb-4 shrink-0">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+                  Trilha de Conhecimento
+                </p>
+                <span className="text-[10px] font-medium bg-foreground/10 text-foreground px-2 py-0.5 rounded-full">
+                  {Math.min(estado.totalSessoes, config.ementa.length)}/{config.ementa.length}
+                </span>
+              </div>
+              <div className="space-y-2">
+                {config.ementa.map((topico, idx) => {
+                  const isCompleted = idx < estado.totalSessoes;
+                  const isCurrent = idx === estado.totalSessoes;
+                  return (
+                    <div 
+                      key={idx} 
+                      className={cn(
+                        "flex items-center gap-3 text-sm",
+                        isCompleted ? "text-muted-foreground" : isCurrent ? "text-foreground font-medium" : "text-muted-foreground/40"
+                      )}
+                    >
+                      <div className={cn(
+                        "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px]",
+                        isCompleted ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" :
+                        isCurrent ? "bg-foreground text-background border-foreground shadow-sm" :
+                        "bg-muted/50 border-border/50 text-muted-foreground/50"
+                      )}>
+                        {isCompleted ? "✓" : (idx + 1)}
+                      </div>
+                      <span className={cn(
+                        "line-clamp-1", 
+                        isCompleted && "line-through decoration-muted-foreground/30"
+                      )}>
+                        {topico}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
         {/* Sub-tópicos */}
         {config.subTopicos && config.subTopicos.length > 0 && (
@@ -182,13 +226,12 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                       <div
                         className={cn(
                           "flex items-center justify-between px-3 py-2.5",
-                          hasChat && sessao.session_key && "cursor-pointer hover:bg-muted/50 transition-colors"
+                          hasChat && "cursor-pointer hover:bg-muted/50 transition-colors"
                         )}
                         onClick={() => {
-                          if (hasChat && sessao.session_key) {
+                          if (hasChat) {
                             playPopSound();
-                            onOpenChange(false);
-                            navigate(`/sessao/${config.slug}?resume=${sessao.session_key}`);
+                            setExpandedSession(expandedSession === sessao.id ? null : sessao.id);
                           }
                         }}
                       >
@@ -198,14 +241,59 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                             {format(new Date(sessao.created_at || sessao.data), "d 'de' MMM", { locale: ptBR })}
                           </p>
                         </div>
-                        {hasChat && sessao.session_key && (
+                        {hasChat && (
                           <div className="text-muted-foreground shrink-0 ml-2">
-                            <span className="text-[10px] font-medium px-2 py-1 bg-background rounded-md border border-border">
-                              Abrir Conversa
-                            </span>
+                            {expandedSession === sessao.id ? (
+                              <ChevronUp className="w-4 h-4" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4" />
+                            )}
                           </div>
                         )}
                       </div>
+
+                      {expandedSession === sessao.id && hasChat && (
+                        <div className="px-3 pb-3 pt-1 border-t border-border/50 bg-background/50">
+                          <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                            {sessao.messages_json?.map((msg, idx) => {
+                              if (msg.role === 'system') return null;
+                              
+                              // Limpar tags internas como <session_done/>
+                              const cleanContent = msg.content.replace(/<[^>]+>/g, '').trim();
+                              if (!cleanContent) return null;
+
+                              return (
+                                <div key={idx} className={cn(
+                                  "flex",
+                                  msg.role === 'user' ? "justify-end" : "justify-start"
+                                )}>
+                                  <div className={cn(
+                                    "px-3 py-2 rounded-xl text-[11px] max-w-[90%]",
+                                    msg.role === 'user' 
+                                      ? "bg-primary text-primary-foreground" 
+                                      : "bg-muted text-foreground"
+                                  )}>
+                                    <p className="whitespace-pre-wrap">{cleanContent}</p>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {sessao.session_key && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                playPopSound();
+                                onOpenChange(false);
+                                navigate(`/sessao/${config.slug}?resume=${sessao.session_key}`);
+                              }}
+                              className="mt-3 w-full py-2 bg-foreground/5 hover:bg-foreground/10 text-foreground text-[11px] font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
+                            >
+                              Abrir Tela Completa do Chat
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   );
                 })}

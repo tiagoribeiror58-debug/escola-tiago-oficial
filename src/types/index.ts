@@ -20,7 +20,8 @@ export interface MateriaConfig {
   slug: string;
   nome: string;
   emoji: string;
-  contexto?: string;
+  descricao?: string;             // Descrição para a UI (modal)
+  contexto?: string;              // System prompt
   subTopicos?: { slug: string; nome: string }[];
   isCategory?: boolean;           // se true, clique navega para /categoria/:slug
   children?: MateriaConfig[];     // sub-matérias dentro desta categoria
