@@ -8,7 +8,8 @@ Este documento centraliza todas as regras de negócio, fluxos de experiência do
 
 - **Fricção Zero:** O aplicativo deve minimizar cliques. Não existem modais de confirmação desnecessários. Quando o aluno encerra uma sessão, a interface salva e o redireciona imediatamente (com feedback sonoro) para a Home.
 - **Anti-Sobrecarga:** O aluno entra, foca, resolve e sai. A interface oculta complexidades. Históricos profundos ficam em modais de segundo nível. O Hero (Top 1) na Home indica exatamente o que o aluno deve fazer no momento.
-- **Invisible Syllabus (Ementa Invisível):** Com exceção das áreas com ementa explícita (`config.ementa`), o aluno não vê uma lista exaustiva de tópicos. A IA guia a jornada baseando-se no que ele já sabe, ocultando a ansiedade de "quanto falta para acabar".
+- **Invisible Syllabus (Ementa Invisível) vs Trilhas Explicitas:** Historicamente a IA guiava a jornada no escuro, mas agora a plataforma possui **Trilhas de Conhecimento (Ementas)** estruturadas em quase todas as matérias.
+- **Seleção Dinâmica de Foco:** O aluno não é prisioneiro da sequência. Dentro do modal da matéria, a Ementa é interativa. O usuário pode **clicar em qualquer tópico** da trilha e iniciar uma sessão focada exclusivamente naquele assunto, passando o controle direcional para as mãos do aluno sem perder a rigidez técnica da aula.
 
 ---
 
@@ -75,4 +76,4 @@ A gamificação não usa "moedas" ou "fogo de ofensiva", usa provas de maestria 
 
 O sistema possui duas métricas de avanço coexistentes:
 1. **O Sprint (A Prova):** Ciclos de 10 sessões (N/10) que geram urgência e liberam exames de validação.
-2. **A Maratona (O Currículo):** Quando uma matéria possui uma ementa declarada rigidamente (ex: `violao-acordes` tem 6 tópicos), o Card também exibe `(N / 6 Tóp.)`, informando ao aluno que, diferentemente de conversas abstratas, ali existe uma linha de chegada técnica definitiva.
+2. **A Maratona (A Trilha/Ementa):** Agora as matérias possuem uma ementa declarada (ex: Matemática tem 6 tópicos base). O modal exibe exatamente em qual tópico o aluno está (ex: `2/6`), mostrando checkboxes para os tópicos já superados, e permitindo pular ou focar livremente em qualquer etapa da trilha.

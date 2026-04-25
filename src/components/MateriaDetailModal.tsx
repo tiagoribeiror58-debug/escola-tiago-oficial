@@ -130,28 +130,31 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   const isCompleted = idx < estado.totalSessoes;
                   const isCurrent = idx === estado.totalSessoes;
                   return (
-                    <div 
+                    <button 
                       key={idx} 
+                      onClick={() => setSelectedSub(selectedSub === topico ? null : topico)}
                       className={cn(
-                        "flex items-center gap-3 text-sm",
-                        isCompleted ? "text-muted-foreground" : isCurrent ? "text-foreground font-medium" : "text-muted-foreground/40"
+                        "flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl transition-colors",
+                        selectedSub === topico ? "bg-muted border border-border" : "hover:bg-muted/50 border border-transparent",
+                        isCompleted && selectedSub !== topico ? "text-muted-foreground" : isCurrent || selectedSub === topico ? "text-foreground font-medium" : "text-muted-foreground/50"
                       )}
                     >
                       <div className={cn(
-                        "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px]",
+                        "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors",
+                        selectedSub === topico ? "bg-foreground text-background border-foreground shadow-sm" :
                         isCompleted ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" :
-                        isCurrent ? "bg-foreground text-background border-foreground shadow-sm" :
+                        isCurrent ? "bg-primary/10 border-primary/30 text-primary" :
                         "bg-muted/50 border-border/50 text-muted-foreground/50"
                       )}>
-                        {isCompleted ? "✓" : (idx + 1)}
+                        {isCompleted && selectedSub !== topico ? "✓" : (idx + 1)}
                       </div>
                       <span className={cn(
-                        "line-clamp-1", 
-                        isCompleted && "line-through decoration-muted-foreground/30"
+                        "line-clamp-1 flex-1", 
+                        isCompleted && selectedSub !== topico && "line-through decoration-muted-foreground/30"
                       )}>
                         {topico}
                       </span>
-                    </div>
+                    </button>
                   );
                 })}
               </div>

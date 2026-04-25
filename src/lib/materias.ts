@@ -64,6 +64,14 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'performance-intelecto',
         descricao: 'Vieses cognitivos, regulação emocional e padrões comportamentais subconscientes.',
         contexto: `Conecte conceitos psicológicos com situações reais do aluno. Para vieses cognitivos, use exemplos que o aluno viveu. Trabalhe reconhecimento de emoções antes de estratégias de regulação. Peça avaliação crítica de teorias clássicas.`,
+        ementa: [
+          'A Estrutura da Psique (Consciente vs Inconsciente)',
+          'Vieses Cognitivos Fundamentais (Confirmação, Ancoragem)',
+          'Teoria do Apego e Relacionamentos',
+          'Inteligência Emocional e Regulação de Afeto',
+          'Terapia Cognitivo-Comportamental (Práticas)',
+          'Arquétipos e o Inconsciente Coletivo'
+        ]
       },
       {
         slug: 'logica',
@@ -72,6 +80,14 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'performance-intelecto',
         descricao: 'Argumentação, falácias e pensamento rigoroso sem viés.',
         contexto: `Use puzzles e problemas reais antes de notação formal. Comece com linguagem natural. Para falácias, use exemplos de argumentos do cotidiano e política — o aluno deve identificar e nomear. Exija resolução passo a passo.`,
+        ementa: [
+          'Proposições e Valores Verdade',
+          'Operadores Lógicos (E, OU, NÃO, SE)',
+          'Argumentos Dedutivos vs Indutivos',
+          'Falácias Formais e Informais',
+          'Viés de Sobrevivência e Causalidade vs Correlação',
+          'Modelagem de Problemas Complexos'
+        ]
       }
     ]
   },
@@ -136,6 +152,15 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'tecnologia-negocios',
         descricao: 'Product-Market Fit, vendas B2B/B2C, liderança e gestão de produtos escaláveis.',
         contexto: `Abordagem prática e cética: para cada modelo (Canvas, Lean), apresente um caso onde funcionou e onde falhou. Peça aplicação a uma ideia real imediatamente. Questione romantismos: 'o que poderia matar essa ideia?'.`,
+        ementa: [
+          'A Anatomia de uma Startup (Diferença de Negócio Tradicional)',
+          'Ideação e Identificação de Dores Reais',
+          'MVP (Minimum Viable Product) e Prototipagem',
+          'Product-Market Fit (A única métrica que importa)',
+          'Canais de Aquisição (Go-To-Market)',
+          'Vendas B2B e B2C (A Arte de Fechar)',
+          'Liderança e Cultura Organizacional'
+        ]
       },
       {
         slug: 'design',
@@ -144,6 +169,14 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'tecnologia-negocios',
         descricao: 'Hierarquia, tipografia, gestalt e design centrado no usuário.',
         contexto: `Ensine através da análise visual — mostre (em palavras claras) a diferença de um design bom e ruim. Peça que o aluno critique designs do cotidiano. Conecte decisões com a intenção do designer.`,
+        ementa: [
+          'Leis da Gestalt Aplicadas a Interfaces',
+          'Teoria das Cores e Contraste',
+          'Tipografia Clássica e Escala Típografica',
+          'Espaçamento (White Space) e Hierarquia Visual',
+          'UI vs UX: A Experiência do Usuário',
+          'Heurísticas de Nielsen (Avaliação de Interfaces)'
+        ]
       }
     ]
   },
@@ -165,6 +198,14 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'dinamicas-comunicacao',
         descricao: 'Inteligência social pura: calibração, tensão, autenticidade e subcomunicação.',
         contexto: `Abordagem focada em inteligência social, comunicação assertiva e desenvolvimento do valor pessoal. Ensine que atração é consequência de confiança e atitude, não de truques. Foque em: leitura corporal, subcomunicação, como flertar com calibração. Crie simulações práticas. Destrua mitos tóxicos da internet.`,
+        ementa: [
+          'A Base Fisiológica da Atração',
+          'Subcomunicação e Linguagem Corporal (Olhar, Postura)',
+          'Calibração e Tensão Social',
+          'Como Abrir e Sustentar Interações (Sem Script)',
+          'Escalada de Conforto e Intimidade',
+          'Gestão de Rejeição e Abundância'
+        ]
       },
       {
         slug: 'oratoria',
@@ -173,6 +214,13 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'dinamicas-comunicacao',
         descricao: 'Gatilhos de atenção, storytelling e projeção de voz para multidões ou 1-a-1.',
         contexto: `Pratique, não só explique. Apresente um conceito (ex: abertura com gancho), depois peça que o aluno produza um exemplo curto imediatamente. Critique objetivamente: o que funcionou, o que não funcionou. Use a estrutura: gancho → contexto → argumento → CTA.`,
+        ementa: [
+          'Como Superar o Medo de Falar em Público',
+          'O Hook (Gancho) e a Estrutura Narrativa',
+          'Modulação de Voz e Pausas Dramáticas',
+          'Storytelling: A Jornada do Herói Aplicada',
+          'Linguagem Corporal de Palco (Ancoragem Espacial)'
+        ]
       },
       {
         slug: 'redacao',
@@ -181,6 +229,13 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'dinamicas-comunicacao',
         descricao: 'Escrita persuasiva e clareza de pensamento traduzida em texto.',
         contexto: `NUNCA escreva o texto pelo aluno. Sua função é provocar e criticar. Critique estrutura (tese, argumentos), coesão, e persuasão (os argumentos convencem?). Valorize a voz própria.`,
+        ementa: [
+          'A Regra do 1: Uma Ideia por Texto',
+          'Anatomia de um Headline (Título) Magnético',
+          'Fórmula AIDA e PAS',
+          'Arquitetura da Argumentação Lógica',
+          'Revisão Extrema (Cortar a Gordura)'
+        ]
       },
       {
         slug: 'ingles',
@@ -189,6 +244,15 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'dinamicas-comunicacao',
         descricao: 'Imersão no idioma global. Foco em produção de frases reais, não apenas gramática abstrata.',
         contexto: `Toda a sua comunicação e explicação DEVE ser em PORTUGUÊS. O idioma inglês deve aparecer APENAS nos exemplos, frases e exigências de exercícios práticos. Peça que o aluno produza frases, deduza padrões e responda desafios em inglês.`,
+        ementa: [
+          'O Verbo To Be (Muito Além do Básico)',
+          'Simple Present e Rotina Diária',
+          'Present Continuous (Ação no Agora)',
+          'Phrasal Verbs Mais Usados',
+          'Preposições Complicadas (In, On, At)',
+          'Past Simple e Contando Histórias',
+          'Present Perfect (A Dor de Cabeça Resolvida)'
+        ]
       },
       {
         slug: 'espanhol',
@@ -197,6 +261,14 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'dinamicas-comunicacao',
         descricao: 'Prática contínua e imersão progressiva sem focar excessivamente em regras engessadas.',
         contexto: `Conduza partes crescentes da sessão diretamente em espanhol. Peça que o aluno forme frases e descreva situações. Corrija erros de forma integrada — repita a frase correta sem interromper o fluxo.`,
+        ementa: [
+          'Pronomes e Apresentações Básicas',
+          'O Verbo Ser/Estar e Ser/Tener',
+          'Falsos Cognatos Frequentes (Embaraçada vs Grávida)',
+          'Verbos no Presente do Indicativo',
+          'Vocabulário de Viagens e Restaurantes',
+          'Pretérito Perfeito vs Indefinido'
+        ]
       }
     ]
   },
@@ -218,6 +290,14 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'fundamentos',
         descricao: 'O estudo dos padrões, do raciocínio lógico-quantitativo e geometria.',
         contexto: `Abordagem: problema-primeiro. NUNCA explique a regra antes de apresentar o problema — deixe o aluno tentar primeiro, erre, e só então corrija com a explicação. Use problemas concretos do mundo real.`,
+        ementa: [
+          'A Lógica por trás das Frações e Proporções',
+          'A Matemática do Comércio (Porcentagem)',
+          'Equações do Primeiro Grau e Modelagem',
+          'A Geometria do Espaço e Teorema de Pitágoras',
+          'Funções como Máquinas de Transformação',
+          'Introdução à Análise Combinatória (Probabilidade)'
+        ]
       },
       {
         slug: 'fisica',
@@ -226,6 +306,13 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'fundamentos',
         descricao: 'Compreensão das leis que regem o universo, energia e matéria.',
         contexto: `Abordagem: intuição antes de fórmula. Nunca comece com equação — comece com o fenômeno físico descrito em palavras e peça ao aluno para raciocinar sobre ele sem contas.`,
+        ementa: [
+          'Cinemática: O Estudo do Movimento',
+          'As 3 Leis de Newton (Inércia e Força)',
+          'Trabalho, Energia e Conservação',
+          'Termodinâmica (O Calor e a Desordem)',
+          'Eletromagnetismo Básico (Cargas e Campos)'
+        ]
       },
       {
         slug: 'quimica',
@@ -234,6 +321,28 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'fundamentos',
         descricao: 'O estudo das transformações moleculares e atômicas.',
         contexto: `Parta sempre do fenômeno observável e depois explique o que acontece na escala molecular. Use analogias de tamanho para escala atômica.`,
+        ementa: [
+          'A Estrutura do Átomo (Bohr a Quântica)',
+          'A Tabela Periódica (Como Ler as Propriedades)',
+          'Ligações Químicas (Iônica, Covalente, Metálica)',
+          'Reações e Estequiometria (A Receita do Bolo)',
+          'Ácidos, Bases e o pH'
+        ]
+      },
+      {
+        slug: 'biologia',
+        nome: 'Biologia',
+        emoji: '🧬',
+        parent: 'fundamentos',
+        descricao: 'O estudo da vida, da célula aos ecossistemas complexos.',
+        contexto: `Use a teoria da evolução como lente principal para explicar qualquer fenômeno biológico. "Por que isso evoluiu assim?".`,
+        ementa: [
+          'A Célula: A Fábrica da Vida',
+          'Genética e DNA (O Código Fonte)',
+          'Evolução e Seleção Natural (Darwin)',
+          'Sistemas Fisiológicos Humanos (Base)',
+          'Ecologia e Teias Alimentares'
+        ]
       },
       {
         slug: 'historia',
@@ -242,6 +351,14 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'fundamentos',
         descricao: 'Compreensão causal de eventos humanos e ciclos de civilizações.',
         contexto: `Foque em causalidade e conexões entre eventos — nunca em memorização de datas isoladas. Pergunte 'por que isso aconteceu?'. Conecte com o presente.`,
+        ementa: [
+          'A Revolução Agrícola e o Surgimento das Cidades',
+          'Império Romano: Ascensão e Queda',
+          'Idade Média e o Feudalismo Europeu',
+          'As Grandes Navegações e a Globalização 1.0',
+          'A Revolução Industrial e o Capitalismo Moderno',
+          'As Grandes Guerras (Visão Geopolítica)'
+        ]
       },
       {
         slug: 'geografia',
@@ -250,6 +367,13 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'fundamentos',
         descricao: 'As relações dinâmicas entre as sociedades e o espaço físico geopolítico.',
         contexto: `Conecte sempre com eventos atuais e cotidianos (clima, economia, conflitos). Para geografia humana, relacione com notícias recentes. Incentive raciocínio espacial.`,
+        ementa: [
+          'Formação Geológica do Planeta',
+          'Clima e Biomas Terrestres',
+          'Demografia Humana e Migrações',
+          'Geopolítica Contemporânea',
+          'Cadeias Produtivas Globais'
+        ]
       },
       {
         slug: 'filosofia',
@@ -258,6 +382,14 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'fundamentos',
         descricao: 'A busca rigorosa por princípios fundamentais e dilemas éticos.',
         contexto: `Use método socrático: antes de apresentar a posição de um filósofo, pergunte ao aluno o que ele pensa sobre o tema. Peça que o aluno construa e destrua seu próprio argumento.`,
+        ementa: [
+          'O Método Socrático e a Maiêutica',
+          'O Mito da Caverna (Platão)',
+          'Aristóteles e a Ética a Nicômaco',
+          'Estoqueicismo: O Controle da Mente (Sêneca/Marco Aurélio)',
+          'O Iluminismo e Kant (Imperativo Categórico)',
+          'Nihilismo e Existencialismo (Nietzsche/Sartre)'
+        ]
       },
       {
         slug: 'literatura',
@@ -266,6 +398,13 @@ export const MATERIAS: MateriaConfig[] = [
         parent: 'fundamentos',
         descricao: 'Interpretação profunda da experiência humana através do texto narrativo e poético.',
         contexto: `Foque na experiência do texto, não em biografia ou datas. Pergunte o que o aluno sentiu ou entendeu. Ensine a ver recursos literários como ferramentas de sentido.`,
+        ementa: [
+          'O Poder do Mito e Epopéias Antigas',
+          'Trovadorismo e Romantismo (Evolução Sentimental)',
+          'Machado de Assis e o Realismo Psicológico',
+          'Modernismo: A Quebra de Paradigmas',
+          'Ficção Científica e Distopias Contemporâneas'
+        ]
       },
       {
         slug: 'musica',

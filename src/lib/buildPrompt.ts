@@ -60,12 +60,18 @@ Matéria: ${materia.nome}`;
   }
   
   if (sub) {
+    const isEmentaItem = materia.ementa?.includes(sub);
     const subNome = materia.subTopicos?.find(s => s.slug === sub)?.nome || sub;
-    contexto += `\n\nATENÇÃO: O aluno escolheu focar exclusivamente no EIXO: **${subNome}**. Todas as suas explicações, perguntas e o tópico desta sessão devem ser limitados a esta subcategoria de ${materia.nome}.`;
+    
+    if (isEmentaItem) {
+      contexto += `\n\nATENÇÃO MÁXIMA: O aluno escolheu MANUALMENTE pular ou focar no seguinte tópico da ementa: **${subNome}**. Ignore o progresso normal e ENSINE ESTE TÓPICO IMEDIATAMENTE.`;
+    } else {
+      contexto += `\n\nATENÇÃO: O aluno escolheu focar exclusivamente no EIXO: **${subNome}**. Todas as suas explicações, perguntas e o tópico desta sessão devem ser limitados a esta subcategoria de ${materia.nome}.`;
+    }
   }
 
   if (materia.ementa && materia.ementa.length > 0) {
-    contexto += `\n\nEMENTA RIGOROSA (Passo a Passo):\nEsta matéria possui uma ementa estrita. Você não pode pular passos. Baseando-se no histórico, identifique em qual passo o aluno parou e ensine EXATAMENTE O PRÓXIMO PASSO. Não improvise tópicos fora desta lista.\n` + 
+    contexto += `\n\nEMENTA RIGOROSA (Passo a Passo):\nEsta matéria possui uma ementa estrita. Baseando-se no histórico (ou no Tópico Selecionado acima), ensine EXATAMENTE ESSE PASSO. Não improvise tópicos fora desta lista.\n` + 
     materia.ementa.map(step => `- ${step}`).join('\n');
   }
 

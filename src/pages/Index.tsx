@@ -81,25 +81,36 @@ export default function Index() {
                   </div>
                 </div>
                 
-                <button
-                  onClick={() => {
-                    if (isMasteryReady) {
-                      navigate(`/sessao/${heroEstado.config.slug}?modo=desafio`);
-                    } else {
-                      handleCardClick(heroEstado);
-                    }
-                  }}
-                  className={cn(
-                    "w-full sm:w-auto self-start px-8 py-3.5 rounded-xl font-medium transition-all text-sm shadow-xl",
-                    isMasteryReady
-                      ? "bg-emerald-500 text-white shadow-emerald-500/20 hover:bg-emerald-600 hover:-translate-y-0.5 active:scale-95"
-                      : "bg-foreground text-background shadow-foreground/10 hover:opacity-90 active:scale-95"
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={() => {
+                      if (isMasteryReady) {
+                        navigate(`/sessao/${heroEstado.config.slug}?modo=desafio`);
+                      } else {
+                        handleCardClick(heroEstado);
+                      }
+                    }}
+                    className={cn(
+                      "w-full sm:w-auto self-start px-8 py-3.5 rounded-xl font-medium transition-all text-sm shadow-xl",
+                      isMasteryReady
+                        ? "bg-emerald-500 text-white shadow-emerald-500/20 hover:bg-emerald-600 hover:-translate-y-0.5 active:scale-95"
+                        : "bg-foreground text-background shadow-foreground/10 hover:opacity-90 active:scale-95"
+                    )}
+                  >
+                    {isMasteryReady 
+                      ? `Fazer Desafio de Maestria de ${heroEstado.config.nome}` 
+                      : `Continuar Estudando ${heroEstado.config.nome}`}
+                  </button>
+
+                  {isMasteryReady && (
+                    <button
+                      onClick={() => handleCardClick(heroEstado)}
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors underline-offset-4 hover:underline self-start px-1"
+                    >
+                      Agora não — continuar estudando
+                    </button>
                   )}
-                >
-                  {isMasteryReady 
-                    ? `Fazer Desafio de Maestria de ${heroEstado.config.nome}` 
-                    : `Continuar Estudando ${heroEstado.config.nome}`}
-                </button>
+                </div>
               </div>
             </div>
           );
