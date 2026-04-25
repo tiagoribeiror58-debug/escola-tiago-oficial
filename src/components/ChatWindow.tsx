@@ -36,6 +36,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const [chipsEnabled, setChipsEnabled] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const autoStartFiredRef = useRef(false); // BUG-04: guard contra double auto-start
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -219,12 +220,13 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     }
   }, [input, isLoading, messages, systemPrompt, materia.slug, sessionKey, saveMutation]);
 
-  // Auto-start the session if it's new
+  // BUG-04: auto-start com ref para garantir disparo único (React StrictMode dispara 2x em dev)
   useEffect(() => {
-    if (!isContinuation && messages.length === 0 && !isLoading) {
-      handleSend("Inicie a sessão.", true);
-    }
-  }, [isContinuation, messages.length, isLoading, handleSend]);
+    if (isContinuation || autoStartFiredRef.current) return;
+    autoStartFiredRef.current = true;
+    handleSend("Inicie a sessão.", true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intencional: dispara só no mount
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {

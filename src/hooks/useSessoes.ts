@@ -7,9 +7,11 @@ export function useSessoes() {
   return useQuery({
     queryKey: ['sessoes'],
     queryFn: async () => {
+      // BUG-03: excluindo messages_json da listagem geral (pode ter MBs de dados)
+      // Use useSessionMessages(id) para carregar lazy quando necessario
       const { data, error } = await supabase
         .from('sessoes')
-        .select('*')
+        .select('id, materia, topico, data, erros, dificuldade, duracao_min, observacoes, proximo_topico, created_at, nivel, decisao_proxima, proxima_revisao, session_key')
         .order('created_at', { ascending: false });
 
       if (error) throw error;

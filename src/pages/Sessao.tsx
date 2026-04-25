@@ -43,6 +43,7 @@ export default function Sessao() {
 
   const messagesRef = useRef<ChatMessage[]>([]);
   const startTimeRef = useRef(Date.now());
+  const isSavingRef = useRef(false); // BUG-02: guard contra double-save
   const [saving, setSaving] = useState(false);
   const [topicComplete, setTopicComplete] = useState(false);
 
@@ -62,6 +63,10 @@ export default function Sessao() {
       navigate('/');
       return;
     }
+
+    // BUG-02: impede duplo encerramento (ex: usuário clica 2x após erro)
+    if (isSavingRef.current) return;
+    isSavingRef.current = true;
 
     const messages = messagesRef.current;
     setSaving(true);
@@ -130,6 +135,7 @@ export default function Sessao() {
     } catch (err) {
       console.error(err);
       toast.error('Erro ao salvar — tente novamente');
+      isSavingRef.current = false; // libera o lock para permitir retry
       setSaving(false);
     }
   }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey]);

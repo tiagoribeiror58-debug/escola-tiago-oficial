@@ -46,6 +46,24 @@ export function useSaveChatMessage() {
   });
 }
 
+// BUG-03: carrega messages_json de uma sessão específica de forma lazy
+// Evita trazer megabytes na listagem geral
+export function useSessionMessages(sessionId: number | null) {
+  return useQuery({
+    queryKey: ['session-messages', sessionId],
+    enabled: sessionId !== null,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('sessoes')
+        .select('messages_json')
+        .eq('id', sessionId!)
+        .single();
+      if (error) throw error;
+      return (data?.messages_json || []) as import('@/types').ChatMessage[];
+    },
+  });
+}
+
 export function useChatSessions(materia: string) {
   return useQuery({
     queryKey: ['chat-sessions', materia],
