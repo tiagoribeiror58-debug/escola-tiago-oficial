@@ -16,36 +16,16 @@ interface Props {
   onOpenChange: (open: boolean) => void;
 }
 
-function ChatBubbles({ messages }: { messages: ChatMessage[] }) {
-  const filtered = messages.filter(m => m.content !== 'Inicie a sessão.');
-  return (
-    <div className="space-y-2 max-h-56 overflow-y-auto pr-1 py-2">
-      {filtered.map((msg, i) => (
-        <div key={i} className={cn('flex', msg.role === 'user' ? 'justify-end' : 'justify-start')}>
-          <div className={cn(
-            'max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed',
-            msg.role === 'user'
-              ? 'bg-foreground text-background rounded-br-sm'
-              : 'bg-muted text-foreground rounded-bl-sm'
-          )}>
-            {msg.content}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+
 
 export default function MateriaDetailModal({ estado, open, onOpenChange }: Props) {
   const navigate = useNavigate();
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
-  const [expandedSessaoId, setExpandedSessaoId] = useState<number | null>(null);
   const { data: todasSessoes } = useSessoes();
 
   useEffect(() => {
     if (open) {
       setSelectedSub(null);
-      setExpandedSessaoId(null);
     }
   }, [open]);
 
@@ -93,6 +73,15 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
               </p>
             </div>
           </div>
+
+          {/* Introdução / Contexto */}
+          {config.contexto && (
+            <div className="mb-4 text-sm text-muted-foreground/90 bg-muted/30 p-3 rounded-xl border border-border/50">
+              <p className="line-clamp-3 hover:line-clamp-none transition-all cursor-default">
+                {config.contexto}
+              </p>
+            </div>
+          )}
 
           {/* Tópico anterior + próximo */}
           {ultimaSessao && (
@@ -184,7 +173,6 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
               </p>
               <div className="space-y-2">
                 {sessoesMateria.map(sessao => {
-                  const isExpanded = expandedSessaoId === sessao.id;
                   const hasChat = sessao.messages_json && sessao.messages_json.length > 0;
                   return (
                     <div
@@ -194,9 +182,15 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                       <div
                         className={cn(
                           "flex items-center justify-between px-3 py-2.5",
-                          hasChat && "cursor-pointer hover:bg-muted/50 transition-colors"
+                          hasChat && sessao.session_key && "cursor-pointer hover:bg-muted/50 transition-colors"
                         )}
-                        onClick={() => hasChat && setExpandedSessaoId(isExpanded ? null : sessao.id)}
+                        onClick={() => {
+                          if (hasChat && sessao.session_key) {
+                            playPopSound();
+                            onOpenChange(false);
+                            navigate(`/sessao/${config.slug}?resume=${sessao.session_key}`);
+                          }
+                        }}
                       >
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium text-foreground truncate">{sessao.topico}</p>
@@ -204,20 +198,14 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                             {format(new Date(sessao.created_at || sessao.data), "d 'de' MMM", { locale: ptBR })}
                           </p>
                         </div>
-                        {hasChat && (
+                        {hasChat && sessao.session_key && (
                           <div className="text-muted-foreground shrink-0 ml-2">
-                            {isExpanded
-                              ? <ChevronUp className="w-3.5 h-3.5" />
-                              : <ChevronDown className="w-3.5 h-3.5" />
-                            }
+                            <span className="text-[10px] font-medium px-2 py-1 bg-background rounded-md border border-border">
+                              Abrir Conversa
+                            </span>
                           </div>
                         )}
                       </div>
-                      {isExpanded && hasChat && (
-                        <div className="border-t border-border px-3 pb-2">
-                          <ChatBubbles messages={sessao.messages_json as ChatMessage[]} />
-                        </div>
-                      )}
                     </div>
                   );
                 })}

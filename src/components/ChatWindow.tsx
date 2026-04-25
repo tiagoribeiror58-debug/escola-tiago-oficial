@@ -15,13 +15,15 @@ interface Props {
   sessionKey: string;
   initialMessages?: ChatMessage[];
   sub?: string | null;
+  modo?: string | null;
+  sessoesRecentes?: Sessao[];
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
-export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, sub }: Props) {
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, sub, modo, sessoesRecentes }: Props) {
   const isContinuation = !!(initialMessages && initialMessages.length > 0);
-  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub);
+  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo, sessoesRecentes);
   const saveMutation = useSaveChatMessage();
 
   const [messages, setMessages] = useState<ChatMessage[]>(
@@ -173,7 +175,15 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       // Detect session_done signal — strips tag and notifies parent
       if (assistantContent.includes('<session_done/>')) {
         assistantContent = assistantContent.replace(/<session_done\/>/gi, '').trimEnd();
-        // Update the displayed message without the tag
+        setMessages(prev => prev.map((m, i) =>
+          i === prev.length - 1 ? { ...m, content: assistantContent } : m
+        ));
+        onTopicComplete?.();
+      }
+
+      // Detect mastery_passed signal
+      if (assistantContent.includes('<mastery_passed/>')) {
+        assistantContent = assistantContent.replace(/<mastery_passed\/>/gi, '').trimEnd();
         setMessages(prev => prev.map((m, i) =>
           i === prev.length - 1 ? { ...m, content: assistantContent } : m
         ));

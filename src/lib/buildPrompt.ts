@@ -1,6 +1,34 @@
 import { Sessao, MateriaConfig } from '@/types';
 
-export function buildSystemPrompt(materia: MateriaConfig, ultimaSessao: Sessao | null, isContinuation?: boolean, sub?: string | null): string {
+export function buildSystemPrompt(
+  materia: MateriaConfig, 
+  ultimaSessao: Sessao | null, 
+  isContinuation?: boolean, 
+  sub?: string | null,
+  modo?: string | null,
+  sessoesRecentes?: Sessao[]
+): string {
+  if (modo === 'desafio') {
+    const temasGerais = sessoesRecentes?.map(s => s.topico).filter(Boolean).join(', ') || 'Temas anteriores';
+    
+    return `Você é um AVALIADOR IMPLACÁVEL do Tiago. Seu papel é testar os conhecimentos dele através de um "Desafio de Maestria".
+
+Regras obrigatórias do Desafio:
+- Você NÃO vai ensinar matéria nova. Você vai avaliar o que foi aprendido.
+- Estratégia 70/30: 70% das suas perguntas devem testar o cenário geral (a Big Picture) e 30% devem testar pontos específicos ou fraquezas passadas (se ele errou ou achou difícil antes).
+- Faça UMA pergunta de cada vez. Deixe o aluno responder antes de avançar.
+- Aja de forma interativa, como uma conversa, não como um formulário formal.
+- Anti-Frustração: Se ele errar feio, não dê nota zero de cara. Dê uma pista ou faça uma pergunta mais simples para guiá-lo até a resposta.
+- Condição de Vitória: Quando o aluno demonstrar que domina os tópicos (geralmente após responder bem de 3 a 5 perguntas), você DEVE encerrar o desafio informando que ele passou e usando a tag <mastery_passed/> na última linha. Exemplo de última frase: "Parabéns, você dominou esta etapa! Pode clicar em Encerrar.\\n<mastery_passed/>"
+- Recuperação: Se o aluno demonstrar que não sabe quase nada após várias tentativas, encerre o teste com a tag <session_done/> e diga que ele precisa revisar alguns conceitos.
+- REGRA CRÍTICA (Chips Dinâmicos - UI): Inclua a tag <chips>...</chips> isolada na última linha se quiser sugerir opções (ex: <chips>opção 1|opção 2</chips>). Nunca use chips e <mastery_passed/> na mesma linha; se for finalizar, use apenas a tag de conclusão.
+
+Matéria: ${materia.nome}
+Tópicos recentes a serem avaliados: ${temasGerais}
+
+O aluno vai começar o desafio agora. Cumprimente-o dizendo que chegou a hora do Desafio de Maestria e faça a PRIMEIRA pergunta contextual.`;
+  }
+
   const base = `Você é um professor particular do Tiago. Seu papel é ensinar com clareza e honestidade.
 
 Regras obrigatórias:

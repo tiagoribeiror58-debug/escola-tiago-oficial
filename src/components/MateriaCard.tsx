@@ -57,6 +57,14 @@ export default function MateriaCard({ estado, onClick }: Props) {
         <span className="text-2xl leading-none select-none">{config.emoji}</span>
         <span className="text-sm font-medium text-foreground">{config.nome}</span>
         <div className="ml-auto flex items-center gap-2">
+          {config.ementa && config.ementa.length > 0 && (
+            <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-foreground/5 text-foreground/70">
+              {estado.totalSessoes}/{config.ementa.length} Tóp.
+            </span>
+          )}
+          <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-foreground/5 text-foreground/70">
+            {estado.totalSessoes % 11}/10 Prova
+          </span>
           <span className={cn(
             'text-[11px] font-medium px-2 py-0.5 rounded-full',
             urgenciaBg[urg]
@@ -74,16 +82,6 @@ export default function MateriaCard({ estado, onClick }: Props) {
           <p className="text-[12px] text-muted-foreground truncate flex-1 pointer-events-none">
             {displayTopic}
           </p>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              window.location.href = `/historico/${config.slug}`;
-            }}
-            className="flex items-center text-[11px] font-medium text-foreground/60 hover:text-foreground bg-muted/50 hover:bg-muted px-2 py-1 rounded-md transition-colors whitespace-nowrap"
-          >
-            Histórico
-          </button>
         </div>
       )}
     </div>

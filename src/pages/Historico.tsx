@@ -8,37 +8,13 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-function ChatBubbles({ messages }: { messages: ChatMessage[] }) {
-  return (
-    <div className="mt-3 space-y-2 max-h-96 overflow-y-auto pr-1">
-      {messages.map((msg, i) => (
-        <div
-          key={i}
-          className={cn(
-            'flex',
-            msg.role === 'user' ? 'justify-end' : 'justify-start'
-          )}
-        >
-          <div className={cn(
-            'max-w-[85%] px-3 py-2 rounded-xl text-sm leading-relaxed',
-            msg.role === 'user'
-              ? 'bg-foreground text-background rounded-br-sm'
-              : 'bg-muted text-foreground rounded-bl-sm'
-          )}>
-            {msg.content}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+
 
 export default function Historico() {
   const { materia: slug } = useParams<{ materia: string }>();
   const navigate = useNavigate();
   const { data: sessoes, isLoading } = useSessoes();
   const materiaConfig = getMateriaBySlug(slug || '');
-  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   if (!materiaConfig) {
     return (
@@ -85,9 +61,6 @@ export default function Historico() {
         ) : (
           <div className="space-y-3">
             {sessoesMateria.map((sessao) => {
-              const isExpanded = expandedId === sessao.id;
-              const hasChat = sessao.messages_json && sessao.messages_json.length > 0;
-
               return (
                 <div
                   key={sessao.id}
@@ -101,26 +74,16 @@ export default function Historico() {
                           {format(new Date(sessao.created_at || sessao.data), "eeee, d 'de' MMMM", { locale: ptBR })}
                         </p>
                       </div>
-                      {hasChat && (
+                      {hasChat && sessao.session_key && (
                         <button
-                          onClick={() => setExpandedId(isExpanded ? null : sessao.id)}
-                          className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted px-2.5 py-1.5 rounded-lg transition-colors shrink-0"
+                          onClick={() => navigate(`/sessao/${slug}?resume=${sessao.session_key}`)}
+                          className="flex items-center gap-1.5 text-xs font-medium text-foreground hover:bg-foreground hover:text-background border border-foreground bg-transparent px-3 py-1.5 rounded-lg transition-colors shrink-0"
                         >
-                          {isExpanded ? (
-                            <>Fechar <ChevronUp className="w-3.5 h-3.5" /></>
-                          ) : (
-                            <>Ver conversa <ChevronDown className="w-3.5 h-3.5" /></>
-                          )}
+                          Retomar
                         </button>
                       )}
                     </div>
                   </div>
-
-                  {isExpanded && hasChat && (
-                    <div className="border-t border-border px-4 pb-4">
-                      <ChatBubbles messages={sessao.messages_json as ChatMessage[]} />
-                    </div>
-                  )}
                 </div>
               );
             })}

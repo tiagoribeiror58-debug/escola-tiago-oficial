@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
-import { useUltimaSessao } from '@/hooks/useSessoes';
+import { useUltimaSessao, useSessoes } from '@/hooks/useSessoes';
 import { useChatHistory } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 
@@ -25,6 +25,16 @@ export default function Sessao() {
   const materiaConfig = getMateriaBySlug(slug || '');
   const { data: ultimaSessao, isLoading } = useUltimaSessao(slug || '');
   const { data: resumeMessages, isLoading: loadingResume } = useChatHistory(slug || '', resumeKey);
+  const { data: todasSessoes } = useSessoes();
+
+  const modo = searchParams.get('modo');
+
+  const sessoesRecentes = useMemo(() => {
+    return (todasSessoes || [])
+      .filter(s => s.materia === slug)
+      .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime())
+      .slice(0, 10);
+  }, [todasSessoes, slug]);
 
   const sessionKey = useMemo(() => {
     if (resumeKey) return resumeKey;
@@ -34,10 +44,7 @@ export default function Sessao() {
   const messagesRef = useRef<ChatMessage[]>([]);
   const startTimeRef = useRef(Date.now());
   const [saving, setSaving] = useState(false);
-  const [showSuccessMenu, setShowSuccessMenu] = useState(false);
-  const [showEarlyExitConfirm, setShowEarlyExitConfirm] = useState(false);
   const [topicComplete, setTopicComplete] = useState(false);
-  const [showConversation, setShowConversation] = useState(false);
 
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
@@ -51,9 +58,8 @@ export default function Sessao() {
   }, []);
 
   const doEncerrar = useCallback(async () => {
-    setShowEarlyExitConfirm(false);
     if (resumeKey) {
-      setShowSuccessMenu(true);
+      navigate('/');
       return;
     }
 
@@ -116,10 +122,11 @@ export default function Sessao() {
 
       queryClient.invalidateQueries({ queryKey: ['sessoes'] });
       queryClient.invalidateQueries({ queryKey: ['chat-sessions', slug] });
+      queryClient.invalidateQueries({ queryKey: ['ultima-sessao', slug] });
       toast.success('Sessão salva ✓');
       setSaving(false);
-      setShowSuccessMenu(true);
       playSuccessSound();
+      navigate('/');
     } catch (err) {
       console.error(err);
       toast.error('Erro ao salvar — tente novamente');
@@ -128,13 +135,8 @@ export default function Sessao() {
   }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey]);
 
   const handleEncerrar = useCallback(() => {
-    // Se o tópico ainda não foi concluído pela IA, pede confirmação
-    if (!topicComplete && messagesRef.current.length > 2) {
-      setShowEarlyExitConfirm(true);
-      return;
-    }
     doEncerrar();
-  }, [topicComplete, doEncerrar]);
+  }, [doEncerrar]);
 
   const handleMessagesChange = useCallback((messages: ChatMessage[]) => {
     messagesRef.current = messages;
@@ -163,93 +165,6 @@ export default function Sessao() {
   return (
     <div className="h-screen flex flex-col relative">
 
-      {/* Dialog: Sair antes do tópico concluir */}
-      {showEarlyExitConfirm && (
-        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-card border border-border p-6 rounded-2xl shadow-xl max-w-[300px] w-full space-y-4 text-center animate-in fade-in zoom-in-95 duration-200">
-            <p className="text-sm font-medium text-foreground">A IA ainda não concluiu o tópico.</p>
-            <p className="text-xs text-muted-foreground">Encerrar agora vai salvar a sessão do jeito que está. Prefere continuar?</p>
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={() => setShowEarlyExitConfirm(false)}
-                className="w-full bg-foreground text-background py-2.5 rounded-lg font-medium hover:opacity-90 active:scale-95 transition-all text-sm"
-              >
-                Continuar estudando
-              </button>
-              <button
-                onClick={doEncerrar}
-                className="w-full bg-muted text-muted-foreground py-2.5 rounded-lg font-medium hover:bg-muted/80 active:scale-95 transition-all text-sm"
-              >
-                Encerrar mesmo assim
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Tela de Sucesso */}
-      {showSuccessMenu && (
-        <div className="absolute inset-0 bg-background/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-card border border-border p-6 rounded-2xl shadow-xl max-w-[320px] w-full space-y-5 text-center animate-in fade-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto">
-              <Check className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-1">Sessão Encerrada!</h3>
-              <p className="text-sm text-muted-foreground">O tópico foi salvo com sucesso.</p>
-            </div>
-
-            {/* Ver conversa desta sessão */}
-            {messagesRef.current.length > 0 && (
-              <div className="text-left">
-                <button
-                  onClick={() => setShowConversation(v => !v)}
-                  className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors w-full justify-center"
-                >
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  {showConversation ? 'Ocultar conversa' : 'Ver conversa'}
-                  {showConversation ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                </button>
-                {showConversation && (
-                  <div className="mt-3 space-y-2 max-h-60 overflow-y-auto pr-1">
-                    {messagesRef.current.map((msg, i) => (
-                      <div key={i} className={cn('flex', msg.role === 'user' ? 'justify-end' : 'justify-start')}>
-                        <div className={cn(
-                          'max-w-[90%] px-3 py-2 rounded-xl text-xs leading-relaxed text-left',
-                          msg.role === 'user'
-                            ? 'bg-foreground text-background rounded-br-sm'
-                            : 'bg-muted text-foreground rounded-bl-sm'
-                        )}>
-                          {msg.content}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            <div className="flex flex-col gap-2.5">
-              <button
-                onClick={() => {
-                  setShowSuccessMenu(false);
-                  navigate(`/sessao/${slug}`);
-                }}
-                className="w-full bg-foreground text-background py-2.5 rounded-lg font-medium hover:opacity-90 active:scale-95 transition-all text-sm"
-              >
-                Nova Sessão
-              </button>
-              <button
-                onClick={() => navigate('/')}
-                className="w-full bg-muted text-muted-foreground py-2.5 rounded-lg font-medium hover:bg-muted/80 active:scale-95 transition-all text-sm"
-              >
-                Menu Principal
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <header className="flex items-center gap-3 px-4 py-3 border-b border-border">
         <button
           onClick={() => navigate('/')}
@@ -269,7 +184,7 @@ export default function Sessao() {
             'disabled:opacity-50',
             topicComplete
               ? 'bg-emerald-500 text-white ring-2 ring-emerald-500/40 animate-pulse hover:bg-emerald-600'
-              : 'bg-foreground text-background hover:opacity-90'
+              : 'hidden'
           )}
         >
           {saving ? (
@@ -296,6 +211,8 @@ export default function Sessao() {
           sessionKey={sessionKey}
           initialMessages={resumeKey ? resumeMessages || undefined : undefined}
           sub={sub}
+          modo={modo}
+          sessoesRecentes={sessoesRecentes}
         />
       </div>
     </div>

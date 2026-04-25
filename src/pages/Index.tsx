@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { BookOpen } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
 
 function getGreeting(): string {
@@ -33,13 +34,8 @@ export default function Index() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
 
-  // Sugestão SM-2 (Matéria mais atrasada)
-  const sugestaoSM2 = estados.find(
-    e => e.ultimaSessao !== null && e.diasAteRevisao !== null && e.diasAteRevisao <= 0
-  );
-
-  // Hero Card é a Sugestão SM-2 ou a matéria de maior acesso
-  const heroEstado = sugestaoSM2 || (estados.length > 0 ? estados[0] : null);
+  // Hero Card é a matéria de maior acesso
+  const heroEstado = estados.length > 0 ? estados[0] : null;
 
   const handleCardClick = (estado: MateriaEstado) => {
     if (estado.config.isCategory) {
@@ -61,37 +57,53 @@ export default function Index() {
           <h1 className="text-xl font-semibold tracking-tight">{getGreeting()}</h1>
           <p className="text-sm text-muted-foreground mt-0.5 capitalize">{hoje}</p>
         </div>
-        {/* Hero Card Absoluto */}
-        {heroEstado && !isLoading && (
-          <div className="mb-8 relative overflow-hidden rounded-[2rem] border border-border/50 bg-gradient-to-b from-card to-background p-6 sm:p-8 shadow-2xl transition-all hover:border-border/80">
-            <div className="absolute inset-0 bg-foreground/5 opacity-50 blur-3xl pointer-events-none" />
-            
-            <div className="relative z-10 flex flex-col gap-6 sm:gap-8">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h2 className="text-3xl font-semibold tracking-tight text-foreground">
-                    {heroEstado.config.nome}
-                  </h2>
-                  <p className="text-muted-foreground mt-1 text-sm sm:text-base pr-8">
-                    {sugestaoSM2 === heroEstado 
-                      ? 'Você tem uma revisão inteligente pendente para hoje.'
-                      : 'Sua matéria de maior foco. Retome sua jornada.'}
-                  </p>
-                </div>
-                <div className="w-14 h-14 rounded-full bg-foreground/5 flex items-center justify-center text-2xl shrink-0">
-                  {heroEstado.config.emoji}
-                </div>
-              </div>
+        {heroEstado && !isLoading && (() => {
+          const sessoesFeitas = heroEstado.totalSessoes % 11;
+          const isMasteryReady = sessoesFeitas === 10;
+          return (
+            <div className="mb-8 relative overflow-hidden rounded-[2rem] border border-border/50 bg-gradient-to-b from-card to-background p-6 sm:p-8 shadow-2xl transition-all hover:border-border/80">
+              <div className="absolute inset-0 bg-foreground/5 opacity-50 blur-3xl pointer-events-none" />
               
-              <button
-                onClick={() => handleCardClick(heroEstado)}
-                className="w-full sm:w-auto self-start px-8 py-3.5 rounded-xl bg-foreground text-background font-medium hover:opacity-90 active:scale-95 transition-all text-sm shadow-xl shadow-foreground/10"
-              >
-                {heroEstado.config.isCategory ? 'Explorar' : 'Retomar Foco'}
-              </button>
+              <div className="relative z-10 flex flex-col gap-6 sm:gap-8">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h2 className="text-3xl font-semibold tracking-tight text-foreground">
+                      {heroEstado.config.nome}
+                    </h2>
+                    <p className="text-muted-foreground mt-1 text-sm sm:text-base pr-8">
+                      {isMasteryReady
+                        ? 'Área dominada! Está na hora de provar seus conhecimentos.'
+                        : `Sua matéria de maior foco. Faltam ${10 - sessoesFeitas} sessões para o Desafio de Maestria.`}
+                    </p>
+                  </div>
+                  <div className="w-14 h-14 rounded-full bg-foreground/5 flex items-center justify-center text-2xl shrink-0">
+                    {heroEstado.config.emoji}
+                  </div>
+                </div>
+                
+                <button
+                  onClick={() => {
+                    if (isMasteryReady) {
+                      navigate(`/sessao/${heroEstado.config.slug}?modo=desafio`);
+                    } else {
+                      handleCardClick(heroEstado);
+                    }
+                  }}
+                  className={cn(
+                    "w-full sm:w-auto self-start px-8 py-3.5 rounded-xl font-medium transition-all text-sm shadow-xl",
+                    isMasteryReady
+                      ? "bg-emerald-500 text-white shadow-emerald-500/20 hover:bg-emerald-600 hover:-translate-y-0.5 active:scale-95"
+                      : "bg-foreground text-background shadow-foreground/10 hover:opacity-90 active:scale-95"
+                  )}
+                >
+                  {isMasteryReady 
+                    ? `Fazer Desafio de Maestria de ${heroEstado.config.nome}` 
+                    : `Continuar Estudando ${heroEstado.config.nome}`}
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
 
 
