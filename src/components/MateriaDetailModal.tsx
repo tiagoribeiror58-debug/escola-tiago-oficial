@@ -5,7 +5,7 @@ import { useSessoes, useEmentaConcluida, useToggleEmenta } from '@/hooks/useSess
 import { useSessionMessages } from '@/hooks/useChatMessages';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2 } from 'lucide-react';
+import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Lock } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { playPopSound } from '@/lib/audioUtils';
 import { format } from 'date-fns';
@@ -146,6 +146,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   const isCompleted = ementaConcluida.includes(topico);
                   const firstUncompletedIdx = config.ementa!.findIndex(t => !ementaConcluida.includes(t));
                   const isCurrent = idx === (firstUncompletedIdx === -1 ? config.ementa!.length : firstUncompletedIdx);
+                  const isLocked = !isCompleted && !isCurrent;
                   
                   return (
                     <button
@@ -154,7 +155,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                       className={cn(
                         "flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl transition-colors",
                         selectedSub === topico ? "bg-muted border border-border" : "hover:bg-muted/50 border border-transparent",
-                        isCompleted && selectedSub !== topico ? "text-muted-foreground" : isCurrent || selectedSub === topico ? "text-foreground font-medium" : "text-muted-foreground/50"
+                        isCompleted && selectedSub !== topico ? "text-muted-foreground" : isCurrent || selectedSub === topico ? "text-foreground font-medium" : "text-muted-foreground"
                       )}
                     >
                       <div 
@@ -164,9 +165,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                           selectedSub === topico ? "bg-foreground text-background border-foreground shadow-sm" :
                           isCompleted ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" :
                           isCurrent ? "bg-primary/10 border-primary/30 text-primary" :
-                          "bg-muted/50 border-border/50 text-muted-foreground/50"
+                          "bg-muted/30 border-border/50 text-muted-foreground"
                         )}>
-                        {isCompleted ? "✓" : (idx + 1)}
+                        {isCompleted ? "✓" : isLocked ? <Lock className="w-2.5 h-2.5" /> : (idx + 1)}
                       </div>
                       <span className={cn(
                         "line-clamp-1 flex-1",
