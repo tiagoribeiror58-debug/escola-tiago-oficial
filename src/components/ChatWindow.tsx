@@ -4,7 +4,7 @@ import { buildSystemPrompt } from '@/lib/buildPrompt';
 import { useSaveChatMessage } from '@/hooks/useChatMessages';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
-import { ArrowUp, Loader2, Zap, ZapOff } from 'lucide-react';
+import { ArrowUp, Loader2, Zap, ZapOff, History } from 'lucide-react';
 import { playPopSound, playThinkingDoneSound } from '@/lib/audioUtils';
 
 interface Props {
@@ -13,7 +13,8 @@ interface Props {
   onMessagesChange?: (messages: ChatMessage[]) => void;
   onTopicComplete?: () => void;
   sessionKey: string;
-  initialMessages?: ChatMessage[];
+  initialMessages?: ChatMessage[];   // retomada real (resume)
+  historyMessages?: ChatMessage[];   // histórico anterior (display-only, contexto visual)
   sub?: string | null;
   modo?: string | null;
   sessoesRecentes?: Sessao[];
@@ -21,7 +22,7 @@ interface Props {
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
-export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, sub, modo, sessoesRecentes }: Props) {
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, historyMessages, sub, modo, sessoesRecentes }: Props) {
   const isContinuation = !!(initialMessages && initialMessages.length > 0);
   const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo, sessoesRecentes);
   const saveMutation = useSaveChatMessage();
@@ -34,9 +35,9 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [chipsEnabled, setChipsEnabled] = useState(true);
+  const [historyExpanded, setHistoryExpanded] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const autoStartFiredRef = useRef(false); // BUG-04: guard contra double auto-start
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -220,13 +221,8 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     }
   }, [input, isLoading, messages, systemPrompt, materia.slug, sessionKey, saveMutation]);
 
-  // BUG-04: auto-start com ref para garantir disparo único (React StrictMode dispara 2x em dev)
-  useEffect(() => {
-    if (isContinuation || autoStartFiredRef.current) return;
-    autoStartFiredRef.current = true;
-    handleSend("Inicie a sessão.", true);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // intencional: dispara só no mount
+  // Auto-start removido: o agente só fala quando o usuário escrever primeiro.
+  // O contexto da sessão anterior já está no systemPrompt (tópico, próximo tópico).
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -235,9 +231,77 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     }
   };
 
+  const hasHistory = !!(historyMessages && historyMessages.length > 0);
+  const hasMessages = messages.length > 0;
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+
+        {/* Histórico da sessão anterior — display-only, não vai para IA */}
+        {hasHistory && (
+          <div className="mb-2">
+            <button
+              onClick={() => setHistoryExpanded(v => !v)}
+              className="flex items-center gap-2 w-full py-2 px-3 rounded-xl bg-muted/30 border border-border/50 hover:bg-muted/50 transition-colors"
+            >
+              <History className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
+              <span className="text-[11px] text-muted-foreground/70 font-medium flex-1 text-left">
+                {historyExpanded ? 'Ocultar histórico anterior' : `Ver sessão anterior (${historyMessages!.filter(m => m.role !== 'system').length} mensagens)`}
+              </span>
+              <span className="text-[10px] text-muted-foreground/40">{historyExpanded ? '▲' : '▼'}</span>
+            </button>
+
+            {historyExpanded && (
+              <div className="mt-2 space-y-3 max-h-[40vh] overflow-y-auto pr-1 py-2">
+                {historyMessages!.filter(m => m.role !== 'system').map((msg, i) => {
+                  const cleanContent = msg.content.replace(/<[^>]+>/g, '').trim();
+                  if (!cleanContent) return null;
+                  return (
+                    <div key={i} className={cn('flex opacity-60', msg.role === 'user' ? 'justify-end' : 'justify-start')}>
+                      <div className={cn(
+                        'px-3 py-2 rounded-xl text-[11px] max-w-[85%]',
+                        msg.role === 'user'
+                          ? 'bg-foreground/20 text-foreground rounded-br-sm'
+                          : 'bg-muted/50 text-muted-foreground'
+                      )}>
+                        <p className="whitespace-pre-wrap">{cleanContent}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Separador: divide histórico da conversa nova */}
+            <div className="flex items-center gap-2 my-4">
+              <div className="flex-1 h-px bg-border/50" />
+              <span className="text-[10px] text-muted-foreground/50 font-medium uppercase tracking-widest px-2">Nova conversa</span>
+              <div className="flex-1 h-px bg-border/50" />
+            </div>
+          </div>
+        )}
+
+        {/* Estado vazio: instrução para o usuário começar */}
+        {!hasMessages && !isLoading && (
+          <div className="flex flex-col items-center justify-center py-12 gap-3 text-center">
+            <span className="text-3xl select-none">{materia.emoji}</span>
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                {ultimaSessao
+                  ? `Retomando ${materia.nome}`
+                  : `Bem-vindo a ${materia.nome}`}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {ultimaSessao?.proximo_topico
+                  ? `Próximo: ${ultimaSessao.proximo_topico}`
+                  : 'Escreva qualquer coisa para começar'}
+              </p>
+            </div>
+            <p className="text-[11px] text-muted-foreground/50 mt-2">↓ O professor responde quando você escrever</p>
+          </div>
+        )}
+
         {messages.map((msg, i) => (
           <div
             key={i}

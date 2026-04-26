@@ -25,6 +25,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const [expandedSession, setExpandedSession] = useState<number | null>(null);
   const { data: todasSessoes } = useSessoes();
 
+  // REGRA DOS HOOKS: todos os hooks devem ser chamados ANTES de qualquer early return
+  const ementaConcluidaQuery = useEmentaConcluida(estado?.config?.slug || '');
+  const ementaConcluida = ementaConcluidaQuery.data || [];
+  const toggleEmenta = useToggleEmenta();
+
   useEffect(() => {
     if (open) {
       setSelectedSub(null);
@@ -35,10 +40,6 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   if (!estado) return null;
 
   const { config, ultimaSessao, diasParada } = estado;
-
-  const ementaConcluidaQuery = useEmentaConcluida(config?.slug || '');
-  const ementaConcluida = ementaConcluidaQuery.data || [];
-  const toggleEmenta = useToggleEmenta();
 
   const handleToggleTopico = (e: React.MouseEvent, topico: string, isCompleted: boolean) => {
     e.stopPropagation();

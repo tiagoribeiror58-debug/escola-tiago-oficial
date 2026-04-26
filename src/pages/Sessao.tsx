@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
 import { useUltimaSessao, useSessoes } from '@/hooks/useSessoes';
-import { useChatHistory } from '@/hooks/useChatMessages';
+import { useChatHistory, useSessionMessages } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 
 import { ArrowLeft, Square, Loader2, Check, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
@@ -26,6 +26,10 @@ export default function Sessao() {
   const { data: ultimaSessao, isLoading } = useUltimaSessao(slug || '');
   const { data: resumeMessages, isLoading: loadingResume } = useChatHistory(slug || '', resumeKey);
   const { data: todasSessoes } = useSessoes();
+  // Histórico visual da última sessão — exibido no chat, mas NÃO enviado à IA
+  const { data: historyMessages, isLoading: loadingHistory } = useSessionMessages(
+    !resumeKey && ultimaSessao?.id ? ultimaSessao.id : null
+  );
 
   const modo = searchParams.get('modo');
 
@@ -161,7 +165,7 @@ export default function Sessao() {
     );
   }
 
-  if (isLoading || (resumeKey && loadingResume)) {
+  if (isLoading || loadingHistory || (resumeKey && loadingResume)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-5 h-5 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin" />
@@ -217,6 +221,7 @@ export default function Sessao() {
           onTopicComplete={handleTopicComplete}
           sessionKey={sessionKey}
           initialMessages={resumeKey ? resumeMessages || undefined : undefined}
+          historyMessages={!resumeKey && historyMessages && historyMessages.length > 0 ? historyMessages : undefined}
           sub={sub}
           modo={modo}
           sessoesRecentes={sessoesRecentes}
