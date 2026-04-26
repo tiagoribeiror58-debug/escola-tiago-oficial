@@ -1,7 +1,7 @@
-import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
-import { useUltimaSessao, useSessoes } from '@/hooks/useSessoes';
+import { useUltimaSessao } from '@/hooks/useSessoes';
 import { useChatHistory, useSessionMessages } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 
@@ -25,7 +25,6 @@ export default function Sessao() {
   const materiaConfig = getMateriaBySlug(slug || '');
   const { data: ultimaSessao, isLoading } = useUltimaSessao(slug || '');
   const { data: resumeMessages, isLoading: loadingResume } = useChatHistory(slug || '', resumeKey);
-  const { data: todasSessoes } = useSessoes();
   // Histórico visual da última sessão — exibido no chat, mas NÃO enviado à IA
   const { data: historyMessages, isLoading: loadingHistory } = useSessionMessages(
     !resumeKey && ultimaSessao?.id ? ultimaSessao.id : null
@@ -33,12 +32,6 @@ export default function Sessao() {
 
   const modo = searchParams.get('modo');
 
-  const sessoesRecentes = useMemo(() => {
-    return (todasSessoes || [])
-      .filter(s => s.materia === slug)
-      .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime())
-      .slice(0, 10);
-  }, [todasSessoes, slug]);
 
   const sessionKey = useMemo(() => {
     if (resumeKey) return resumeKey;
@@ -224,7 +217,6 @@ export default function Sessao() {
           historyMessages={!resumeKey && historyMessages && historyMessages.length > 0 ? historyMessages : undefined}
           sub={sub}
           modo={modo}
-          sessoesRecentes={sessoesRecentes}
         />
       </div>
     </div>

@@ -17,14 +17,13 @@ interface Props {
   historyMessages?: ChatMessage[];   // histórico anterior (display-only, contexto visual)
   sub?: string | null;
   modo?: string | null;
-  sessoesRecentes?: Sessao[];
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
-export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, historyMessages, sub, modo, sessoesRecentes }: Props) {
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, historyMessages, sub, modo }: Props) {
   const isContinuation = !!(initialMessages && initialMessages.length > 0);
-  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo, sessoesRecentes);
+  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo);
   const saveMutation = useSaveChatMessage();
 
   const [messages, setMessages] = useState<ChatMessage[]>(
@@ -91,7 +90,9 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({ 
-          messages: newMessagesForAI.map(({ role, content }) => ({ role, content })), 
+          // Janela deslizante: envia apenas as últimas 12 mensagens à IA.
+          // Reduz custo de tokens sem perder contexto relevante (cada sessão é 1 tópico só).
+          messages: newMessagesForAI.slice(-12).map(({ role, content }) => ({ role, content })), 
           systemPrompt 
         }),
       });

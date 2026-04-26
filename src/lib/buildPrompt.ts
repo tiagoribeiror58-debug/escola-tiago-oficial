@@ -5,11 +5,12 @@ export function buildSystemPrompt(
   ultimaSessao: Sessao | null, 
   isContinuation?: boolean, 
   sub?: string | null,
-  modo?: string | null,
-  sessoesRecentes?: Sessao[]
+  modo?: string | null
 ): string {
   if (modo === 'desafio') {
-    const temasGerais = sessoesRecentes?.map(s => s.topico).filter(Boolean).join(', ') || 'Temas anteriores';
+    const temasGerais = ultimaSessao
+      ? `${ultimaSessao.topico}${ultimaSessao.proximo_topico ? `, ${ultimaSessao.proximo_topico}` : ''}`
+      : 'Temas da matéria';
     
     return `Você é um AVALIADOR IMPLACÁVEL do Tiago. Seu papel é testar os conhecimentos dele através de um "Desafio de Maestria".
 
