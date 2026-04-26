@@ -111,7 +111,7 @@ export default function Sessao() {
         duracao_min: duracaoMin > 0 ? duracaoMin : 1,
         session_key: sessionKey,
         messages_json: messagesSnapshot,
-        is_mastery: modo === 'desafio', // marca se foi um Desafio de Maestria
+        is_mastery: modo === 'avaliacao', // marca se foi um Exame de Proficiência
       });
 
       if (error) throw error;

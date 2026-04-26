@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Loader2, ScrollText } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export default function Maestria() {
+export default function Avaliacoes() {
   const { estados, isLoading } = useMateriasEstado();
   const navigate = useNavigate();
 
@@ -33,11 +33,11 @@ export default function Maestria() {
             </div>
             <div>
               <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                Portão de Avaliação
+                Avaliações de Proficiência
               </h1>
               <p className="text-sm text-muted-foreground mt-1 max-w-md leading-relaxed">
                 A cada 10 sessões concluídas em uma matéria, você desbloqueia
-                uma avaliação. Aqui você enfrenta o que aprendeu — sem atalhos.
+                um exame de proficiência. Aqui você demonstra o que consolidou — sem atalhos.
               </p>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function Maestria() {
                 key={estado.config.slug}
                 estado={estado}
                 onStart={() =>
-                  navigate(`/sessao/${estado.config.slug}?modo=desafio`)
+                  navigate(`/sessao/${estado.config.slug}?modo=avaliacao`)
                 }
               />
             ))}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMateriasEstado, useSessoes } from '@/hooks/useSessoes';
 import MateriaCard from '@/components/MateriaCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen, ScrollText } from 'lucide-react';
+import { BookOpen, ScrollText, Map } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -64,19 +64,31 @@ export default function Index() {
               <h1 className="text-xl font-semibold tracking-tight">{getGreeting()}</h1>
               <p className="text-sm text-muted-foreground mt-0.5 capitalize">{hoje}</p>
             </div>
-            {/* Atalho para o Portão de Avaliação */}
-            <button
-              onClick={() => navigate('/maestria')}
-              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-all"
-            >
-              <ScrollText className="w-3.5 h-3.5" />
-              Avaliações
-              {totalProvasPendentes > 0 && (
-                <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-foreground text-background text-[10px] font-bold leading-none">
-                  {totalProvasPendentes}
-                </span>
-              )}
-            </button>
+            
+            <div className="flex items-center gap-2">
+              {/* Atalho para Trilhas */}
+              <button
+                onClick={() => navigate('/trilhas')}
+                className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-all"
+              >
+                <Map className="w-3.5 h-3.5" />
+                Minhas Trilhas
+              </button>
+
+              {/* Atalho para o Portão de Avaliação */}
+              <button
+                onClick={() => navigate('/avaliacoes')}
+                className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-all"
+              >
+                <ScrollText className="w-3.5 h-3.5" />
+                Avaliações
+                {totalProvasPendentes > 0 && (
+                  <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-foreground text-background text-[10px] font-bold leading-none">
+                    {totalProvasPendentes}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
         {heroEstado && !isLoading && (() => {

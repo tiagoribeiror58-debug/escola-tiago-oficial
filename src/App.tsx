@@ -7,7 +7,8 @@ import Index from "./pages/Index.tsx";
 import Sessao from "./pages/Sessao.tsx";
 import Historico from "./pages/Historico.tsx";
 import Categoria from "./pages/Categoria.tsx";
-import Maestria from "./pages/Maestria.tsx";
+import Avaliacoes from "./pages/Avaliacoes.tsx";
+import Trilhas from "./pages/Trilhas.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -24,7 +25,8 @@ const App = () => (
           <Route path="/historico/:materia" element={<Historico />} />
           <Route path="/categoria/:slug" element={<Categoria />} />
           <Route path="/categoria/:slug/:sub" element={<Categoria />} />
-          <Route path="/maestria" element={<Maestria />} />
+          <Route path="/avaliacoes" element={<Avaliacoes />} />
+          <Route path="/trilhas" element={<Trilhas />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
