@@ -34,7 +34,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "claude-3-7-sonnet-20250219",
+        model: "claude-sonnet-4-6",
         system: systemPrompt || "You are a helpful assistant.",
         messages: messages,
         max_tokens: 4096,

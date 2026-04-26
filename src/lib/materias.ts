@@ -128,6 +128,15 @@ export const MATERIAS: MateriaConfig[] = [
           { slug: 'frontend', nome: 'Frontend (React/UI)' },
           { slug: 'backend', nome: 'Backend & APIs' },
           { slug: 'arquitetura', nome: 'Arquitetura & Clean Code' }
+        ],
+        ementa: [
+          'Lógica de Programação e Algoritmos Básicos',
+          'Variáveis, Tipos de Dados e Operadores',
+          'Estruturas de Controle (If/Else, Loops)',
+          'Funções e Escopo',
+          'Estruturas de Dados Básicas (Arrays, Objetos)',
+          'Programação Orientada a Objetos',
+          'Tratamento de Erros e Debugging'
         ]
       },
       {
