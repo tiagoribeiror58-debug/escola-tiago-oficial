@@ -141,7 +141,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     : `${ementaConcluida.length}/${config.ementa.length}`}
                 </span>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-1 max-h-[280px] overflow-y-auto pr-2">
                 {config.ementa.map((topico, idx) => {
                   const isCompleted = ementaConcluida.includes(topico);
                   const firstUncompletedIdx = config.ementa!.findIndex(t => !ementaConcluida.includes(t));
