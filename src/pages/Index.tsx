@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMateriasEstado, useSessoes } from '@/hooks/useSessoes';
 import MateriaCard from '@/components/MateriaCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen } from 'lucide-react';
+import { BookOpen, ScrollText } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -34,6 +34,11 @@ export default function Index() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
 
+  // Total de provas pendentes em todas as matérias
+  const totalProvasPendentes = estados
+    .filter(e => !e.config.isCategory)
+    .reduce((acc, e) => acc + e.provasPendentes, 0);
+
   // Hero Card é a matéria de maior acesso
   const heroEstado = estados.length > 0 ? estados[0] : null;
 
@@ -54,8 +59,25 @@ export default function Index() {
       <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-xl font-semibold tracking-tight">{getGreeting()}</h1>
-          <p className="text-sm text-muted-foreground mt-0.5 capitalize">{hoje}</p>
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <h1 className="text-xl font-semibold tracking-tight">{getGreeting()}</h1>
+              <p className="text-sm text-muted-foreground mt-0.5 capitalize">{hoje}</p>
+            </div>
+            {/* Atalho para o Portão de Avaliação */}
+            <button
+              onClick={() => navigate('/maestria')}
+              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-all"
+            >
+              <ScrollText className="w-3.5 h-3.5" />
+              Avaliações
+              {totalProvasPendentes > 0 && (
+                <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-foreground text-background text-[10px] font-bold leading-none">
+                  {totalProvasPendentes}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
         {heroEstado && !isLoading && (() => {
           const sessoesFeitas = heroEstado.totalSessoes % 11;

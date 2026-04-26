@@ -111,6 +111,7 @@ export default function Sessao() {
         duracao_min: duracaoMin > 0 ? duracaoMin : 1,
         session_key: sessionKey,
         messages_json: messagesSnapshot,
+        is_mastery: modo === 'desafio', // marca se foi um Desafio de Maestria
       });
 
       if (error) throw error;

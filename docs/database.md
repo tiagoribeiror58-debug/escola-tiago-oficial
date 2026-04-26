@@ -26,6 +26,7 @@ Tabela principal. Cada linha representa uma sessão de estudo encerrada.
 | `proxima_revisao` | `date` | Data calculada por SM-2 para revisão |
 | `session_key` | `uuid` | Chave única da sessão de chat (para associar mensagens) |
 | `messages_json` | `jsonb` | Snapshot completo da conversa ao encerrar |
+| `is_mastery` | `boolean` | `true` se a sessão foi um Desafio de Maestria (padrão: `false`) |
 | `created_at` | `timestamptz` | Timestamp automático |
 
 ### `chat_messages`
@@ -50,6 +51,7 @@ Tabela temporária. Armazena mensagens durante uma sessão ativa. **Deletada ao 
 | `20260416153226_*.sql` | Schema inicial: tabelas `sessoes` e `chat_messages` |
 | `20260419170000_add_sm2_proxima_revisao.sql` | Adiciona `proxima_revisao` e `nivel` para SM-2 |
 | `20260420180400_sessoes_session_key.sql` | Adiciona `session_key` em `sessoes` |
+| `20260426_add_is_mastery_to_sessoes` | Adiciona `is_mastery boolean` em `sessoes` para rastrear Desafios de Maestria |
 
 > **Nota:** A coluna `messages_json` foi adicionada via migration inline durante o desenvolvimento. Verificar o estado atual em: `supabase/migrations/`.
 
