@@ -25,6 +25,7 @@ export function useChatHistory(materia: string, sessionKey: string | null) {
     queryKey: ['chat-history', materia, sessionKey],
     enabled: !!sessionKey,
     queryFn: async () => {
+      // 1. Tenta buscar da tabela ativa de chat_messages
       const { data, error } = await supabase
         .from('chat_messages')
         .select('*')
@@ -32,7 +33,25 @@ export function useChatHistory(materia: string, sessionKey: string | null) {
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      return (data || []).map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })) as ChatMessage[];
+      
+      let messages = (data || []).map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })) as ChatMessage[];
+      
+      // 2. Se não encontrou, pode ser uma sessão antiga já encerrada.
+      // Nesse caso, as mensagens estão salvas como JSON em sessoes.messages_json
+      if (messages.length === 0) {
+        const { data: sessaoData, error: sessaoError } = await supabase
+          .from('sessoes')
+          .select('messages_json')
+          .eq('session_key', sessionKey!)
+          .maybeSingle();
+          
+        if (!sessaoError && sessaoData?.messages_json) {
+          // O banco retorna JSONB, garantimos que seja array de ChatMessage
+          messages = sessaoData.messages_json as unknown as ChatMessage[];
+        }
+      }
+      
+      return messages;
     },
   });
 }

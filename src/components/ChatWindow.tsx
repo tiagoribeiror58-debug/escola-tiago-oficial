@@ -22,14 +22,12 @@ interface Props {
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
 export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, historyMessages, sub, modo }: Props) {
-  const isContinuation = !!(initialMessages && initialMessages.length > 0);
+  const isContinuation = initialMessages !== undefined;
   const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo);
   const saveMutation = useSaveChatMessage();
 
   const [messages, setMessages] = useState<ChatMessage[]>(
-    initialMessages && initialMessages.length > 0
-      ? initialMessages
-      : []
+    initialMessages || []
   );
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
