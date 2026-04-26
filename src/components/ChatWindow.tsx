@@ -38,6 +38,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const [historyExpanded, setHistoryExpanded] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const autoStartFiredRef = useRef(false); // guard contra double auto-start (StrictMode)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -221,8 +222,14 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     }
   }, [input, isLoading, messages, systemPrompt, materia.slug, sessionKey, saveMutation]);
 
-  // Auto-start removido: o agente só fala quando o usuário escrever primeiro.
-  // O contexto da sessão anterior já está no systemPrompt (tópico, próximo tópico).
+  // Auto-start: dispara apenas em sessões NOVAS (não resume).
+  // isContinuation é true quando há resumeKey — nesses casos o usuário escolhe quando começar.
+  useEffect(() => {
+    if (isContinuation || autoStartFiredRef.current) return;
+    autoStartFiredRef.current = true;
+    handleSend('Inicie a sessão.', true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intencional: dispara só no mount
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
