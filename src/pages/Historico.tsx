@@ -61,6 +61,7 @@ export default function Historico() {
         ) : (
           <div className="space-y-3">
             {sessoesMateria.map((sessao) => {
+              const hasChat = !!sessao.session_key;
               return (
                 <div
                   key={sessao.id}

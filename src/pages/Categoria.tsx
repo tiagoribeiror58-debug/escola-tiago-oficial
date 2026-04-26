@@ -14,12 +14,20 @@ function buildEstado(config: MateriaConfig, sessoes: Sessao[]): MateriaEstado {
   const sessoesMateria = sessoes.filter(s => slugsAlvo.includes(s.materia));
   const ultimaSessao = sessoesMateria.length > 0 ? sessoesMateria[0] : null;
   const diasParada = ultimaSessao ? calcularDiasParada(ultimaSessao.data) : null;
+  
+  // Cálculo de provas pendentes (consistente com useSessoes.ts)
+  const sessoesNormais = sessoesMateria.filter(s => !s.is_mastery).length;
+  const provasRealizadas = sessoesMateria.filter(s => s.is_mastery).length;
+  const ciclosCompletados = Math.floor(sessoesNormais / 10);
+  const provasPendentes = Math.max(0, ciclosCompletados - provasRealizadas);
+
   return {
     config,
     ultimaSessao,
     totalSessoes: sessoesMateria.length,
     diasParada,
     diasAteRevisao: null,
+    provasPendentes,
   };
 }
 
