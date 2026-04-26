@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Sessao, MateriaEstado } from '@/types';
 import { MATERIAS, calcularDiasParada, getAllLeafSlugs } from '@/lib/materias';
@@ -86,3 +86,42 @@ export function useUltimaSessao(materia: string) {
   });
 }
 
+export function useEmentaConcluida(materia: string) {
+  return useQuery({
+    queryKey: ['ementa-concluida', materia],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('ementa_concluida')
+        .select('topico')
+        .eq('materia', materia);
+
+      if (error) throw error;
+      return data.map(d => d.topico) as string[];
+    },
+  });
+}
+
+export function useToggleEmenta() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ materia, topico, isCompleted }: { materia: string, topico: string, isCompleted: boolean }) => {
+      if (isCompleted) {
+        const { error } = await supabase
+          .from('ementa_concluida')
+          .delete()
+          .eq('materia', materia)
+          .eq('topico', topico);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('ementa_concluida')
+          .insert({ materia, topico });
+        if (error) throw error;
+      }
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['ementa-concluida', variables.materia] });
+    }
+  });
+}

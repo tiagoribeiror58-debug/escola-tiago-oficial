@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MateriaEstado } from '@/types';
 import { urgencia, getMateriaBySlug } from '@/lib/materias';
-import { useSessoes } from '@/hooks/useSessoes';
+import { useSessoes, useEmentaConcluida, useToggleEmenta } from '@/hooks/useSessoes';
 import { useSessionMessages } from '@/hooks/useChatMessages';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -35,6 +35,18 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   if (!estado) return null;
 
   const { config, ultimaSessao, diasParada } = estado;
+
+  const ementaConcluidaQuery = useEmentaConcluida(config?.slug || '');
+  const ementaConcluida = ementaConcluidaQuery.data || [];
+  const toggleEmenta = useToggleEmenta();
+
+  const handleToggleTopico = (e: React.MouseEvent, topico: string, isCompleted: boolean) => {
+    e.stopPropagation();
+    if (config) {
+      toggleEmenta.mutate({ materia: config.slug, topico, isCompleted });
+      playPopSound();
+    }
+  };
   const urg = urgencia(diasParada);
 
   const urgColors: Record<string, string> = {
@@ -123,15 +135,17 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   Trilha de Conhecimento
                 </p>
                 <span className="text-[10px] font-medium bg-foreground/10 text-foreground px-2 py-0.5 rounded-full">
-                  {estado.totalSessoes >= config.ementa.length 
-                    ? `Base concluída ${estado.totalSessoes > config.ementa.length ? `(+${estado.totalSessoes - config.ementa.length})` : ''}` 
-                    : `${estado.totalSessoes}/${config.ementa.length}`}
+                  {ementaConcluida.length >= config.ementa.length 
+                    ? `Base concluída` 
+                    : `${ementaConcluida.length}/${config.ementa.length}`}
                 </span>
               </div>
               <div className="space-y-1">
                 {config.ementa.map((topico, idx) => {
-                  const isCompleted = idx < estado.totalSessoes;
-                  const isCurrent = idx === estado.totalSessoes;
+                  const isCompleted = ementaConcluida.includes(topico);
+                  const firstUncompletedIdx = config.ementa!.findIndex(t => !ementaConcluida.includes(t));
+                  const isCurrent = idx === (firstUncompletedIdx === -1 ? config.ementa!.length : firstUncompletedIdx);
+                  
                   return (
                     <button
                       key={idx}
@@ -142,14 +156,16 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                         isCompleted && selectedSub !== topico ? "text-muted-foreground" : isCurrent || selectedSub === topico ? "text-foreground font-medium" : "text-muted-foreground/50"
                       )}
                     >
-                      <div className={cn(
-                        "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors",
-                        selectedSub === topico ? "bg-foreground text-background border-foreground shadow-sm" :
-                        isCompleted ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" :
-                        isCurrent ? "bg-primary/10 border-primary/30 text-primary" :
-                        "bg-muted/50 border-border/50 text-muted-foreground/50"
-                      )}>
-                        {isCompleted && selectedSub !== topico ? "✓" : (idx + 1)}
+                      <div 
+                        onClick={(e) => handleToggleTopico(e, topico, isCompleted)}
+                        className={cn(
+                          "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors cursor-pointer hover:scale-110",
+                          selectedSub === topico ? "bg-foreground text-background border-foreground shadow-sm" :
+                          isCompleted ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" :
+                          isCurrent ? "bg-primary/10 border-primary/30 text-primary" :
+                          "bg-muted/50 border-border/50 text-muted-foreground/50"
+                        )}>
+                        {isCompleted ? "✓" : (idx + 1)}
                       </div>
                       <span className={cn(
                         "line-clamp-1 flex-1",
@@ -162,7 +178,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 })}
 
                 {/* Infinite Curriculum Extension */}
-                {estado.totalSessoes >= config.ementa.length && (
+                {ementaConcluida.length >= config.ementa.length && (
                   <div className="flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl text-foreground font-medium mt-2 opacity-90">
                     <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors bg-primary/10 border-primary/30 text-primary">
                       ∞
