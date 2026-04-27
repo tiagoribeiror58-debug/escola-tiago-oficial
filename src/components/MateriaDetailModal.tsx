@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MateriaEstado } from '@/types';
 import { urgencia, getMateriaBySlug } from '@/lib/materias';
 import { useSessoes, useEmentaConcluida, useToggleEmenta } from '@/hooks/useSessoes';
@@ -30,10 +30,19 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const ementaConcluida = ementaConcluidaQuery.data || [];
   const toggleEmenta = useToggleEmenta();
 
+  const currentTopicRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     if (open) {
       setSelectedSub(null);
       setExpandedSession(null);
+      
+      // Auto-scroll suave para o tópico atual após renderização
+      setTimeout(() => {
+        if (currentTopicRef.current) {
+          currentTopicRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 150);
     }
   }, [open]);
 
@@ -141,7 +150,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     : `${ementaConcluida.length}/${config.ementa.length}`}
                 </span>
               </div>
-              <div className="space-y-1 max-h-[280px] overflow-y-auto pr-2">
+              <div className="space-y-1">
                 {config.ementa.map((topico, idx) => {
                   const isCompleted = ementaConcluida.includes(topico);
                   const firstUncompletedIdx = config.ementa!.findIndex(t => !ementaConcluida.includes(t));
@@ -151,6 +160,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   return (
                     <button
                       key={idx}
+                      ref={isCurrent ? currentTopicRef : null}
                       onClick={() => setSelectedSub(selectedSub === topico ? null : topico)}
                       className={cn(
                         "flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl transition-colors",
@@ -164,7 +174,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                           "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors cursor-pointer hover:scale-110",
                           selectedSub === topico ? "bg-foreground text-background border-foreground shadow-sm" :
                           isCompleted ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" :
-                          isCurrent ? "bg-primary/10 border-primary/30 text-primary" :
+                          isCurrent ? "bg-primary/10 border-primary/30 text-primary ring-2 ring-primary/20 ring-offset-1 ring-offset-background" :
                           "bg-muted/30 border-border/50 text-muted-foreground"
                         )}>
                         {isCompleted ? "✓" : isLocked ? <Lock className="w-2.5 h-2.5" /> : (idx + 1)}
@@ -175,6 +185,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                       )}>
                         {topico}
                       </span>
+                      {isCurrent && (
+                        <span className="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full shrink-0 animate-pulse">
+                          Atual
+                        </span>
+                      )}
                     </button>
                   );
                 })}
