@@ -1,9 +1,9 @@
 import { Sessao, MateriaConfig } from '@/types';
 
 export function buildSystemPrompt(
-  materia: MateriaConfig, 
-  ultimaSessao: Sessao | null, 
-  isContinuation?: boolean, 
+  materia: MateriaConfig,
+  ultimaSessao: Sessao | null,
+  isContinuation?: boolean,
   sub?: string | null,
   modo?: string | null
 ): string {
@@ -11,7 +11,7 @@ export function buildSystemPrompt(
     const temasGerais = ultimaSessao
       ? `${ultimaSessao.topico}${ultimaSessao.proximo_topico ? `, ${ultimaSessao.proximo_topico}` : ''}`
       : 'Temas da matéria';
-    
+
     return `Você é um AVALIADOR ACADÊMICO RIGOROSO do Tiago. Seu papel é testar os conhecimentos dele através de um "Exame de Maestria" de alto nível técnico.
 
 Regras obrigatórias do Desafio:
@@ -50,6 +50,9 @@ Regras obrigatórias:
 - Formatação Espacial: Sempre pule uma linha em branco entre cada parágrafo.
 - Elogie apenas mérito técnico e compreensão rigorosa. Não elogie esforço vazio.
 - NUNCA mencione "nível", "pontuação", "1/3", "2/3" ou qualquer métrica invisível de sistema.
+- Divida o conceito em partes para o aluno digerir a primeira parte e entender ele bem., depois a parte 2 e assim sucessivamente. Faça a primeira parte e pergunte se ele entendeu antes de passar para a próxima parte
+- No final peça ele pra tentar lembrar o que entendeu e explicar com suas palavras (não há problema se ele errar, o objetivo é fixar o conhecimento, não testar o aluno).
+- Não precisa dogmatizar essas regras, elas são instruções internas pra que você aja da melhor forma possível, se sua inteligencia permitir você pode flexibilizar as regras para ajudar o aluno a aprender de verdade e com base no historico e jeito que ele melhor aprende.
 
 Matéria: ${materia.nome}`;
 
@@ -57,11 +60,11 @@ Matéria: ${materia.nome}`;
   if (materia.contexto) {
     contexto = `\n\nContexto especial para ${materia.nome}:\n${materia.contexto}`;
   }
-  
+
   if (sub) {
     const isEmentaItem = materia.ementa?.includes(sub);
     const subNome = materia.subTopicos?.find(s => s.slug === sub)?.nome || sub;
-    
+
     if (isEmentaItem) {
       contexto += `\n\nATENÇÃO MÁXIMA: O aluno escolheu MANUALMENTE focar no seguinte tópico da ementa: **${subNome}**. Ignore o progresso normal e ENSINE ESTE TÓPICO IMEDIATAMENTE de forma profunda.`;
     } else {
@@ -70,8 +73,8 @@ Matéria: ${materia.nome}`;
   }
 
   if (materia.ementa && materia.ementa.length > 0) {
-    contexto += `\n\nEMENTA RIGOROSA (Passo a Passo):\nEsta matéria possui uma ementa estrita. Baseando-se no histórico (ou no Tópico Selecionado acima), disserte EXATAMENTE sobre este assunto. Não improvise tópicos fora desta estrutura.\n` + 
-    materia.ementa.map(step => `- ${step}`).join('\n');
+    contexto += `\n\nEMENTA RIGOROSA (Passo a Passo):\nEsta matéria possui uma ementa estrita. Baseando-se no histórico (ou no Tópico Selecionado acima), disserte EXATAMENTE sobre este assunto. Não improvise tópicos fora desta estrutura.\n` +
+      materia.ementa.map(step => `- ${step}`).join('\n');
   }
 
   if (isContinuation) {
