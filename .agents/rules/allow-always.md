@@ -1,6 +1,5 @@
 ---
 trigger: always_on
-glob:
-description:
 ---
 
+só-me-pessa-permissão-pra-analisar-e editar arquivo se for brultalmente critico!

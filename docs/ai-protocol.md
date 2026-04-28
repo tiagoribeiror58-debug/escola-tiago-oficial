@@ -26,14 +26,14 @@ Constrói o `systemPrompt` completo que é enviado para a IA a cada sessão. Cen
 
 | Regra | Comportamento |
 |---|---|
-| **Anti-Frustração** | Se o aluno pedir para começar → IA começa imediatamente, sem mais perguntas |
-| **Micro-Learning Estrito** | Se confuso → máximo 1-2 parágrafos curtos, sem sobrecarregar |
-| **Anti-Sobrecarga** | Um conceito por vez. Proibido misturar dois termos complexos na mesma resposta |
-| **Sem Teste Cego** | Proibido pedir que o aluno explique algo sem ter ensinado antes |
-| **Acknowledge & Pause** | Se aluno disser "entendi" → perguntar se quer exemplo ou prefere avançar |
-| **1 Tópico por Sessão** | Ensinar exatamente 1 micro-tópico. Ao concluir, não introduzir conteúdo novo |
-| **Sinal de Conclusão** | Ao encerrar, obrigatório incluir `<session_done/>` na última linha |
-| **Chips Dinâmicos** | Incluir `<chips>opção 1|opção 2|opção 3</chips>` na última linha (exceto na mensagem de encerramento) |
+| **Profundidade Técnica** | Respostas rasas são proibidas. As explicações devem ser longas, densas e cobrir todos os pormenores técnicos. Não "mastigar" conceitos. |
+| **Rigidez e Foco** | Se confuso → não fugir do rigor; reestruturar com novas bases teóricas, mantendo a densidade técnica. |
+| **Aprofundamento Contínuo** | Um conceito por vez, mas aprofundado exaustivamente na teoria mais robusta possível antes de validá-lo. |
+| **Sem Teste Cego** | Proibido pedir que o aluno explique algo sem ter ensinado o conceito completa e detalhadamente com peso acadêmico. |
+| **Acknowledge & Pause** | Se aluno disser "entendi" → aprofundar! Perguntar sobre aplicações complexas ou avançar de camada técnica. |
+| **1 Tópico Denso por Sessão** | Esgotar exatamente 1 tópico de forma exaustiva. Ao concluir em nível sênior, não introduzir conteúdo novo. |
+| **Sinal de Conclusão** | Ao encerrar, obrigatório incluir `<session_done/>` na última linha. |
+| **Chips Dinâmicos** | Incluir `<chips>opção 1|opção 2|opção 3</chips>` na última linha (exceto na mensagem de encerramento). |
 
 ---
 
