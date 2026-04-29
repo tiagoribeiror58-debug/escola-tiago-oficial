@@ -17,7 +17,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '👁️',
         parent: 'performance-intelecto',
         descricao: 'A ciência de aprender a aprender. Domine a retenção de leitura, sistemas de notas e deep work.',
-        contexto: `Foque nos princípios de aprender a aprender. Ensine sistemas reais: Zettelkasten, Leituras de Mortimer Adler, Recuperação Ativa e Repetição Espaçada. Para cada conceito, peça que o aluno crie um plano prático de 1 linha de como aplicar na vida amanhã. Questione métodos antigos (ex: releitura passiva, grifar textos) mostrando porque são ineficientes segundo a neurociência.`,
+        contexto: `Foco: aprender a aprender. Sistemas reais — Zettelkasten, Leitura Analítica de Adler, Recuperação Ativa, Repetição Espaçada.
+
+Abordagem obrigatória:
+- Antes de qualquer exercício, explique o mecanismo por trás do sistema — por que funciona, o que ele resolve, onde falha.
+- Só depois de compreensão estabelecida: peça que o aluno identifique como aquilo se aplica à sua rotina.
+- Questione métodos ineficientes (releitura passiva, grifo) explicando o mecanismo do fracasso — não apenas afirmando que são ruins.
+- Nunca peça "crie um plano prático" sem antes ter explicado o fundamento que justifica aquele plano.`,
         ementa: [
           'Leitura Inspecional e Leitura Analítica',
           'A Ilusão da Fluência (Por que reler não funciona)',
@@ -33,7 +39,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '🧪',
         parent: 'performance-intelecto',
         descricao: 'Protocolos baseados em ciência para otimizar sono, energia, foco e longevidade.',
-        contexto: `Foque em otimização de performance humana: sono, nutrição, suplementação, exercício, cold exposure, luz solar, manejo de estresse. Ao apresentar qualquer protocolo, seja transparente sobre o nível de evidência — o que tem RCT sólido vs o que é anedotal. Conecte com aplicações práticas imediatas.`,
+        contexto: `Foco: otimização de performance humana — sono, nutrição, suplementação, exercício, estresse.
+
+Abordagem obrigatória:
+- Explique o mecanismo fisiológico antes de qualquer protocolo. O aluno precisa entender por que aquilo funciona antes de saber o que fazer.
+- Seja transparente sobre nível de evidência: separe o que tem ensaio clínico sólido do que é anedotal. Nunca misture os dois sem marcar a diferença.
+- Só depois de compreensão do mecanismo: discuta aplicação prática.
+- Nunca apresente protocolo como receita sem antes explicar a biologia por trás.`,
         ementa: [
           'Ritmo Circadiano e Luz Solar Matinal',
           'Arquitetura do Sono (REM e Deep Sleep)',
@@ -48,7 +60,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '🧬',
         parent: 'performance-intelecto',
         descricao: 'Entenda os mecanismos mecânicos do seu cérebro por trás de hábitos e vícios.',
-        contexto: `Ensine como o cérebro funciona e conecte imediatamente com a vida do aluno: "isso explica por que você procrastina". Para memória e aprendizado, ensine os mecanismos (LTP, consolidação, sono). Para neuroplasticidade, use exemplos de hábitos. Desmistifique neuromitos comuns.`,
+        contexto: `Foco: mecanismos cerebrais reais — LTP, neuroplasticidade, consolidação de memória.
+
+Abordagem obrigatória:
+- Comece sempre pelo mecanismo biológico. Só depois conecte com comportamento observável.
+- Nunca parta do comportamento ("você procrastina porque...") sem antes ter explicado o substrato neural que o sustenta.
+- Desmistifique neuromitos explicando por que o mito existe e onde o mecanismo real diverge dele.
+- Exercícios de compreensão só após o mecanismo estar claro — nunca antes.`,
         ementa: [
           'Neuroplasticidade Hebbiana',
           'O Circuito de Recompensa (Dopamina)',
@@ -63,7 +81,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '🪞',
         parent: 'performance-intelecto',
         descricao: 'Vieses cognitivos, regulação emocional e padrões comportamentais subconscientes.',
-        contexto: `Conecte conceitos psicológicos com situações reais do aluno. Para vieses cognitivos, use exemplos que o aluno viveu. Trabalhe reconhecimento de emoções antes de estratégias de regulação. Peça avaliação crítica de teorias clássicas.`,
+        contexto: `Foco: mecanismos psicológicos reais — vieses, regulação emocional, padrões de comportamento.
+
+Abordagem obrigatória:
+- Explique o mecanismo do viés ou padrão antes de dar exemplos. O aluno precisa entender a estrutura, não só reconhecer casos.
+- Só depois de explicar o mecanismo: conecte com situações reais.
+- Para regulação emocional: explique o processo fisiológico e cognitivo envolvido antes de qualquer estratégia prática.
+- Peça avaliação crítica de teorias apenas depois que o aluno compreendeu os fundamentos — nunca como diagnóstico inicial.`,
         ementa: [
           'A Estrutura da Psique (Consciente vs Inconsciente)',
           'Vieses Cognitivos Fundamentais (Confirmação, Ancoragem)',
@@ -79,7 +103,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '⊢',
         parent: 'performance-intelecto',
         descricao: 'Argumentação, falácias e pensamento rigoroso sem viés.',
-        contexto: `Use puzzles e problemas reais antes de notação formal. Comece com linguagem natural. Para falácias, use exemplos de argumentos do cotidiano e política — o aluno deve identificar e nomear. Exija resolução passo a passo.`,
+        contexto: `Foco: estrutura lógica de argumentos — dedução, indução, falácias.
+
+Abordagem obrigatória:
+- Explique a estrutura formal do conceito antes de apresentar exemplos em linguagem natural.
+- Para falácias: explique por que a estrutura falha logicamente antes de nomear e exemplificar.
+- Problemas práticos só depois que o mecanismo lógico estiver estabelecido. Nunca use puzzles como diagnóstico inicial.
+- Exija resolução passo a passo com justificativa — não apenas a resposta correta.`,
         ementa: [
           'Proposições e Valores Verdade',
           'Operadores Lógicos (E, OU, NÃO, SE)',
@@ -108,7 +138,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '🤖',
         parent: 'tecnologia-negocios',
         descricao: 'Mecânicas de LLMs, Engenharia de Prompt avançada e Agentes Autônomos.',
-        contexto: `Foque nos fundamentos do que faz uma IA generativa funcionar, não apenas em usar ChatGPT. Ensine os limites do Transformer, a diferença entre Zero-shot e Few-shot, e arquiteturas de RAG (Retrieval-Augmented Generation). NUNCA dê a resposta mastigada; peça para o aluno criar um prompt que resolva um problema técnico específico, depois faça a crítica desse prompt.`,
+        contexto: `Foco: fundamentos reais de IA generativa — Transformer, tokenização, limites de arquitetura.
+
+Abordagem obrigatória:
+- Explique o mecanismo técnico antes de qualquer aplicação prática. O aluno precisa entender o que acontece dentro do modelo antes de saber como usá-lo.
+- Para prompting: explique por que determinada estrutura funciona (o mecanismo de atenção, contexto, etc.) antes de pedir que o aluno escreva um prompt.
+- Só depois de compreensão do mecanismo: peça que o aluno aplique em um problema técnico específico.
+- Critique prompts com base no mecanismo — não apenas "isso funciona melhor", mas por quê estruturalmente.`,
         ementa: [
           'Fundamentos de Transformers e Tokens',
           'Zero-shot, One-shot e Few-shot Prompting',
@@ -123,7 +159,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '<>',
         parent: 'tecnologia-negocios',
         descricao: 'Da lógica de base à arquitetura de sistemas distribuídos.',
-        contexto: `Abordagem: código primeiro, explicação depois. Apresente um problema pequeno e concreto, peça ao aluno para tentar resolver. Só depois de ele tentar é que você explica. Para bugs, não corrija — faça perguntas que levem o aluno a encontrar o erro.`,
+        contexto: `Foco: raciocínio computacional — lógica, estruturas, arquitetura.
+
+Abordagem obrigatória:
+- Explique o conceito ou padrão antes de apresentar o problema. O aluno precisa entender o que está sendo aplicado.
+- Para bugs: não corrija. Faça perguntas que levem o aluno ao mecanismo do erro — não à solução direta.
+- Código vem depois de compreensão do padrão, não antes. Nunca use código como diagnóstico inicial sem base conceitual.
+- Exija que o aluno explique o raciocínio da solução — não apenas que ela funcione.`,
         subTopicos: [
           { slug: 'frontend', nome: 'Frontend (React/UI)' },
           { slug: 'backend', nome: 'Backend & APIs' },
@@ -144,8 +186,14 @@ export const MATERIAS: MateriaConfig[] = [
         nome: 'Finanças & Equity',
         emoji: '📈',
         parent: 'tecnologia-negocios',
-        descricao: 'Ciclos de mercado, valuation de negócios e construção de patrimônio (Skin in the Game).',
-        contexto: `Abordagem fria, matemática e anti-fragilidade. Ensine conceitos de fluxo de caixa livre, CAC, LTV, Múltiplos de Mercado e Estruturação de Cap Table. Use estudos de caso de empresas reais (Apple, Nubank, Amazon). Se o aluno perguntar 'onde investir', responda com os frameworks de avaliação de risco/retorno, nunca com dicas de ativos.`,
+        descricao: 'Ciclos de mercado, valuation de negócios e construção de patrimônio.',
+        contexto: `Foco: fundamentos financeiros reais — fluxo de caixa, valuation, estrutura de capital.
+
+Abordagem obrigatória:
+- Explique o mecanismo financeiro antes de qualquer aplicação ou estudo de caso. O aluno precisa entender a lógica antes de ver o exemplo.
+- Para valuation: explique por que determinado método funciona e onde falha antes de aplicar em empresa real.
+- Se o aluno perguntar "onde investir": responda com o framework de análise de risco/retorno que justifica qualquer decisão — nunca com dicas de ativos.
+- Estudos de caso só depois que o mecanismo conceitual estiver sólido.`,
         ementa: [
           'A Matemática do Juros Composto (O Tempo vs Taxa)',
           'Unit Economics: CAC, LTV, Payback',
@@ -160,7 +208,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '💼',
         parent: 'tecnologia-negocios',
         descricao: 'Product-Market Fit, vendas B2B/B2C, liderança e gestão de produtos escaláveis.',
-        contexto: `Abordagem prática e cética: para cada modelo (Canvas, Lean), apresente um caso onde funcionou e onde falhou. Peça aplicação a uma ideia real imediatamente. Questione romantismos: 'o que poderia matar essa ideia?'.`,
+        contexto: `Foco: fundamentos reais de construção de negócios — validação, distribuição, escala.
+
+Abordagem obrigatória:
+- Para cada modelo (Canvas, Lean, etc.): explique o problema que ele resolve e onde falha antes de qualquer aplicação.
+- Só depois de entender o mecanismo: peça aplicação a uma ideia real.
+- Questione romantismos com base em mecanismo — "o que estruturalmente poderia matar essa ideia?" — não como provocação vazia.
+- Nunca peça pitch ou plano sem antes ter estabelecido os fundamentos que deveriam sustentá-los.`,
         ementa: [
           'A Anatomia de uma Startup (Diferença de Negócio Tradicional)',
           'Ideação e Identificação de Dores Reais',
@@ -177,11 +231,17 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '◑',
         parent: 'tecnologia-negocios',
         descricao: 'Hierarquia, tipografia, gestalt e design centrado no usuário.',
-        contexto: `Ensine através da análise visual — mostre (em palavras claras) a diferença de um design bom e ruim. Peça que o aluno critique designs do cotidiano. Conecte decisões com a intenção do designer.`,
+        contexto: `Foco: princípios estruturais do design — hierarquia, gestalt, percepção visual.
+
+Abordagem obrigatória:
+- Explique o princípio perceptivo ou cognitivo por trás de cada decisão de design antes de analisar exemplos.
+- Só depois de explicar o mecanismo: peça que o aluno critique um design real com base naquele princípio.
+- Nunca peça análise de design sem antes estabelecer o critério de análise — o que torna algo bom ou ruim e por quê.
+- Decisões de design sempre conectadas à intenção e ao mecanismo de percepção humana que as justifica.`,
         ementa: [
           'Leis da Gestalt Aplicadas a Interfaces',
           'Teoria das Cores e Contraste',
-          'Tipografia Clássica e Escala Típografica',
+          'Tipografia Clássica e Escala Tipográfica',
           'Espaçamento (White Space) e Hierarquia Visual',
           'UI vs UX: A Experiência do Usuário',
           'Heurísticas de Nielsen (Avaliação de Interfaces)'
@@ -206,7 +266,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '🔥',
         parent: 'dinamicas-comunicacao',
         descricao: 'Inteligência social pura: calibração, tensão, autenticidade e subcomunicação.',
-        contexto: `Abordagem focada em inteligência social, comunicação assertiva e desenvolvimento do valor pessoal. Ensine que atração é consequência de confiança e atitude, não de truques. Foque em: leitura corporal, subcomunicação, como flertar com calibração. Crie simulações práticas. Destrua mitos tóxicos da internet.`,
+        contexto: `Foco: inteligência social real — leitura de contexto, subcomunicação, calibração.
+
+Abordagem obrigatória:
+- Explique o mecanismo psicológico ou social por trás de cada dinâmica antes de qualquer simulação ou aplicação.
+- Para atração: explique o que a produz estruturalmente (confiança, consistência, atitude) antes de discutir comportamentos específicos.
+- Destrua mitos explicando o mecanismo pelo qual falham — não apenas afirmando que são errados.
+- Simulações práticas só depois que o aluno compreendeu o princípio que está sendo aplicado.`,
         ementa: [
           'A Base Fisiológica da Atração',
           'Subcomunicação e Linguagem Corporal (Olhar, Postura)',
@@ -222,7 +288,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '🎤',
         parent: 'dinamicas-comunicacao',
         descricao: 'Gatilhos de atenção, storytelling e projeção de voz para multidões ou 1-a-1.',
-        contexto: `Pratique, não só explique. Apresente um conceito (ex: abertura com gancho), depois peça que o aluno produza um exemplo curto imediatamente. Critique objetivamente: o que funcionou, o que não funcionou. Use a estrutura: gancho → contexto → argumento → CTA.`,
+        contexto: `Foco: mecanismos de atenção e persuasão oral — estrutura, ritmo, presença.
+
+Abordagem obrigatória:
+- Explique por que determinada técnica funciona (o mecanismo cognitivo ou emocional que ela aciona) antes de pedir que o aluno aplique.
+- Para estrutura narrativa: explique o mecanismo de atenção que ela sustenta antes de pedir produção.
+- Só depois de compreensão do princípio: peça que o aluno produza um exemplo curto.
+- Critique com base no mecanismo — "o gancho falhou porque..." — não apenas "ficou fraco".`,
         ementa: [
           'Como Superar o Medo de Falar em Público',
           'O Hook (Gancho) e a Estrutura Narrativa',
@@ -237,7 +309,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '✎',
         parent: 'dinamicas-comunicacao',
         descricao: 'Escrita persuasiva e clareza de pensamento traduzida em texto.',
-        contexto: `NUNCA escreva o texto pelo aluno. Sua função é provocar e criticar. Critique estrutura (tese, argumentos), coesão, e persuasão (os argumentos convencem?). Valorize a voz própria.`,
+        contexto: `Foco: mecanismos de persuasão e clareza na escrita — estrutura, argumento, coesão.
+
+Abordagem obrigatória:
+- Explique o mecanismo retórico ou lógico por trás de cada técnica antes de qualquer exercício de produção.
+- Para fórmulas (AIDA, PAS): explique o mecanismo psicológico que cada etapa aciona antes de aplicar.
+- Nunca escreva o texto pelo aluno. Critique com base no mecanismo — "o argumento falha aqui porque estruturalmente...".
+- Produção de texto só depois que o aluno compreendeu o princípio que deveria guiar aquela escrita.`,
         ementa: [
           'A Regra do 1: Uma Ideia por Texto',
           'Anatomia de um Headline (Título) Magnético',
@@ -252,7 +330,14 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: 'EN',
         parent: 'dinamicas-comunicacao',
         descricao: 'Imersão no idioma global. Foco em produção de frases reais, não apenas gramática abstrata.',
-        contexto: `Toda a sua comunicação e explicação DEVE ser em PORTUGUÊS. O idioma inglês deve aparecer APENAS nos exemplos, frases e exigências de exercícios práticos. Peça que o aluno produza frases, deduza padrões e responda desafios em inglês.`,
+        contexto: `Toda comunicação e explicação em PORTUGUÊS. Inglês aparece apenas em exemplos e exercícios.
+
+Abordagem obrigatória:
+- Explique o núcleo semântico ou estrutural de cada padrão antes de qualquer exemplo ou exercício. O aluno precisa entender o "porquê" da estrutura, não apenas reconhecer casos.
+- Só depois de compreensão do mecanismo: apresente exemplos para confirmar o padrão.
+- Exercícios de produção (frases, respostas em inglês) apenas depois que o mecanismo estiver estabelecido.
+- Nunca use exercícios de completar lacunas ou escolha entre opções como forma de ensino — isso testa memória, não compreensão.
+- Quando o aluno produzir uma frase: corrija explicando o mecanismo que foi violado, não apenas a forma correta.`,
         ementa: [
           'O Verbo To Be (Muito Além do Básico)',
           'Simple Present e Rotina Diária',
@@ -269,7 +354,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: 'ES',
         parent: 'dinamicas-comunicacao',
         descricao: 'Prática contínua e imersão progressiva sem focar excessivamente em regras engessadas.',
-        contexto: `Conduza partes crescentes da sessão diretamente em espanhol. Peça que o aluno forme frases e descreva situações. Corrija erros de forma integrada — repita a frase correta sem interromper o fluxo.`,
+        contexto: `Conduza partes crescentes da sessão diretamente em espanhol conforme o aluno avança.
+
+Abordagem obrigatória:
+- Explique o mecanismo gramatical ou semântico antes de pedir produção. O aluno precisa entender a estrutura antes de usá-la.
+- Para falsos cognatos e diferenças com o português: explique a origem da divergência antes de apenas listar os casos.
+- Corrija erros de forma integrada — aponte o mecanismo que foi violado e repita a estrutura correta sem interromper o fluxo.
+- Produção em espanhol só depois que o padrão estrutural estiver compreendido.`,
         ementa: [
           'Pronomes e Apresentações Básicas',
           'O Verbo Ser/Estar e Ser/Tener',
@@ -298,7 +389,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '∑',
         parent: 'fundamentos',
         descricao: 'O estudo dos padrões, do raciocínio lógico-quantitativo e geometria.',
-        contexto: `Abordagem: problema-primeiro. NUNCA explique a regra antes de apresentar o problema — deixe o aluno tentar primeiro, erre, e só então corrija com a explicação. Use problemas concretos do mundo real.`,
+        contexto: `Foco: raciocínio matemático real — padrões, estrutura, modelagem.
+
+Abordagem obrigatória:
+- Explique o princípio matemático antes de apresentar o problema. O aluno precisa entender o que está sendo aplicado antes de tentar resolver.
+- Para resolução de problemas: exija que o aluno justifique cada passo com base no princípio — não apenas o resultado.
+- Use problemas do mundo real para ilustrar o princípio, não como diagnóstico inicial sem base conceitual.
+- Nunca apresente fórmula sem explicar o que ela representa estruturalmente e de onde vem.`,
         ementa: [
           'A Lógica por trás das Frações e Proporções',
           'A Matemática do Comércio (Porcentagem)',
@@ -314,7 +411,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: 'λ',
         parent: 'fundamentos',
         descricao: 'Compreensão das leis que regem o universo, energia e matéria.',
-        contexto: `Abordagem: intuição antes de fórmula. Nunca comece com equação — comece com o fenômeno físico descrito em palavras e peça ao aluno para raciocinar sobre ele sem contas.`,
+        contexto: `Foco: intuição física real — fenômenos, forças, conservação.
+
+Abordagem obrigatória:
+- Comece pelo fenômeno físico descrito em palavras. Explique o mecanismo intuitivo antes de qualquer equação.
+- A fórmula é a última etapa — ela formaliza o que o aluno já deve ter compreendido conceitualmente.
+- Nunca comece com equação. Se o aluno não consegue descrever o fenômeno sem contas, a equação não serve de nada.
+- Problemas numéricos só depois que o mecanismo físico estiver estabelecido conceitualmente.`,
         ementa: [
           'Cinemática: O Estudo do Movimento',
           'As 3 Leis de Newton (Inércia e Força)',
@@ -329,7 +432,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '⚗',
         parent: 'fundamentos',
         descricao: 'O estudo das transformações moleculares e atômicas.',
-        contexto: `Parta sempre do fenômeno observável e depois explique o que acontece na escala molecular. Use analogias de tamanho para escala atômica.`,
+        contexto: `Foco: mecanismos químicos reais — estrutura atômica, ligações, reações.
+
+Abordagem obrigatória:
+- Parta sempre do fenômeno observável. Explique o que acontece na escala molecular antes de formalizar com nomenclatura ou equações.
+- Use analogias de escala para tornar o nível atômico concreto — mas só depois de estabelecer o fenômeno.
+- Equações estequiométricas e balanceamento só depois que o aluno compreendeu o que a reação representa fisicamente.
+- Nunca apresente nomenclatura química sem antes explicar o que ela descreve estruturalmente.`,
         ementa: [
           'A Estrutura do Átomo (Bohr a Quântica)',
           'A Tabela Periódica (Como Ler as Propriedades)',
@@ -344,7 +453,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '🧬',
         parent: 'fundamentos',
         descricao: 'O estudo da vida, da célula aos ecossistemas complexos.',
-        contexto: `Use a teoria da evolução como lente principal para explicar qualquer fenômeno biológico. "Por que isso evoluiu assim?".`,
+        contexto: `Foco: mecanismos biológicos reais — célula, genética, evolução, fisiologia.
+
+Abordagem obrigatória:
+- Use a teoria da evolução como lente principal. Antes de explicar qualquer estrutura ou mecanismo, estabeleça: "qual pressão seletiva produziu isso?"
+- Explique o mecanismo biológico antes de conectar com comportamento ou saúde humana.
+- Nomenclatura e classificação só depois que o aluno compreendeu o que está sendo categorizado e por quê.
+- Nunca parta de definição de manual — parta do fenômeno e construa a definição com o aluno.`,
         ementa: [
           'A Célula: A Fábrica da Vida',
           'Genética e DNA (O Código Fonte)',
@@ -359,7 +474,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '⏳',
         parent: 'fundamentos',
         descricao: 'Compreensão causal de eventos humanos e ciclos de civilizações.',
-        contexto: `Foque em causalidade e conexões entre eventos — nunca em memorização de datas isoladas. Pergunte 'por que isso aconteceu?'. Conecte com o presente.`,
+        contexto: `Foco: causalidade histórica real — por que eventos acontecem, como se conectam, o que produzem.
+
+Abordagem obrigatória:
+- Nunca comece por datas ou nomes isolados. Comece pelas condições estruturais que tornaram um evento possível.
+- Explique o mecanismo causal antes de narrar o evento. O aluno precisa entender o "porquê" antes do "o quê".
+- Conecte com o presente pelo mecanismo — não como curiosidade, mas como extensão causal do que foi ensinado.
+- Análise crítica de eventos só depois que o contexto estrutural estiver estabelecido.`,
         ementa: [
           'A Revolução Agrícola e o Surgimento das Cidades',
           'Império Romano: Ascensão e Queda',
@@ -375,7 +496,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '🌍',
         parent: 'fundamentos',
         descricao: 'As relações dinâmicas entre as sociedades e o espaço físico geopolítico.',
-        contexto: `Conecte sempre com eventos atuais e cotidianos (clima, economia, conflitos). Para geografia humana, relacione com notícias recentes. Incentive raciocínio espacial.`,
+        contexto: `Foco: relações causais entre espaço físico, clima, economia e geopolítica.
+
+Abordagem obrigatória:
+- Explique o mecanismo geográfico ou geopolítico antes de conectar com eventos atuais.
+- Para notícias e conflitos: explique as condições estruturais que os produzem antes de analisar o evento em si.
+- Raciocínio espacial: o aluno deve ser capaz de deduzir implicações geográficas antes de receber confirmação.
+- Nunca apresente dado geográfico isolado — sempre dentro do mecanismo que o torna relevante.`,
         ementa: [
           'Formação Geológica do Planeta',
           'Clima e Biomas Terrestres',
@@ -390,12 +517,18 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '∞',
         parent: 'fundamentos',
         descricao: 'A busca rigorosa por princípios fundamentais e dilemas éticos.',
-        contexto: `Use método socrático: antes de apresentar a posição de um filósofo, pergunte ao aluno o que ele pensa sobre o tema. Peça que o aluno construa e destrua seu próprio argumento.`,
+        contexto: `Foco: argumentação filosófica real — estrutura, pressupostos, implicações.
+
+Abordagem obrigatória:
+- Antes de apresentar a posição de um filósofo: explique o problema que ele estava tentando resolver e por que as respostas anteriores eram insuficientes.
+- O aluno deve compreender o problema antes de ser apresentado à solução proposta.
+- Método socrático aplicado com rigor: o aluno constrói e destrói seus próprios argumentos com base em princípios, não em intuição.
+- Só depois de compreender o sistema filosófico: peça avaliação crítica fundamentada.`,
         ementa: [
           'O Método Socrático e a Maiêutica',
           'O Mito da Caverna (Platão)',
           'Aristóteles e a Ética a Nicômaco',
-          'Estoqueicismo: O Controle da Mente (Sêneca/Marco Aurélio)',
+          'Estoicismo: O Controle da Mente (Sêneca/Marco Aurélio)',
           'O Iluminismo e Kant (Imperativo Categórico)',
           'Nihilismo e Existencialismo (Nietzsche/Sartre)'
         ]
@@ -406,7 +539,13 @@ export const MATERIAS: MateriaConfig[] = [
         emoji: '📖',
         parent: 'fundamentos',
         descricao: 'Interpretação profunda da experiência humana através do texto narrativo e poético.',
-        contexto: `Foque na experiência do texto, não em biografia ou datas. Pergunte o que o aluno sentiu ou entendeu. Ensine a ver recursos literários como ferramentas de sentido.`,
+        contexto: `Foco: mecanismos literários reais — recursos, estrutura narrativa, intenção do autor.
+
+Abordagem obrigatória:
+- Explique o recurso literário e o efeito que ele produz antes de identificá-lo em textos.
+- O aluno deve compreender o mecanismo (metáfora, ironia, narrador não-confiável) antes de ser capaz de reconhecê-lo ou usá-lo.
+- Nunca comece por biografia ou contexto histórico isolado — comece pelo texto e pelo que ele faz.
+- Interpretação crítica só depois que os instrumentos de leitura estiverem estabelecidos.`,
         ementa: [
           'O Poder do Mito e Epopéias Antigas',
           'Trovadorismo e Romantismo (Evolução Sentimental)',
@@ -424,22 +563,65 @@ export const MATERIAS: MateriaConfig[] = [
         descricao: 'Treinamento de percepção auditiva, teoria harmônica e execução instrumental.',
         children: [
           {
-            slug: 'violao', nome: 'Violão Prático', emoji: '🎸', parent: 'musica',
+            slug: 'violao',
+            nome: 'Violão Prático',
+            emoji: '🎸',
+            parent: 'musica',
             descricao: 'Fundamentos de cordas, cifras e levadas rítmicas aplicadas.',
-            contexto: 'Ensine usando transição fluida entre acordes como foco principal. Corrija tensão nas mãos e postura.',
-            ementa: ['Postura e Mão Esquerda', 'Acordes Menores Iniciais (Am, Em)', 'Acordes Maiores (C, G, D)', 'Transição e Memória Muscular', 'Ritmo e Levadas de Mão Direita']
+            contexto: `Foco: mecanismos técnicos reais — postura, tensão muscular, transição de acordes.
+
+Abordagem obrigatória:
+- Explique o mecanismo físico e muscular antes de pedir execução. O aluno precisa entender o que o corpo deve fazer e por quê antes de tentar.
+- Para transição de acordes: explique o que causa lentidão ou travamento antes de propor exercícios.
+- Corrija tensão e postura explicando o mecanismo do problema — não apenas dizendo "relaxa a mão".
+- Exercício prático só depois que o princípio técnico estiver estabelecido.`,
+            ementa: [
+              'Postura e Mão Esquerda',
+              'Acordes Menores Iniciais (Am, Em)',
+              'Acordes Maiores (C, G, D)',
+              'Transição e Memória Muscular',
+              'Ritmo e Levadas de Mão Direita'
+            ]
           },
           {
-            slug: 'piano', nome: 'Teclas & Harmonia', emoji: '🎹', parent: 'musica',
+            slug: 'piano',
+            nome: 'Teclas & Harmonia',
+            emoji: '🎹',
+            parent: 'musica',
             descricao: 'Arranjos harmônicos, tríades, leitura e independência motora.',
-            contexto: 'Foque em estado fundamental de acordes. I-IV-V-I. Uma mão de cada vez.',
-            ementa: ['Postura e Numeração de Dedos', 'Acordes Naturais (Tríades)', 'Progressões Básicas (Pop)', 'Independência Mão Esquerda/Direita']
+            contexto: `Foco: harmonia aplicada e independência motora — tríades, progressões, coordenação.
+
+Abordagem obrigatória:
+- Explique o princípio harmônico antes de pedir execução. O aluno precisa entender por que aquela progressão funciona musicalmente.
+- Para independência de mãos: explique o mecanismo cognitivo e muscular do problema antes de propor exercícios.
+- Uma mão de cada vez, com compreensão do papel de cada uma antes de integrá-las.
+- Nunca peça execução sem antes estabelecer o que o aluno está tentando produzir e por quê.`,
+            ementa: [
+              'Postura e Numeração de Dedos',
+              'Acordes Naturais (Tríades)',
+              'Progressões Básicas (Pop)',
+              'Independência Mão Esquerda/Direita'
+            ]
           },
           {
-            slug: 'teoria-musical', nome: 'Teoria Musical Aplicada', emoji: '🎵', parent: 'musica',
+            slug: 'teoria-musical',
+            nome: 'Teoria Musical Aplicada',
+            emoji: '🎵',
+            parent: 'musica',
             descricao: 'A matemática da música: escalas, percepção e formação de acordes.',
-            contexto: 'Ensine a escala maior. Conecte tudo com músicas reais que o aluno conheça. Solfejo antes de notação formal.',
-            ementa: ['Escalas Maiores e Menores', 'Formação de Tríades', 'Intervalos Musicais', 'Campos Harmônicos Simples']
+            contexto: `Foco: estrutura musical real — escalas, intervalos, campos harmônicos.
+
+Abordagem obrigatória:
+- Explique o princípio acústico ou matemático por trás de cada conceito antes de nomear ou formalizar.
+- Para escalas: explique por que aquela sequência de intervalos produz aquele efeito sonoro antes de pedir que o aluno execute.
+- Conecte com músicas reais que o aluno conhece para confirmar o mecanismo — não como ponto de partida.
+- Solfejo e percepção antes de notação formal — o aluno deve ouvir o conceito antes de lê-lo.`,
+            ementa: [
+              'Escalas Maiores e Menores',
+              'Formação de Tríades',
+              'Intervalos Musicais',
+              'Campos Harmônicos Simples'
+            ]
           }
         ]
       }
@@ -458,7 +640,6 @@ export function getMateriaBySlug(slug: string, list: MateriaConfig[] = MATERIAS)
   return undefined;
 }
 
-/** Retorna todos os slugs-folha (sem filhos) de uma config, para agregar sessões de categorias */
 export function getAllLeafSlugs(config: MateriaConfig): string[] {
   if (!config.children || config.children.length === 0) return [config.slug];
   return config.children.flatMap(child => getAllLeafSlugs(child));
