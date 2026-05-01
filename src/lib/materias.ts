@@ -369,6 +369,52 @@ Abordagem obrigatória:
           'Vocabulário de Viagens e Restaurantes',
           'Pretérito Perfeito vs Indefinido'
         ]
+      },
+      {
+        slug: 'retorica',
+        nome: 'Retórica & Argumentação',
+        emoji: '⚖️',
+        parent: 'dinamicas-comunicacao',
+        descricao: 'A arte de construir, desconstruir e avaliar argumentos com rigor lógico e impacto persuasivo.',
+        contexto: `Foco: estrutura argumentativa real — premissas, conclusões, pressupostos ocultos e estratégias de persuasão.
+
+Abordagem obrigatória:
+- Explique a estrutura lógica de cada tipo de argumento antes de analisar exemplos reais.
+- Para falácias retóricas: explique o mecanismo pelo qual enganam antes de pedir identificação.
+- Use discursos reais (políticos, publicitários, jurídicos) como material de análise DEPOIS que o aluno dominar a estrutura formal.
+- O aluno deve ser capaz de construir um argumento sólido E desmontá-lo identificando seus pontos fracos.
+- Diferencie claramente retórica (persuasão) de lógica formal (validade) — são ferramentas distintas.`,
+        ementa: [
+          'Anatomia de um Argumento (Premissa → Conclusão)',
+          'Ethos, Pathos e Logos (Os 3 Pilares de Aristóteles)',
+          'Falácias Retóricas vs Falácias Lógicas',
+          'Contra-Argumentação e Refutação Estruturada',
+          'Retórica Aplicada: Política, Publicidade e Direito',
+          'Dialética: A Arte de Debater sem Agredir'
+        ]
+      },
+      {
+        slug: 'negociacao',
+        nome: 'Negociação',
+        emoji: '🤝',
+        parent: 'dinamicas-comunicacao',
+        descricao: 'Princípios e táticas de negociação baseados em Harvard, FBI e teoria dos jogos.',
+        contexto: `Foco: mecanismos de influência mútua — o que gera acordo, o que gera impasse, e por quê.
+
+Abordagem obrigatória:
+- Explique o princípio estrutural antes de qualquer tática. O aluno precisa entender POR QUE uma técnica funciona, não apenas memorizá-la.
+- Para BATNA e zona de acordo: ensine a mecânica de poder antes de aplicar em cenários.
+- Simulações práticas DEPOIS que o aluno compreender o framework sendo usado.
+- Diferencie negociação distributiva (soma zero) de integrativa (ganha-ganha) pelo mecanismo, não pelo rótulo.
+- Use casos reais (salário, contratos, conflitos) como material de aplicação, não de introdução.`,
+        ementa: [
+          'O Framework de Harvard (Fisher & Ury)',
+          'BATNA: Seu Poder Real na Mesa',
+          'Ancoragem e a Psicologia das Concessões',
+          'Negociação Distributiva vs Integrativa',
+          'Escuta Tática (Técnicas do FBI — Chris Voss)',
+          'Comunicação Não-Violenta Aplicada a Conflitos'
+        ]
       }
     ]
   },
@@ -552,6 +598,52 @@ Abordagem obrigatória:
           'Machado de Assis e o Realismo Psicológico',
           'Modernismo: A Quebra de Paradigmas',
           'Ficção Científica e Distopias Contemporâneas'
+        ]
+      },
+      {
+        slug: 'economia',
+        nome: 'Economia',
+        emoji: '💹',
+        parent: 'fundamentos',
+        descricao: 'Como mercados, governos e incentivos moldam o comportamento humano e a distribuição de recursos.',
+        contexto: `Foco: mecanismos econômicos reais — incentivos, trade-offs, consequências de segunda ordem.
+
+Abordagem obrigatória:
+- Explique o mecanismo econômico (oferta/demanda, incentivos, externalidades) antes de qualquer exemplo histórico ou atual.
+- Para políticas públicas: explique os trade-offs estruturais antes de discutir posições ideológicas. Economia não tem lado — tem consequências.
+- O aluno deve ser capaz de prever consequências de segunda e terceira ordem de uma decisão econômica antes de receber a resposta.
+- Diferencie claramente Economia (ciência dos incentivos) de Finanças (gestão de capital pessoal/empresarial).
+- Use exemplos do cotidiano do aluno (preço do pão, aluguel, salário) para ancorar conceitos abstratos.`,
+        ementa: [
+          'Oferta, Demanda e o Mecanismo de Preços',
+          'Incentivos e Consequências Não-Intencionais',
+          'Custo de Oportunidade e Trade-offs',
+          'Inflação, Juros e Política Monetária',
+          'Comércio Internacional e Vantagem Comparativa',
+          'Ciclos Econômicos (Boom, Recessão, Recuperação)'
+        ]
+      },
+      {
+        slug: 'estatistica',
+        nome: 'Estatística & Dados',
+        emoji: '📊',
+        parent: 'fundamentos',
+        descricao: 'A linguagem da incerteza. Interpretar dados, identificar viés e pensar probabilisticamente.',
+        contexto: `Foco: raciocínio probabilístico e alfabetização em dados — a capacidade de não ser enganado por números.
+
+Abordagem obrigatória:
+- Explique o conceito estatístico usando situações do cotidiano antes de qualquer fórmula. O aluno deve entender a intuição antes da notação.
+- Para viés de amostragem e p-value: explique o mecanismo pelo qual conclusões erradas são produzidas antes de ensinar a ferramenta de correção.
+- Sempre que apresentar um dado ou gráfico: peça ao aluno para identificar o que pode estar errado ou omitido ANTES de revelar.
+- Correlação vs Causalidade deve ser um tema recorrente em toda a ementa, não apenas um tópico isolado.
+- Use manchetes de jornal e pesquisas reais como material de análise crítica.`,
+        ementa: [
+          'Média, Mediana e Moda (Quando Cada Uma Mente)',
+          'Distribuição Normal e o Conceito de Desvio',
+          'Probabilidade Condicional (Bayes no Cotidiano)',
+          'Correlação vs Causalidade (A Armadilha Eterna)',
+          'Viés de Amostragem e Representatividade',
+          'Como Ler Gráficos Sem Ser Manipulado'
         ]
       },
       {

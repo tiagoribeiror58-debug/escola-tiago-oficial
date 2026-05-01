@@ -80,6 +80,57 @@ urgencia(dias: number | null): string
 
 ---
 
+## Catálogo de Matérias (atualizado 2026-05-01)
+
+### 1. Performance & Intelecto (`performance-intelecto`)
+| Slug | Nome | Tipo |
+|---|---|---|
+| metacognicao | Metacognição | folha |
+| biohacking | Biohacking | folha |
+| neurociencia | Neurociência | folha |
+| psicologia | Psicologia | folha |
+| logica | Lógica | folha |
+
+### 2. Tecnologia & Negócios (`tecnologia-negocios`)
+| Slug | Nome | Tipo |
+|---|---|---|
+| inteligencia-artificial | Inteligência Artificial | folha |
+| programacao | Programação | folha (com subTopicos) |
+| financas-equity | Finanças & Equity | folha |
+| empreendedorismo | Empreendedorismo | folha |
+| design | Design Visual & UX | folha |
+
+### 3. Comunicação & Sociedade (`dinamicas-comunicacao`)
+| Slug | Nome | Tipo |
+|---|---|---|
+| seducao | Sedução & Dinâmicas Sociais | folha |
+| oratoria | Oratória & Apresentação | folha |
+| redacao | Redação & Copywriting | folha |
+| ingles | Inglês | folha |
+| espanhol | Espanhol | folha |
+| retorica | Retórica & Argumentação | folha |
+| negociacao | Negociação | folha |
+
+### 4. Fundamentos Acadêmicos (`fundamentos`)
+| Slug | Nome | Tipo |
+|---|---|---|
+| matematica | Matemática | folha |
+| fisica | Física | folha |
+| quimica | Química | folha |
+| biologia | Biologia | folha |
+| historia | História | folha |
+| geografia | Geografia | folha |
+| filosofia | Filosofia | folha |
+| literatura | Literatura | folha |
+| economia | Economia | folha |
+| estatistica | Estatística & Dados | folha |
+| musica | Música & Instrumentos | categoria |
+| ↳ violao | Violão Prático | folha |
+| ↳ piano | Teclas & Harmonia | folha |
+| ↳ teoria-musical | Teoria Musical Aplicada | folha |
+
+---
+
 ## Como adicionar uma nova matéria
 
 **Matéria simples** (sem sub-áreas):
