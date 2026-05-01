@@ -5,7 +5,7 @@ import { useUltimaSessao } from '@/hooks/useSessoes';
 import { useChatHistory, useSessionMessages } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 
-import { ArrowLeft, Square, Loader2, Check, MessageSquare, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Square, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatMessage } from '@/types';
 import { extractSession } from '@/lib/extractSession';
@@ -13,6 +13,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { playSuccessSound } from '@/lib/audioUtils';
+
+// Formata segundos em mm:ss
+function formatTimer(seconds: number): string {
+  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+  const s = (seconds % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
 
 export default function Sessao() {
   const { materia: slug } = useParams<{ materia: string }>();
@@ -43,6 +51,14 @@ export default function Sessao() {
   const isSavingRef = useRef(false); // BUG-02: guard contra double-save
   const [saving, setSaving] = useState(false);
   const [topicComplete, setTopicComplete] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [messageCount, setMessageCount] = useState(0);
+
+  // Timer em tempo real — incrementa a cada segundo desde o mount da sessão
+  useEffect(() => {
+    const id = setInterval(() => setElapsedSeconds(s => s + 1), 1000);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
@@ -139,11 +155,18 @@ export default function Sessao() {
   }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey]);
 
   const handleEncerrar = useCallback(() => {
+    // Regra 5: botão sempre acessível. Se sessão não concluiu, pede confirmação.
+    if (!topicComplete) {
+      const ok = window.confirm('A sessão ainda não foi concluída pela IA. Encerrar mesmo assim?');
+      if (!ok) return;
+    }
     doEncerrar();
-  }, [doEncerrar]);
+  }, [doEncerrar, topicComplete]);
 
   const handleMessagesChange = useCallback((messages: ChatMessage[]) => {
     messagesRef.current = messages;
+    // Conta apenas mensagens de usuário e assistente (ignora system)
+    setMessageCount(messages.filter(m => m.role !== 'system').length);
   }, []);
 
   const handleTopicComplete = useCallback(() => {
@@ -176,19 +199,29 @@ export default function Sessao() {
         >
           <ArrowLeft className="w-4 h-4" />
         </button>
+
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <span className="text-lg">{materiaConfig.emoji}</span>
           <span className="text-sm font-medium truncate">{materiaConfig.nome}</span>
         </div>
+
+        {/* Timer — visível após primeira mensagem */}
+        {messageCount > 0 && (
+          <span className="text-[11px] font-mono text-muted-foreground tabular-nums shrink-0">
+            {formatTimer(elapsedSeconds)}
+          </span>
+        )}
+
+        {/* Botão Encerrar — SEMPRE visível (Regra 5 do principal.md) */}
         <button
           onClick={handleEncerrar}
           disabled={saving}
           className={cn(
-            'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95',
+            'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 shrink-0',
             'disabled:opacity-50',
             topicComplete
               ? 'bg-emerald-500 text-white ring-2 ring-emerald-500/40 animate-pulse hover:bg-emerald-600'
-              : 'hidden'
+              : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-border'
           )}
         >
           {saving ? (

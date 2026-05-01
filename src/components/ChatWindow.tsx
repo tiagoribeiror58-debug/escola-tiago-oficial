@@ -88,9 +88,10 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({ 
-          // Janela deslizante: envia apenas as últimas 12 mensagens à IA.
-          // Reduz custo de tokens sem perder contexto relevante (cada sessão é 1 tópico só).
-          messages: newMessagesForAI.slice(-12).map(({ role, content }) => ({ role, content })), 
+          // Enviamos o histórico completo da sessão atual.
+          // Cada sessão cobre 1 micro-tópico — o histórico não cresce o suficiente para ser problema.
+          // Janela deslizante removida: a IA nunca perde contexto de nada que foi dito nesta sessão.
+          messages: newMessagesForAI.map(({ role, content }) => ({ role, content })), 
           systemPrompt 
         }),
       });
