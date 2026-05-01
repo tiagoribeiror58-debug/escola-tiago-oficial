@@ -31,18 +31,24 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const toggleEmenta = useToggleEmenta();
 
   const currentTopicRef = useRef<HTMLButtonElement>(null);
+  const trailScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (open) {
       setSelectedSub(null);
       setExpandedSession(null);
       
-      // Auto-scroll suave para o tópico atual após renderização
+      // Auto-scroll dentro do container da trilha para o tópico atual
       setTimeout(() => {
-        if (currentTopicRef.current) {
-          currentTopicRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const container = trailScrollRef.current;
+        const current = currentTopicRef.current;
+        if (container && current) {
+          const containerTop = container.getBoundingClientRect().top;
+          const itemTop = current.getBoundingClientRect().top;
+          const offset = itemTop - containerTop - container.clientHeight / 2 + current.clientHeight / 2;
+          container.scrollTo({ top: container.scrollTop + offset, behavior: 'smooth' });
         }
-      }, 150);
+      }, 160);
     }
   }, [open]);
 
@@ -150,62 +156,75 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     : `${ementaConcluida.length}/${config.ementa.length}`}
                 </span>
               </div>
-              <div className="space-y-1">
-                {config.ementa.map((topico, idx) => {
-                  const isCompleted = ementaConcluida.includes(topico);
-                  const firstUncompletedIdx = config.ementa!.findIndex(t => !ementaConcluida.includes(t));
-                  const isCurrent = idx === (firstUncompletedIdx === -1 ? config.ementa!.length : firstUncompletedIdx);
-                  const isLocked = !isCompleted && !isCurrent;
-                  
-                  return (
-                    <button
-                      key={idx}
-                      ref={isCurrent ? currentTopicRef : null}
-                      onClick={() => setSelectedSub(selectedSub === topico ? null : topico)}
-                      className={cn(
-                        "flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl transition-colors",
-                        selectedSub === topico ? "bg-muted border border-border" : "hover:bg-muted/50 border border-transparent",
-                        isCompleted && selectedSub !== topico ? "text-muted-foreground" : isCurrent || selectedSub === topico ? "text-foreground font-medium" : "text-muted-foreground"
-                      )}
-                    >
-                      <div 
-                        onClick={(e) => handleToggleTopico(e, topico, isCompleted)}
+              
+              {/* Container scrollável da trilha */}
+              <div
+                ref={trailScrollRef}
+                className="relative max-h-[300px] overflow-y-auto pr-0.5
+                  scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
+              >
+                <div className="space-y-1">
+                  {config.ementa.map((topico, idx) => {
+                    const isCompleted = ementaConcluida.includes(topico);
+                    const firstUncompletedIdx = config.ementa!.findIndex(t => !ementaConcluida.includes(t));
+                    const isCurrent = idx === (firstUncompletedIdx === -1 ? config.ementa!.length : firstUncompletedIdx);
+                    const isLocked = !isCompleted && !isCurrent;
+                    
+                    return (
+                      <button
+                        key={idx}
+                        ref={isCurrent ? currentTopicRef : null}
+                        onClick={() => setSelectedSub(selectedSub === topico ? null : topico)}
                         className={cn(
-                          "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors cursor-pointer hover:scale-110",
-                          selectedSub === topico ? "bg-foreground text-background border-foreground shadow-sm" :
-                          isCompleted ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" :
-                          isCurrent ? "bg-primary/10 border-primary/30 text-primary ring-2 ring-primary/20 ring-offset-1 ring-offset-background" :
-                          "bg-muted/30 border-border/50 text-muted-foreground"
+                          "flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl transition-colors",
+                          selectedSub === topico ? "bg-muted border border-border" : "hover:bg-muted/50 border border-transparent",
+                          isCompleted && selectedSub !== topico ? "text-muted-foreground" : isCurrent || selectedSub === topico ? "text-foreground font-medium" : "text-muted-foreground"
+                        )}
+                      >
+                        <div 
+                          onClick={(e) => handleToggleTopico(e, topico, isCompleted)}
+                          className={cn(
+                            "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors cursor-pointer hover:scale-110",
+                            selectedSub === topico ? "bg-foreground text-background border-foreground shadow-sm" :
+                            isCompleted ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" :
+                            isCurrent ? "bg-primary/10 border-primary/30 text-primary ring-2 ring-primary/20 ring-offset-1 ring-offset-background" :
+                            "bg-muted/30 border-border/50 text-muted-foreground"
+                          )}>
+                          {isCompleted ? "✓" : isLocked ? <Lock className="w-2.5 h-2.5" /> : (idx + 1)}
+                        </div>
+                        <span className={cn(
+                          "line-clamp-1 flex-1",
+                          isCompleted && selectedSub !== topico && "line-through decoration-muted-foreground/30"
                         )}>
-                        {isCompleted ? "✓" : isLocked ? <Lock className="w-2.5 h-2.5" /> : (idx + 1)}
-                      </div>
-                      <span className={cn(
-                        "line-clamp-1 flex-1",
-                        isCompleted && selectedSub !== topico && "line-through decoration-muted-foreground/30"
-                      )}>
-                        {topico}
-                      </span>
-                      {isCurrent && (
-                        <span className="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full shrink-0 animate-pulse">
-                          Atual
+                          {topico}
                         </span>
-                      )}
-                    </button>
-                  );
-                })}
+                        {isCurrent && (
+                          <span className="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full shrink-0 animate-pulse">
+                            Atual
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
 
-                {/* Infinite Curriculum Extension */}
-                {ementaConcluida.length >= config.ementa.length && (
-                  <div className="flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl text-foreground font-medium mt-2 opacity-90">
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors bg-primary/10 border-primary/30 text-primary">
-                      ∞
+                  {/* Infinite Curriculum Extension */}
+                  {ementaConcluida.length >= config.ementa.length && (
+                    <div className="flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl text-foreground font-medium mt-2 opacity-90">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors bg-primary/10 border-primary/30 text-primary">
+                        ∞
+                      </div>
+                      <span className="line-clamp-1 flex-1">
+                        Fronteira do Conhecimento
+                      </span>
                     </div>
-                    <span className="line-clamp-1 flex-1">
-                      Fronteira do Conhecimento
-                    </span>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
+
+              {/* Fade gradient indicando overflow (só aparece quando há mais conteúdo) */}
+              {config.ementa.length > 4 && (
+                <div className="h-4 -mt-4 bg-gradient-to-t from-background to-transparent pointer-events-none rounded-b-xl" />
+              )}
             </div>
           )}
 
