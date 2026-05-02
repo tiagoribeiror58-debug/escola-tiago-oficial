@@ -329,7 +329,7 @@ Abordagem obrigatória:
         nome: 'Inglês',
         emoji: 'EN',
         parent: 'dinamicas-comunicacao',
-        descricao: 'Imersão no idioma global. Foco em produção de frases reais, não apenas gramática abstrata.',
+        descricao: 'Imersão no idioma global. Foco em produção de frases reais, não em gramática abstrata.',
         contexto: `Toda comunicação e explicação em PORTUGUÊS. Inglês aparece apenas em exemplos e exercícios.
 
 Abordagem obrigatória:
