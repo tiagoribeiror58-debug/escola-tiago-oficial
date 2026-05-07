@@ -17,7 +17,7 @@ Tabela principal. Cada linha representa uma sessão de estudo encerrada.
 | `topico` | `text` | Tópico ensinado nesta sessão |
 | `data` | `date` | Data da sessão |
 | `erros` | `int4` | Número de erros cometidos |
-| `dificuldade` | `text` | `'fácil'`, `'médio'`, `'difícil'` |
+| `dificuldade` | `text` | `'baixa'`, `'media'`, `'alta'` (extraído pela edge function `/extract`) |
 | `duracao_min` | `int4` | Duração em minutos |
 | `observacoes` | `text` | Notas internas da IA (não visível ao usuário) |
 | `proximo_topico` | `text` | Sugestão da IA para a próxima sessão |
@@ -42,6 +42,16 @@ Tabela temporária. Armazena mensagens durante uma sessão ativa. **Deletada ao 
 | `content` | `text` | Conteúdo da mensagem |
 | `created_at` | `timestamptz` | Timestamp automático |
 
+### `ementa_concluida`
+
+Rastreia quais tópicos da ementa de cada matéria já foram cobertos em sessões.
+
+| Coluna | Tipo | Descrição |
+|---|---|---|
+| `materia` | `text` PK | Slug da matéria |
+| `topico` | `text` PK | Tópico concluído (chave composta com `materia`) |
+| `created_at` | `timestamptz` | Timestamp automático |
+
 ---
 
 ## Migrations
@@ -49,11 +59,9 @@ Tabela temporária. Armazena mensagens durante uma sessão ativa. **Deletada ao 
 | Arquivo | O que faz |
 |---|---|
 | `20260416153226_*.sql` | Schema inicial: tabelas `sessoes` e `chat_messages` |
-| `20260419170000_add_sm2_proxima_revisao.sql` | Adiciona `proxima_revisao` e `nivel` para SM-2 |
+| `20260419170000_add_sm2_proxima_revisao.sql` | Adiciona `proxima_revisao`, `nivel` e `messages_json` para SM-2 |
 | `20260420180400_sessoes_session_key.sql` | Adiciona `session_key` em `sessoes` |
-| `20260426_add_is_mastery_to_sessoes` | Adiciona `is_mastery boolean` em `sessoes` para rastrear Desafios de Maestria |
-
-> **Nota:** A coluna `messages_json` foi adicionada via migration inline durante o desenvolvimento. Verificar o estado atual em: `supabase/migrations/`.
+| `20260426133402_add_ementa_concluida.sql` | Cria tabela `ementa_concluida` para rastrear tópicos cobertos |
 
 ---
 
@@ -61,11 +69,11 @@ Tabela temporária. Armazena mensagens durante uma sessão ativa. **Deletada ao 
 
 Calculado na **Edge Function `/extract`** ao encerrar a sessão:
 
-- `dificuldade: 'fácil'` → próxima revisão em `nivel * 3` dias
-- `dificuldade: 'médio'` → próxima revisão em `nivel * 2` dias  
-- `dificuldade: 'difícil'` → próxima revisão em `nivel * 1` dias (mínimo 1)
+- `dificuldade: 'baixa'` → próxima revisão em `nivel * 3` dias
+- `dificuldade: 'media'` → próxima revisão em `nivel * 2` dias  
+- `dificuldade: 'alta'` → próxima revisão em `nivel * 1` dias (mínimo 1)
 
-O `nivel` sobe +1 a cada sessão com dificuldade fácil, fica igual no médio, e desce -1 no difícil (mínimo 1).
+O `nivel` sobe +1 a cada sessão com dificuldade baixa, fica igual no media, e desce -1 no alta (mínimo 1).
 
 ---
 

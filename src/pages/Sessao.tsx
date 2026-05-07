@@ -124,7 +124,7 @@ export default function Sessao() {
         duracao_min: duracaoMin > 0 ? duracaoMin : 1,
         session_key: sessionKey,
         messages_json: messagesSnapshot,
-        is_mastery: modo === 'avaliacao', // marca se foi um Exame de Proficiência
+        is_mastery: modo === 'avaliacao' || modo === 'desafio', // marca se foi um Exame de Proficiência (ambos os caminhos: Avaliações e Hero Card)
       });
 
       if (error) throw error;
@@ -220,7 +220,7 @@ export default function Sessao() {
             'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 shrink-0',
             'disabled:opacity-50',
             topicComplete
-              ? 'bg-emerald-500 text-white ring-2 ring-emerald-500/40 animate-pulse hover:bg-emerald-600'
+              ? 'bg-[hsl(var(--success))] text-white ring-2 ring-[hsl(var(--success)/0.4)] animate-pulse hover:brightness-110'
               : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-border'
           )}
         >

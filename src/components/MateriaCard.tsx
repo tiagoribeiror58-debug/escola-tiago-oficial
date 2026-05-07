@@ -21,16 +21,16 @@ export default function MateriaCard({ estado, onClick }: Props) {
 
   const urgenciaBg: Record<string, string> = {
     nova: 'bg-muted text-muted-foreground',
-    ok: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
-    atencao: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
-    urgente: 'bg-red-500/10 text-red-600 dark:text-red-400',
+    ok: 'bg-[hsl(var(--success)/0.1)] text-[hsl(var(--success))]',
+    atencao: 'bg-[hsl(var(--warning)/0.1)] text-[hsl(var(--warning))]',
+    urgente: 'bg-[hsl(var(--danger)/0.1)] text-[hsl(var(--danger))]',
   };
 
   const urgenciaBorder: Record<string, string> = {
     nova: 'border-border',
     ok: 'border-border',
-    atencao: 'border-amber-500/20',
-    urgente: 'border-red-500/20',
+    atencao: 'border-[hsl(var(--warning)/0.2)]',
+    urgente: 'border-[hsl(var(--danger)/0.2)]',
   };
 
   const displayTopic = ultimaSessao?.proximo_topico || ultimaSessao?.topico;

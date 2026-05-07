@@ -5,7 +5,10 @@ import { useSaveChatMessage } from '@/hooks/useChatMessages';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
 import { ArrowUp, Loader2, Zap, ZapOff, History } from 'lucide-react';
-import { playPopSound, playThinkingDoneSound } from '@/lib/audioUtils';
+import { playPopSound, playThinkingDoneSound, playSuccessSound } from '@/lib/audioUtils';
+import confetti from 'canvas-confetti';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 interface Props {
   materia: MateriaConfig;
@@ -52,6 +55,13 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   useEffect(() => {
     autoResize();
   }, [input, autoResize]);
+
+  // Focus input on mount for better UX
+  useEffect(() => {
+    if (window.innerWidth > 768) {
+      inputRef.current?.focus();
+    }
+  }, []);
 
   const handleSend = useCallback(async (textToSubmit?: string, isSilentTrigger = false) => {
     const text = typeof textToSubmit === 'string' ? textToSubmit.trim() : input.trim();
@@ -181,6 +191,14 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
         setMessages(prev => prev.map((m, i) =>
           i === prev.length - 1 ? { ...m, content: assistantContent } : m
         ));
+        confetti({
+          particleCount: 150,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#22c55e', '#3b82f6', '#eab308'],
+          disableForReducedMotion: true
+        });
+        playSuccessSound();
         onTopicComplete?.();
       }
 
@@ -190,6 +208,14 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
         setMessages(prev => prev.map((m, i) =>
           i === prev.length - 1 ? { ...m, content: assistantContent } : m
         ));
+        confetti({
+          particleCount: 200,
+          spread: 100,
+          origin: { y: 0.6 },
+          colors: ['#eab308', '#f59e0b', '#fbbf24'],
+          disableForReducedMotion: true
+        });
+        playSuccessSound();
         onTopicComplete?.();
       }
 
@@ -344,7 +370,30 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                   )}
                   {mainContent && (
                     <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 whitespace-pre-wrap break-words">
-                      <ReactMarkdown>{mainContent}</ReactMarkdown>
+                      <ReactMarkdown
+                        components={{
+                          code({ node, inline, className, children, ...props }: any) {
+                            const match = /language-(\w+)/.exec(className || '');
+                            return !inline && match ? (
+                              <SyntaxHighlighter
+                                {...props}
+                                style={vscDarkPlus}
+                                language={match[1]}
+                                PreTag="div"
+                                className="rounded-md my-2 text-xs"
+                              >
+                                {String(children).replace(/\n$/, '')}
+                              </SyntaxHighlighter>
+                            ) : (
+                              <code {...props} className={cn("bg-muted px-1.5 py-0.5 rounded text-xs font-mono", className)}>
+                                {children}
+                              </code>
+                            );
+                          }
+                        }}
+                      >
+                        {mainContent}
+                      </ReactMarkdown>
                     </div>
                   )}
                 </div>

@@ -45,14 +45,4 @@ export interface ChatMessage {
   content: string;
 }
 
-export interface EncerramentoForm {
-  topico: string;
-  data: string;
-  duracao_min: number | null;
-  erros: number;
-  dificuldade: string;
-  proximo_topico: string;
-  decisao_proxima: string;
-  observacoes: string;
-  nivel: number;
-}
+

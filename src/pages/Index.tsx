@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useMateriasEstado, useSessoes } from '@/hooks/useSessoes';
+import { useFolhasEstado, useSessoes } from '@/hooks/useSessoes';
+import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import MateriaCard from '@/components/MateriaCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen, ScrollText } from 'lucide-react';
+import { BookOpen, ScrollText, Library } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -17,9 +18,9 @@ function getGreeting(): string {
 
 
 export default function Index() {
-  const { estados, isLoading } = useMateriasEstado();
+  const { estados, isLoading } = useFolhasEstado();
+  const { foco } = useMateriasFoco();
   const { data: sessoes } = useSessoes();
-  const [showAll, setShowAll] = useState(false);
   const navigate = useNavigate();
 
   const hoje = new Date().toLocaleDateString('pt-BR', {
@@ -39,8 +40,12 @@ export default function Index() {
     .filter(e => !e.config.isCategory)
     .reduce((acc, e) => acc + e.provasPendentes, 0);
 
-  // Hero Card é a matéria de maior acesso
-  const heroEstado = estados.length > 0 ? estados[0] : null;
+  const estadosFocados = foco.length > 0 
+    ? estados.filter(e => foco.includes(e.config.slug))
+    : [];
+
+  // Hero Card é a matéria de maior acesso dentre as focadas
+  const heroEstado = estadosFocados.length > 0 ? estadosFocados[0] : null;
 
   const handleCardClick = (estado: MateriaEstado) => {
     if (estado.config.isCategory) {
@@ -51,8 +56,8 @@ export default function Index() {
     setModalOpen(true);
   };
 
-  const outrosEstados = heroEstado ? estados.filter(e => e.config.slug !== heroEstado.config.slug) : estados;
-  const displayedEstados = showAll ? outrosEstados : outrosEstados.slice(0, 4);
+  const outrosEstados = heroEstado ? estadosFocados.filter(e => e.config.slug !== heroEstado.config.slug) : estadosFocados;
+  const displayedEstados = outrosEstados; // Sempre mostrar todos os focados
 
   return (
     <div className="min-h-screen">
@@ -82,9 +87,68 @@ export default function Index() {
             </div>
           </div>
         </div>
+
+        {!isLoading && foco.length === 0 ? (
+          <div className="flex flex-col items-center justify-center text-center p-12 mt-12 border border-dashed rounded-[2rem] bg-card">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-6">
+              <Library className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h2 className="text-xl font-semibold mb-2">Mesa de estudos vazia</h2>
+            <p className="text-muted-foreground text-sm max-w-sm mb-8">
+              Sua tela inicial é restrita para evitar paralisia por análise. Vá até a biblioteca e escolha no que focar agora.
+            </p>
+            <button
+              onClick={() => navigate('/biblioteca')}
+              className="bg-foreground text-background px-8 py-3 rounded-xl text-sm font-medium hover:opacity-90 transition-all active:scale-95 shadow-xl shadow-foreground/10 flex items-center gap-2"
+            >
+              <Library className="w-4 h-4" />
+              Explorar Biblioteca
+            </button>
+          </div>
+        ) : (
+          <>
+        {/* Separador de Outras Disciplinas (se necessário, agora pode ser o título principal do grid) */}
+        {!isLoading && displayedEstados.length > 0 && (
+          <div className="mb-6">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+              Sua Mesa de Estudos
+            </h3>
+          </div>
+        )}
+
+        {/* Grid Residual */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-2xl" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            {displayedEstados.map(estado => (
+              <MateriaCard
+                key={estado.config.slug}
+                estado={estado}
+                onClick={() => handleCardClick(estado)}
+              />
+            ))}
+          </div>
+        )}
+
+        {!isLoading && (
+          <button
+            onClick={() => navigate('/biblioteca')}
+            className="w-full mb-12 py-4 px-4 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed hover:bg-muted transition-colors flex items-center justify-center gap-2"
+          >
+            <Library className="w-4 h-4" />
+            Gerenciar Foco na Biblioteca
+          </button>
+        )}
+
         {heroEstado && !isLoading && (() => {
-          const sessoesFeitas = heroEstado.totalSessoes % 11;
-          const isMasteryReady = sessoesFeitas === 10;
+          const isMasteryReady = heroEstado.provasPendentes > 0;
+          // Quantas sessões o aluno fez no ciclo atual (0-9) — display-only
+          const sessoesNoCiclo = heroEstado.totalSessoes % 10;
           return (
             <div className="mb-8 relative overflow-hidden rounded-[2rem] border border-border/50 bg-gradient-to-b from-card to-background p-6 sm:p-8 shadow-2xl transition-all hover:border-border/80">
               <div className="absolute inset-0 bg-foreground/5 opacity-50 blur-3xl pointer-events-none" />
@@ -98,7 +162,7 @@ export default function Index() {
                     <p className="text-muted-foreground mt-1 text-sm sm:text-base pr-8">
                       {isMasteryReady
                         ? 'Área dominada! Está na hora de provar seus conhecimentos.'
-                        : `Sua matéria de maior foco. Faltam ${10 - sessoesFeitas} sessões para o Desafio de Maestria.`}
+                        : `Sua matéria de maior foco. Faltam ${10 - sessoesNoCiclo} sessões para o Desafio de Maestria.`}
                     </p>
                   </div>
                   <div className="w-14 h-14 rounded-full bg-foreground/5 flex items-center justify-center text-2xl shrink-0">
@@ -118,7 +182,7 @@ export default function Index() {
                     className={cn(
                       "w-full sm:w-auto self-start px-8 py-3.5 rounded-xl font-medium transition-all text-sm shadow-xl",
                       isMasteryReady
-                        ? "bg-emerald-500 text-white shadow-emerald-500/20 hover:bg-emerald-600 hover:-translate-y-0.5 active:scale-95"
+                        ? "bg-[hsl(var(--success))] text-white shadow-[hsl(var(--success)/0.2)] hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
                         : "bg-foreground text-background shadow-foreground/10 hover:opacity-90 active:scale-95"
                     )}
                   >
@@ -140,44 +204,7 @@ export default function Index() {
             </div>
           );
         })()}
-
-
-
-        {/* Separador de Outras Disciplinas */}
-        {outrosEstados.length > 0 && !isLoading && (
-          <div className="mt-12 mb-6 border-t border-border pt-8 flex items-center justify-between">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
-              Explorar biblioteca
-            </h3>
-          </div>
-        )}
-
-        {/* Grid Residual */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-24 rounded-2xl" />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {displayedEstados.map(estado => (
-              <MateriaCard
-                key={estado.config.slug}
-                estado={estado}
-                onClick={() => handleCardClick(estado)}
-              />
-            ))}
-          </div>
-        )}
-
-        {!isLoading && outrosEstados.length > 4 && !showAll && (
-          <button
-            onClick={() => setShowAll(true)}
-            className="w-full mt-6 py-3 px-4 rounded-xl text-[13px] font-medium text-foreground bg-muted/50 hover:bg-muted transition-colors"
-          >
-            Ver todas as {outrosEstados.length} matérias
-          </button>
+        </>
         )}
       </div>
 

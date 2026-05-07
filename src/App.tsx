@@ -8,6 +8,7 @@ import Sessao from "./pages/Sessao.tsx";
 import Historico from "./pages/Historico.tsx";
 import Categoria from "./pages/Categoria.tsx";
 import Avaliacoes from "./pages/Avaliacoes.tsx";
+import Biblioteca from "./pages/Biblioteca.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/categoria/:slug" element={<Categoria />} />
           <Route path="/categoria/:slug/:sub" element={<Categoria />} />
           <Route path="/avaliacoes" element={<Avaliacoes />} />
+          <Route path="/biblioteca" element={<Biblioteca />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

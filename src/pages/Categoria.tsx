@@ -1,35 +1,12 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MATERIAS, getMateriaBySlug, calcularDiasParada, getAllLeafSlugs } from '@/lib/materias';
-import { useSessoes } from '@/hooks/useSessoes';
+import { useSessoes, buildMateriaEstado } from '@/hooks/useSessoes';
 import { MateriaConfig, MateriaEstado, Sessao } from '@/types';
 import MateriaCard from '@/components/MateriaCard';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowLeft } from 'lucide-react';
-
-// Constrói MateriaEstado para qualquer config usando a lista de sessões disponível
-function buildEstado(config: MateriaConfig, sessoes: Sessao[]): MateriaEstado {
-  const slugsAlvo = config.isCategory ? getAllLeafSlugs(config) : [config.slug];
-  const sessoesMateria = sessoes.filter(s => slugsAlvo.includes(s.materia));
-  const ultimaSessao = sessoesMateria.length > 0 ? sessoesMateria[0] : null;
-  const diasParada = ultimaSessao ? calcularDiasParada(ultimaSessao.data) : null;
-  
-  // Cálculo de provas pendentes (consistente com useSessoes.ts)
-  const sessoesNormais = sessoesMateria.filter(s => !s.is_mastery).length;
-  const provasRealizadas = sessoesMateria.filter(s => s.is_mastery).length;
-  const ciclosCompletados = Math.floor(sessoesNormais / 10);
-  const provasPendentes = Math.max(0, ciclosCompletados - provasRealizadas);
-
-  return {
-    config,
-    ultimaSessao,
-    totalSessoes: sessoesMateria.length,
-    diasParada,
-    diasAteRevisao: null,
-    provasPendentes,
-  };
-}
 
 export default function Categoria() {
   const { slug, sub } = useParams<{ slug: string; sub?: string }>();
@@ -64,7 +41,7 @@ export default function Categoria() {
       navigate(`/categoria/${slug}/${config.slug}`);
       return;
     }
-    setSelectedEstado(buildEstado(config, sessoes));
+    setSelectedEstado(buildMateriaEstado(config, sessoes));
     setModalOpen(true);
   };
 
@@ -126,7 +103,7 @@ export default function Categoria() {
             {filhos.map(config => (
               <MateriaCard
                 key={config.slug}
-                estado={buildEstado(config, sessoes)}
+                estado={buildMateriaEstado(config, sessoes)}
                 onClick={() => handleCardClick(config)}
               />
             ))}

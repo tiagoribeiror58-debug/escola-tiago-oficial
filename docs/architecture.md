@@ -52,8 +52,8 @@
 5. Usuário encerra sessão
        │
        ├── Dialog de confirmação se topicComplete = false
-       ├── Abre formulário de encerramento (EncerramentoForm)
-       ├── POST: salva sessão em `sessoes` com messages_json
+       ├── POST /extract: IA extrai topico, erros, dificuldade, nivel etc.
+       ├── INSERT: salva sessão em `sessoes` com messages_json + dados extraídos
        ├── DELETE: limpa chat_messages da session_key
        └── Redireciona para / após 1.5s com toast
 ```

@@ -31,40 +31,61 @@ function calcularDiasAteRevisao(proxima_revisao: string | null): number | null {
   return diff;
 }
 
+export function buildMateriaEstado(config: MateriaConfig, sessoes: Sessao[]): MateriaEstado {
+  // Para categorias (isCategory), agrega sessões de todos os filhos recursivamente
+  const slugsAlvo = config.isCategory ? getAllLeafSlugs(config) : [config.slug];
+  const sessoesMateria = (sessoes || []).filter(s => slugsAlvo.includes(s.materia));
+  const ultimaSessao = sessoesMateria.length > 0 ? sessoesMateria[0] : null;
+  const diasParada = ultimaSessao ? calcularDiasParada(ultimaSessao.data) : null;
+  const diasAteRevisao = ultimaSessao ? calcularDiasAteRevisao(ultimaSessao.proxima_revisao) : null;
+
+  // Cálculo de provas pendentes:
+  // Sessões normais = todas que não são desafios
+  // A cada 10 sessões normais completas, o aluno "ganhou" 1 prova
+  // provasPendentes = ciclosCompletados - provas já realizadas
+  const sessoesNormais = sessoesMateria.filter(s => !s.is_mastery).length;
+  const provasRealizadas = sessoesMateria.filter(s => s.is_mastery).length;
+  const ciclosCompletados = Math.floor(sessoesNormais / 10);
+  const provasPendentes = Math.max(0, ciclosCompletados - provasRealizadas);
+
+  return {
+    config,
+    ultimaSessao,
+    totalSessoes: sessoesMateria.length,
+    diasParada,
+    diasAteRevisao,
+    provasPendentes,
+  };
+}
+
 export function useMateriasEstado() {
   const { data: sessoes, isLoading, error } = useSessoes();
 
-  const estados: MateriaEstado[] = MATERIAS.map(config => {
-    // Para categorias (isCategory), agrega sessões de todos os filhos recursivamente
-    const slugsAlvo = config.isCategory ? getAllLeafSlugs(config) : [config.slug];
-    const sessoesMateria = (sessoes || []).filter(s => slugsAlvo.includes(s.materia));
-    const ultimaSessao = sessoesMateria.length > 0 ? sessoesMateria[0] : null;
-    const diasParada = ultimaSessao ? calcularDiasParada(ultimaSessao.data) : null;
-    const diasAteRevisao = ultimaSessao ? calcularDiasAteRevisao(ultimaSessao.proxima_revisao) : null;
-
-    // Cálculo de provas pendentes:
-    // Sessões normais = todas que não são desafios
-    // A cada 10 sessões normais completas, o aluno "ganhou" 1 prova
-    // provasPendentes = ciclosCompletados - provas já realizadas
-    const sessoesNormais = sessoesMateria.filter(s => !s.is_mastery).length;
-    const provasRealizadas = sessoesMateria.filter(s => s.is_mastery).length;
-    const ciclosCompletados = Math.floor(sessoesNormais / 10);
-    const provasPendentes = Math.max(0, ciclosCompletados - provasRealizadas);
-
-    return {
-      config,
-      ultimaSessao,
-      totalSessoes: sessoesMateria.length,
-      diasParada,
-      diasAteRevisao,
-      provasPendentes,
-    };
-  });
+  const estados: MateriaEstado[] = MATERIAS.map(config => buildMateriaEstado(config, sessoes || []));
 
   // Ordenação: matérias mais acessadas (maior total de sessões) primeiro
   estados.sort((a, b) => {
     return b.totalSessoes - a.totalSessoes;
   });
+
+  return { estados, isLoading, error };
+}
+
+export function useFolhasEstado() {
+  const { data: sessoes, isLoading, error } = useSessoes();
+
+  const todasFolhas: MateriaConfig[] = [];
+  const extrairFolhas = (lista: MateriaConfig[]) => {
+    lista.forEach(m => {
+      if (m.children && m.children.length > 0) extrairFolhas(m.children);
+      else todasFolhas.push(m);
+    });
+  };
+  extrairFolhas(MATERIAS);
+
+  const estados: MateriaEstado[] = todasFolhas.map(config => buildMateriaEstado(config, sessoes || []));
+
+  estados.sort((a, b) => b.totalSessoes - a.totalSessoes);
 
   return { estados, isLoading, error };
 }

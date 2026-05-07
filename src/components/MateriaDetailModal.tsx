@@ -67,9 +67,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
 
   const urgColors: Record<string, string> = {
     nova: 'text-muted-foreground',
-    ok: 'text-emerald-500',
-    atencao: 'text-amber-500',
-    urgente: 'text-red-500',
+    ok: 'text-[hsl(var(--success))]',
+    atencao: 'text-[hsl(var(--warning))]',
+    urgente: 'text-[hsl(var(--danger))]',
   };
 
   // Busca sessões desta matéria ordenadas desc
@@ -186,7 +186,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                           className={cn(
                             "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors cursor-pointer hover:scale-110",
                             selectedSub === topico ? "bg-foreground text-background border-foreground shadow-sm" :
-                            isCompleted ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500" :
+                            isCompleted ? "bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)] text-[hsl(var(--success))]" :
                             isCurrent ? "bg-primary/10 border-primary/30 text-primary ring-2 ring-primary/20 ring-offset-1 ring-offset-background" :
                             "bg-muted/30 border-border/50 text-muted-foreground"
                           )}>
