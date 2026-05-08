@@ -1,6 +1,6 @@
 # Sistema de Matérias (`materias.ts`)
 
-**Arquivo:** `src/lib/materias.ts`
+**Arquivos:** `src/lib/materias.ts` e submódulos em `src/lib/materias/`
 
 ---
 
@@ -24,17 +24,17 @@ interface MateriaConfig {
 
 ## Hierarquia de 3 Níveis
 
-Para matérias complexas (ex: Música), usa-se estrutura de 3 camadas:
+Para matérias complexas, usa-se estrutura de 3 camadas:
 
 ```
-Nível 1: Categoria        → /categoria/musica
+Nível 1: Categoria        → /categoria/performance-intelecto
          isCategory: true, children: [...]
 
-Nível 2: Sub-área         → /categoria/musica/violao  
-         isCategory: true, parent: 'musica', children: [...]
+Nível 2: Sub-área         → /categoria/performance-intelecto/mente-cognicao  
+         isCategory: true, parent: 'performance-intelecto', children: [...]
 
-Nível 3: Tópico de sessão → /sessao/violao-acordes
-         parent: 'violao', contexto: '...', ementa: [...]
+Nível 3: Tópico de sessão → /sessao/metacognicao
+         parent: 'mente-cognicao', contexto: '...', ementa: [...]
 ```
 
 **Regra:** Matéria com mais de 3 sub-áreas → obrigatório usar hierarquia.
@@ -43,7 +43,7 @@ Nível 3: Tópico de sessão → /sessao/violao-acordes
 
 ## Ementa Invisível
 
-Matérias técnicas com progressão clara (ex: Violão) têm `ementa: string[]`:
+Matérias técnicas com progressão clara têm `ementa: string[]`:
 
 ```ts
 ementa: [
@@ -80,87 +80,84 @@ urgencia(dias: number | null): string
 
 ---
 
-## Catálogo de Matérias (atualizado 2026-05-01)
+## Catálogo de Matérias (atualizado 2026-05)
 
 ### 1. Performance & Intelecto (`performance-intelecto`)
-| Slug | Nome | Tipo |
-|---|---|---|
-| metacognicao | Metacognição | folha |
-| biohacking | Biohacking | folha |
-| neurociencia | Neurociência | folha |
-| psicologia | Psicologia | folha |
-| logica | Lógica | folha |
+- **Mente & Cognição** (`mente-cognicao`)
+  - Metacognição (`metacognicao`)
+  - Psicologia (`psicologia`)
+  - Lógica (`logica`)
+  - Saúde Mental & Resiliência (`saude-mental`)
+- **Corpo & Biologia** (`corpo-biologia`)
+  - Biohacking (`biohacking`)
+  - Neurociência (`neurociencia`)
+  - Nutrição Otimizada (`nutricao-otimizada`)
+  - Fisiologia & Treino (`fisiologia-esporte`)
 
-### 2. Tecnologia & Negócios (`tecnologia-negocios`)
-| Slug | Nome | Tipo |
-|---|---|---|
-| inteligencia-artificial | Inteligência Artificial | folha |
-| programacao | Programação | folha (com subTopicos) |
-| financas-equity | Finanças & Equity | folha |
-| empreendedorismo | Empreendedorismo | folha |
-| design | Design Visual & UX | folha |
+### 2. Negócios & Tecnologia (`tecnologia-negocios`)
+- **Business & Growth** (`business-growth`)
+  - Fundação & Startups (`empreendedorismo`)
+  - Finanças & Valuation (`financas-equity`)
+  - Finanças Corporativas (`financas-corporativas`)
+  - Direito Empresarial & Tributário (`direito-empresarial`)
+  - Operações & Supply Chain (`operacoes-supply-chain`)
+  - Marketing & Distribuição (`marketing-distribuicao`)
+  - Vendas & Negociação (`vendas-b2b-b2c`)
+  - Liderança & Gestão (`lideranca-gestao`)
+- **Tecnologia & Produtos** (`tecnologia-produtos`)
+  - Engenharia de Software (`programacao`)
+  - Inteligência Artificial (`inteligencia-artificial`)
+  - Gestão de Produto Digital (PM) (`product-management`)
+  - Cloud Computing & DevOps (`cloud-devops`)
+  - Design de Produto (UX/UI) (`design`)
+  - Data Science (`data-science`)
+  - Web3 & Cripto (`web3-cripto`)
 
-### 3. Comunicação & Sociedade (`dinamicas-comunicacao`)
-| Slug | Nome | Tipo |
-|---|---|---|
-| seducao | Sedução & Dinâmicas Sociais | folha |
-| oratoria | Oratória & Apresentação | folha |
-| redacao | Redação & Copywriting | folha |
-| ingles | Inglês | folha |
-| espanhol | Espanhol | folha |
-| retorica | Retórica & Argumentação | folha |
-| negociacao | Negociação | folha |
+### 3. Comunicação & Influência (`comunicacao-influencia`)
+- **Influência & Persuasão** (`influencia-persuasao`)
+  - Sedução & Dinâmicas Sociais (`seducao`)
+  - Negociação Estratégica (`negociacao`)
+  - Retórica & Lógica (`retorica`)
+  - Oratória & Apresentação (`oratoria`)
+- **Idiomas & Escrita** (`idiomas-escrita`)
+  - Copywriting & Redação (`redacao`)
+  - Inglês (`ingles`)
+  - Espanhol (`espanhol`)
+  - Francês (`frances`)
 
-### 4. Fundamentos Acadêmicos (`fundamentos`)
-| Slug | Nome | Tipo |
-|---|---|---|
-| matematica | Matemática | folha |
-| fisica | Física | folha |
-| quimica | Química | folha |
-| biologia | Biologia | folha |
-| historia | História | folha |
-| geografia | Geografia | folha |
-| filosofia | Filosofia | folha |
-| literatura | Literatura | folha |
-| economia | Economia | folha |
-| estatistica | Estatística & Dados | folha |
-| musica | Música & Instrumentos | categoria |
-| ↳ violao | Violão Prático | folha |
-| ↳ piano | Teclas & Harmonia | folha |
-| ↳ teoria-musical | Teoria Musical Aplicada | folha |
+### 4. Fundamentos Acadêmicos (`fundamentos-academicos`)
+- **Ciências Exatas** (`ciencias-exatas`)
+  - Matemática (`matematica`)
+  - Física (`fisica`)
+  - Estatística & Dados (`estatistica`)
+  - Química (`quimica`)
+- **Humanidades** (`humanidades`)
+  - História (`historia`)
+  - Filosofia (`filosofia`)
+  - Geografia (`geografia`)
+  - Economia (`economia`)
+  - Literatura (`literatura`)
+  - Sociologia (`sociologia`)
+- **Artes & Expressão** (`artes-expressao`)
+  - Violão Prático (`violao`)
+  - Teclas & Harmonia (`piano`)
+  - Teoria Musical Aplicada (`teoria-musical`)
+  - História da Arte (`historia-arte`)
 
 ---
 
 ## Como adicionar uma nova matéria
 
-**Matéria simples** (sem sub-áreas):
+As matérias estão modularizadas em arquivos dentro de `src/lib/materias/`.
+Adicione ou modifique o arquivo relevante (`performance.ts`, `negocios.ts`, `comunicacao.ts` ou `fundamentos.ts`), e a mudança refletirá automaticamente, pois `src/lib/materias.ts` agrega as estruturas principais.
+
+Exemplo de Matéria no nível 3 (Tópico de sessão):
 ```ts
 {
   slug: 'filosofia',
   nome: 'Filosofia',
   emoji: '🦉',
+  parent: 'humanidades',
   contexto: 'Ensine a partir de problemas concretos...',
-}
-```
-
-**Matéria como categoria** (com hierarquia):
-```ts
-{
-  slug: 'idiomas',
-  nome: 'Idiomas',
-  emoji: '🌍',
-  isCategory: true,
-  children: [
-    {
-      slug: 'ingles',
-      nome: 'Inglês',
-      emoji: '🇺🇸',
-      isCategory: true,
-      parent: 'idiomas',
-      children: [
-        { slug: 'ingles-gramatica', nome: 'Gramática', emoji: '🇺🇸', parent: 'ingles', contexto: '...', ementa: [...] },
-      ]
-    }
-  ]
 }
 ```
