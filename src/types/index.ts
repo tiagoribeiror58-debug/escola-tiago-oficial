@@ -28,6 +28,8 @@ export interface MateriaConfig {
   children?: MateriaConfig[];     // sub-matérias dentro desta categoria
   parent?: string;                // slug da categoria pai
   ementa?: string[];              // lista estruturada e rigorosa de micro-tópicos
+  layout?: 'chat' | 'split' | 'narrative' | 'canvas'; // Formato visual da interface
+  widget?: string;                // Widget específico a ser carregado (ex: 'FinanceLab', 'CodeLab')
 }
 
 export interface MateriaEstado {

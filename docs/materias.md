@@ -17,6 +17,8 @@ interface MateriaConfig {
   children?: MateriaConfig[]; // sub-matérias (hierarquia)
   parent?: string;       // slug da categoria pai
   subTopicos?: { slug: string; nome: string }[]; // (legado — substituído por children)
+  layout?: 'chat' | 'split' | 'narrative' | 'canvas'; // (novo) Modo de visualização híbrida
+  widget?: string;       // (novo) Nome do componente visual associado (ex: 'FinanceLab')
 }
 ```
 
@@ -101,6 +103,7 @@ urgencia(dias: number | null): string
   - Finanças Corporativas (`financas-corporativas`)
   - Direito Empresarial & Tributário (`direito-empresarial`)
   - Operações & Supply Chain (`operacoes-supply-chain`)
+  - Investimento Anjo & Venture Capital (`private-equity-vc`)
   - Marketing & Distribuição (`marketing-distribuicao`)
   - Vendas & Negociação (`vendas-b2b-b2c`)
   - Liderança & Gestão (`lideranca-gestao`)

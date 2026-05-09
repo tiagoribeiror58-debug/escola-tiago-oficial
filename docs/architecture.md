@@ -39,9 +39,15 @@
        │
        ├── Gera session_key único (UUID)
        ├── Busca última sessão (useUltimaSessao)
-       └── Renderiza ChatWindow
+       └── Renderiza Workspace
 
-4. ChatWindow.tsx
+4. Workspace.tsx (Adaptive Layout System)
+       │
+       ├── Detecta o layout da matéria (split, narrative, canvas, chat)
+       ├── Renderiza o ChatWindow encapsulado no layout correto
+       └── Se split ou canvas, prepara o espaço para renderizar Widgets específicos (ex: FinanceLab)
+
+5. ChatWindow.tsx
        │
        ├── buildSystemPrompt(materia, ultimaSessao) → prompt completo
        ├── Auto-envia "Inicie a sessão." (trigger silencioso)
@@ -49,7 +55,7 @@
        ├── Detecta <session_done/> → seta topicComplete = true
        └── Detecta <chips>...</chips> → renderiza sugestões clicáveis
 
-5. Usuário encerra sessão
+6. Usuário encerra sessão
        │
        ├── Dialog de confirmação se topicComplete = false
        ├── POST /extract: IA extrai topico, erros, dificuldade, nivel etc.

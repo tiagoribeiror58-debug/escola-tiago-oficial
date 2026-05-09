@@ -4,6 +4,7 @@ import { getMateriaBySlug } from '@/lib/materias';
 import { useUltimaSessao } from '@/hooks/useSessoes';
 import { useChatHistory, useSessionMessages } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
+import Workspace from '@/components/Workspace';
 
 import { ArrowLeft, Square, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -239,18 +240,20 @@ export default function Sessao() {
       </header>
 
       <div className="flex-1 min-h-0">
-        <ChatWindow
-          key={sessionKey}
-          materia={materiaConfig}
-          ultimaSessao={ultimaSessao}
-          onMessagesChange={handleMessagesChange}
-          onTopicComplete={handleTopicComplete}
-          sessionKey={sessionKey}
-          initialMessages={resumeKey ? resumeMessages || undefined : undefined}
-          historyMessages={!resumeKey && historyMessages && historyMessages.length > 0 ? historyMessages : undefined}
-          sub={sub}
-          modo={modo}
-        />
+        <Workspace materia={materiaConfig}>
+          <ChatWindow
+            key={sessionKey}
+            materia={materiaConfig}
+            ultimaSessao={ultimaSessao}
+            onMessagesChange={handleMessagesChange}
+            onTopicComplete={handleTopicComplete}
+            sessionKey={sessionKey}
+            initialMessages={resumeKey ? resumeMessages || undefined : undefined}
+            historyMessages={!resumeKey && historyMessages && historyMessages.length > 0 ? historyMessages : undefined}
+            sub={sub}
+            modo={modo}
+          />
+        </Workspace>
       </div>
     </div>
   );

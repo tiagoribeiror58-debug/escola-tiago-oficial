@@ -107,7 +107,8 @@ Abordagem obrigatória:
             'Qualificação de Leads (BANT, MEDDIC)',
             'Contorno de Objeções Estrutural',
             'Previsibilidade e Máquina de Vendas'
-          ]
+          ],
+          layout: 'narrative'
         },
         {
           slug: 'gestao-lideranca',
@@ -137,7 +138,9 @@ Abordagem obrigatória:
             'Propriedade Intelectual e Marcas',
             'Noções de Direito Trabalhista e Terceirização (PJ)',
             'Regimes Tributários e Elisão Fiscal Legal'
-          ]
+          ],
+          layout: 'split',
+          widget: 'LegalViewer'
         },
         {
           slug: 'operacoes-supply-chain',
@@ -153,6 +156,30 @@ Abordagem obrigatória:
             'Lean Manufacturing e Gestão de Qualidade',
             'Matriz de Riscos e Contingência Operacional'
           ]
+        },
+        {
+          slug: 'private-equity-vc',
+          nome: 'Investimento Anjo & Venture Capital',
+          emoji: '🦄',
+          parent: 'business-growth',
+          descricao: 'Investimento direto em empresas reais, startups e equity-crowdfunding.',
+          contexto: `Foco: a dinâmica do investidor que senta à mesa com o founder. Ensine a avaliar teses, founders e o mecanismo de saída (exit).
+          
+Abordagem obrigatória:
+- Explique o conceito de "Skin in the Game" e alinhamento de interesses antes de falar de taxas.
+- Diferencie Investimento Anjo, VC e Private Equity pelo mecanismo de risco e maturidade da empresa.
+- Ensine a avaliar o "Founders-Market Fit" — por que ESSAS pessoas são as certas para ESSA dor?
+- Due Diligence não é só papelada; é ver se o mecanismo de crescimento é real ou sustentado por fumaça.`,
+          ementa: [
+            'Teses de Investimento: Onde e por que colocar dinheiro',
+            'Análise de Founders e Time (Soft Skills Hardcoded)',
+            'Deal Flow: Como encontrar e filtrar boas oportunidades',
+            'Term Sheets: Cláusulas de controle e proteção (Veto, Board)',
+            'Métricas de Performance Pós-Investimento',
+            'Estratégias de Exit: IPO, M&A e Secondary'
+          ],
+          layout: 'split',
+          widget: 'FinanceLab'
         }
       ]
     },
@@ -184,7 +211,9 @@ Abordagem obrigatória:
             'Arquitetura Backend (APIs, REST)',
             'Bancos de Dados Relacionais vs NoSQL',
             'Design Patterns e Clean Code'
-          ]
+          ],
+          layout: 'split',
+          widget: 'CodeLab'
         },
         {
           slug: 'inteligencia-artificial',
@@ -226,7 +255,9 @@ Abordagem obrigatória:
             'Espaçamento e Hierarquia Visual',
             'UI vs UX: A Experiência do Usuário',
             'Heurísticas de Nielsen'
-          ]
+          ],
+          layout: 'canvas',
+          widget: 'DesignPreview'
         },
         {
           slug: 'dados-analytics',
