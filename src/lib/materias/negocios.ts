@@ -294,6 +294,8 @@ Abordagem obrigatória:
           nome: 'Gestão de Produto Digital (PM)',
           emoji: '📦',
           parent: 'tecnologia-ia',
+          layout: 'split',
+          widget: 'UserStoryBuilder',
           descricao: 'Descoberta de produto, priorização de backlog e métricas de engajamento.',
           contexto: `Foco: a ponte entre engenharia, negócios e design. Ensine como decidir O QUE construir antes de COMO construir.`,
           ementa: [

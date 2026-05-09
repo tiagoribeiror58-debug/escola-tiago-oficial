@@ -1,6 +1,13 @@
 import { MateriaConfig } from '@/types';
 import { cn } from '@/lib/utils';
 import { FinanceLab } from '@/components/widgets/FinanceLab';
+import { LegalViewer } from '@/components/widgets/LegalViewer';
+import { CodeLab } from '@/components/widgets/CodeLab';
+import { NegotiationBoard } from '@/components/widgets/NegotiationBoard';
+import { ArgumentMap } from '@/components/widgets/ArgumentMap';
+import { FlashcardDeck } from '@/components/widgets/FlashcardDeck';
+import { EconGraph } from '@/components/widgets/EconGraph';
+import { UserStoryBuilder } from '@/components/widgets/UserStoryBuilder';
 
 interface Props {
   materia: MateriaConfig;
@@ -20,6 +27,20 @@ export default function Workspace({ materia, children }: Props) {
         <div className="w-full md:w-1/2 bg-muted/10 h-[50%] md:h-full overflow-auto p-0">
            {materia.widget === 'FinanceLab' ? (
              <FinanceLab />
+           ) : materia.widget === 'LegalViewer' ? (
+             <LegalViewer />
+           ) : materia.widget === 'CodeLab' ? (
+             <CodeLab />
+           ) : materia.widget === 'NegotiationBoard' ? (
+             <NegotiationBoard />
+           ) : materia.widget === 'ArgumentMap' ? (
+             <ArgumentMap />
+           ) : materia.widget === 'FlashcardDeck' ? (
+             <FlashcardDeck />
+           ) : materia.widget === 'EconGraph' ? (
+             <EconGraph />
+           ) : materia.widget === 'UserStoryBuilder' ? (
+             <UserStoryBuilder />
            ) : (
              <div className="h-full flex flex-col items-center justify-center text-center space-y-4 p-4 md:p-8 animate-in fade-in duration-700">
                 <div className="w-16 h-16 rounded-2xl bg-foreground/5 flex items-center justify-center text-3xl shadow-inner">

@@ -90,6 +90,8 @@ Abordagem obrigatória:
           nome: 'Estatística & Dados',
           emoji: '📊',
           parent: 'ciencias-exatas',
+          layout: 'split',
+          widget: 'EconGraph',
           descricao: 'A linguagem da incerteza. Interpretar dados, viés e pensamento probabilístico.',
           contexto: `Foco: raciocínio probabilístico. O aluno deve entender a intuição por trás da estatística para não ser enganado por números mal utilizados.`,
           ementa: [
@@ -162,6 +164,8 @@ Abordagem obrigatória:
           nome: 'Economia',
           emoji: '💹',
           parent: 'humanidades',
+          layout: 'split',
+          widget: 'EconGraph',
           descricao: 'Como mercados, governos e incentivos moldam o comportamento humano.',
           contexto: `Foco: mecanismos econômicos reais — incentivos, trade-offs. Economia não tem lado, tem consequências.`,
           ementa: [

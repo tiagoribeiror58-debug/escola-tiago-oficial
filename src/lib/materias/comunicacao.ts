@@ -42,6 +42,8 @@ Abordagem obrigatória:
           nome: 'Negociação',
           emoji: '🤝',
           parent: 'influencia-persuasao',
+          layout: 'split',
+          widget: 'NegotiationBoard',
           descricao: 'Princípios e táticas de negociação baseados em Harvard e FBI.',
           contexto: `Foco: mecanismos de influência mútua — o que gera acordo, o que gera impasse, e por quê.
 
@@ -63,6 +65,8 @@ Abordagem obrigatória:
           nome: 'Retórica & Argumentação',
           emoji: '⚖️',
           parent: 'influencia-persuasao',
+          layout: 'split',
+          widget: 'ArgumentMap',
           descricao: 'A arte de construir, desconstruir e avaliar argumentos.',
           contexto: `Foco: estrutura argumentativa real — premissas, conclusões, pressupostos ocultos e persuasão.
 
@@ -132,6 +136,8 @@ Abordagem obrigatória:
           nome: 'Inglês',
           emoji: 'EN',
           parent: 'idiomas-escrita',
+          layout: 'split',
+          widget: 'FlashcardDeck',
           descricao: 'Imersão no idioma global. Foco em produção de frases reais.',
           contexto: `Toda comunicação e explicação em PORTUGUÊS. Inglês aparece apenas em exemplos e exercícios.
 
@@ -153,6 +159,8 @@ Abordagem obrigatória:
           nome: 'Espanhol',
           emoji: 'ES',
           parent: 'idiomas-escrita',
+          layout: 'split',
+          widget: 'FlashcardDeck',
           descricao: 'Prática contínua e imersão progressiva.',
           contexto: `Conduza partes crescentes da sessão diretamente em espanhol conforme o aluno avança. Foco em estrutura antes de produção.`,
           ementa: [
@@ -169,6 +177,8 @@ Abordagem obrigatória:
           nome: 'Francês',
           emoji: 'FR',
           parent: 'idiomas-escrita',
+          layout: 'split',
+          widget: 'FlashcardDeck',
           descricao: 'Fundamentos de fonética e estrutura do idioma.',
           contexto: `Foco na fonética peculiar do francês e nas similaridades sintáticas com o português.`,
           ementa: [

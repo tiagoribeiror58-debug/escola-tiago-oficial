@@ -101,16 +101,16 @@ urgencia(dias: number | null): string
   - Fundação & Startups (`empreendedorismo`)
   - Finanças & Valuation (`financas-equity`)
   - Finanças Corporativas (`financas-corporativas`)
-  - Direito Empresarial & Tributário (`direito-empresarial`)
+  - Direito Empresarial & Tributário (`direito-empresarial`) [Widget: `LegalViewer`]
   - Operações & Supply Chain (`operacoes-supply-chain`)
   - Investimento Anjo & Venture Capital (`private-equity-vc`)
   - Marketing & Distribuição (`marketing-distribuicao`)
   - Vendas & Negociação (`vendas-b2b-b2c`)
   - Liderança & Gestão (`lideranca-gestao`)
 - **Tecnologia & Produtos** (`tecnologia-produtos`)
-  - Engenharia de Software (`programacao`)
+  - Engenharia de Software (`programacao`) [Widget: `CodeLab`]
   - Inteligência Artificial (`inteligencia-artificial`)
-  - Gestão de Produto Digital (PM) (`product-management`)
+  - Gestão de Produto Digital (PM) (`product-management`) [Widget: `UserStoryBuilder`]
   - Cloud Computing & DevOps (`cloud-devops`)
   - Design de Produto (UX/UI) (`design`)
   - Data Science (`data-science`)
@@ -119,26 +119,26 @@ urgencia(dias: number | null): string
 ### 3. Comunicação & Influência (`comunicacao-influencia`)
 - **Influência & Persuasão** (`influencia-persuasao`)
   - Sedução & Dinâmicas Sociais (`seducao`)
-  - Negociação Estratégica (`negociacao`)
-  - Retórica & Lógica (`retorica`)
+  - Negociação Estratégica (`negociacao`) [Widget: `NegotiationBoard`]
+  - Retórica & Lógica (`retorica`) [Widget: `ArgumentMap`]
   - Oratória & Apresentação (`oratoria`)
 - **Idiomas & Escrita** (`idiomas-escrita`)
   - Copywriting & Redação (`redacao`)
-  - Inglês (`ingles`)
-  - Espanhol (`espanhol`)
-  - Francês (`frances`)
+  - Inglês (`ingles`) [Widget: `FlashcardDeck`]
+  - Espanhol (`espanhol`) [Widget: `FlashcardDeck`]
+  - Francês (`frances`) [Widget: `FlashcardDeck`]
 
 ### 4. Fundamentos Acadêmicos (`fundamentos-academicos`)
 - **Ciências Exatas** (`ciencias-exatas`)
   - Matemática (`matematica`)
   - Física (`fisica`)
-  - Estatística & Dados (`estatistica`)
+  - Estatística & Dados (`estatistica`) [Widget: `EconGraph`]
   - Química (`quimica`)
 - **Humanidades** (`humanidades`)
   - História (`historia`)
   - Filosofia (`filosofia`)
   - Geografia (`geografia`)
-  - Economia (`economia`)
+  - Economia (`economia`) [Widget: `EconGraph`]
   - Literatura (`literatura`)
   - Sociologia (`sociologia`)
 - **Artes & Expressão** (`artes-expressao`)
