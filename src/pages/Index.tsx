@@ -8,6 +8,7 @@ import { MateriaEstado } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
+import { Search } from 'lucide-react';
 
 function getGreeting(): string {
   const h = new Date().getHours();
@@ -59,6 +60,18 @@ export default function Index() {
   const outrosEstados = heroEstado ? estadosFocados.filter(e => e.config.slug !== heroEstado.config.slug) : estadosFocados;
   const displayedEstados = outrosEstados; // Sempre mostrar todos os focados
 
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const normalizeString = (str: string) =>
+    str
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+
+  const searchResults = searchQuery.trim().length > 0
+    ? estados.filter(e => normalizeString(e.config.nome).includes(normalizeString(searchQuery)))
+    : [];
+
   return (
     <div className="min-h-screen">
       <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
@@ -88,7 +101,42 @@ export default function Index() {
           </div>
         </div>
 
-        {!isLoading && foco.length === 0 ? (
+        {/* Barra de Pesquisa */}
+        <div className="mb-8 relative">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <input
+            type="text"
+            placeholder="O que você quer estudar agora?..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-4 py-4 bg-card border border-border/50 rounded-2xl text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all shadow-sm"
+          />
+        </div>
+
+        {searchQuery.trim().length > 0 ? (
+          <div className="space-y-6">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest px-1">
+              Resultados da busca ({searchResults.length})
+            </h3>
+            {searchResults.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                {searchResults.map(estado => (
+                  <MateriaCard
+                    key={estado.config.slug}
+                    estado={estado}
+                    onClick={() => handleCardClick(estado)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="p-8 text-center text-muted-foreground bg-muted/30 rounded-2xl border border-dashed border-border/50">
+                Nenhuma matéria encontrada com esse nome.
+              </div>
+            )}
+          </div>
+        ) : !isLoading && foco.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-center p-12 mt-12 border border-dashed rounded-[2rem] bg-card">
             <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-6">
               <Library className="w-8 h-8 text-muted-foreground" />
