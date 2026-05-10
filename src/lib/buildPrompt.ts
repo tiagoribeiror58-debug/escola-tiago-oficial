@@ -5,7 +5,8 @@ export function buildSystemPrompt(
   ultimaSessao: Sessao | null,
   isContinuation?: boolean,
   sub?: string | null,
-  modo?: string | null
+  modo?: string | null,
+  ementaConcluida?: string[]
 ): string {
   if (modo === 'desafio') {
     const temasGerais = ultimaSessao
@@ -90,17 +91,30 @@ Matéria: ${materia.nome}`;
 
   // --- EMENTA MAPA (livre mas ancorada) ---
   if (materia.ementa && materia.ementa.length > 0) {
-    // Determinar o índice do último tópico concluído baseado no histórico
-    const topicoAnterior = ultimaSessao?.topico || '';
-    const indexAnterior = materia.ementa.findIndex(
-      step => step.toLowerCase().includes(topicoAnterior.toLowerCase()) ||
-              topicoAnterior.toLowerCase().includes(step.toLowerCase())
-    );
+    // Usa ementaConcluida (fonte do banco) como verdade absoluta de progresso.
+    // Fallback: se não vier o array, tenta inferir pelo nome da última sessão (menos preciso).
+    let concluidos: Set<string>;
 
-    // Montar mapa compacto: ✅ concluídos, 📍 atual, ⬜ disponíveis
+    if (ementaConcluida && ementaConcluida.length >= 0) {
+      concluidos = new Set(ementaConcluida);
+    } else {
+      // fallback legado: marca como concluídos todos até o índice encontrado pelo nome
+      const topicoAnterior = ultimaSessao?.topico || '';
+      const indexAnterior = materia.ementa.findIndex(
+        step => step.toLowerCase().includes(topicoAnterior.toLowerCase()) ||
+                topicoAnterior.toLowerCase().includes(step.toLowerCase())
+      );
+      concluidos = new Set(
+        indexAnterior >= 0 ? materia.ementa.slice(0, indexAnterior + 1) : []
+      );
+    }
+
+    // Encontra o próximo não concluído (sugestão)
+    const proximoIdx = materia.ementa.findIndex(t => !concluidos.has(t));
+
     const mapaItems = materia.ementa.map((step, i) => {
-      if (indexAnterior >= 0 && i <= indexAnterior) return `  ✅ ${step}`;
-      if (indexAnterior >= 0 && i === indexAnterior + 1) return `  📍 ${step} ← sugerido`;
+      if (concluidos.has(step)) return `  ✅ ${step}`;
+      if (i === proximoIdx) return `  📍 ${step} ← sugerido`;
       return `  ⬜ ${step}`;
     });
 
