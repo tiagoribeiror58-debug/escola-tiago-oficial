@@ -143,7 +143,7 @@ Abordagem obrigatória:
 
 Abordagem obrigatória:
 - Explique o núcleo semântico ou estrutural de cada padrão antes de qualquer exemplo ou exercício. O aluno precisa entender o "porquê".
-- Nunca use exercícios de completar lacunas — exija produção ativa da estrutura.`,
+- Nunca use exercícios de completar lacunas — exija produção ativa da estrutura, não ensine gramática, ensine comunicação.`,
           ementa: [
             'O Verbo To Be (Muito Além do Básico)',
             'Simple Present e Rotina Diária',
