@@ -5,7 +5,7 @@ import { useSessoes, useEmentaConcluida, useToggleEmenta } from '@/hooks/useSess
 import { useSessionMessages } from '@/hooks/useChatMessages';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2 } from 'lucide-react';
+import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { playPopSound } from '@/lib/audioUtils';
 import { format } from 'date-fns';
@@ -23,7 +23,6 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const navigate = useNavigate();
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
   const [expandedSession, setExpandedSession] = useState<number | null>(null);
-  const [openPhases, setOpenPhases] = useState<Set<number>>(new Set([0]));
   const { data: todasSessoes } = useSessoes();
 
   // REGRA DOS HOOKS: todos os hooks devem ser chamados ANTES de qualquer early return
@@ -34,16 +33,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const currentTopicRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (open && config?.ementa) {
+    if (open) {
       setSelectedSub(null);
       setExpandedSession(null);
 
-      // Calcula a fase atual e a abre por padrão
-      const firstUncompletedIdx = config.ementa.findIndex(t => !ementaConcluida.includes(t));
-      const currentIndex = firstUncompletedIdx === -1 ? config.ementa.length : firstUncompletedIdx;
-      const currentPhaseIdx = Math.floor(currentIndex / 10);
-      setOpenPhases(new Set([currentPhaseIdx]));
-
+      // Scroll suave para o tópico atual (no modal externo)
       setTimeout(() => {
         currentTopicRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 160);
@@ -155,119 +149,54 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 </span>
               </div>
               
-              {/* Trilha dividida em Fases (agrupamento inteligente) */}
-              <div className="space-y-2">
-                  {(() => {
-                    const CHUNK_SIZE = 10;
-                    const fases = [];
-                    for (let i = 0; i < config.ementa.length; i += CHUNK_SIZE) {
-                      fases.push({
-                        titulo: `Fase ${fases.length + 1}`,
-                        topicos: config.ementa.slice(i, i + CHUNK_SIZE),
-                        startIndex: i
-                      });
-                    }
-
-                    const firstUncompletedIdx = config.ementa.findIndex(t => !ementaConcluida.includes(t));
-                    const currentIndex = firstUncompletedIdx === -1 ? config.ementa.length : firstUncompletedIdx;
-
-                    return fases.map((fase, fIdx) => {
-                      const isCurrentPhase = currentIndex >= fase.startIndex && currentIndex < fase.startIndex + CHUNK_SIZE;
-                      const isOpen = openPhases.has(fIdx);
-                      const completedInPhase = fase.topicos.filter(t => ementaConcluida.includes(t)).length;
-
-                      const togglePhase = () => {
-                        setOpenPhases(prev => {
-                          const next = new Set(prev);
-                          if (next.has(fIdx)) next.delete(fIdx);
-                          else next.add(fIdx);
-                          return next;
-                        });
-                      };
-
-                      return (
-                        <div
-                          key={fIdx}
-                          className="bg-muted/10 rounded-2xl border border-border overflow-hidden"
-                        >
-                          {/* Header da fase — clicável para expandir/recolher */}
-                          <button
-                            onClick={togglePhase}
-                            className="flex items-center justify-between p-3 w-full text-left cursor-pointer hover:bg-muted/40 transition-colors"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className={cn(
-                                "w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold border transition-colors",
-                                isCurrentPhase ? "bg-primary/10 border-primary/30 text-primary" : "bg-foreground/5 border-border text-foreground"
-                              )}>
-                                {fIdx + 1}
-                              </div>
-                              <div>
-                                <p className="text-sm font-semibold text-foreground">Fase {fIdx + 1}</p>
-                                <p className="text-[10px] text-muted-foreground">
-                                  Tópicos {fase.startIndex + 1}–{Math.min(fase.startIndex + CHUNK_SIZE, config.ementa!.length)}
-                                  {completedInPhase > 0 && ` · ${completedInPhase}/${fase.topicos.length} concluídos`}
-                                </p>
-                              </div>
-                            </div>
-                            <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform", isOpen && "rotate-180")} />
-                          </button>
-
-                          {/* Conteúdo da fase — só renderiza se aberto */}
-                          {isOpen && (
-                            <div className="p-2 pt-0 space-y-1 bg-background/50 border-t border-border/50">
-                              {fase.topicos.map((topico, localIdx) => {
-                                const idx = fase.startIndex + localIdx;
-                                const isCompleted = ementaConcluida.includes(topico);
-                                const isCurrent = idx === currentIndex;
-
-                                return (
-                                  <button
-                                    key={idx}
-                                    ref={isCurrent ? currentTopicRef : null}
-                                    onClick={() => setSelectedSub(selectedSub === topico ? null : topico)}
-                                    className={cn(
-                                      "flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl transition-colors",
-                                      selectedSub === topico ? "bg-muted border border-border" : "hover:bg-muted/50 border border-transparent",
-                                      isCompleted && selectedSub !== topico ? "text-muted-foreground" : isCurrent || selectedSub === topico ? "text-foreground font-medium" : "text-muted-foreground"
-                                    )}
-                                  >
-                                    <div
-                                      onClick={(e) => handleToggleTopico(e, topico, isCompleted)}
-                                      className={cn(
-                                        "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors cursor-pointer hover:scale-110",
-                                        selectedSub === topico ? "bg-foreground text-background border-foreground shadow-sm" :
-                                        isCompleted ? "bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)] text-[hsl(var(--success))]" :
-                                        isCurrent ? "bg-primary/10 border-primary/30 text-primary ring-2 ring-primary/20 ring-offset-1 ring-offset-background" :
-                                        "bg-muted/30 border-border/50 text-muted-foreground"
-                                      )}>
-                                      {isCompleted ? "✓" : (idx + 1)}
-                                    </div>
-                                    <span className={cn(
-                                      "line-clamp-1 flex-1",
-                                      isCompleted && selectedSub !== topico && "line-through decoration-muted-foreground/30"
-                                    )}>
-                                      {topico}
-                                    </span>
-                                    {isCurrent && (
-                                      <span className="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full shrink-0 animate-pulse">
-                                        Atual
-                                      </span>
-                                    )}
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          )}
+              {/* Trilha — expande livremente, scroll do modal externo cobre */}
+              <div className="space-y-1">
+                  {config.ementa.map((topico, idx) => {
+                    const isCompleted = ementaConcluida.includes(topico);
+                    const firstUncompletedIdx = config.ementa!.findIndex(t => !ementaConcluida.includes(t));
+                    const isCurrent = idx === (firstUncompletedIdx === -1 ? config.ementa!.length : firstUncompletedIdx);
+                    
+                    return (
+                      <button
+                        key={idx}
+                        ref={isCurrent ? currentTopicRef : null}
+                        onClick={() => setSelectedSub(selectedSub === topico ? null : topico)}
+                        className={cn(
+                          "flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl transition-colors",
+                          selectedSub === topico ? "bg-muted border border-border" : "hover:bg-muted/50 border border-transparent",
+                          isCompleted && selectedSub !== topico ? "text-muted-foreground" : isCurrent || selectedSub === topico ? "text-foreground font-medium" : "text-muted-foreground"
+                        )}
+                      >
+                        <div 
+                          onClick={(e) => handleToggleTopico(e, topico, isCompleted)}
+                          className={cn(
+                            "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors cursor-pointer hover:scale-110",
+                            selectedSub === topico ? "bg-foreground text-background border-foreground shadow-sm" :
+                            isCompleted ? "bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)] text-[hsl(var(--success))]" :
+                            isCurrent ? "bg-primary/10 border-primary/30 text-primary ring-2 ring-primary/20 ring-offset-1 ring-offset-background" :
+                            "bg-muted/30 border-border/50 text-muted-foreground"
+                          )}>
+                          {isCompleted ? "✓" : (idx + 1)}
                         </div>
-                      );
-                    });
-                  })()}
+                        <span className={cn(
+                          "line-clamp-1 flex-1",
+                          isCompleted && selectedSub !== topico && "line-through decoration-muted-foreground/30"
+                        )}>
+                          {topico}
+                        </span>
+                        {isCurrent && (
+                          <span className="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full shrink-0 animate-pulse">
+                            Atual
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
 
                   {/* Infinite Curriculum Extension */}
                   {ementaConcluida.length >= config.ementa.length && (
-                    <div className="flex items-center gap-3 text-sm w-full text-left p-4 rounded-2xl border border-primary/20 text-foreground font-medium mt-2 bg-primary/5">
-                      <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[12px] transition-colors bg-primary/20 border-primary/40 text-primary">
+                    <div className="flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl text-foreground font-medium mt-2 opacity-90">
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors bg-primary/10 border-primary/30 text-primary">
                         ∞
                       </div>
                       <span className="line-clamp-1 flex-1">
@@ -328,6 +257,17 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
               </div>
               <ChevronRight className="w-4 h-4 text-muted-foreground" />
             </button>
+
+            {/* Link para Jornada Completa */}
+            {config.ementa && config.ementa.length > 0 && (
+              <button
+                onClick={() => { playPopSound(); onOpenChange(false); navigate(`/ementa/${config.slug}`); }}
+                className="mt-2 w-full flex items-center justify-center gap-2 py-2 rounded-xl text-[12px] text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+              >
+                <Map className="w-3.5 h-3.5" />
+                Ver jornada completa ({(ementaConcluida.length)}/{config.ementa.length} tópicos)
+              </button>
+            )}
           </div>
 
           {/* Histórico de Sessões */}

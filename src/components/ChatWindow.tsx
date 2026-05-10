@@ -2,7 +2,6 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { ChatMessage, MateriaConfig, Sessao } from '@/types';
 import { buildSystemPrompt } from '@/lib/buildPrompt';
 import { useSaveChatMessage } from '@/hooks/useChatMessages';
-import { useEmentaConcluida } from '@/hooks/useSessoes';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
 import { ArrowUp, Loader2, Zap, ZapOff, History } from 'lucide-react';
@@ -27,8 +26,7 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
 export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, historyMessages, sub, modo }: Props) {
   const isContinuation = initialMessages !== undefined;
-  const { data: ementaConcluida } = useEmentaConcluida(materia.slug);
-  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo, ementaConcluida ?? []);
+  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo);
   const saveMutation = useSaveChatMessage();
 
   const [messages, setMessages] = useState<ChatMessage[]>(
