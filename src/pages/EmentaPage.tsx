@@ -1,13 +1,15 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
 import { useEmentaConcluida, useToggleEmenta } from '@/hooks/useSessoes';
 import { playPopSound } from '@/lib/audioUtils';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, BookOpen, CheckCircle2, Circle, Zap } from 'lucide-react';
+import { ArrowLeft, BookOpen, CheckCircle2, Circle, Zap, ChevronDown } from 'lucide-react';
 
 export default function EmentaPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const [expandedTopic, setExpandedTopic] = useState<string | null>(null);
 
   const config = slug ? getMateriaBySlug(slug) : null;
   const ementaConcluidaQuery = useEmentaConcluida(slug || '');
@@ -89,98 +91,138 @@ export default function EmentaPage() {
         {ementa.map((topico, idx) => {
           const isCompleted = ementaConcluida.includes(topico);
           const isCurrent = idx === currentIdx;
-          const isPending = !isCompleted && !isCurrent;
+          const isSelected = expandedTopic === topico;
 
           return (
-            <button
+            <div
               key={idx}
-              onClick={() => handleStartSession(topico)}
+              onClick={() => { playPopSound(); setExpandedTopic(isSelected ? null : topico); }}
               className={cn(
-                'w-full flex items-center gap-4 p-4 rounded-2xl border text-left transition-all active:scale-[0.98]',
-                isCurrent
-                  ? 'bg-primary/10 border-primary/30 hover:bg-primary/15'
+                'w-full flex flex-col p-4 rounded-2xl border text-left transition-all cursor-pointer hover:bg-muted/20 active:scale-[0.98]',
+                isSelected 
+                  ? 'bg-primary/10 border-primary/40 ring-1 ring-primary/20' 
+                  : isCurrent
+                  ? 'bg-primary/5 border-primary/20'
                   : isCompleted
-                  ? 'bg-muted/20 border-border/40 hover:bg-muted/40'
-                  : 'bg-muted/10 border-border/30 hover:bg-muted/30'
+                  ? 'bg-muted/10 border-border/40'
+                  : 'bg-muted/5 border-border/30'
               )}
             >
-              {/* Ícone / Toggle */}
-              <div
-                onClick={(e) => handleToggle(e, topico, isCompleted)}
-                className={cn(
-                  'shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all hover:scale-110',
-                  isCurrent
-                    ? 'bg-primary/10 border-primary/40 text-primary ring-2 ring-primary/20 ring-offset-2 ring-offset-background'
-                    : isCompleted
-                    ? 'bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.4)] text-[hsl(var(--success))]'
-                    : 'bg-muted/30 border-border/50 text-muted-foreground'
-                )}
-              >
-                {isCompleted
-                  ? <CheckCircle2 className="w-4 h-4" />
-                  : isCurrent
-                  ? <Zap className="w-4 h-4" />
-                  : <Circle className="w-4 h-4 opacity-50" />
-                }
+              {/* Cabeçalho do Cartão */}
+              <div className="w-full flex items-center gap-4">
+                {/* Ícone / Toggle */}
+                <div
+                  onClick={(e) => handleToggle(e, topico, isCompleted)}
+                  className={cn(
+                    'shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all hover:scale-110',
+                    isSelected
+                      ? 'bg-primary border-primary text-primary-foreground shadow-sm'
+                      : isCurrent
+                      ? 'bg-primary/10 border-primary/40 text-primary'
+                      : isCompleted
+                      ? 'bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.4)] text-[hsl(var(--success))]'
+                      : 'bg-muted/30 border-border/50 text-muted-foreground'
+                  )}
+                >
+                  {isCompleted
+                    ? <CheckCircle2 className="w-4 h-4" />
+                    : isCurrent
+                    ? <Zap className="w-4 h-4" />
+                    : <Circle className="w-4 h-4 opacity-50" />
+                  }
+                </div>
+
+                {/* Conteúdo */}
+                <div className="flex-1 min-w-0">
+                  <p className={cn(
+                    'text-sm font-medium leading-snug',
+                    isCompleted && !isSelected ? 'text-muted-foreground line-through decoration-muted-foreground/30' : 'text-foreground'
+                  )}>
+                    {topico}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">Tópico {idx + 1} de {total}</p>
+                </div>
+
+                {/* Badges */}
+                <div className="flex items-center gap-3 shrink-0">
+                  {isCurrent && !isSelected && (
+                    <span className="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full animate-pulse">
+                      Atual
+                    </span>
+                  )}
+                  {isCompleted && !isSelected && (
+                    <span className="text-[10px] font-medium text-[hsl(var(--success))] opacity-70">
+                      ✓
+                    </span>
+                  )}
+                </div>
               </div>
 
-              {/* Conteúdo */}
-              <div className="flex-1 min-w-0">
-                <p className={cn(
-                  'text-sm font-medium leading-snug',
-                  isCompleted ? 'text-muted-foreground line-through decoration-muted-foreground/30' : 'text-foreground'
-                )}>
-                  {topico}
-                </p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">Tópico {idx + 1} de {total}</p>
-              </div>
+              {/* Conteúdo Expansível (Sub-tópicos e Botão) */}
+              {isSelected && (
+                <div className="w-full mt-4 pt-4 border-t border-border/50 animate-in fade-in slide-in-from-top-2">
+                  <p className="text-[13px] text-muted-foreground mb-4">
+                    Selecione um foco opcional ou inicie a sessão padrão para este tópico.
+                  </p>
+                  
+                  {config.subTopicos && config.subTopicos.length > 0 && (
+                    <div className="mb-4">
+                      <p className="text-[11px] font-medium text-muted-foreground mb-2">Foco opcional da matéria:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {config.subTopicos.map(sub => (
+                          <span key={sub.slug} className="px-2 py-1 text-[11px] rounded-full border border-border bg-muted/30 text-muted-foreground">
+                            {sub.nome}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-              {/* Badge de estado */}
-              {isCurrent && (
-                <span className="shrink-0 text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full animate-pulse">
-                  Atual
-                </span>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleStartSession(topico); }}
+                    className="w-full py-3 rounded-xl bg-foreground text-background font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    Estudar este tópico
+                  </button>
+                </div>
               )}
-              {isCompleted && (
-                <span className="shrink-0 text-[10px] font-medium text-[hsl(var(--success))] opacity-70">
-                  ✓
-                </span>
-              )}
-            </button>
+            </div>
           );
         })}
 
         {/* Fim da trilha */}
         {total > 0 && concluidos >= total && (
-          <div className="flex items-center gap-4 p-4 rounded-2xl border border-primary/20 bg-primary/5 mt-4">
-            <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-primary shrink-0">
+          <div className="flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl text-foreground font-medium mt-2 opacity-90">
+            <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors bg-primary/10 border-primary/30 text-primary">
               ∞
             </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">Fronteira do Conhecimento</p>
-              <p className="text-[11px] text-muted-foreground">Você concluiu toda a ementa base.</p>
-            </div>
+            <span className="line-clamp-1 flex-1">
+              Fronteira do Conhecimento
+            </span>
           </div>
         )}
       </div>
 
-      {/* CTA flutuante — Começar sessão no tópico atual */}
-      {currentIdx < total && (
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/90 backdrop-blur-md border-t border-border">
-          <div className="max-w-2xl mx-auto">
-            <button
-              onClick={() => handleStartSession(ementa[currentIdx])}
-              className="w-full flex items-center gap-3 p-4 rounded-2xl bg-foreground text-background hover:opacity-90 transition-all active:scale-[0.98] font-semibold"
-            >
-              <BookOpen className="w-5 h-5 shrink-0" />
-              <div className="text-left flex-1">
-                <span className="block text-sm">Estudar tópico atual</span>
-                <span className="block text-[11px] opacity-60 font-normal truncate">{ementa[currentIdx]}</span>
-              </div>
-            </button>
-          </div>
+      {/* CTA flutuante — Começar sessão */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/90 backdrop-blur-md border-t border-border">
+        <div className="max-w-2xl mx-auto">
+          <button
+            onClick={() => handleStartSession(expandedTopic || (currentIdx < total ? ementa[currentIdx] : ementa[0]))}
+            className="w-full flex items-center gap-3 p-4 rounded-2xl bg-foreground text-background hover:opacity-90 transition-all active:scale-[0.98] font-semibold"
+          >
+            <BookOpen className="w-5 h-5 shrink-0" />
+            <div className="text-left flex-1">
+              <span className="block text-sm">
+                {expandedTopic ? `Estudar: ${expandedTopic.length > 30 ? expandedTopic.slice(0, 30) + '…' : expandedTopic}` : currentIdx < total ? 'Estudar tópico atual' : 'Revisar matéria'}
+              </span>
+              <span className="block text-[11px] opacity-60 font-normal truncate">
+                {expandedTopic || (currentIdx < total ? ementa[currentIdx] : 'Trilha concluída')}
+              </span>
+            </div>
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 }
