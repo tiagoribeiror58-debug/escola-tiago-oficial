@@ -31,23 +31,15 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const toggleEmenta = useToggleEmenta();
 
   const currentTopicRef = useRef<HTMLButtonElement>(null);
-  const trailScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (open) {
       setSelectedSub(null);
       setExpandedSession(null);
-      
-      // Auto-scroll dentro do container da trilha para o tópico atual
+
+      // Scroll suave para o tópico atual (no modal externo)
       setTimeout(() => {
-        const container = trailScrollRef.current;
-        const current = currentTopicRef.current;
-        if (container && current) {
-          const containerTop = container.getBoundingClientRect().top;
-          const itemTop = current.getBoundingClientRect().top;
-          const offset = itemTop - containerTop - container.clientHeight / 2 + current.clientHeight / 2;
-          container.scrollTo({ top: container.scrollTop + offset, behavior: 'smooth' });
-        }
+        currentTopicRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 160);
     }
   }, [open]);
@@ -157,13 +149,8 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 </span>
               </div>
               
-              {/* Container scrollável da trilha */}
-              <div
-                ref={trailScrollRef}
-                className="relative max-h-[300px] overflow-y-auto pr-0.5
-                  scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
-              >
-                <div className="space-y-1">
+              {/* Trilha — expande livremente, scroll do modal externo cobre */}
+              <div className="space-y-1">
                   {config.ementa.map((topico, idx) => {
                     const isCompleted = ementaConcluida.includes(topico);
                     const firstUncompletedIdx = config.ementa!.findIndex(t => !ementaConcluida.includes(t));
@@ -217,13 +204,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                       </span>
                     </div>
                   )}
-                </div>
               </div>
-
-              {/* Fade gradient indicando overflow (só aparece quando há mais conteúdo) */}
-              {config.ementa.length > 4 && (
-                <div className="h-4 -mt-4 bg-gradient-to-t from-background to-transparent pointer-events-none rounded-b-xl" />
-              )}
             </div>
           )}
 
