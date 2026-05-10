@@ -38,7 +38,7 @@ COMO VOCÊ FUNCIONA:
 
 REGRAS INVIOLÁVEIS:
 
-1. **MANDAMENTO SUPREMO: NENHUMA PERGUNTA SEM ENSINAR PRIMEIRO.** É estritamente PROIBIDO fazer testes cegos, sondar conhecimento prévio, pedir para o aluno "adivinhar" algo ou fazer perguntas do tipo "Como você acha que X funciona?". O aluno NÃO VAI adivinhar nada. O fluxo obrigatório e inviolável é: PRIMEIRO você explica o conceito técnico completo, a lógica e o fundamento, e SÓ NO FINAL da sua resposta você faz uma única pergunta, que deve testar EXCLUSIVAMENTE a lógica do que você acabou de explicar. Se a sua pergunta exigir uma resposta que não foi ensinada por você minutos antes, você falhou criticamente como professor.
+1. **MANDAMENTO SUPREMO: FOCO NA EXPLICAÇÃO, NÃO NO INTERROGATÓRIO.** É estritamente PROIBIDO fazer perguntas ao final de cada output apenas por protocolo ou para "forçar" interação. O fluxo deve ser natural: explique o conceito técnico com completude e clareza. Só faça uma pergunta se ela for vital para validar um ponto que VOCÊ ACABOU de ensinar ou para o Desafio de Maestria. Se o aluno apenas precisa absorver, termine com a explicação e deixe-o decidir o próximo passo. NUNCA peça para o aluno "adivinhar" o que você ainda não ensinou.
 
 2. **Atomicidade Radical.** Uma ideia por mensagem. É proibido explicar dois conceitos diferentes na mesma resposta.
 
@@ -88,9 +88,26 @@ Matéria: ${materia.nome}`;
     }
   }
 
+  // --- EMENTA MAPA (livre mas ancorada) ---
   if (materia.ementa && materia.ementa.length > 0) {
-    contexto += `\n\nEMENTA (siga esta ordem):\n` +
-      materia.ementa.map(step => `- ${step}`).join('\n');
+    // Determinar o índice do último tópico concluído baseado no histórico
+    const topicoAnterior = ultimaSessao?.topico || '';
+    const indexAnterior = materia.ementa.findIndex(
+      step => step.toLowerCase().includes(topicoAnterior.toLowerCase()) ||
+              topicoAnterior.toLowerCase().includes(step.toLowerCase())
+    );
+
+    // Montar mapa compacto: ✅ concluídos, 📍 atual, ⬜ disponíveis
+    const mapaItems = materia.ementa.map((step, i) => {
+      if (indexAnterior >= 0 && i <= indexAnterior) return `  ✅ ${step}`;
+      if (indexAnterior >= 0 && i === indexAnterior + 1) return `  📍 ${step} ← sugerido`;
+      return `  ⬜ ${step}`;
+    });
+
+    contexto += `\n\nMAPA DA MATÉRIA (sua bússola — NÃO saia destes tópicos):
+${mapaItems.join('\n')}
+
+REGRA DO MAPA: O aluno pode escolher qualquer tópico ⬜ por curiosidade. O 📍 é apenas sugestão de continuidade. Você NÃO pode inventar tópicos fora desta lista. Se o aluno pedir algo fora do mapa, conecte ao tópico mais próximo.`;
   }
 
   if (isContinuation) {
@@ -99,16 +116,12 @@ Matéria: ${materia.nome}`;
 
   let historico = '';
   if (ultimaSessao) {
-    historico = `\n\nÚltima sessão:
-- Tópico: ${ultimaSessao.topico}
-- Dificuldade: ${ultimaSessao.dificuldade}, erros: ${ultimaSessao.erros ?? 0}
-- Próximo tópico sugerido: ${ultimaSessao.proximo_topico || 'não definido'}
-
-Inicie pelo próximo tópico. Se for redundante com o anterior, avance para a próxima camada de complexidade sem repetir o que já foi coberto.
+    historico = `\n\nÚltima sessão: "${ultimaSessao.topico}" (dificuldade: ${ultimaSessao.dificuldade || 'normal'}).
+Comece pelo tópico 📍 sugerido no mapa, a menos que o aluno peça outro. Não repita conteúdo já coberto (✅).
 
 A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;
   } else {
-    historico = `\n\nPrimeira sessão de ${materia.nome}. Comece pelo início da ementa com precisão técnica. Não faça diagnóstico inicial — vá direto ao conteúdo.
+    historico = `\n\nPrimeira sessão de ${materia.nome}. Comece pelo primeiro tópico do mapa (⬜). Vá direto ao conteúdo.
 
 A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;
   }
