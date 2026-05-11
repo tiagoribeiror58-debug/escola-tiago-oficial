@@ -133,6 +133,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 )}
               </div>
             )}
+
+            {/* Por que estudar agora — visível só se houver whyStart */}
+            {config.whyStart && <WhyStartSection text={config.whyStart} />}
           </div>
 
           {/* Ementa / Roadmap Timeline */}
@@ -417,6 +420,32 @@ function SessaoItem({
             </button>
           )}
         </div>
+      )}
+    </div>
+  );
+}
+
+// Componente colapsável para exibir a justificativa pedagógica da matéria
+function WhyStartSection({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="mt-3">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors group"
+      >
+        <ChevronRight className={cn(
+          "w-3 h-3 transition-transform duration-200",
+          open && "rotate-90"
+        )} />
+        Por que estudar agora?
+      </button>
+
+      {open && (
+        <p className="mt-2 text-[12px] text-muted-foreground leading-relaxed bg-muted/30 rounded-xl px-3 py-2.5 border border-border/50">
+          {text}
+        </p>
       )}
     </div>
   );
