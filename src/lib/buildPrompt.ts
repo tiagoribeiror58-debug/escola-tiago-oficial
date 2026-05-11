@@ -5,7 +5,8 @@ export function buildSystemPrompt(
   ultimaSessao: Sessao | null,
   isContinuation?: boolean,
   sub?: string | null,
-  modo?: string | null
+  modo?: string | null,
+  concluidos: string[] = []
 ): string {
   if (modo === 'desafio') {
     const temasGerais = ultimaSessao
@@ -114,10 +115,11 @@ Matéria: ${materia.nome}`;
       }
     }
 
-    // Montar mapa compacto: ✅ concluídos, 📍 atual, ⬜ disponíveis
+    // Montar mapa compacto: ✅ concluídos (no banco), 📍 atual, ⬜ disponíveis
     const mapaItems = materia.ementa.map((step, i) => {
-      if (indexAtual >= 0 && i < indexAtual) return `  ✅ ${step}`;
+      const isConcluido = concluidos.some(c => c.toLowerCase() === step.toLowerCase());
       if (indexAtual >= 0 && i === indexAtual) return `  📍 ${step} ← sugerido`;
+      if (isConcluido) return `  ✅ ${step}`;
       return `  ⬜ ${step}`;
     });
 
@@ -133,10 +135,12 @@ REGRA DO MAPA: O aluno pode escolher qualquer tópico ⬜ por curiosidade. O �
 
   let historico = '';
   if (ultimaSessao) {
+    const proximo = ultimaSessao.proximo_topico || 'o próximo tópico do mapa';
     historico = `\n\nÚltima sessão: "${ultimaSessao.topico}" (dificuldade: ${ultimaSessao.dificuldade || 'normal'}).
-Comece pelo tópico 📍 sugerido no mapa, a menos que o aluno peça outro. Não repita conteúdo já coberto (✅).
+FOCO DA SESSÃO: Você deve iniciar ensinando obrigatoriamente o tópico: **${proximo}**. 
+(Nota: Se este tópico não estiver marcado com 📍 no mapa, trate-o como uma expansão natural da matéria além da trilha base). 
 
-A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;
+Não repita conteúdo já coberto (✅). A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;
   } else {
     historico = `\n\nPrimeira sessão de ${materia.nome}. Comece pelo primeiro tópico do mapa (⬜). Vá direto ao conteúdo.
 

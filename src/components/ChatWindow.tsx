@@ -20,13 +20,14 @@ interface Props {
   historyMessages?: ChatMessage[];   // histórico anterior (display-only, contexto visual)
   sub?: string | null;
   modo?: string | null;
+  concluidos?: string[];
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
-export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, historyMessages, sub, modo }: Props) {
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, historyMessages, sub, modo, concluidos = [] }: Props) {
   const isContinuation = initialMessages !== undefined;
-  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo);
+  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo, concluidos);
   const saveMutation = useSaveChatMessage();
 
   const [messages, setMessages] = useState<ChatMessage[]>(
