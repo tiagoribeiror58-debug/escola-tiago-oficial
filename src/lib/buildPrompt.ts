@@ -90,17 +90,34 @@ Matéria: ${materia.nome}`;
 
   // --- EMENTA MAPA (livre mas ancorada) ---
   if (materia.ementa && materia.ementa.length > 0) {
-    // Determinar o índice do último tópico concluído baseado no histórico
     const topicoAnterior = ultimaSessao?.topico || '';
-    const indexAnterior = materia.ementa.findIndex(
-      step => step.toLowerCase().includes(topicoAnterior.toLowerCase()) ||
-              topicoAnterior.toLowerCase().includes(step.toLowerCase())
-    );
+    const proximoTopico = ultimaSessao?.proximo_topico || '';
+
+    // Estratégia 1: ancora diretamente pelo proximo_topico (o que deve ser ensinado AGORA)
+    // Isso é mais confiável pois não depende de inferir "topico + 1"
+    let indexAtual = -1;
+    if (proximoTopico) {
+      indexAtual = materia.ementa.findIndex(
+        step => step.toLowerCase().includes(proximoTopico.toLowerCase()) ||
+                proximoTopico.toLowerCase().includes(step.toLowerCase())
+      );
+    }
+
+    // Estratégia 2 (fallback): usa topico e avança 1 posição na ementa
+    if (indexAtual === -1 && topicoAnterior) {
+      const idxAnterior = materia.ementa.findIndex(
+        step => step.toLowerCase().includes(topicoAnterior.toLowerCase()) ||
+                topicoAnterior.toLowerCase().includes(step.toLowerCase())
+      );
+      if (idxAnterior >= 0 && idxAnterior + 1 < materia.ementa.length) {
+        indexAtual = idxAnterior + 1;
+      }
+    }
 
     // Montar mapa compacto: ✅ concluídos, 📍 atual, ⬜ disponíveis
     const mapaItems = materia.ementa.map((step, i) => {
-      if (indexAnterior >= 0 && i <= indexAnterior) return `  ✅ ${step}`;
-      if (indexAnterior >= 0 && i === indexAnterior + 1) return `  📍 ${step} ← sugerido`;
+      if (indexAtual >= 0 && i < indexAtual) return `  ✅ ${step}`;
+      if (indexAtual >= 0 && i === indexAtual) return `  📍 ${step} ← sugerido`;
       return `  ⬜ ${step}`;
     });
 

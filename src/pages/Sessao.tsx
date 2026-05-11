@@ -91,8 +91,11 @@ export default function Sessao() {
       const duracaoMin = Math.round((Date.now() - startTimeRef.current) / 60000);
 
       if (messages.length < 4) {
+        // BUGFIX: sessão curta NÃO copia proximo_topico para topico.
+        // Antes: topico = proximo_topico, proximo_topico = proximo_topico → loop!
+        // Agora: preserva o estado anterior intacto — nada mudou de fato.
         sessionData = {
-          topico: ultimaSessao?.proximo_topico || ultimaSessao?.topico || 'Sessão curta',
+          topico: ultimaSessao?.topico || 'Sessão curta',
           erros: 0,
           dificuldade: 'media',
           nivel: ultimaSessao?.nivel || 1,
