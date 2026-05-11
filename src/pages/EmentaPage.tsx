@@ -238,7 +238,7 @@ export default function EmentaPage() {
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/90 backdrop-blur-md border-t border-border">
         <div className="max-w-2xl mx-auto">
           <button
-            onClick={() => handleStartSession(expandedTopic || (currentIdx < total ? ementa[currentIdx] : ementa[0]))}
+            onClick={() => handleStartSession(expandedTopic || (currentIdx < total ? flatEmenta[currentIdx] : flatEmenta[0]))}
             className="w-full flex items-center gap-3 p-4 rounded-2xl bg-foreground text-background hover:opacity-90 transition-all active:scale-[0.98] font-semibold"
           >
             <BookOpen className="w-5 h-5 shrink-0" />
@@ -247,7 +247,7 @@ export default function EmentaPage() {
                 {expandedTopic ? `Estudar: ${expandedTopic.length > 30 ? expandedTopic.slice(0, 30) + '…' : expandedTopic}` : currentIdx < total ? 'Estudar tópico atual' : 'Revisar matéria'}
               </span>
               <span className="block text-[11px] opacity-60 font-normal truncate">
-                {expandedTopic || (currentIdx < total ? ementa[currentIdx] : 'Trilha concluída')}
+                {expandedTopic || (currentIdx < total ? flatEmenta[currentIdx] : 'Trilha concluída')}
               </span>
             </div>
           </button>
