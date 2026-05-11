@@ -24,6 +24,12 @@ export default function EmentaPage() {
     );
   }
 
+  // Bug guard: categorias não têm ementa própria — redireciona para a página de categoria
+  if (config.isCategory) {
+    navigate(`/categoria/${config.slug}`, { replace: true });
+    return null;
+  }
+
   const fases = config.fases || (config.ementa ? [{ nome: '', topicos: config.ementa }] : []);
   const flatEmenta = fases.flatMap(f => f.topicos);
 

@@ -46,12 +46,14 @@ export default function Index() {
   // Hero Card é a matéria de maior acesso dentre as focadas
   const heroEstado = estadosFocados.length > 0 ? estadosFocados[0] : null;
 
-  // Lógica para o botão de 1-Click do Hero
-  const heroEmentaConcluidaQuery = useEmentaConcluida(heroEstado?.config.slug || '');
+  // Lógica para o botão de 1-Click do Hero (só funciona para matérias folha, não categorias)
+  const heroEmentaConcluidaQuery = useEmentaConcluida(
+    heroEstado && !heroEstado.config.isCategory ? heroEstado.config.slug : ''
+  );
   const heroConcluidos = heroEmentaConcluidaQuery.data || [];
   let nextTopic = '';
   
-  if (heroEstado) {
+  if (heroEstado && !heroEstado.config.isCategory) {
     const fases = heroEstado.config.fases || (heroEstado.config.ementa ? [{ nome: '', topicos: heroEstado.config.ementa }] : []);
     const flatEmenta = fases.flatMap(f => f.topicos);
     const uncompleted = flatEmenta.find(t => !heroConcluidos.includes(t));

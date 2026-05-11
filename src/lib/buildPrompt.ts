@@ -77,7 +77,8 @@ Matéria: ${materia.nome}`;
   }
 
   if (sub) {
-    const isEmentaItem = materia.ementa?.includes(sub);
+    const flatEmenta = materia.fases ? materia.fases.flatMap(f => f.topicos) : (materia.ementa || []);
+    const isEmentaItem = flatEmenta.includes(sub);
     const subNome = materia.subTopicos?.find(s => s.slug === sub)?.nome || sub;
 
     if (isEmentaItem) {

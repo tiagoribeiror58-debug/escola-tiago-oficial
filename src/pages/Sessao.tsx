@@ -45,7 +45,7 @@ export default function Sessao() {
   const sessionKey = useMemo(() => {
     if (resumeKey) return resumeKey;
     return `${slug}-${Date.now()}`;
-  }, [slug, resumeKey, location.key]);
+  }, [slug, resumeKey]);
 
   const messagesRef = useRef<ChatMessage[]>([]);
   const startTimeRef = useRef(Date.now());
@@ -153,7 +153,7 @@ export default function Sessao() {
       isSavingRef.current = false; // libera o lock para permitir retry
       setSaving(false);
     }
-  }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey]);
+  }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey, modo, navigate]);
 
   const handleEncerrar = useCallback(() => {
     // Regra 5: botão sempre acessível. Se sessão não concluiu, pede confirmação.
