@@ -55,7 +55,10 @@ export default function Biblioteca() {
           <div>
             {MATERIAS.map(cat => {
               const leafSlugs = getAllLeafSlugs(cat);
-              const catEstados = estados.filter(e => leafSlugs.includes(e.config.slug));
+              const catEstados = leafSlugs
+                .map(slug => estados.find(e => e.config.slug === slug))
+                .filter(Boolean) as typeof estados;
+              
               if (catEstados.length === 0) return null;
 
               return (
