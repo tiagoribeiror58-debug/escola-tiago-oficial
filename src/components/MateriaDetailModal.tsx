@@ -135,78 +135,105 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             )}
           </div>
 
-          {/* Ementa / Trilha */}
-          {config.ementa && config.ementa.length > 0 && (
-            <div className="px-6 pb-4">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
-                  Trilha de Conhecimento
-                </p>
-                <span className="text-[10px] font-medium bg-foreground/10 text-foreground px-2 py-0.5 rounded-full">
-                  {ementaConcluida.length >= config.ementa.length 
-                    ? `Base concluída` 
-                    : `${ementaConcluida.length}/${config.ementa.length}`}
-                </span>
-              </div>
-              
-              {/* Trilha — expande livremente, scroll do modal externo cobre */}
-              <div className="space-y-1">
+          {/* Ementa / Roadmap Timeline */}
+          {config.ementa && config.ementa.length > 0 && (() => {
+            const firstUncompletedIdx = config.ementa!.findIndex(t => !ementaConcluida.includes(t));
+            const currentIdx = firstUncompletedIdx === -1 ? config.ementa!.length : firstUncompletedIdx;
+            const allDone = ementaConcluida.length >= config.ementa.length;
+
+            return (
+              <div className="px-6 pb-4">
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+                    Roadmap
+                  </p>
+                  <span className="text-[10px] font-medium bg-foreground/10 text-foreground px-2 py-0.5 rounded-full">
+                    {allDone ? 'Base concluída' : `${ementaConcluida.length} de ${config.ementa.length}`}
+                  </span>
+                </div>
+
+                {/* Timeline vertical */}
+                <div className="relative">
                   {config.ementa.map((topico, idx) => {
                     const isCompleted = ementaConcluida.includes(topico);
-                    const firstUncompletedIdx = config.ementa!.findIndex(t => !ementaConcluida.includes(t));
-                    const isCurrent = idx === (firstUncompletedIdx === -1 ? config.ementa!.length : firstUncompletedIdx);
-                    
+                    const isCurrent = idx === currentIdx;
+                    const isFuture = idx > currentIdx;
+                    const isLast = idx === config.ementa!.length - 1;
+
                     return (
-                      <button
-                        key={idx}
-                        ref={isCurrent ? currentTopicRef : null}
-                        onClick={() => setSelectedSub(selectedSub === topico ? null : topico)}
-                        className={cn(
-                          "flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl transition-colors",
-                          selectedSub === topico ? "bg-muted border border-border" : "hover:bg-muted/50 border border-transparent",
-                          isCompleted && selectedSub !== topico ? "text-muted-foreground" : isCurrent || selectedSub === topico ? "text-foreground font-medium" : "text-muted-foreground"
-                        )}
-                      >
-                        <div 
-                          onClick={(e) => handleToggleTopico(e, topico, isCompleted)}
-                          className={cn(
-                            "w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors cursor-pointer hover:scale-110",
-                            selectedSub === topico ? "bg-foreground text-background border-foreground shadow-sm" :
-                            isCompleted ? "bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)] text-[hsl(var(--success))]" :
-                            isCurrent ? "bg-primary/10 border-primary/30 text-primary ring-2 ring-primary/20 ring-offset-1 ring-offset-background" :
-                            "bg-muted/30 border-border/50 text-muted-foreground"
-                          )}>
-                          {isCompleted ? "✓" : (idx + 1)}
+                      <div key={idx} className="flex gap-3">
+                        {/* Coluna da linha + nó */}
+                        <div className="flex flex-col items-center">
+                          {/* Nó */}
+                          <button
+                            ref={isCurrent ? currentTopicRef : null}
+                            onClick={(e) => handleToggleTopico(e, topico, isCompleted)}
+                            title={isCompleted ? 'Marcar como não concluído' : 'Marcar como concluído'}
+                            className={cn(
+                              "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] font-bold transition-all duration-200 hover:scale-110 z-10",
+                              isCompleted
+                                ? "bg-[hsl(var(--success)/0.15)] border-[hsl(var(--success)/0.4)] text-[hsl(var(--success))]"
+                                : isCurrent
+                                ? "bg-primary/15 border-primary/50 text-primary ring-2 ring-primary/25 ring-offset-1 ring-offset-background animate-pulse"
+                                : "bg-muted/20 border-border/40 text-muted-foreground/50"
+                            )}
+                          >
+                            {isCompleted ? '✓' : isCurrent ? '●' : (idx + 1)}
+                          </button>
+                          {/* Linha conectora (não aparece no último item) */}
+                          {!isLast && (
+                            <div className={cn(
+                              "w-px flex-1 min-h-[20px] my-0.5 transition-colors",
+                              isCompleted ? "bg-[hsl(var(--success)/0.3)]" : "bg-border/40"
+                            )} />
+                          )}
                         </div>
-                        <span className={cn(
-                          "line-clamp-1 flex-1",
-                          isCompleted && selectedSub !== topico && "line-through decoration-muted-foreground/30"
-                        )}>
-                          {topico}
-                        </span>
-                        {isCurrent && (
-                          <span className="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full shrink-0 animate-pulse">
-                            Atual
+
+                        {/* Conteúdo do passo */}
+                        <button
+                          onClick={() => setSelectedSub(selectedSub === topico ? null : topico)}
+                          className={cn(
+                            "flex-1 text-left pb-3 text-sm transition-colors rounded-lg px-2 -mx-2",
+                            isCurrent && "font-semibold text-foreground",
+                            isCompleted && !isCurrent && "text-muted-foreground",
+                            isFuture && "text-muted-foreground/60",
+                            selectedSub === topico && "bg-muted/40"
+                          )}
+                          style={{ paddingTop: '3px' }}
+                        >
+                          <span className={cn(
+                            "line-clamp-2",
+                            isCompleted && selectedSub !== topico && "line-through decoration-muted-foreground/30"
+                          )}>
+                            {topico}
                           </span>
-                        )}
-                      </button>
+                          {isCurrent && (
+                            <span className="block text-[10px] font-bold uppercase tracking-widest text-primary mt-0.5">
+                              Você está aqui
+                            </span>
+                          )}
+                        </button>
+                      </div>
                     );
                   })}
 
-                  {/* Infinite Curriculum Extension */}
-                  {ementaConcluida.length >= config.ementa.length && (
-                    <div className="flex items-center gap-3 text-sm w-full text-left p-2 rounded-xl text-foreground font-medium mt-2 opacity-90">
-                      <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 border text-[10px] transition-colors bg-primary/10 border-primary/30 text-primary">
-                        ∞
+                  {/* Fronteira do conhecimento (quando tudo concluído) */}
+                  {allDone && (
+                    <div className="flex gap-3 mt-1">
+                      <div className="flex flex-col items-center">
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[11px] bg-primary/15 border-primary/50 text-primary">
+                          ∞
+                        </div>
                       </div>
-                      <span className="line-clamp-1 flex-1">
+                      <p className="flex-1 text-sm font-semibold text-foreground pb-2 pt-0.5">
                         Fronteira do Conhecimento
-                      </span>
+                      </p>
                     </div>
                   )}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Sub-tópicos */}
           {config.subTopicos && config.subTopicos.length > 0 && (
