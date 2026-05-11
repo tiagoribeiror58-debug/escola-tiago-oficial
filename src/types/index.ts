@@ -34,6 +34,7 @@ export interface MateriaConfig {
   subTopicos?: { slug: string; nome: string }[]; // áreas de foco dentro da matéria
   ementa?: string[];              // lista estruturada e rigorosa de micro-tópicos (plana)
   fases?: EmentaFase[];           // lista estruturada dividida em fases
+  whyStart?: string;              // Justificativa pedagógica exibida no roadmap do hub
   layout?: 'chat' | 'split' | 'narrative' | 'canvas'; // Formato visual da interface
   widget?: string;                // Widget específico a ser carregado (ex: 'FinanceLab', 'CodeLab')
 }

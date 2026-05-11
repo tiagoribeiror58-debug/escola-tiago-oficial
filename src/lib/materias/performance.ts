@@ -13,6 +13,7 @@ export const performanceIntelecto: MateriaConfig = {
       emoji: '🧘',
       isCategory: true,
       parent: 'performance-intelecto',
+      whyStart: 'Comece pela mente. De nada adianta otimizar o corpo se o software está bugado. Aqui você aprende a aprender — e isso multiplica tudo que vem depois, dentro e fora deste hub.',
       descricao: 'Psicologia, viéses e a arte de aprender a aprender.',
       children: [
         {
@@ -20,6 +21,7 @@ export const performanceIntelecto: MateriaConfig = {
           nome: 'Metacognição',
           emoji: '👁️',
           parent: 'mente-cognicao',
+          whyStart: 'Este é o meta-skill. Aprender como aprender transforma qualquer outro estudo em 3x mais eficiente. Comece aqui antes de qualquer matéria — o retorno é imediato e permanente.',
           descricao: 'A ciência de aprender a aprender. Domine a retenção de leitura, sistemas de notas e deep work.',
           contexto: `Foco: aprender a aprender. Sistemas reais — Zettelkasten, Leitura Analítica de Adler, Recuperação Ativa, Repetição Espaçada.
 
@@ -38,32 +40,11 @@ Abordagem obrigatória:
           ]
         },
         {
-          slug: 'psicologia',
-          nome: 'Psicologia',
-          emoji: '🪞',
-          parent: 'mente-cognicao',
-          descricao: 'Vieses cognitivos, regulação emocional e padrões comportamentais subconscientes.',
-          contexto: `Foco: mecanismos psicológicos reais — vieses, regulação emocional, padrões de comportamento.
-
-Abordagem obrigatória:
-- Explique o mecanismo do viés ou padrão antes de dar exemplos. O aluno precisa entender a estrutura, não só reconhecer casos.
-- Só depois de explicar o mecanismo: conecte com situações reais.
-- Para regulação emocional: explique o processo fisiológico e cognitivo envolvido antes de qualquer estratégia prática.
-- Peça avaliação crítica de teorias apenas depois que o aluno compreendeu os fundamentos — nunca como diagnóstico inicial.`,
-          ementa: [
-            'A Estrutura da Psique (Consciente vs Inconsciente)',
-            'Vieses Cognitivos Fundamentais (Confirmação, Ancoragem)',
-            'Teoria do Apego e Relacionamentos',
-            'Inteligência Emocional e Regulação de Afeto',
-            'Terapia Cognitivo-Comportamental (Práticas)',
-            'Arquétipos e o Inconsciente Coletivo'
-          ]
-        },
-        {
           slug: 'logica',
           nome: 'Lógica',
           emoji: '⊢',
           parent: 'mente-cognicao',
+          whyStart: 'Com a metacognição ativa, você precisa do motor do raciocínio rigoroso. Lógica é o filtro que separa argumentos válidos dos inválidos — e isso vai impactar como você lê, escreve, debate e decide.',
           descricao: 'Argumentação, falácias e pensamento rigoroso sem viés.',
           contexto: `Foco: estrutura lógica de argumentos — dedução, indução, falácias.
 
@@ -82,10 +63,34 @@ Abordagem obrigatória:
           ]
         },
         {
+          slug: 'psicologia',
+          nome: 'Psicologia',
+          emoji: '🪞',
+          parent: 'mente-cognicao',
+          whyStart: 'Agora que você pensa com mais clareza, é hora de entender o que move as pessoas — inclusive você. Vieses, emoções e padrões subconscientes explicam a maior parte das decisões humanas. Ignorar isso é trabalhar no escuro.',
+          descricao: 'Vieses cognitivos, regulação emocional e padrões comportamentais subconscientes.',
+          contexto: `Foco: mecanismos psicológicos reais — vieses, regulação emocional, padrões de comportamento.
+
+Abordagem obrigatória:
+- Explique o mecanismo do viés ou padrão antes de dar exemplos. O aluno precisa entender a estrutura, não só reconhecer casos.
+- Só depois de explicar o mecanismo: conecte com situações reais.
+- Para regulação emocional: explique o processo fisiológico e cognitivo envolvido antes de qualquer estratégia prática.
+- Peça avaliação crítica de teorias apenas depois que o aluno compreendeu os fundamentos — nunca como diagnóstico inicial.`,
+          ementa: [
+            'A Estrutura da Psique (Consciente vs Inconsciente)',
+            'Vieses Cognitivos Fundamentais (Confirmação, Ancoragem)',
+            'Teoria do Apego e Relacionamentos',
+            'Inteligência Emocional e Regulação de Afeto',
+            'Terapia Cognitivo-Comportamental (Práticas)',
+            'Arquétipos e o Inconsciente Coletivo'
+          ]
+        },
+        {
           slug: 'saude-mental',
           nome: 'Saúde Mental & Resiliência',
           emoji: '🛡️',
           parent: 'mente-cognicao',
+          whyStart: 'A etapa final da mente: a blindagem. Metacognição, lógica e psicologia não servem de nada se você colapsa sob pressão. Aqui você constrói a antifragilidade que sustenta todo o resto.',
           descricao: 'Gestão de ansiedade, burnout e antifragilidade psicológica.',
           contexto: `Foco: mecanismos clínicos e práticos de resiliência. Explique a biologia e a psicologia do estresse antes de propor técnicas de enfrentamento.`,
           ementa: [
@@ -104,34 +109,15 @@ Abordagem obrigatória:
       emoji: '🧬',
       isCategory: true,
       parent: 'performance-intelecto',
+      whyStart: 'Com a mente calibrada, você otimiza o hardware. Sono, nutrição, neurociência e treino não são separados — são um sistema integrado. Entender como o corpo funciona multiplica os ganhos cognitivos da etapa anterior.',
       descricao: 'Otimização da máquina biológica para máxima performance.',
       children: [
-        {
-          slug: 'biohacking',
-          nome: 'Biohacking',
-          emoji: '🧪',
-          parent: 'corpo-biologia',
-          descricao: 'Protocolos baseados em ciência para otimizar sono, energia, foco e longevidade.',
-          contexto: `Foco: otimização de performance humana — sono, nutrição, suplementação, exercício, estresse.
-
-Abordagem obrigatória:
-- Explique o mecanismo fisiológico antes de qualquer protocolo. O aluno precisa entender por que aquilo funciona antes de saber o que fazer.
-- Seja transparente sobre nível de evidência: separe o que tem ensaio clínico sólido do que é anedotal. Nunca misture os dois sem marcar a diferença.
-- Só depois de compreensão do mecanismo: discuta aplicação prática.
-- Nunca apresente protocolo como receita sem antes explicar a biologia por trás.`,
-          ementa: [
-            'Ritmo Circadiano e Luz Solar Matinal',
-            'Arquitetura do Sono (REM e Deep Sleep)',
-            'Termogênese e Cold Exposure',
-            'Janela Alimentar e Otimização Metabólica',
-            'Neurotransmissores e Nutrição (Dopamina Base)'
-          ]
-        },
         {
           slug: 'neurociencia',
           nome: 'Neurociência',
           emoji: '🧬',
           parent: 'corpo-biologia',
+          whyStart: 'Comece pelo hardware. Antes de adotar qualquer protocolo de performance, entenda os mecanismos cerebrais que os justificam. Sem isso, você segue receitas sem saber por que funcionam — e não sabe ajustá-las quando não funcionam.',
           descricao: 'Entenda os mecanismos mecânicos do seu cérebro por trás de hábitos e vícios.',
           contexto: `Foco: mecanismos cerebrais reais — LTP, neuroplasticidade, consolidação de memória.
 
@@ -149,10 +135,33 @@ Abordagem obrigatória:
           ]
         },
         {
+          slug: 'biohacking',
+          nome: 'Biohacking',
+          emoji: '🧪',
+          parent: 'corpo-biologia',
+          whyStart: 'Agora que você entende o cérebro, você implementa os protocolos com inteligência. Sono, luz, frio, ritmo circadiano — cada protocolo tem um mecanismo. Aqui você aprende a usá-los com precisão, não por modismo.',
+          descricao: 'Protocolos baseados em ciência para otimizar sono, energia, foco e longevidade.',
+          contexto: `Foco: otimização de performance humana — sono, nutrição, suplementação, exercício, estresse.
+
+Abordagem obrigatória:
+- Explique o mecanismo fisiológico antes de qualquer protocolo. O aluno precisa entender por que aquilo funciona antes de saber o que fazer.
+- Seja transparente sobre nível de evidência: separe o que tem ensaio clínico sólido do que é anedotal. Nunca misture os dois sem marcar a diferença.
+- Só depois de compreensão do mecanismo: discuta aplicação prática.
+- Nunca apresente protocolo como receita sem antes explicar a biologia por trás.`,
+          ementa: [
+            'Ritmo Circadiano e Luz Solar Matinal',
+            'Arquitetura do Sono (REM e Deep Sleep)',
+            'Termogênese e Cold Exposure',
+            'Janela Alimentar e Otimização Metabólica',
+            'Neurotransmissores e Nutrição (Dopamina Base)'
+          ]
+        },
+        {
           slug: 'nutricao-otimizada',
           nome: 'Nutrição Otimizada',
           emoji: '🥑',
           parent: 'corpo-biologia',
+          whyStart: 'O combustível da máquina. Com neurociência e biohacking estabelecidos, você entende que comida não é só calorias — é sinalização hormonal, inflamação e cognição. Esta etapa fecha o loop do que você coloca no corpo.',
           descricao: 'Macronutrientes, micronutrientes e impacto metabólico.',
           contexto: `Foco: metabolismo e bioquímica nutricional. Explique como o corpo processa alimentos antes de sugerir dietas ou restrições. Diferencie correlação de causalidade em estudos nutricionais.`,
           ementa: [
@@ -168,6 +177,7 @@ Abordagem obrigatória:
           nome: 'Fisiologia & Treino',
           emoji: '🏋️',
           parent: 'corpo-biologia',
+          whyStart: 'A última peça do sistema físico. Treino não é castigo — é o maior estimulador de neurogênese e performance cognitiva que existe. Com tudo o que você já aprendeu, agora você treina com consciência, não apenas com suor.',
           descricao: 'Hipertrofia, capacidade cardiovascular e recuperação.',
           contexto: `Foco: vias de sinalização muscular e adaptação biológica. A hipertrofia e a resistência são respostas de sobrevivência; ensine sob essa ótica evolutiva.`,
           ementa: [

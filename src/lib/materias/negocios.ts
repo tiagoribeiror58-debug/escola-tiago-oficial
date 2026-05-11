@@ -13,6 +13,7 @@ export const tecnologiaNegocios: MateriaConfig = {
       emoji: '💼',
       isCategory: true,
       parent: 'tecnologia-negocios',
+      whyStart: 'Comece pelo negócio, não pela tecnologia. Entender como empresas nascem, crescem e sobrevivem é o filtro que determina quais ferramentas técnicas valem a pena aprender — e para quê.',
       descricao: 'A arte de construir, escalar e gerir empresas. Do zero ao equity.',
       children: [
         {
@@ -20,6 +21,7 @@ export const tecnologiaNegocios: MateriaConfig = {
           nome: 'Fundação & Startups',
           emoji: '🏗️',
           parent: 'business-growth',
+          whyStart: 'O ponto zero. Antes de vender, contratar ou investir, você precisa entender como uma empresa nasce — validação, dor real e o único número que importa: Product-Market Fit.',
           descricao: 'Product-Market Fit, ideação e gestão de produtos escaláveis.',
           contexto: `Foco: fundamentos reais de construção de negócios — validação, distribuição, escala.
 
@@ -41,6 +43,7 @@ Abordagem obrigatória:
           nome: 'Finanças & Equity',
           emoji: '📈',
           parent: 'business-growth',
+          whyStart: 'Com receita entrando, você precisa entender o dinheiro. Valuation, juros compostos e unit economics — aqui você aprende a ler os números e decidir com inteligência financeira.',
           descricao: 'Valuation, estrutura de capital e modelagem financeira.',
           contexto: `Foco: fundamentos financeiros reais — fluxo de caixa, valuation, estrutura de capital.
 
@@ -62,6 +65,7 @@ Abordagem obrigatória:
           nome: 'Finanças Corporativas',
           emoji: '🏦',
           parent: 'business-growth',
+          whyStart: 'Quando o negócio cresce, a complexidade financeira cresce junto. DRE, balanço e M&A são para quem vai além da startup e entra em empresas estruturadas — onde caixa, não lucro, determina a sobrevivência.',
           descricao: 'Controladoria, demonstrações financeiras, M&A e tesouraria empresarial.',
           contexto: `Foco: a mecânica financeira interna das grandes empresas (Corporate Finance). Prepare o aluno para atuar como analista financeiro, banker ou CFO.
 
@@ -84,6 +88,7 @@ Abordagem obrigatória:
           nome: 'Marketing & Growth',
           emoji: '🎯',
           parent: 'business-growth',
+          whyStart: 'Sem clientes, não existe negócio. Com a ideia validada, o próximo passo é gerar demanda. Marketing é matemática e comportamento humano — e quem entende isso cedo sai na frente.',
           descricao: 'Geração de demanda, funis de conversão e aquisição escalável.',
           contexto: `Foco: engenharia de aquisição e psicologia de consumo. Marketing é matemática e comportamento humano aplicado. Ensine a estrutura do funil antes de táticas isoladas.`,
           ementa: [
@@ -99,6 +104,7 @@ Abordagem obrigatória:
           nome: 'Vendas & Negociação Comercial',
           emoji: '🤝',
           parent: 'business-growth',
+          whyStart: 'Marketing gera leads. Vendas converte. Esta etapa fecha o ciclo de aquisição — transformando interesse em receita com processos repetíveis, não carisma improvisado.',
           descricao: 'Vendas B2B, fechamento, spin selling e previsibilidade de receita.',
           contexto: `Foco: processos de vendas repetíveis e previsíveis. Ensine metodologias estruturadas (SPIN, BANT) pelo motivo de sua existência, não como scripts robóticos.`,
           ementa: [
@@ -115,6 +121,7 @@ Abordagem obrigatória:
           nome: 'Gestão & Cultura',
           emoji: '👑',
           parent: 'business-growth',
+          whyStart: 'Com o negócio rodando, você precisa escalar pessoas. Liderança, OKRs e cultura determinam se a empresa cresce com você — ou se fica dependente de você.',
           descricao: 'Liderança, OKRs, contratação e cultura organizacional.',
           contexto: `Foco: alinhamento de incentivos e engenharia organizacional. Cultura é o que acontece quando o líder não está na sala.`,
           ementa: [
@@ -130,6 +137,7 @@ Abordagem obrigatória:
           nome: 'Direito Empresarial & Tributário',
           emoji: '⚖️',
           parent: 'business-growth',
+          whyStart: 'Ignorar o arcabouço jurídico é o erro mais caro de um empreendedor. Esta etapa não é sobre virar advogado — é sobre saber quando você está em risco e como se proteger antes de ser tarde.',
           descricao: 'Contratos, blindagem patrimonial, compliance e eficiência tributária.',
           contexto: `Foco: as regras do jogo do mundo corporativo. Prepare o aluno para entender o arcabouço jurídico sem o juridiquês teórico; foco em sobrevivência e otimização.`,
           ementa: [
@@ -147,6 +155,7 @@ Abordagem obrigatória:
           nome: 'Operações & Supply Chain',
           emoji: '⚙️',
           parent: 'business-growth',
+          whyStart: 'Uma empresa lucrativa pode morrer por ineficiência operacional. Esta etapa ensina a fazer a máquina girar com menos desperdício — gargalos, logística e processos em escala real.',
           descricao: 'Logística, teoria das restrições e eficiência operacional.',
           contexto: `Foco: a máquina girando. Ensine como otimizar processos, identificar gargalos e reduzir custos sem perder qualidade. Foco prático para futuros COOs e gerentes de projeto.`,
           ementa: [
@@ -162,6 +171,7 @@ Abordagem obrigatória:
           nome: 'Investimento Anjo & Venture Capital',
           emoji: '🦄',
           parent: 'business-growth',
+          whyStart: 'A etapa final do founder: sentar do outro lado da mesa. Com o negócio construído, você aprende a avaliar outros, alocar capital e gerar retorno como investidor.',
           descricao: 'Investimento direto em empresas reais, startups e equity-crowdfunding.',
           contexto: `Foco: a dinâmica do investidor que senta à mesa com o founder. Ensine a avaliar teses, founders e o mecanismo de saída (exit).
           
@@ -189,6 +199,7 @@ Abordagem obrigatória:
       emoji: '💻',
       isCategory: true,
       parent: 'tecnologia-negocios',
+      whyStart: 'Com o negócio entendido, você aprende as ferramentas que o fazem escalar. Tecnologia sem estratégia de negócio é hobby — com ela, é vantagem competitiva.',
       descricao: 'Desenvolvimento de software, engenharia de produtos e design centrado no usuário.',
       children: [
         {
@@ -196,6 +207,7 @@ Abordagem obrigatória:
           nome: 'Engenharia de Software',
           emoji: '<>',
           parent: 'tecnologia-ia',
+          whyStart: 'A base de tudo digital. Mesmo que não vá codar profissionalmente, entender raciocínio computacional muda como você pensa e resolve problemas — e elimina dependência de outros para construir.',
           descricao: 'Da lógica de base à arquitetura de sistemas distribuídos.',
           contexto: `Foco: raciocínio computacional — lógica, estruturas, arquitetura.
 
@@ -220,6 +232,7 @@ Abordagem obrigatória:
           nome: 'Design Visual & UX',
           emoji: '◑',
           parent: 'tecnologia-ia',
+          whyStart: 'Código sem design é ferramenta bruta. Esta etapa ensina a pensar visualmente — hierarquia, gestalt, percepção. O melhor produto do mundo fracassa se a experiência for ruim.',
           descricao: 'Hierarquia, tipografia, gestalt e design centrado no usuário.',
           contexto: `Foco: princípios estruturais do design — hierarquia, gestalt, percepção visual.
 
@@ -243,6 +256,7 @@ Abordagem obrigatória:
           nome: 'Ciência de Dados & Analytics',
           emoji: '📊',
           parent: 'tecnologia-ia',
+          whyStart: 'Com o produto no ar, você precisa entender o que os dados dizem. Analytics transforma comportamento de usuário em decisão de produto — sem achismo, com evidência.',
           descricao: 'Pipelines de dados, Business Intelligence e modelagem estatística aplicada.',
           contexto: `Foco: transformar dados brutos em decisões de negócios. Explique o fluxo de ETL (Extração, Transformação, Carga) e a diferença entre análise descritiva e preditiva.`,
           ementa: [
@@ -258,6 +272,7 @@ Abordagem obrigatória:
           nome: 'Cripto & Web3',
           emoji: '⛓️',
           parent: 'tecnologia-ia',
+          whyStart: 'A fronteira da descentralização. Com a stack tecnológica dominada, você explora o paradigma que muda a relação entre software, dinheiro e confiança. Foco no mecanismo — não especulação.',
           descricao: 'Criptografia, Blockchain, DeFi e contratos inteligentes.',
           contexto: `Foco: os fundamentos técnicos da descentralização. Evite o viés de investimento e especulação; foque no mecanismo do consenso e da imutabilidade.`,
           ementa: [
@@ -275,6 +290,7 @@ Abordagem obrigatória:
           parent: 'tecnologia-ia',
           layout: 'split',
           widget: 'UserStoryBuilder',
+          whyStart: 'Com engenharia e design como base, você aprende a decidir o que construir. PM é a ponte entre negócio, tecnologia e usuário — o papel que garante que o produto certo será feito da forma certa.',
           descricao: 'Descoberta de produto, priorização de backlog e métricas de engajamento.',
           contexto: `Foco: a ponte entre engenharia, negócios e design. Ensine como decidir O QUE construir antes de COMO construir.`,
           ementa: [
@@ -290,6 +306,7 @@ Abordagem obrigatória:
           nome: 'Cloud Computing & DevOps',
           emoji: '☁️',
           parent: 'tecnologia-ia',
+          whyStart: 'Produto funcionando para 10 usuários é diferente de funcionar para 1 milhão. Esta etapa ensina a escalar infraestrutura com confiabilidade — e entregar software rápido sem quebrar produção.',
           descricao: 'Arquitetura de servidores, CI/CD, Docker e escalabilidade.',
           contexto: `Foco: infraestrutura e segurança da informação. Abordagem técnica para quem quer atuar como Tech Lead ou CTO, garantindo que o software funcione para milhões de usuários.`,
           ementa: [

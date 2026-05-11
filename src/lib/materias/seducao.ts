@@ -13,6 +13,7 @@ export const seducaoHub: MateriaConfig = {
       emoji: '🧠',
       descricao: 'A base de todo sucesso social. Construa uma autoimagem inabalável, destrua a ansiedade de aproximação e desenvolva a verdadeira independência emocional.',
       parent: 'seducao-hub',
+      whyStart: 'Comece aqui ou você vai desperdiçar todas as técnicas. Sem o estado interno correto, cada abordagem vai parecer forçada e vai ser percebida como tal. Esta é a fundação — nenhum outro módulo funciona sem ela.',
       contexto: 'Foque em psicologia comportamental, estoicismo prático e reestruturação cognitiva. Ensine que a verdadeira confiança não é "saber que vai dar certo", mas "saber que ficará bem independente do resultado". Seja pragmático, não motivacional barato.',
       fases: [
         {
@@ -41,6 +42,7 @@ export const seducaoHub: MateriaConfig = {
       emoji: '🚶‍♂️',
       descricao: 'A arte de iniciar interações do zero absoluto. Domine a linguagem corporal, as quebras de gelo e as transições rápidas em qualquer ambiente.',
       parent: 'seducao-hub',
+      whyStart: 'Com o estado interno calibrado, é hora de agir. Esta etapa desmonta o medo de abordar desconstruindo a mecânica da aproximação — ângulo, tonalidade, primeiros 10 segundos. Sem praticar isso, tudo fica só na teoria.',
       contexto: 'Foque em mecânica pura: ângulos de aproximação, tonalidade de voz, calibração social e transições. Ensine "O Quê" e "Como" fazer, desmistificando a abordagem a frio como uma habilidade sistêmica.',
       fases: [
         {
@@ -69,6 +71,7 @@ export const seducaoHub: MateriaConfig = {
       emoji: '🔥',
       descricao: 'A atração não é lógica, é emocional. Aprenda a gerar tensão, quebrar a previsibilidade e criar picos emocionais que ancoram interesse real.',
       parent: 'seducao-hub',
+      whyStart: 'Você já sabe abrir. Agora precisa sustentar. Conversas lógicas matam o interesse — esta etapa ensina a criar variação emocional, tensão e mistério. É o que separa quem fica na zona de amizade de quem gera atração real.',
       contexto: 'Foque em dinâmicas de conversação avançadas: Push/Pull, qualificação, tensão sexual e storytelling. Ensine a evocar emoções em vez de apenas trocar informações lógicas (entrevistas).',
       fases: [
         {
@@ -97,6 +100,7 @@ export const seducaoHub: MateriaConfig = {
       emoji: '📱',
       descricao: 'O jogo mudou para as telas. Domine a escalada via WhatsApp/Instagram, como manter o interesse alto e fechar encontros de forma rápida e eficiente.',
       parent: 'seducao-hub',
+      whyStart: 'Depois da abordagem, o jogo vai para o celular. Aqui você aprende a não destruir pelo texto o que construiu pessoalmente — menos é mais, o objetivo é único: marcar o encontro.',
       contexto: 'Foque na utilidade do texto: o objetivo do texto é marcar o encontro, não virar amigo por chat. Ensine economia de palavras, resposta a "shit tests" textuais, uso estratégico de mídias e geração de FOMO.',
       fases: [
         {
@@ -125,6 +129,7 @@ export const seducaoHub: MateriaConfig = {
       emoji: '🌍',
       descricao: 'Pessoas atraentes têm vidas atraentes. Aprenda a estruturar seus círculos sociais, redes sociais e estilo de vida para que as interações ocorram no automático.',
       parent: 'seducao-hub',
+      whyStart: 'Até aqui você aprendeu a jogar o jogo. Agora você muda o tabuleiro. Esta etapa é sobre construir uma vida que gera atração passivamente — sem precisar de técnica toda vez que encontra alguém interessante.',
       contexto: 'Foque em valor social, pré-seleção, e criação de eventos/comunidades onde o aluno seja o centro (Hub). Aborde também a vitrine digital (Instagram).',
       fases: [
         {
@@ -153,6 +158,7 @@ export const seducaoHub: MateriaConfig = {
       emoji: '👑',
       descricao: 'Atrair é a primeira parte. Aprenda a conduzir o encontro, fazer a manutenção do interesse e estabelecer limites de liderança em relacionamentos longos.',
       parent: 'seducao-hub',
+      whyStart: 'O módulo final. Tudo que você aprendeu antes era para chegar aqui. Relacionamentos de longo prazo exigem uma camada a mais: polaridade, liderança e manutenção da tensão sem perder a conexão.',
       contexto: 'Foque na liderança masculina pragmática, dinâmica de encontros (locais, transições), e definição de limites. Aborde o conceito de polaridade sexual e como evitar a zona de conforto conjugal.',
       fases: [
         {
