@@ -100,11 +100,12 @@ export default function Categoria() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {filhos.map(config => (
+            {filhos.map((config, index) => (
               <MateriaCard
                 key={config.slug}
                 estado={buildMateriaEstado(config, sessoes)}
                 onClick={() => handleCardClick(config)}
+                ordem={index + 1}
               />
             ))}
           </div>

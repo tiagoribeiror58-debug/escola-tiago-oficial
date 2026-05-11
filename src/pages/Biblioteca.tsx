@@ -65,7 +65,7 @@ export default function Biblioteca() {
                     {cat.nome}
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {catEstados.map(estado => {
+                    {catEstados.map((estado, index) => {
                       const pinned = isFocado(estado.config.slug);
                       return (
                         <div 
@@ -86,9 +86,14 @@ export default function Biblioteca() {
                               <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-2">
                                   <span className="text-2xl">{estado.config.emoji}</span>
-                                  <h3 className="font-semibold text-foreground tracking-tight leading-tight">
-                                    {estado.config.nome}
-                                  </h3>
+                                  <div className="flex flex-col">
+                                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">
+                                      Etapa {index + 1}
+                                    </span>
+                                    <h3 className="font-semibold text-foreground tracking-tight leading-tight">
+                                      {estado.config.nome}
+                                    </h3>
+                                  </div>
                                 </div>
                                 <p className="text-[13px] text-muted-foreground line-clamp-2">
                                   {estado.config.descricao}

@@ -6,9 +6,10 @@ import { ChevronRight } from 'lucide-react';
 interface Props {
   estado: MateriaEstado;
   onClick: () => void;
+  ordem?: number;
 }
 
-export default function MateriaCard({ estado, onClick }: Props) {
+export default function MateriaCard({ estado, onClick, ordem }: Props) {
   const { config, ultimaSessao, diasParada } = estado;
   const urg = urgencia(diasParada);
 
@@ -64,7 +65,14 @@ export default function MateriaCard({ estado, onClick }: Props) {
 
       <div className="flex items-center gap-3 w-full relative z-10 pointer-events-none">
         <span className="text-2xl leading-none select-none">{config.emoji}</span>
-        <span className="text-sm font-medium text-foreground">{config.nome}</span>
+        <div className="flex flex-col">
+          {ordem !== undefined && (
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">
+              Etapa {ordem}
+            </span>
+          )}
+          <span className="text-sm font-medium text-foreground">{config.nome}</span>
+        </div>
         <div className="ml-auto flex items-center gap-2">
           <span className={cn(
             'text-[11px] font-medium px-2 py-0.5 rounded-full',
