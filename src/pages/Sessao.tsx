@@ -34,7 +34,6 @@ export default function Sessao() {
   const materiaConfig = getMateriaBySlug(slug || '');
   const { data: ultimaSessao, isLoading } = useUltimaSessao(slug || '');
   const { data: resumeMessages, isLoading: loadingResume } = useChatHistory(slug || '', resumeKey);
-  const { data: concluidos } = useEmentaConcluida(slug || '');
   // Histórico visual da última sessão — exibido no chat, mas NÃO enviado à IA
   const { data: historyMessages, isLoading: loadingHistory } = useSessionMessages(
     !resumeKey && ultimaSessao?.id ? ultimaSessao.id : null
@@ -256,7 +255,6 @@ export default function Sessao() {
             historyMessages={!resumeKey && historyMessages && historyMessages.length > 0 ? historyMessages : undefined}
             sub={sub}
             modo={modo}
-            concluidos={concluidos || []}
           />
         </Workspace>
       </div>
