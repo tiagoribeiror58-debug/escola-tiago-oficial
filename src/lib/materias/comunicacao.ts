@@ -84,29 +84,6 @@ Abordagem obrigatória:
             'Linguagem Corporal de Palco'
           ]
         },
-        {
-          slug: 'seducao',
-          nome: 'Sedução & Dinâmicas',
-          emoji: '🔥',
-          parent: 'influencia-persuasao',
-          whyStart: 'A fronteira mais humana da influência. Com retórica, negociação e oratória dominados, você entra no campo da inteligência social profunda — calibração, tensão, subcomunicação. É onde o não-verbal supera o verbal.',
-          descricao: 'Inteligência social pura: calibração, tensão, autenticidade e subcomunicação.',
-          contexto: `Foco: inteligência social real — leitura de contexto, subcomunicação, calibração.
-
-Abordagem obrigatória:
-- Explique o mecanismo psicológico ou social por trás de cada dinâmica antes de qualquer simulação ou aplicação.
-- Para atração: explique o que a produz estruturalmente (confiança, consistência, atitude) antes de discutir comportamentos específicos.
-- Destrua mitos explicando o mecanismo pelo qual falham — não apenas afirmando que são errados.
-- Simulações práticas só depois que o aluno compreendeu o princípio que está sendo aplicado.`,
-          ementa: [
-            'A Base Fisiológica da Atração',
-            'Subcomunicação e Linguagem Corporal',
-            'Calibração e Tensão Social',
-            'Como Abrir e Sustentar Interações',
-            'Escalada de Conforto e Intimidade',
-            'Gestão de Rejeição'
-          ]
-        }
       ]
     },
     {
