@@ -3,12 +3,14 @@ import { performanceIntelecto } from './materias/performance';
 import { tecnologiaNegocios } from './materias/negocios';
 import { comunicacaoInfluencia } from './materias/comunicacao';
 import { fundamentosAcademicos } from './materias/fundamentos';
+import { iaHub } from './materias/ia';
 
 export const MATERIAS: MateriaConfig[] = [
   performanceIntelecto,
   tecnologiaNegocios,
   comunicacaoInfluencia,
-  fundamentosAcademicos
+  fundamentosAcademicos,
+  iaHub
 ];
 
 export function getMateriaBySlug(slug: string, list: MateriaConfig[] = MATERIAS): MateriaConfig | undefined {

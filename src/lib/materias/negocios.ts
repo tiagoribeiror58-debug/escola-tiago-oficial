@@ -189,7 +189,7 @@ Abordagem obrigatória:
       emoji: '💻',
       isCategory: true,
       parent: 'tecnologia-negocios',
-      descricao: 'Desenvolvimento de software, arquitetura de sistemas e inteligência artificial.',
+      descricao: 'Desenvolvimento de software, engenharia de produtos e design centrado no usuário.',
       children: [
         {
           slug: 'programacao',
@@ -214,27 +214,6 @@ Abordagem obrigatória:
           ],
           layout: 'split',
           widget: 'CodeLab'
-        },
-        {
-          slug: 'inteligencia-artificial',
-          nome: 'Inteligência Artificial',
-          emoji: '🤖',
-          parent: 'tecnologia-ia',
-          descricao: 'Mecânicas de LLMs, Engenharia de Prompt e Agentes Autônomos.',
-          contexto: `Foco: fundamentos reais de IA generativa — Transformer, tokenização, limites de arquitetura.
-
-Abordagem obrigatória:
-- Explique o mecanismo técnico antes de qualquer aplicação prática. O aluno precisa entender o que acontece dentro do modelo antes de saber como usá-lo.
-- Para prompting: explique por que determinada estrutura funciona (o mecanismo de atenção, contexto, etc.) antes de pedir que o aluno escreva um prompt.
-- Só depois de compreensão do mecanismo: peça que o aluno aplique em um problema técnico específico.
-- Critique prompts com base no mecanismo — não apenas "isso funciona melhor", mas por quê estruturalmente.`,
-          ementa: [
-            'Fundamentos de Transformers e Tokens',
-            'Zero-shot, One-shot e Few-shot Prompting',
-            'Chain of Thought & Step-by-Step',
-            'Arquitetura RAG (Bancos Vetoriais)',
-            'Agentes Autônomos e Tool Calling'
-          ]
         },
         {
           slug: 'design',

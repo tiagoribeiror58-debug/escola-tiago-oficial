@@ -20,6 +20,48 @@ export function useSessoes() {
   });
 }
 
+export function calcularOfensiva(sessoes: Sessao[]): number {
+  if (!sessoes || sessoes.length === 0) return 0;
+  
+  // Extrai datas únicas (formato YYYY-MM-DD ajustado para o timezone local do usuário)
+  const datasUnicas = [...new Set(sessoes.map(s => {
+    const d = new Date(s.data);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+  }))].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+
+  if (datasUnicas.length === 0) return 0;
+
+  const getLocalIso = (date: Date) => new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+  
+  const hojeIso = getLocalIso(new Date());
+  const ontem = new Date();
+  ontem.setDate(ontem.getDate() - 1);
+  const ontemIso = getLocalIso(ontem);
+
+  const ultimaData = datasUnicas[0];
+  
+  // Se a última sessão não foi hoje nem ontem, ofensiva quebrou.
+  if (ultimaData !== hojeIso && ultimaData !== ontemIso) {
+    return 0;
+  }
+
+  let ofensiva = 1;
+  for (let i = 0; i < datasUnicas.length - 1; i++) {
+    const atual = new Date(datasUnicas[i] + 'T12:00:00Z');
+    const anterior = new Date(datasUnicas[i+1] + 'T12:00:00Z');
+    
+    const diff = Math.round((atual.getTime() - anterior.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (diff === 1) {
+      ofensiva++;
+    } else {
+      break;
+    }
+  }
+
+  return ofensiva;
+}
+
 // Calcula quantos dias faltam (ou atrasaram) para a próxima revisão SM-2
 // Retorna negativo se a revisão já passou (atrasada), positivo se ainda falta
 function calcularDiasAteRevisao(proxima_revisao: string | null): number | null {

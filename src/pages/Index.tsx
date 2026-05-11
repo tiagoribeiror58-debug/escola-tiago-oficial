@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useFolhasEstado, useSessoes } from '@/hooks/useSessoes';
+import { useFolhasEstado, useSessoes, calcularOfensiva, useEmentaConcluida } from '@/hooks/useSessoes';
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import MateriaCard from '@/components/MateriaCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen, ScrollText, Library } from 'lucide-react';
+import { BookOpen, ScrollText, Library, Flame, Play } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -17,7 +17,6 @@ function getGreeting(): string {
   return 'Boa noite, Tiago';
 }
 
-
 export default function Index() {
   const { estados, isLoading } = useFolhasEstado();
   const { foco } = useMateriasFoco();
@@ -30,8 +29,7 @@ export default function Index() {
     month: 'long',
   });
 
-  const totalSessoes = sessoes?.length || 0;
-  const materiasAtivas = estados.filter(e => e.totalSessoes > 0).length;
+  const ofensiva = sessoes ? calcularOfensiva(sessoes) : 0;
   
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
@@ -47,6 +45,18 @@ export default function Index() {
 
   // Hero Card é a matéria de maior acesso dentre as focadas
   const heroEstado = estadosFocados.length > 0 ? estadosFocados[0] : null;
+
+  // Lógica para o botão de 1-Click do Hero
+  const heroEmentaConcluidaQuery = useEmentaConcluida(heroEstado?.config.slug || '');
+  const heroConcluidos = heroEmentaConcluidaQuery.data || [];
+  let nextTopic = '';
+  
+  if (heroEstado) {
+    const fases = heroEstado.config.fases || (heroEstado.config.ementa ? [{ nome: '', topicos: heroEstado.config.ementa }] : []);
+    const flatEmenta = fases.flatMap(f => f.topicos);
+    const uncompleted = flatEmenta.find(t => !heroConcluidos.includes(t));
+    nextTopic = uncompleted || (flatEmenta.length > 0 ? flatEmenta[flatEmenta.length - 1] : 'Iniciar');
+  }
 
   const handleCardClick = (estado: MateriaEstado) => {
     if (estado.config.isCategory) {
@@ -75,29 +85,38 @@ export default function Index() {
   return (
     <div className="min-h-screen">
       <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <h1 className="text-xl font-semibold tracking-tight">{getGreeting()}</h1>
-              <p className="text-sm text-muted-foreground mt-0.5 capitalize">{hoje}</p>
+        {/* Header com Saudação e Ofensiva */}
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-xl font-semibold tracking-tight">{getGreeting()}</h1>
+            <p className="text-sm text-muted-foreground mt-0.5 capitalize">{hoje}</p>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            {/* Atalho Ofensiva */}
+            <div className={cn(
+              "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all shadow-sm",
+              ofensiva > 0 
+                ? "bg-[hsl(var(--warning)/0.1)] border-[hsl(var(--warning)/0.3)] text-[hsl(var(--warning))]" 
+                : "bg-card border-border text-muted-foreground"
+            )}>
+              <Flame className={cn("w-3.5 h-3.5", ofensiva > 0 && "animate-pulse")} />
+              {ofensiva} {ofensiva === 1 ? 'dia' : 'dias'}
             </div>
-            
-            <div className="flex items-center gap-2">
-              {/* Atalho para o Portão de Avaliação */}
-              <button
-                onClick={() => navigate('/avaliacoes')}
-                className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-all"
-              >
-                <ScrollText className="w-3.5 h-3.5" />
-                Avaliações
-                {totalProvasPendentes > 0 && (
-                  <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-foreground text-background text-[10px] font-bold leading-none">
-                    {totalProvasPendentes}
-                  </span>
-                )}
-              </button>
-            </div>
+
+            {/* Atalho para o Portão de Avaliação */}
+            <button
+              onClick={() => navigate('/avaliacoes')}
+              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-all shadow-sm"
+            >
+              <ScrollText className="w-3.5 h-3.5" />
+              Avaliações
+              {totalProvasPendentes > 0 && (
+                <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-foreground text-background text-[10px] font-bold leading-none">
+                  {totalProvasPendentes}
+                </span>
+              )}
+            </button>
           </div>
         </div>
 
@@ -224,19 +243,20 @@ export default function Index() {
                       if (isMasteryReady) {
                         navigate(`/sessao/${heroEstado.config.slug}?modo=desafio`);
                       } else {
-                        handleCardClick(heroEstado);
+                        navigate(`/sessao/${heroEstado.config.slug}?sub=${encodeURIComponent(nextTopic)}`);
                       }
                     }}
                     className={cn(
-                      "w-full sm:w-auto self-start px-8 py-3.5 rounded-xl font-medium transition-all text-sm shadow-xl",
+                      "w-full sm:w-auto self-start px-8 py-3.5 rounded-xl font-medium transition-all text-sm shadow-xl flex items-center justify-center gap-2",
                       isMasteryReady
                         ? "bg-[hsl(var(--success))] text-white shadow-[hsl(var(--success)/0.2)] hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
                         : "bg-foreground text-background shadow-foreground/10 hover:opacity-90 active:scale-95"
                     )}
                   >
+                    {!isMasteryReady && <Play className="w-4 h-4 fill-current" />}
                     {isMasteryReady 
-                      ? `Fazer Desafio de Maestria de ${heroEstado.config.nome}` 
-                      : `Continuar Estudando ${heroEstado.config.nome}`}
+                      ? `Desafio de Maestria` 
+                      : `Continuar: ${nextTopic}`}
                   </button>
 
                   {isMasteryReady && (
