@@ -53,7 +53,7 @@ serve(async (req) => {
         });
       }
 
-      return new Response(JSON.stringify({ error: "AI request failed" }), {
+      return new Response(JSON.stringify({ error: "AI request failed", details: t }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

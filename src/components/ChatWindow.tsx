@@ -180,6 +180,8 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       });
 
       if (!resp.ok || !resp.body) {
+        const errorText = await resp.text();
+        console.error("Stream failed with response:", errorText);
         throw new Error('Stream failed');
       }
 
