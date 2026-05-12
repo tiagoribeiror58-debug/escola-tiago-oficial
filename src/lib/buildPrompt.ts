@@ -67,6 +67,7 @@ REGRAS INVIOLÁVEIS:
 
 
 16. Em Inglês: É ESTRITAMENTE PROIBIDO ENSINAR GRAMÁTICA. O foco é comunicação, pragmatismo e conversação. Nas outras matérias, siga o mesmo princípio de objetividade.
+17. Comece introduzindo em cada sessão o tema que será abordado e qual o objetivo principal da sessão. 
 
 Matéria: ${materia.nome}`;
 
@@ -97,14 +98,14 @@ Matéria: ${materia.nome}`;
     if (proximoTopico) {
       indexProximo = materia.ementa.findIndex(
         step => step.toLowerCase().includes(proximoTopico.toLowerCase()) ||
-                proximoTopico.toLowerCase().includes(step.toLowerCase())
+          proximoTopico.toLowerCase().includes(step.toLowerCase())
       );
     }
 
     // Âncora dos ✅: sempre baseada em topico (o que foi de fato ensinado)
     const idxAnterior = topicoAnterior ? materia.ementa.findIndex(
       step => step.toLowerCase().includes(topicoAnterior.toLowerCase()) ||
-              topicoAnterior.toLowerCase().includes(step.toLowerCase())
+        topicoAnterior.toLowerCase().includes(step.toLowerCase())
     ) : -1;
 
     // 📍 aponta para proximo_topico se estiver na ementa; senão usa topico+1 como referência visual
@@ -139,7 +140,7 @@ Matéria: ${materia.nome}`;
   let historico = '';
   if (ultimaSessao) {
     let topicoObrigatorio = ultimaSessao.proximo_topico;
-    
+
     // Se temos uma ementa, forçamos o tópico atual do mapa
     if (materia.ementa && materia.ementa.length > 0) {
       // Re-calculamos rapidamente para pegar o 📍
