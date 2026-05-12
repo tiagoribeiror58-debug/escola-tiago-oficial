@@ -1,5 +1,15 @@
 import { Sessao, MateriaConfig } from '@/types';
 
+// Calcula deterministicamente o próximo tópico: primeiro da ementa que NÃO está em concluídos.
+function resolverTopicoAtual(ementa: string[], concluidos: string[]): { topico: string; idx: number } | null {
+  const norm = (s: string) => s.toLowerCase().trim();
+  const idx = ementa.findIndex(
+    step => !concluidos.some(d => norm(d).includes(norm(step)) || norm(step).includes(norm(d)))
+  );
+  if (idx === -1) return null; // ementa completa
+  return { topico: ementa[idx], idx };
+}
+
 export function buildSystemPrompt(
   materia: MateriaConfig,
   ultimaSessao: Sessao | null,
@@ -9,173 +19,141 @@ export function buildSystemPrompt(
   ementaConcluida?: string[],
   sessoesRecentes?: Sessao[]
 ): string {
+
+  // ─── MODO DESAFIO ───────────────────────────────────────────────────────────
   if (modo === 'desafio') {
-    const temasGerais = ultimaSessao
+    const temas = ultimaSessao
       ? `${ultimaSessao.topico}${ultimaSessao.proximo_topico ? `, ${ultimaSessao.proximo_topico}` : ''}`
       : 'Temas da matéria';
+    return `Você é um avaliador técnico do Tiago. Teste o que ele aprendeu — não ensine.
 
-    return `Você é um avaliador técnico do Tiago. Seu papel é testar o que ele aprendeu — não ensinar.
+REGRAS:
+- Uma pergunta técnica por vez. Exija respostas fundamentadas.
+- Se demonstrar domínio real: encerre com "Domínio comprovado." + <mastery_passed/> na última linha.
+- Se houver lacunas: encerre com <session_done/> e aponte os pontos a revisar.
+- Chips: inclua <chips>opção 1|opção 2</chips> isolado na última linha quando quiser sugerir opções.
 
-REGRAS DO DESAFIO:
-- Faça uma pergunta técnica por vez. Exija respostas fundamentadas.
-- 70% das perguntas testam a estrutura geral do conteúdo. 30% testam pontos específicos ou lacunas anteriores.
-- Seja direto e exigente. Sem elogios vazios.
-- Se o aluno demonstrar domínio real: encerre com "Domínio comprovado." e a tag <mastery_passed/> na última linha.
-- Se demonstrar lacunas estruturais: encerre com <session_done/> e aponte os pontos a revisar, sem suavizar.
-- Chips: inclua <chips>opção 1|opção 2</chips> isolado na última linha quando quiser sugerir opções. Nunca use chips e tag de conclusão na mesma mensagem.
-
-Matéria: ${materia.nome}
-Tópicos a avaliar: ${temasGerais}
-
-Faça a primeira pergunta técnica agora.`;
+Matéria: ${materia.nome} | Tópicos: ${temas}
+Faça a primeira pergunta agora.`;
   }
 
-  const base = `Você é o professor técnico do Tiago. Ensina com rigor e precisão — sem simplificação excessiva, sem enrolação.
-
-COMO VOCÊ FUNCIONA:
-- Ensine o conceito de forma clara e técnica ANTES de exigir qualquer resposta. Nunca faça o aluno tentar adivinhar algo que ele não aprendeu. Depois de ensinar, avance com base na reação dele.
-- Não despeje tudo de uma vez. Uma camada de cada vez, com pausa para absorção.
-- Se o aluno errar: aponte o erro com precisão técnica antes de corrigir. Não suavize.
-- Se o aluno entender com facilidade: aprofunde ou avance — nunca fique parado no mesmo nível.
-
-REGRAS INVIOLÁVEIS:
-
-1. **MANDAMENTO SUPREMO: FOCO NA EXPLICAÇÃO, NÃO NO INTERROGATÓRIO.** É estritamente PROIBIDO fazer perguntas ao final de cada output apenas por protocolo ou para "forçar" interação. O fluxo deve ser natural: explique o conceito técnico com completude e clareza. Só faça uma pergunta se ela for vital para validar um ponto que VOCÊ ACABOU de ensinar ou para o Desafio de Maestria. Se o aluno apenas precisa absorver, termine com a explicação e deixe-o decidir o próximo passo. NUNCA peça para o aluno "adivinhar" o que você ainda não ensinou.
-
-2. **Atomicidade Radical.** Uma ideia por mensagem. É proibido explicar dois conceitos diferentes na mesma resposta.
-
-3. **Limite duro de resposta.** Máximo 3 parágrafos curtos (2 linhas cada) por mensagem. Se sua resposta ultrapassar 100 palavras, você está enrolando — corte pela metade antes de enviar.
-
-4. **Sem dumps.** A profundidade vem pela iteração, não pelo volume de texto.
-
-5. **Sem glossário.** Defina termos no contexto da explicação, não em blocos separados.
-
-6. **Active recall honesto.** Só peça que o aluno aplique ou explique algo depois que VOCÊ forneceu toda a base para a resposta.
-
-7. **Encerramento sem dump.** Quando o tópico estiver concluído, NÃO faça resumo em lista de bullets. Em vez disso: (a) faça UMA pergunta de consolidação — "Com o que aprendeu aqui, o que você faria diferente em [situação concreta]?"; (b) aguarde a resposta; (c) só então dê UMA aplicação prática em no máximo 2 linhas; (d) diga "Tópico concluído. Pode encerrar." e inclua <session_done/> na última linha.
-
-8. **Chips obrigatórios.** Inclua <chips>opção 1|opção 2</chips> isolado na última linha de cada mensagem, exceto quando enviar <session_done/>. Máximo 4 opções.
-
-9. **Sem métricas visíveis.** Nunca mencione "nível", "pontuação" ou qualquer métrica do sistema.
-
-10. **Formato flexível.** O aluno pode pedir mudança de formato a qualquer momento. Adapte imediatamente sem questionar.
-
-11. **Comece Direto (Socratic Onboarding).** PROIBIDO USAR SAUDAÇÕES ("Olá", "Tudo bem", "Vamos começar?"). A sua primeira mensagem DEVE ser um gancho direto ou um desafio conceitual brutal sobre o tema, sem aviso. Exemplo: "Leia este código. Onde ele falha em escala?" ou "Se o juros está a 10%, por que o banco quebra?". Prenda a atenção no primeiro segundo.
-12. **Atomicidade de feedback.** Se o aluno cometer vários erros, aponte apenas o erro mais estrutural. Nunca múltiplas correções simultâneas.
-
-13. **Primeiros princípios.** Prefira raciocínio de causa raiz a fórmulas prontas. Use convenções só quando forem o caminho mais curto.
-
-14. **Momentum — Avançar por padrão.** Se você enviou 2 mensagens explicativas seguidas sem que o aluno respondeu com mais de uma frase, mude o ângulo de explicação com uma analogia ou exemplo concreto e CONTINUE avançando o conteúdo. NUNCA pare o conteúdo apenas porque o aluno respondeu curto. Mensagens curtas ("entendi", "ok", "continua") são sinal de absorção — avance para a próxima camada.
-
-16. Em Inglês: É ESTRITAMENTE PROIBIDO ENSINAR GRAMÁTICA. O foco é comunicação, pragmatismo e conversação. Nas outras matérias, siga o mesmo princípio de objetividade.
-17. Comece introduzindo em cada sessão o tema que será abordado e qual o objetivo principal da sessão.
-18. explique em linguagem simples como feynman quando for abordar um novo tópico.
-
-Matéria: ${materia.nome}`;
-
-  let contexto = '';
-  if (materia.contexto) {
-    contexto = `\n\nContexto de ${materia.nome}:\n${materia.contexto}`;
-  }
-
-  if (sub) {
-    const flatEmenta = materia.fases ? materia.fases.flatMap(f => f.topicos) : (materia.ementa || []);
-    const isEmentaItem = flatEmenta.includes(sub);
-    const subNome = materia.subTopicos?.find(s => s.slug === sub)?.nome || sub;
-
-    if (isEmentaItem) {
-      contexto += `\n\nO aluno escolheu este tópico da ementa: **${subNome}**. Ignore o progresso normal e ensine este tópico agora.`;
-    } else {
-      contexto += `\n\nO aluno escolheu focar no eixo: **${subNome}**. Restrinja todas as explicações a esta subcategoria.`;
-    }
-  }
-
-  // --- CONTEXTO ADAPTATIVO: histórico real + currículo como guia ---
+  // ─── CALCULAR TÓPICO ATUAL (DETERMINÍSTICO) ─────────────────────────────────
   const ementa = materia.fases
     ? materia.fases.flatMap(f => f.topicos)
     : (materia.ementa || []);
+  const concluidos = ementaConcluida || [];
 
-  if (ementa.length > 0 || (sessoesRecentes && sessoesRecentes.length > 0)) {
-    const normalize = (s: string) => s.toLowerCase().trim();
-    const concluidos = ementaConcluida || [];
+  let topicoObrigatorio: string | null = null;
+  let topicosProibidos: string[] = [...concluidos];
+  let ementaCompleta = false;
 
-    // Histórico de performance das sessões recentes (mais antiga → mais recente)
-    const historicoLinhas: string[] = [];
-    if (sessoesRecentes && sessoesRecentes.length > 0) {
-      const sessoesOrdenadas = [...sessoesRecentes].reverse(); // mais antiga primeiro
-      for (const s of sessoesOrdenadas) {
-        if (s.is_mastery) continue; // ignora desafios de maestria no histórico normal
-        const dif = s.dificuldade || 'desconhecida';
+  // Se o aluno escolheu um sub-tópico explicitamente via UI, respeita
+  if (sub) {
+    const flat = ementa;
+    const isEmentaItem = flat.includes(sub);
+    topicoObrigatorio = isEmentaItem ? sub : null;
+    if (isEmentaItem) {
+      topicosProibidos = concluidos.filter(c => c !== sub);
+    }
+  } else if (ementa.length > 0) {
+    const resultado = resolverTopicoAtual(ementa, concluidos);
+    if (resultado) {
+      topicoObrigatorio = resultado.topico;
+    } else {
+      ementaCompleta = true;
+    }
+  }
+
+  // ─── BASE DO PROFESSOR ────────────────────────────────────────────────────────
+  const base = `Você é o professor técnico do Tiago. Ensina com rigor e precisão — sem simplificação excessiva, sem enrolação.
+
+COMO VOCÊ FUNCIONA:
+- Ensine o conceito de forma clara ANTES de exigir qualquer resposta.
+- Uma camada de cada vez. Se o aluno entender fácil → aprofunde ou avance. Se errar → corrija com precisão técnica.
+
+REGRAS INVIOLÁVEIS:
+1. PROIBIDO fazer perguntas por protocolo. Só pergunte quando for validar algo que você acabou de ensinar.
+2. Atomicidade: uma ideia por mensagem.
+3. Máximo 3 parágrafos curtos por mensagem. Acima de 100 palavras → está enrolando, corte.
+4. Sem glossários. Defina termos no contexto.
+5. Active recall só após ensinar a base completa.
+6. Encerramento: ao concluir o tópico, faça UMA pergunta de consolidação, aguarde resposta, dê UMA aplicação prática em 2 linhas, escreva "Tópico concluído. Pode encerrar." e inclua <session_done/> na última linha.
+7. Chips: inclua <chips>opção 1|opção 2</chips> isolado na última linha de cada mensagem, exceto com <session_done/>. Máximo 4 opções.
+8. NUNCA mencione "nível", "pontuação" ou métricas do sistema.
+9. PROIBIDO saudações ("Olá", "Tudo bem"). Comece com gancho direto ou desafio conceitual.
+10. Se o aluno responder curto ("entendi", "ok") → avance para a próxima camada. Nunca pare por resposta curta.
+11. Explique em linguagem simples (Feynman) ao introduzir conceito novo.
+12. Comece introduzindo o tema e o objetivo principal da sessão.
+
+Matéria: ${materia.nome}`;
+
+  // ─── CONTEXTO DA MATÉRIA ─────────────────────────────────────────────────────
+  let contexto = '';
+  if (materia.contexto) {
+    contexto += `\n\nContexto pedagógico de ${materia.nome}:\n${materia.contexto}`;
+  }
+
+  // ─── BLOQUEIO ABSOLUTO DE REPETIÇÃO ──────────────────────────────────────────
+  let bloqueio = '';
+
+  if (ementaCompleta) {
+    bloqueio = `\n\n═══════════════════════════════════
+EMENTA COMPLETA
+═══════════════════════════════════
+O aluno concluiu todos os tópicos do currículo de ${materia.nome}.
+Ofereça aprofundamento, aplicações avançadas ou conexões interdisciplinares.
+Não repita nenhum tópico básico já coberto.`;
+
+  } else if (topicoObrigatorio) {
+    const listaProibidos = topicosProibidos.length > 0
+      ? topicosProibidos.map(t => `  ✗ ${t}`).join('\n')
+      : '  (nenhum ainda)';
+
+    const progressoVisual = ementa.length > 0
+      ? ementa.map(step => {
+          const feito = concluidos.some(d => d.toLowerCase().includes(step.toLowerCase()) || step.toLowerCase().includes(d.toLowerCase()));
+          if (feito) return `  ✅ ${step}`;
+          if (step === topicoObrigatorio) return `  ▶ ${step}  ← VOCÊ ESTÁ AQUI`;
+          return `  ⬜ ${step}`;
+        }).join('\n')
+      : '';
+
+    bloqueio = `\n\n═══════════════════════════════════
+TÓPICO DESTA SESSÃO — REGRA ABSOLUTA
+═══════════════════════════════════
+▶ VOCÊ DEVE ENSINAR EXCLUSIVAMENTE: "${topicoObrigatorio}"
+
+TÓPICOS PROIBIDOS (já concluídos — NÃO podem ser tema principal):
+${listaProibidos}
+
+Esta regra não tem exceção. Referências cruzadas são permitidas, mas a AULA é sobre "${topicoObrigatorio}".${progressoVisual ? `\n\nProgresso na ementa:\n${progressoVisual}` : ''}`;
+  }
+
+  // ─── HISTÓRICO DE PERFORMANCE (contexto, não controle) ───────────────────────
+  let historicoBloco = '';
+  if (sessoesRecentes && sessoesRecentes.length > 0) {
+    const linhas = [...sessoesRecentes]
+      .reverse()
+      .filter(s => !s.is_mastery)
+      .map(s => {
+        const dif = s.dificuldade || '?';
         const erros = s.erros ?? 0;
-        const nota = erros === 0 && dif === 'baixa'
-          ? '→ domínio demonstrado'
-          : erros > 1 || dif === 'alta'
-          ? '→ dificuldade significativa'
-          : '→ progresso normal';
-        historicoLinhas.push(`  • "${s.topico}" — dificuldade: ${dif}, erros: ${erros} ${nota}`);
-      }
-    }
-
-    // Currículo: marca o que já foi concluído
-    let sugestaoProximo = '';
-    const curriculoLinhas: string[] = [];
-
-    if (ementa.length > 0) {
-      let firstNotDoneIdx = -1;
-
-      ementa.forEach((step, i) => {
-        const jaConcluido = concluidos.some(
-          done => normalize(done).includes(normalize(step)) || normalize(step).includes(normalize(done))
-        );
-        if (jaConcluido) {
-          curriculoLinhas.push(`  ✅ ${step}`);
-        } else {
-          if (firstNotDoneIdx === -1) {
-            firstNotDoneIdx = i;
-            curriculoLinhas.push(`  ⬜ ${step}  ← sugestão de próximo tópico`);
-          } else {
-            curriculoLinhas.push(`  ⬜ ${step}`);
-          }
-        }
+        return `  • "${s.topico}" — dificuldade: ${dif}, erros: ${erros}`;
       });
-
-      if (firstNotDoneIdx !== -1) {
-        sugestaoProximo = ementa[firstNotDoneIdx];
-      }
+    if (linhas.length > 0) {
+      historicoBloco = `\n\nHistórico recente do aluno (use para calibrar ritmo):\n${linhas.join('\n')}`;
     }
-
-    let bloco = '\n\n---\nCONTEXTO DO ALUNO\n---';
-
-    if (historicoLinhas.length > 0) {
-      bloco += `\n\nHISTÓRICO RECENTE (últimas sessões, da mais antiga para a mais recente):\n${historicoLinhas.join('\n')}`;
-    }
-
-    if (curriculoLinhas.length > 0) {
-      bloco += `\n\nCURRÍCULO SUGERIDO PARA ${materia.nome.toUpperCase()}:\n${curriculoLinhas.join('\n')}`;
-    }
-
-    bloco += `\n\nDIRETRIZ PEDAGÓGICA PARA ESTA SESSÃO:
-- Use o histórico acima para calibrar o nível e o ritmo. Se o aluno teve dificuldade alta ou muitos erros no último tópico, reforce antes de avançar.
-- Siga a sequência do currículo como guia padrão. Desvie dela APENAS se o histórico indicar que o aluno precisa de revisão ou reforço antes.
-- NÃO repita tópicos que o aluno já domina (✅), exceto se o histórico indicar lacuna específica.
-- Sugestão de próximo tópico: **${sugestaoProximo || 'Fronteira do Conhecimento — aprofunde o que o aluno mais usará na prática'}**
-- Esta é uma SUGESTÃO, não uma lei. Use seu julgamento pedagógico.`;
-
-    contexto += bloco;
   }
 
+  // ─── CONTINUAÇÃO vs NOVA SESSÃO ───────────────────────────────────────────────
   if (isContinuation) {
-    return base + contexto + `\n\nEstamos retomando a sessão anterior. Continue de onde parou, sem introduções.`;
+    return base + contexto + bloqueio + historicoBloco +
+      `\n\nEstamos retomando a sessão anterior. Continue de onde parou, sem introduções.`;
   }
 
-  let historico = '';
-  if (ultimaSessao) {
-    historico = `\n\nA primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente com o tema desta sessão.`;
-  } else {
-    historico = `\n\nPrimeira sessão de ${materia.nome}. Comece pelo primeiro tópico do currículo (⬜). Vá direto ao conteúdo.
+  const inicio = ultimaSessao
+    ? `\n\nA primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação do tópico diretamente.`
+    : `\n\nPrimeira sessão de ${materia.nome}. Vá direto ao conteúdo do tópico acima.\n\nA primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;
 
-A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;
-  }
-
-  return base + contexto + historico;
+  return base + contexto + bloqueio + historicoBloco + inicio;
 }
