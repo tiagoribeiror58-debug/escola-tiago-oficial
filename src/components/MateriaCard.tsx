@@ -34,9 +34,13 @@ export default function MateriaCard({ estado, onClick, ordem }: Props) {
     urgente: 'border-[hsl(var(--danger)/0.2)]',
   };
 
-  // Calcula posição no roadmap (para matérias com ementa)
-  const ementa = config.ementa;
-  const totalPassos = ementa?.length ?? 0;
+  // Calcula posição no roadmap (para matérias com ementa ou fases)
+  // Achata fases[].topicos caso não exista ementa direta
+  const flatEmenta: string[] = config.ementa && config.ementa.length > 0
+    ? config.ementa
+    : (config.fases || []).flatMap(f => f.topicos || []);
+
+  const totalPassos = flatEmenta.length;
   const proximoTopico = ultimaSessao?.proximo_topico || ultimaSessao?.topico;
 
   // "Passo X de Y" = sessões concluídas + 1 (passo atual)
