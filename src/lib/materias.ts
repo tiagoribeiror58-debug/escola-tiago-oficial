@@ -5,6 +5,7 @@ import { comunicacaoInfluencia } from './materias/comunicacao';
 import { fundamentosAcademicos } from './materias/fundamentos';
 import { tecnologiaHub } from './materias/tecnologia';
 import { seducaoHub } from './materias/seducao';
+import { primeirosprincipiosHub } from './materias/primeiros-principios';
 
 export const MATERIAS: MateriaConfig[] = [
   performanceIntelecto,
@@ -12,7 +13,8 @@ export const MATERIAS: MateriaConfig[] = [
   comunicacaoInfluencia,
   fundamentosAcademicos,
   tecnologiaHub,
-  seducaoHub
+  seducaoHub,
+  primeirosprincipiosHub
 ];
 
 export function getMateriaBySlug(slug: string, list: MateriaConfig[] = MATERIAS): MateriaConfig | undefined {
