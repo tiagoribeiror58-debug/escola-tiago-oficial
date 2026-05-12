@@ -104,7 +104,18 @@ export default function Sessao() {
           observacoes: 'Sessão curta',
         };
       } else {
-        sessionData = await extractSession(messages, slug!, ultimaSessao?.nivel || 1);
+        // Passa a ementa e o tópico atual para que a edge function calcule
+        // o proximo_topico de forma determinística (sem o Haiku ter que adivinhar)
+        const ementaFlat = materiaConfig.fases
+          ? materiaConfig.fases.flatMap(f => f.topicos)
+          : (materiaConfig.ementa || []);
+        sessionData = await extractSession(
+          messages,
+          slug!,
+          ultimaSessao?.nivel || 1,
+          ementaFlat,
+          ultimaSessao?.proximo_topico || ultimaSessao?.topico || ''
+        );
       }
 
       const validDificuldades = ['baixa', 'media', 'alta'];

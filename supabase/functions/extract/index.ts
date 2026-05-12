@@ -14,7 +14,6 @@ sem texto adicional, sem markdown, sem explicação.
   "erros": number — total de erros cometidos pelo aluno (0 se nenhum),
   "dificuldade": "baixa" | "media" | "alta",
   "nivel": number — nível de domínio ao final (1, 2 ou 3),
-  "proximo_topico": "string — próximo tópico lógico. OBRIGATÓRIO: Deve ser um assunto NOVO e AVANÇADO, NUNCA repita o tópico atual!",
   "decisao_proxima": "string — decisão de progressão baseada nas regras",
   "observacoes": "string — observação objetiva sobre o desempenho do aluno"
 }
@@ -25,18 +24,48 @@ Regras de progressão para decisao_proxima:
 - erros>0 e dificuldade alta → "Mini-revisão + reforço antes de avançar"
 - erros>1 → "Exercício dedicado obrigatório"`;
 
+/**
+ * Calcula deterministicamente o próximo tópico com base na ementa e no tópico atual.
+ * A IA NÃO decide isso — é lógica de negócio pura.
+ *
+ * Analogia: é como um índice de livro. Se você leu o capítulo 3, o próximo é o 4.
+ * Não perguntamos ao autor qual capítulo você deve ler a seguir — o sistema já sabe.
+ */
+function calcularProximoTopico(ementa: string[], topicoAtual: string): string {
+  if (!ementa || ementa.length === 0 || !topicoAtual) return "";
+
+  const normalize = (s: string) => s.toLowerCase().trim();
+  const topicoNorm = normalize(topicoAtual);
+
+  // Busca por correspondência exata ou parcial (match fuzzy simples)
+  const idx = ementa.findIndex(
+    (step) =>
+      normalize(step).includes(topicoNorm) ||
+      topicoNorm.includes(normalize(step))
+  );
+
+  if (idx === -1) return ementa[0]; // tópico não encontrado → ancora no início
+  if (idx + 1 >= ementa.length) return ""; // último tópico → ementa concluída
+
+  return ementa[idx + 1];
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { messages, materia, nivel_atual } = await req.json();
+    const { messages, materia, nivel_atual, ementa, topico_atual } =
+      await req.json();
 
     if (!messages || !Array.isArray(messages) || !materia) {
       return new Response(
         JSON.stringify({ error: "Missing required fields: messages, materia" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
       );
     }
 
@@ -46,10 +75,15 @@ serve(async (req) => {
     }
 
     const chatHistory = messages
-      .map((m: { role: string; content: string }) => `${m.role === "user" ? "Aluno" : "Professor"}: ${m.content}`)
+      .map(
+        (m: { role: string; content: string }) =>
+          `${m.role === "user" ? "Aluno" : "Professor"}: ${m.content}`
+      )
       .join("\n\n");
 
-    const systemMessage = `${EXTRACT_PROMPT}\n\nMatéria: ${materia}\nNível atual do aluno: ${nivel_atual || 1}`;
+    const systemMessage = `${EXTRACT_PROMPT}\n\nMatéria: ${materia}\nNível atual do aluno: ${
+      nivel_atual || 1
+    }`;
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -62,7 +96,10 @@ serve(async (req) => {
         model: "claude-haiku-4-5",
         system: systemMessage,
         messages: [
-          { role: "user", content: `Aja como o avaliador silêncioso e extraia os dados. Histórico da sessão:\n\n${chatHistory}` },
+          {
+            role: "user",
+            content: `Aja como o avaliador silêncioso e extraia os dados. Histórico da sessão:\n\n${chatHistory}`,
+          },
         ],
         max_tokens: 1024,
       }),
@@ -100,14 +137,35 @@ serve(async (req) => {
       }
     }
 
+    // ✅ CÁLCULO DETERMINÍSTICO: o proximo_topico é calculado pelo código,
+    // não pelo LLM. O Haiku extrai apenas métricas de desempenho (erros, dificuldade, nivel).
+    // A progressão no roadmap é responsabilidade do sistema, não da IA.
+    const proximoTopicoDeterministico = calcularProximoTopico(
+      ementa || [],
+      topico_atual || extracted.topico || ""
+    );
+
+    extracted.proximo_topico = proximoTopicoDeterministico;
+
+    console.log(
+      `[extract] topico_atual="${topico_atual}" → proximo="${proximoTopicoDeterministico}" (ementa size: ${
+        (ementa || []).length
+      })`
+    );
+
     return new Response(JSON.stringify(extracted), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("extract error:", e);
     return new Response(
-      JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({
+        error: e instanceof Error ? e.message : "Unknown error",
+      }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
     );
   }
 });

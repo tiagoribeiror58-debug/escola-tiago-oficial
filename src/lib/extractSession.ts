@@ -15,7 +15,9 @@ const EXTRACT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract`;
 export async function extractSession(
   messages: ChatMessage[],
   materia: string,
-  nivelAtual: number
+  nivelAtual: number,
+  ementa?: string[],
+  topicoAtual?: string
 ): Promise<ExtractedSession> {
   const res = await fetch(EXTRACT_URL, {
     method: 'POST',
@@ -23,7 +25,13 @@ export async function extractSession(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ messages, materia, nivel_atual: nivelAtual }),
+    body: JSON.stringify({
+      messages,
+      materia,
+      nivel_atual: nivelAtual,
+      ementa: ementa || [],
+      topico_atual: topicoAtual || '',
+    }),
   });
 
   if (!res.ok) {
