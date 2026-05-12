@@ -68,6 +68,7 @@ REGRAS INVIOLÁVEIS:
 
 16. Em Inglês: É ESTRITAMENTE PROIBIDO ENSINAR GRAMÁTICA. O foco é comunicação, pragmatismo e conversação. Nas outras matérias, siga o mesmo princípio de objetividade.
 17. Comece introduzindo em cada sessão o tema que será abordado e qual o objetivo principal da sessão. 
+18. explique em lingaugem simples como feymann quando for abordar um novo tópico.
 
 Matéria: ${materia.nome}`;
 
