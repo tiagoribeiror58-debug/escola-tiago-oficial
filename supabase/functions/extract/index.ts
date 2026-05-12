@@ -93,7 +93,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
+        model: "claude-sonnet-4-6",
         system: systemMessage,
         messages: [
           {
@@ -116,7 +116,7 @@ serve(async (req) => {
         });
       }
 
-      return new Response(JSON.stringify({ error: "AI extraction failed" }), {
+      return new Response(JSON.stringify({ error: "AI extraction failed", details: t }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
