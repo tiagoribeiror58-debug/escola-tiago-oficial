@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
-import { useUltimaSessao } from '@/hooks/useSessoes';
+import { useUltimaSessao, useEmentaConcluida, useRecentSessoes } from '@/hooks/useSessoes';
 import { useChatHistory, useSessionMessages } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 import Workspace from '@/components/Workspace';
@@ -33,6 +33,9 @@ export default function Sessao() {
   const queryClient = useQueryClient();
   const materiaConfig = getMateriaBySlug(slug || '');
   const { data: ultimaSessao, isLoading } = useUltimaSessao(slug || '');
+  const { data: ementaConcluidaData } = useEmentaConcluida(slug || '');
+  const ementaConcluida = ementaConcluidaData || [];
+  const { data: sessoesRecentes } = useRecentSessoes(slug || '', 6);
   const { data: resumeMessages, isLoading: loadingResume } = useChatHistory(slug || '', resumeKey);
   // Histórico visual da última sessão — exibido no chat, mas NÃO enviado à IA
   const { data: historyMessages, isLoading: loadingHistory } = useSessionMessages(
@@ -266,6 +269,8 @@ export default function Sessao() {
             historyMessages={!resumeKey && historyMessages && historyMessages.length > 0 ? historyMessages : undefined}
             sub={sub}
             modo={modo}
+            ementaConcluida={ementaConcluida}
+            sessoesRecentes={sessoesRecentes || []}
           />
         </Workspace>
       </div>

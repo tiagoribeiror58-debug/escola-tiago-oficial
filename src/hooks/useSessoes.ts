@@ -149,6 +149,24 @@ export function useUltimaSessao(materia: string) {
   });
 }
 
+export function useRecentSessoes(materia: string, limit = 6) {
+  return useQuery({
+    queryKey: ['recent-sessoes', materia, limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('sessoes')
+        .select('id, topico, dificuldade, erros, nivel, data, created_at, proximo_topico, observacoes, is_mastery')
+        .eq('materia', materia)
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return (data || []) as Sessao[];
+    },
+  });
+}
+
+
 export function useEmentaConcluida(materia: string) {
   return useQuery({
     queryKey: ['ementa-concluida', materia],

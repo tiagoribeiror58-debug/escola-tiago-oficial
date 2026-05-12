@@ -5,7 +5,9 @@ export function buildSystemPrompt(
   ultimaSessao: Sessao | null,
   isContinuation?: boolean,
   sub?: string | null,
-  modo?: string | null
+  modo?: string | null,
+  ementaConcluida?: string[],
+  sessoesRecentes?: Sessao[]
 ): string {
   if (modo === 'desafio') {
     const temasGerais = ultimaSessao
@@ -65,10 +67,9 @@ REGRAS INVIOLÁVEIS:
 
 14. **Momentum — Avançar por padrão.** Se você enviou 2 mensagens explicativas seguidas sem que o aluno respondeu com mais de uma frase, mude o ângulo de explicação com uma analogia ou exemplo concreto e CONTINUE avançando o conteúdo. NUNCA pare o conteúdo apenas porque o aluno respondeu curto. Mensagens curtas ("entendi", "ok", "continua") são sinal de absorção — avance para a próxima camada.
 
-
 16. Em Inglês: É ESTRITAMENTE PROIBIDO ENSINAR GRAMÁTICA. O foco é comunicação, pragmatismo e conversação. Nas outras matérias, siga o mesmo princípio de objetividade.
-17. Comece introduzindo em cada sessão o tema que será abordado e qual o objetivo principal da sessão. 
-18. explique em lingaugem simples como feymann quando for abordar um novo tópico.
+17. Comece introduzindo em cada sessão o tema que será abordado e qual o objetivo principal da sessão.
+18. explique em linguagem simples como feynman quando for abordar um novo tópico.
 
 Matéria: ${materia.nome}`;
 
@@ -89,49 +90,78 @@ Matéria: ${materia.nome}`;
     }
   }
 
-  // --- EMENTA MAPA (referência de progresso) ---
-  if (materia.ementa && materia.ementa.length > 0) {
-    const topicoAnterior = ultimaSessao?.topico || '';
-    const proximoTopico = ultimaSessao?.proximo_topico || '';
+  // --- CONTEXTO ADAPTATIVO: histórico real + currículo como guia ---
+  const ementa = materia.fases
+    ? materia.fases.flatMap(f => f.topicos)
+    : (materia.ementa || []);
 
-    // Verifica se proximo_topico está dentro da ementa
-    let indexProximo = -1;
-    if (proximoTopico) {
-      indexProximo = materia.ementa.findIndex(
-        step => step.toLowerCase().includes(proximoTopico.toLowerCase()) ||
-          proximoTopico.toLowerCase().includes(step.toLowerCase())
-      );
+  if (ementa.length > 0 || (sessoesRecentes && sessoesRecentes.length > 0)) {
+    const normalize = (s: string) => s.toLowerCase().trim();
+    const concluidos = ementaConcluida || [];
+
+    // Histórico de performance das sessões recentes (mais antiga → mais recente)
+    const historicoLinhas: string[] = [];
+    if (sessoesRecentes && sessoesRecentes.length > 0) {
+      const sessoesOrdenadas = [...sessoesRecentes].reverse(); // mais antiga primeiro
+      for (const s of sessoesOrdenadas) {
+        if (s.is_mastery) continue; // ignora desafios de maestria no histórico normal
+        const dif = s.dificuldade || 'desconhecida';
+        const erros = s.erros ?? 0;
+        const nota = erros === 0 && dif === 'baixa'
+          ? '→ domínio demonstrado'
+          : erros > 1 || dif === 'alta'
+          ? '→ dificuldade significativa'
+          : '→ progresso normal';
+        historicoLinhas.push(`  • "${s.topico}" — dificuldade: ${dif}, erros: ${erros} ${nota}`);
+      }
     }
 
-    // Âncora dos ✅: sempre baseada em topico (o que foi de fato ensinado)
-    const idxAnterior = topicoAnterior ? materia.ementa.findIndex(
-      step => step.toLowerCase().includes(topicoAnterior.toLowerCase()) ||
-        topicoAnterior.toLowerCase().includes(step.toLowerCase())
-    ) : -1;
+    // Currículo: marca o que já foi concluído
+    let sugestaoProximo = '';
+    const curriculoLinhas: string[] = [];
 
-    // 📍 aponta para proximo_topico se estiver na ementa; senão usa topico+1 como referência visual
-    let indexAtual = indexProximo >= 0
-      ? indexProximo
-      : (idxAnterior >= 0 && idxAnterior + 1 < materia.ementa.length ? idxAnterior + 1 : -1);
+    if (ementa.length > 0) {
+      let firstNotDoneIdx = -1;
 
-    // Se o usuário está perdido em tópicos legados que não existem mais na ementa, forçamos ele de volta pro início do roadmap.
-    if (indexAtual === -1) {
-      indexAtual = 0;
+      ementa.forEach((step, i) => {
+        const jaConcluido = concluidos.some(
+          done => normalize(done).includes(normalize(step)) || normalize(step).includes(normalize(done))
+        );
+        if (jaConcluido) {
+          curriculoLinhas.push(`  ✅ ${step}`);
+        } else {
+          if (firstNotDoneIdx === -1) {
+            firstNotDoneIdx = i;
+            curriculoLinhas.push(`  ⬜ ${step}  ← sugestão de próximo tópico`);
+          } else {
+            curriculoLinhas.push(`  ⬜ ${step}`);
+          }
+        }
+      });
+
+      if (firstNotDoneIdx !== -1) {
+        sugestaoProximo = ementa[firstNotDoneIdx];
+      }
     }
 
-    // Tópico que a IA DEVE seguir nesta sessão
-    const topicoDestaSessao = materia.ementa[indexAtual];
+    let bloco = '\n\n---\nCONTEXTO DO ALUNO\n---';
 
-    // Montar mapa: ✅ concluídos, 📍 sugerido, ⬜ disponíveis
-    const mapaItems = materia.ementa.map((step, i) => {
-      if (i < indexAtual) return `  ✅ ${step}`;
-      if (i === indexAtual) return `  📍 ${step} ← ESTE É O TÓPICO OBRIGATÓRIO DE HOJE`;
-      return `  ⬜ ${step}`;
-    });
+    if (historicoLinhas.length > 0) {
+      bloco += `\n\nHISTÓRICO RECENTE (últimas sessões, da mais antiga para a mais recente):\n${historicoLinhas.join('\n')}`;
+    }
 
-    const regraDoMapa = `REGRA DO MAPA: O mapa acima é uma LEI. Você deve estritamente ensinar o tópico marcado com 📍. NÃO siga tópicos de sessões passadas se eles divergirem do 📍.`;
+    if (curriculoLinhas.length > 0) {
+      bloco += `\n\nCURRÍCULO SUGERIDO PARA ${materia.nome.toUpperCase()}:\n${curriculoLinhas.join('\n')}`;
+    }
 
-    contexto += `\n\nMAPA DA MATÉRIA (referência de progresso):\n${mapaItems.join('\n')}\n\n${regraDoMapa}`;
+    bloco += `\n\nDIRETRIZ PEDAGÓGICA PARA ESTA SESSÃO:
+- Use o histórico acima para calibrar o nível e o ritmo. Se o aluno teve dificuldade alta ou muitos erros no último tópico, reforce antes de avançar.
+- Siga a sequência do currículo como guia padrão. Desvie dela APENAS se o histórico indicar que o aluno precisa de revisão ou reforço antes.
+- NÃO repita tópicos que o aluno já domina (✅), exceto se o histórico indicar lacuna específica.
+- Sugestão de próximo tópico: **${sugestaoProximo || 'Fronteira do Conhecimento — aprofunde o que o aluno mais usará na prática'}**
+- Esta é uma SUGESTÃO, não uma lei. Use seu julgamento pedagógico.`;
+
+    contexto += bloco;
   }
 
   if (isContinuation) {
@@ -140,29 +170,9 @@ Matéria: ${materia.nome}`;
 
   let historico = '';
   if (ultimaSessao) {
-    let topicoObrigatorio = ultimaSessao.proximo_topico;
-
-    // Se temos uma ementa, forçamos o tópico atual do mapa
-    if (materia.ementa && materia.ementa.length > 0) {
-      // Re-calculamos rapidamente para pegar o 📍
-      const idxAnt = materia.ementa.findIndex(step => step.toLowerCase().includes(ultimaSessao.topico.toLowerCase()) || ultimaSessao.topico.toLowerCase().includes(step.toLowerCase()));
-      const idxProx = ultimaSessao.proximo_topico ? materia.ementa.findIndex(step => step.toLowerCase().includes(ultimaSessao.proximo_topico!.toLowerCase()) || ultimaSessao.proximo_topico!.toLowerCase().includes(step.toLowerCase())) : -1;
-      let currIdx = idxProx >= 0 ? idxProx : (idxAnt >= 0 && idxAnt + 1 < materia.ementa.length ? idxAnt + 1 : 0);
-      topicoObrigatorio = materia.ementa[currIdx];
-    }
-
-    if (topicoObrigatorio) {
-      historico = `\n\nÚltima sessão: "${ultimaSessao.topico}" (dificuldade: ${ultimaSessao.dificuldade || 'normal'}).
-TÓPICO DESTA SESSÃO (obrigatório): **${topicoObrigatorio}**
-Ensine EXATAMENTE este tópico. Não desvie. Não repita conteúdo já coberto (✅).
-
-A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;
-    } else {
-      historico = `\n\nÚltima sessão: "${ultimaSessao.topico}" (dificuldade: ${ultimaSessao.dificuldade || 'normal'}).
-A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;
-    }
+    historico = `\n\nA primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente com o tema desta sessão.`;
   } else {
-    historico = `\n\nPrimeira sessão de ${materia.nome}. Comece pelo primeiro tópico do mapa (⬜). Vá direto ao conteúdo.
+    historico = `\n\nPrimeira sessão de ${materia.nome}. Comece pelo primeiro tópico do currículo (⬜). Vá direto ao conteúdo.
 
 A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;
   }
