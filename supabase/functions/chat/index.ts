@@ -6,10 +6,14 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-// Modelos em ordem de preferência: Sonnet é o principal, Haiku é o fallback.
-// Se o Sonnet estiver sobrecarregado, o sistema cai automaticamente para o Haiku.
-// Quando o Sonnet voltar, ele será usado novamente — sem precisar de redeploy.
-const MODELS = ["claude-sonnet-4-6", "claude-haiku-4-5-20251001"];
+// Cadeia de fallback: tenta do mais moderno ao mais estável.
+// Se um estiver sobrecarregado (overloaded), tenta o próximo automaticamente.
+const MODELS = [
+  "claude-sonnet-4-6",         // Principal — melhor qualidade/velocidade
+  "claude-haiku-4-5-20251001", // Rápido — confirmado estável
+  "claude-sonnet-4-5-20250929",// Sonnet anterior — muito estável
+  "claude-sonnet-4-20250514",  // Emergência — modelo mais antigo e resiliente
+];
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
