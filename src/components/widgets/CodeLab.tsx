@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Play, Terminal } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
+import { useWidgetStore } from '@/hooks/useWidgetStore';
+import { useEffect } from 'react';
 
 const DEFAULT_CODE = `function calcularJurosCompostos(capital, taxa, tempo) {
   // taxa em decimal (ex: 0.1 para 10%)
@@ -17,9 +19,17 @@ console.log("R$ 1000 investidos a 10% a.a por 5 anos:");
 console.log("Montante Final: R$ " + resultado);`;
 
 export function CodeLab() {
+  const globalCodeSnippet = useWidgetStore(state => state.codeSnippet);
   const [code, setCode] = useState(DEFAULT_CODE);
   const [output, setOutput] = useState<string>('');
   const [isRunning, setIsRunning] = useState(false);
+
+  useEffect(() => {
+    if (globalCodeSnippet) {
+      setCode(globalCodeSnippet);
+      setOutput('Código recebido da IA. Aguardando execução...');
+    }
+  }, [globalCodeSnippet]);
 
   const runCode = () => {
     setIsRunning(true);

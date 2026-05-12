@@ -4,11 +4,13 @@ import { buildSystemPrompt } from '@/lib/buildPrompt';
 import { useSaveChatMessage } from '@/hooks/useChatMessages';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
-import { ArrowUp, Loader2, Zap, ZapOff, History } from 'lucide-react';
+import { ArrowUp, Loader2, Zap, ZapOff, History, Volume2, Mic, MicOff } from 'lucide-react';
 import { playPopSound, playThinkingDoneSound, playSuccessSound } from '@/lib/audioUtils';
 import confetti from 'canvas-confetti';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useWidgetStore } from '@/hooks/useWidgetStore';
 
 interface Props {
   materia: MateriaConfig;
@@ -39,6 +41,76 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const autoStartFiredRef = useRef(false); // guard contra double auto-start (StrictMode)
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  // Initialize Speech Recognition
+  useEffect(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'pt-BR';
+
+      recognitionRef.current.onresult = (event: any) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+        
+        // Update input with the recognized text
+        if (finalTranscript) {
+          setInput(prev => prev + ' ' + finalTranscript.trim());
+        } else if (interimTranscript) {
+           // Optional: You could show interim text if desired
+        }
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+      
+      recognitionRef.current.onerror = (event: any) => {
+        console.error('Speech recognition error', event.error);
+        setIsListening(false);
+      };
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current?.start();
+        setIsListening(true);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  const playTTS = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel(); // Stop any ongoing speech
+      const utterance = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, ''));
+      utterance.lang = 'pt-BR';
+      // Find a good Portuguese voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const ptVoice = voices.find(v => v.lang.includes('pt-BR') || v.lang.includes('pt_BR'));
+      if (ptVoice) utterance.voice = ptVoice;
+      
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -219,6 +291,22 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
         onTopicComplete?.();
       }
 
+      // ==== GENERATIVE UI: Widget Store Injection ====
+      const codeMatch = assistantContent.match(/```(?:javascript|js|typescript|ts)\n([\s\S]*?)```/);
+      if (codeMatch) {
+         useWidgetStore.getState().setCodeSnippet(codeMatch[1].trim());
+      }
+      const jsonMatch = assistantContent.match(/```json\n([\s\S]*?)```/);
+      if (jsonMatch) {
+         try {
+             const parsed = JSON.parse(jsonMatch[1].trim());
+             if (Array.isArray(parsed)) {
+                 useWidgetStore.getState().setFlashcards(parsed);
+             }
+         } catch (e) {}
+      }
+      // ===============================================
+
       const contentToSave = assistantContent
         .replace(/<details[\s\S]*?<\/details>/ig, '')
         .replace(/<chips>[\s\S]*?(?:<\/chips>|$)/ig, '')
@@ -369,7 +457,14 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                     </details>
                   )}
                   {mainContent && (
-                    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 whitespace-pre-wrap break-words">
+                    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 whitespace-pre-wrap break-words relative group">
+                      <button 
+                        onClick={() => playTTS(mainContent)}
+                        className="absolute -right-2 -top-2 p-1.5 rounded-md bg-background/80 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:text-foreground"
+                        title="Ouvir"
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                      </button>
                       <ReactMarkdown
                         components={{
                           code({ node, inline, className, children, ...props }: any) {
@@ -473,6 +568,18 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               )}
               style={{ minHeight: '40px', maxHeight: '128px' }}
             />
+            {recognitionRef.current && (
+              <button
+                onClick={toggleListening}
+                className={cn(
+                  'flex items-center justify-center w-9 h-9 rounded-full shrink-0 transition-all',
+                  isListening ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80'
+                )}
+                title={isListening ? "Parar de ouvir" : "Falar"}
+              >
+                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
+            )}
             <button
               onClick={() => {
                 playPopSound();
