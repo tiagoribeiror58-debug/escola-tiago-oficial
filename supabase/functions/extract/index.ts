@@ -93,7 +93,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5",
+        model: "claude-3-5-haiku-20241022",
         system: systemMessage,
         messages: [
           {
