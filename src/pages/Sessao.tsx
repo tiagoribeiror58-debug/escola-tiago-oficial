@@ -14,6 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { playSuccessSound } from '@/lib/audioUtils';
+import { resolverTopicoAtual } from '@/lib/buildPrompt';
 
 // Formata segundos em mm:ss
 function formatTimer(seconds: number): string {
@@ -112,13 +113,23 @@ export default function Sessao() {
         const ementaFlat = materiaConfig.fases
           ? materiaConfig.fases.flatMap(f => f.topicos)
           : (materiaConfig.ementa || []);
+          
+        let topicoAtualParaExtrair = ultimaSessao?.proximo_topico || ultimaSessao?.topico || '';
+        
+        // Usa a mesma lógica determinística do buildPrompt para saber qual foi o tópico DESTA sessão
+        const resultadoDeterministico = resolverTopicoAtual(ementaFlat, ementaConcluida);
+        const topicoDestaSessao = sub || (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair);
+
         sessionData = await extractSession(
           messages,
           slug!,
           ultimaSessao?.nivel || 1,
           ementaFlat,
-          ultimaSessao?.proximo_topico || ultimaSessao?.topico || ''
+          topicoDestaSessao
         );
+
+        // GARANTIA: O tópico salvo no banco é estritamente o da ementa (evita que a IA modifique a string)
+        sessionData.topico = topicoDestaSessao;
       }
 
       const validDificuldades = ['baixa', 'media', 'alta'];
@@ -128,6 +139,20 @@ export default function Sessao() {
 
       // Snapshot das mensagens para guardar no banco
       const messagesSnapshot = messagesRef.current.map(({ role, content }) => ({ role, content }));
+
+      // NOVO: Se a sessão foi concluída com sucesso (topicComplete), marca na ementa_concluida automaticamente!
+      if (topicComplete && sessionData.topico) {
+        const jaConcluido = ementaConcluida.some(d => d.toLowerCase().includes(sessionData.topico.toLowerCase()) || sessionData.topico.toLowerCase().includes(d.toLowerCase()));
+        if (!jaConcluido) {
+          const { error: ementaError } = await supabase.from('ementa_concluida').insert({
+            materia: slug!,
+            topico: sessionData.topico
+          });
+          if (ementaError) {
+            console.error('Falha ao marcar ementa_concluida:', ementaError);
+          }
+        }
+      }
 
       const { error } = await supabase.from('sessoes').insert({
         materia: slug!,

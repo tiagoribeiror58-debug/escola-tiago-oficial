@@ -1,7 +1,7 @@
 import { Sessao, MateriaConfig } from '@/types';
 
 // Calcula deterministicamente o próximo tópico: primeiro da ementa que NÃO está em concluídos.
-function resolverTopicoAtual(ementa: string[], concluidos: string[]): { topico: string; idx: number } | null {
+export function resolverTopicoAtual(ementa: string[], concluidos: string[]): { topico: string; idx: number } | null {
   const norm = (s: string) => s.toLowerCase().trim();
   const idx = ementa.findIndex(
     step => !concluidos.some(d => norm(d).includes(norm(step)) || norm(step).includes(norm(d)))
