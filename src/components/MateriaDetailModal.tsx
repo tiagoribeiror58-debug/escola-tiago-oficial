@@ -48,12 +48,18 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
 
   const { config, ultimaSessao, diasParada } = estado;
 
+  // Achata fases[].topicos em um array plano para matérias que usam estrutura de fases
+  // Se a matéria tem ementa direta, usa ela. Se tem fases, achata os tópicos de todas as fases.
+  const flatEmenta: string[] = config?.ementa && config.ementa.length > 0
+    ? config.ementa
+    : (config?.fases || []).flatMap(f => f.topicos || []);
+
   let proximoTopicoReal = ultimaSessao?.proximo_topico || '';
-  if (config?.ementa && config.ementa.length > 0 && ultimaSessao) {
-    const idxAnt = config.ementa.findIndex(step => step.toLowerCase().includes(ultimaSessao.topico.toLowerCase()) || ultimaSessao.topico.toLowerCase().includes(step.toLowerCase()));
-    const idxProx = proximoTopicoReal ? config.ementa.findIndex(step => step.toLowerCase().includes(proximoTopicoReal.toLowerCase()) || proximoTopicoReal.toLowerCase().includes(step.toLowerCase())) : -1;
-    let currIdx = idxProx >= 0 ? idxProx : (idxAnt >= 0 && idxAnt + 1 < config.ementa.length ? idxAnt + 1 : 0);
-    proximoTopicoReal = config.ementa[currIdx] || proximoTopicoReal;
+  if (flatEmenta.length > 0 && ultimaSessao) {
+    const idxAnt = flatEmenta.findIndex(step => step.toLowerCase().includes(ultimaSessao.topico.toLowerCase()) || ultimaSessao.topico.toLowerCase().includes(step.toLowerCase()));
+    const idxProx = proximoTopicoReal ? flatEmenta.findIndex(step => step.toLowerCase().includes(proximoTopicoReal.toLowerCase()) || proximoTopicoReal.toLowerCase().includes(step.toLowerCase())) : -1;
+    let currIdx = idxProx >= 0 ? idxProx : (idxAnt >= 0 && idxAnt + 1 < flatEmenta.length ? idxAnt + 1 : 0);
+    proximoTopicoReal = flatEmenta[currIdx] || proximoTopicoReal;
   }
 
   const handleToggleTopico = (e: React.MouseEvent, topico: string, isCompleted: boolean) => {
@@ -147,10 +153,10 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
           </div>
 
           {/* Ementa / Roadmap Timeline */}
-          {config.ementa && config.ementa.length > 0 && (() => {
-            const firstUncompletedIdx = config.ementa!.findIndex(t => !ementaConcluida.includes(t));
-            const currentIdx = firstUncompletedIdx === -1 ? config.ementa!.length : firstUncompletedIdx;
-            const allDone = ementaConcluida.length >= config.ementa.length;
+          {flatEmenta.length > 0 && (() => {
+            const firstUncompletedIdx = flatEmenta.findIndex(t => !ementaConcluida.includes(t));
+            const currentIdx = firstUncompletedIdx === -1 ? flatEmenta.length : firstUncompletedIdx;
+            const allDone = ementaConcluida.length >= flatEmenta.length;
 
             return (
               <div className="px-6 pb-4">
@@ -159,17 +165,17 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     Roadmap
                   </p>
                   <span className="text-[10px] font-medium bg-foreground/10 text-foreground px-2 py-0.5 rounded-full">
-                    {allDone ? 'Base concluída' : `${ementaConcluida.length} de ${config.ementa.length}`}
+                    {allDone ? 'Base concluída' : `${ementaConcluida.length} de ${flatEmenta.length}`}
                   </span>
                 </div>
 
                 {/* Timeline vertical */}
                 <div className="relative">
-                  {config.ementa.map((topico, idx) => {
+                  {flatEmenta.map((topico, idx) => {
                     const isCompleted = ementaConcluida.includes(topico);
                     const isCurrent = idx === currentIdx;
                     const isFuture = idx > currentIdx;
-                    const isLast = idx === config.ementa!.length - 1;
+                    const isLast = idx === flatEmenta.length - 1;
 
                     return (
                       <div key={idx} className="flex gap-3">
@@ -297,13 +303,13 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             </button>
 
             {/* Link para Jornada Completa */}
-            {config.ementa && config.ementa.length > 0 && (
+            {flatEmenta.length > 0 && (
               <button
                 onClick={() => { playPopSound(); onOpenChange(false); navigate(`/ementa/${config.slug}`); }}
                 className="mt-2 w-full flex items-center justify-center gap-2 py-2 rounded-xl text-[12px] text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
               >
                 <Map className="w-3.5 h-3.5" />
-                Ver jornada completa ({(ementaConcluida.length)}/{config.ementa.length} tópicos)
+                Ver jornada completa ({ementaConcluida.length}/{flatEmenta.length} tópicos)
               </button>
             )}
           </div>
