@@ -6,6 +6,11 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// Modelos em ordem de preferência: Sonnet é o principal, Haiku é o fallback.
+// Se o Sonnet estiver sobrecarregado, o sistema cai automaticamente para o Haiku.
+// Quando o Sonnet voltar, ele será usado novamente — sem precisar de redeploy.
+const MODELS = ["claude-sonnet-4-6", "claude-haiku-4-5-20251001"];
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -26,42 +31,58 @@ serve(async (req) => {
       throw new Error("ANTHROPIC_API_KEY is not configured");
     }
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        system: systemPrompt || "You are a helpful assistant.",
-        messages: messages,
-        max_tokens: 4096,
-        stream: true,
-      }),
-    });
+    for (const model of MODELS) {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "x-api-key": ANTHROPIC_API_KEY,
+          "anthropic-version": "2023-06-01",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model,
+          system: systemPrompt || "You are a helpful assistant.",
+          messages: messages,
+          max_tokens: 4096,
+          stream: true,
+        }),
+      });
 
-    if (!response.ok) {
-      const t = await response.text();
-      console.error("Anthropic API error:", response.status, t);
+      if (!response.ok) {
+        const t = await response.text();
+        console.error(`[chat] Model ${model} error ${response.status}:`, t);
 
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
-          status: 429,
+        // Se sobrecarregado, tenta o próximo modelo da lista
+        if (response.status === 529 || t.includes("overloaded")) {
+          console.log(`[chat] ${model} overloaded, falling back...`);
+          continue;
+        }
+
+        if (response.status === 429) {
+          return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+
+        return new Response(JSON.stringify({ error: "AI request failed", details: t }), {
+          status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      return new Response(JSON.stringify({ error: "AI request failed", details: t }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      console.log(`[chat] Serving with model: ${model}`);
+      return new Response(response.body, {
+        headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
       });
     }
 
-    return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+    // Todos os modelos falharam
+    return new Response(JSON.stringify({ error: "Servidores sobrecarregados. Tente em instantes." }), {
+      status: 503,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
+
   } catch (e) {
     console.error("chat error:", e);
     return new Response(
