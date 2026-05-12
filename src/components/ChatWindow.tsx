@@ -210,6 +210,16 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
             const parsed = JSON.parse(jsonStr);
             let delta = '';
             
+            // Detecta erros embutidos no stream do Anthropic (ex: overloaded_error)
+            // A Anthropic às vezes retorna HTTP 200 mas embute o erro no próprio stream SSE.
+            if (parsed.type === 'error') {
+              const errType = parsed.error?.type || '';
+              if (errType === 'overloaded_error') {
+                throw new Error('OVERLOADED');
+              }
+              throw new Error(parsed.error?.message || 'Stream error');
+            }
+            
             // Suporte OpenAI
             if (parsed.choices?.[0]?.delta?.content) {
               delta = parsed.choices[0].delta.content;
@@ -250,8 +260,12 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                 }
               });
             }
-          } catch {
-            // partial JSON, wait for more
+          } catch (streamErr) {
+            // Re-lança erros conhecidos (overloaded, stream error)
+            if (streamErr instanceof Error && (streamErr.message === 'OVERLOADED' || streamErr.message !== 'partial JSON')) {
+              throw streamErr;
+            }
+            // Ignora JSON parcial (aguarda mais dados)
           }
         }
       }
