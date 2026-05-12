@@ -3,7 +3,7 @@ import { performanceIntelecto } from './materias/performance';
 import { tecnologiaNegocios } from './materias/negocios';
 import { comunicacaoInfluencia } from './materias/comunicacao';
 import { fundamentosAcademicos } from './materias/fundamentos';
-import { iaHub } from './materias/ia';
+import { tecnologiaHub } from './materias/tecnologia';
 import { seducaoHub } from './materias/seducao';
 
 export const MATERIAS: MateriaConfig[] = [
@@ -11,7 +11,7 @@ export const MATERIAS: MateriaConfig[] = [
   tecnologiaNegocios,
   comunicacaoInfluencia,
   fundamentosAcademicos,
-  iaHub,
+  tecnologiaHub,
   seducaoHub
 ];
 

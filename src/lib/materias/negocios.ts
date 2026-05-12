@@ -2,10 +2,10 @@ import { MateriaConfig } from '@/types';
 
 export const tecnologiaNegocios: MateriaConfig = {
   slug: 'tecnologia-negocios',
-  nome: 'Negócios & Tecnologia',
+  nome: 'Negócios & Empreendedorismo',
   emoji: '🚀',
   isCategory: true,
-  descricao: 'Desenvolvimento de software, inteligência artificial, scale-ups e alocação de capital.',
+  descricao: 'Desenvolvimento de negócios, growth, scale-ups e alocação de capital.',
   children: [
     {
       slug: 'business-growth',
@@ -192,129 +192,6 @@ Abordagem obrigatória:
           widget: 'FinanceLab'
         }
       ]
-    },
-    {
-      slug: 'tecnologia-ia',
-      nome: 'Tecnologia & Produtos',
-      emoji: '💻',
-      isCategory: true,
-      parent: 'tecnologia-negocios',
-      whyStart: 'Com o negócio entendido, você aprende as ferramentas que o fazem escalar. Tecnologia sem estratégia de negócio é hobby — com ela, é vantagem competitiva.',
-      descricao: 'Desenvolvimento de software, engenharia de produtos e design centrado no usuário.',
-      children: [
-        {
-          slug: 'programacao',
-          nome: 'Engenharia de Software',
-          emoji: '<>',
-          parent: 'tecnologia-ia',
-          whyStart: 'A base de tudo digital. Mesmo que não vá codar profissionalmente, entender raciocínio computacional muda como você pensa e resolve problemas — e elimina dependência de outros para construir.',
-          descricao: 'Da lógica de base à arquitetura de sistemas distribuídos.',
-          contexto: `Foco: raciocínio computacional — lógica, estruturas, arquitetura.
-
-Abordagem obrigatória:
-- Explique o conceito ou padrão antes de apresentar o problema. O aluno precisa entender o que está sendo aplicado.
-- Para bugs: não corrija. Faça perguntas que levem o aluno ao mecanismo do erro — não à solução direta.
-- Código vem depois de compreensão do padrão, não antes. Nunca use código como diagnóstico inicial sem base conceitual.
-- Exija que o aluno explique o raciocínio da solução — não apenas que ela funcione.`,
-          ementa: [
-            'Lógica de Programação e Algoritmos',
-            'Estruturas de Dados Básicas',
-            'Arquitetura Frontend (React/SPA)',
-            'Arquitetura Backend (APIs, REST)',
-            'Bancos de Dados Relacionais vs NoSQL',
-            'Design Patterns e Clean Code'
-          ],
-          layout: 'split',
-          widget: 'CodeLab'
-        },
-        {
-          slug: 'design',
-          nome: 'Design Visual & UX',
-          emoji: '◑',
-          parent: 'tecnologia-ia',
-          whyStart: 'Código sem design é ferramenta bruta. Esta etapa ensina a pensar visualmente — hierarquia, gestalt, percepção. O melhor produto do mundo fracassa se a experiência for ruim.',
-          descricao: 'Hierarquia, tipografia, gestalt e design centrado no usuário.',
-          contexto: `Foco: princípios estruturais do design — hierarquia, gestalt, percepção visual.
-
-Abordagem obrigatória:
-- Explique o princípio perceptivo ou cognitivo por trás de cada decisão de design antes de analisar exemplos.
-- Só depois de explicar o mecanismo: peça que o aluno critique um design real com base naquele princípio.
-- Nunca peça análise de design sem antes estabelecer o critério de análise.`,
-          ementa: [
-            'Leis da Gestalt Aplicadas a Interfaces',
-            'Teoria das Cores e Contraste',
-            'Tipografia e Escala Tipográfica',
-            'Espaçamento e Hierarquia Visual',
-            'UI vs UX: A Experiência do Usuário',
-            'Heurísticas de Nielsen'
-          ],
-          layout: 'canvas',
-          widget: 'DesignPreview'
-        },
-        {
-          slug: 'dados-analytics',
-          nome: 'Ciência de Dados & Analytics',
-          emoji: '📊',
-          parent: 'tecnologia-ia',
-          whyStart: 'Com o produto no ar, você precisa entender o que os dados dizem. Analytics transforma comportamento de usuário em decisão de produto — sem achismo, com evidência.',
-          descricao: 'Pipelines de dados, Business Intelligence e modelagem estatística aplicada.',
-          contexto: `Foco: transformar dados brutos em decisões de negócios. Explique o fluxo de ETL (Extração, Transformação, Carga) e a diferença entre análise descritiva e preditiva.`,
-          ementa: [
-            'O Pipeline de Dados (ETL/ELT)',
-            'Data Warehouses vs Data Lakes',
-            'SQL para Análise de Dados',
-            'Modelagem Dimensional (Star Schema)',
-            'Visualização de Dados e Dashboards'
-          ]
-        },
-        {
-          slug: 'web3-cripto',
-          nome: 'Cripto & Web3',
-          emoji: '⛓️',
-          parent: 'tecnologia-ia',
-          whyStart: 'A fronteira da descentralização. Com a stack tecnológica dominada, você explora o paradigma que muda a relação entre software, dinheiro e confiança. Foco no mecanismo — não especulação.',
-          descricao: 'Criptografia, Blockchain, DeFi e contratos inteligentes.',
-          contexto: `Foco: os fundamentos técnicos da descentralização. Evite o viés de investimento e especulação; foque no mecanismo do consenso e da imutabilidade.`,
-          ementa: [
-            'O Problema do Gasto Duplo e o Bitcoin',
-            'Algoritmos de Consenso (PoW vs PoS)',
-            'Ethereum e Smart Contracts',
-            'DeFi (Finanças Descentralizadas)',
-            'Tokenomics e Governança'
-          ]
-        },
-        {
-          slug: 'product-management',
-          nome: 'Gestão de Produto Digital (PM)',
-          emoji: '📦',
-          parent: 'tecnologia-ia',
-          layout: 'split',
-          widget: 'UserStoryBuilder',
-          whyStart: 'Com engenharia e design como base, você aprende a decidir o que construir. PM é a ponte entre negócio, tecnologia e usuário — o papel que garante que o produto certo será feito da forma certa.',
-          descricao: 'Descoberta de produto, priorização de backlog e métricas de engajamento.',
-          contexto: `Foco: a ponte entre engenharia, negócios e design. Ensine como decidir O QUE construir antes de COMO construir.`,
-          ementa: [
-            'O Papel do PM: Engenharia, UX e Negócios',
-            'Product Discovery e Entrevistas de Usuário',
-            'Frameworks de Priorização (RICE, Kano)',
-            'Gestão de Backlog e Roadmap',
-            'Métricas de Produto (AARRR, Cohorts, Churn)'
-          ]
-        },
-        {
-          slug: 'cloud-devops',
-          nome: 'Cloud Computing & DevOps',
-          emoji: '☁️',
-          parent: 'tecnologia-ia',
-          whyStart: 'Produto funcionando para 10 usuários é diferente de funcionar para 1 milhão. Esta etapa ensina a escalar infraestrutura com confiabilidade — e entregar software rápido sem quebrar produção.',
-          descricao: 'Arquitetura de servidores, CI/CD, Docker e escalabilidade.',
-          contexto: `Foco: infraestrutura e segurança da informação. Abordagem técnica para quem quer atuar como Tech Lead ou CTO, garantindo que o software funcione para milhões de usuários.`,
-          ementa: [
-            'Introdução à Nuvem (AWS, GCP, Azure)',
-            'Virtualização e Containers (Docker, K8s)',
-            'Integração e Entrega Contínua (CI/CD)',
-            'Arquitetura de Microserviços vs Monolitos',
-            'Segurança da Informação e CyberSecurity'
           ]
         }
       ]
