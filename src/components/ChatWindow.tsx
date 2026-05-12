@@ -338,7 +338,10 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       });
     } catch (e) {
       console.error(e);
-      const errorMsg = 'Desculpe, houve um erro. Tente novamente.';
+      const isOverloaded = e instanceof Error && e.message === 'OVERLOADED';
+      const errorMsg = isOverloaded
+        ? '⏳ Os servidores da IA estão sobrecarregados agora. Aguarde alguns segundos e tente novamente.'
+        : 'Desculpe, houve um erro. Tente novamente.';
       setMessages(prev => {
         const last = prev[prev.length - 1];
         if (last?.id === messageId) {
