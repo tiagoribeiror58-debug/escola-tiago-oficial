@@ -36,6 +36,7 @@ export async function extractSession(
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: 'Extraction failed' }));
+    console.error("Extraction error details:", err);
     throw new Error(err.error || 'Failed to extract session data');
   }
 
