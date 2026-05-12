@@ -8,7 +8,6 @@ import { ArrowUp, Loader2, Zap, ZapOff, History, Volume2, Mic, MicOff } from 'lu
 import { playPopSound, playThinkingDoneSound, playSuccessSound } from '@/lib/audioUtils';
 import confetti from 'canvas-confetti';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useWidgetStore } from '@/hooks/useWidgetStore';
 

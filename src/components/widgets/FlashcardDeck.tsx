@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Languages, ChevronRight, ChevronLeft, Volume2 } from 'lucide-react';
 import { useWidgetStore } from '@/hooks/useWidgetStore';
-import { useEffect } from 'react';
 
 const cards = [
   { id: 1, front: 'To entail', back: 'Acarretar, envolver (como consequência)', context: 'This job entails a lot of travel.' },

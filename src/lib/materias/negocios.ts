@@ -192,9 +192,6 @@ Abordagem obrigatória:
           widget: 'FinanceLab'
         }
       ]
-          ]
-        }
-      ]
     }
   ]
 };

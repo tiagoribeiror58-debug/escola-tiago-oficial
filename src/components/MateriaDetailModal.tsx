@@ -48,6 +48,14 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
 
   const { config, ultimaSessao, diasParada } = estado;
 
+  let proximoTopicoReal = ultimaSessao?.proximo_topico || '';
+  if (config?.ementa && config.ementa.length > 0 && ultimaSessao) {
+    const idxAnt = config.ementa.findIndex(step => step.toLowerCase().includes(ultimaSessao.topico.toLowerCase()) || ultimaSessao.topico.toLowerCase().includes(step.toLowerCase()));
+    const idxProx = proximoTopicoReal ? config.ementa.findIndex(step => step.toLowerCase().includes(proximoTopicoReal.toLowerCase()) || proximoTopicoReal.toLowerCase().includes(step.toLowerCase())) : -1;
+    let currIdx = idxProx >= 0 ? idxProx : (idxAnt >= 0 && idxAnt + 1 < config.ementa.length ? idxAnt + 1 : 0);
+    proximoTopicoReal = config.ementa[currIdx] || proximoTopicoReal;
+  }
+
   const handleToggleTopico = (e: React.MouseEvent, topico: string, isCompleted: boolean) => {
     e.stopPropagation();
     if (config) {
@@ -118,16 +126,16 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     </p>
                   </div>
                 )}
-                {ultimaSessao.topico && ultimaSessao.proximo_topico && (
+                {ultimaSessao.topico && proximoTopicoReal && (
                   <div className="flex items-center shrink-0">
                     <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/40" />
                   </div>
                 )}
-                {ultimaSessao.proximo_topico && (
+                {proximoTopicoReal && (
                   <div className="flex-1 px-3 py-2 rounded-xl bg-muted/50 border border-border">
                     <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Próximo</p>
                     <p className="text-xs font-semibold text-foreground mt-0.5 line-clamp-2">
-                      {ultimaSessao.proximo_topico}
+                      {proximoTopicoReal}
                     </p>
                   </div>
                 )}
@@ -282,7 +290,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   {selectedSub ? `Estudar: ${selectedSub.length > 30 ? selectedSub.slice(0, 30) + '…' : selectedSub}` : 'Começar Sessão'}
                 </span>
                 <span className="block text-[12px] text-muted-foreground leading-tight mt-0.5">
-                  {ultimaSessao ? `Continua de: ${ultimaSessao.proximo_topico || ultimaSessao.topico}` : 'Primeira sessão nesta matéria'}
+                  {ultimaSessao ? `Continua de: ${proximoTopicoReal || ultimaSessao.topico}` : 'Primeira sessão nesta matéria'}
                 </span>
               </div>
               <ChevronRight className="w-4 h-4 text-muted-foreground" />

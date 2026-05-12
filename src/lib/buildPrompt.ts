@@ -108,22 +108,26 @@ Matéria: ${materia.nome}`;
     ) : -1;
 
     // 📍 aponta para proximo_topico se estiver na ementa; senão usa topico+1 como referência visual
-    const indexAtual = indexProximo >= 0
+    let indexAtual = indexProximo >= 0
       ? indexProximo
       : (idxAnterior >= 0 && idxAnterior + 1 < materia.ementa.length ? idxAnterior + 1 : -1);
 
+    // Se o usuário está perdido em tópicos legados que não existem mais na ementa, forçamos ele de volta pro início do roadmap.
+    if (indexAtual === -1) {
+      indexAtual = 0;
+    }
+
+    // Tópico que a IA DEVE seguir nesta sessão
+    const topicoDestaSessao = materia.ementa[indexAtual];
+
     // Montar mapa: ✅ concluídos, 📍 sugerido, ⬜ disponíveis
     const mapaItems = materia.ementa.map((step, i) => {
-      if (indexAtual >= 0 && i < indexAtual) return `  ✅ ${step}`;
-      if (indexAtual >= 0 && i === indexAtual) return `  📍 ${step} ← sugerido`;
+      if (i < indexAtual) return `  ✅ ${step}`;
+      if (i === indexAtual) return `  📍 ${step} ← ESTE É O TÓPICO OBRIGATÓRIO DE HOJE`;
       return `  ⬜ ${step}`;
     });
 
-    // Quando proximo_topico está FORA da ementa: mapa é referência, não prisão
-    // Quando está DENTRO: mapa é lei (evita a IA inventar tópicos aleatórios)
-    const regraDoMapa = (indexProximo === -1 && proximoTopico)
-      ? `REGRA DO MAPA: Esta lista é referência de progresso já coberto. O tópico desta sessão foi definido pela análise da sessão anterior e pode estar além desta lista — ensine-o normalmente.`
-      : `REGRA DO MAPA: O aluno pode escolher qualquer tópico ⬜ por curiosidade. O 📍 é apenas sugestão de continuidade. Você NÃO pode inventar tópicos fora desta lista. Se o aluno pedir algo fora do mapa, conecte ao tópico mais próximo.`;
+    const regraDoMapa = `REGRA DO MAPA: O mapa acima é uma LEI. Você deve estritamente ensinar o tópico marcado com 📍. NÃO siga tópicos de sessões passadas se eles divergirem do 📍.`;
 
     contexto += `\n\nMAPA DA MATÉRIA (referência de progresso):\n${mapaItems.join('\n')}\n\n${regraDoMapa}`;
   }
@@ -134,21 +138,25 @@ Matéria: ${materia.nome}`;
 
   let historico = '';
   if (ultimaSessao) {
-    const proximoTopico = ultimaSessao.proximo_topico;
+    let topicoObrigatorio = ultimaSessao.proximo_topico;
+    
+    // Se temos uma ementa, forçamos o tópico atual do mapa
+    if (materia.ementa && materia.ementa.length > 0) {
+      // Re-calculamos rapidamente para pegar o 📍
+      const idxAnt = materia.ementa.findIndex(step => step.toLowerCase().includes(ultimaSessao.topico.toLowerCase()) || ultimaSessao.topico.toLowerCase().includes(step.toLowerCase()));
+      const idxProx = ultimaSessao.proximo_topico ? materia.ementa.findIndex(step => step.toLowerCase().includes(ultimaSessao.proximo_topico!.toLowerCase()) || ultimaSessao.proximo_topico!.toLowerCase().includes(step.toLowerCase())) : -1;
+      let currIdx = idxProx >= 0 ? idxProx : (idxAnt >= 0 && idxAnt + 1 < materia.ementa.length ? idxAnt + 1 : 0);
+      topicoObrigatorio = materia.ementa[currIdx];
+    }
 
-    if (proximoTopico) {
-      // proximo_topico existe: nomeia explicitamente como tópico obrigatório desta sessão
-      // Isso garante que a IA não ignore o tópico sugerido pela análise anterior
+    if (topicoObrigatorio) {
       historico = `\n\nÚltima sessão: "${ultimaSessao.topico}" (dificuldade: ${ultimaSessao.dificuldade || 'normal'}).
-TÓPICO DESTA SESSÃO (obrigatório): **${proximoTopico}**
-Este tópico foi definido pela análise da sessão anterior. Ensine exatamente este conteúdo — use o mapa apenas como referência de progresso. Não repita conteúdo já coberto (✅).
+TÓPICO DESTA SESSÃO (obrigatório): **${topicoObrigatorio}**
+Ensine EXATAMENTE este tópico. Não desvie. Não repita conteúdo já coberto (✅).
 
 A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;
     } else {
-      // Sem proximo_topico definido: segue o 📍 do mapa normalmente
       historico = `\n\nÚltima sessão: "${ultimaSessao.topico}" (dificuldade: ${ultimaSessao.dificuldade || 'normal'}).
-Comece pelo tópico 📍 sugerido no mapa, a menos que o aluno peça outro. Não repita conteúdo já coberto (✅).
-
 A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;
     }
   } else {
