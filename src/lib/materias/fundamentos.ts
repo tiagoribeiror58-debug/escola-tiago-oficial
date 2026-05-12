@@ -24,16 +24,28 @@ export const fundamentosAcademicos: MateriaConfig = {
           contexto: `Foco: raciocínio matemático real — padrões, estrutura, modelagem.
 
 Abordagem obrigatória:
-- Explique o princípio matemático antes de apresentar o problema. O aluno precisa entender o que está sendo aplicado.
-- Para resolução de problemas: exija que o aluno justifique cada passo com base no princípio.
-- Nunca apresente fórmula sem explicar o que ela representa estruturalmente e de onde vem.`,
+- Explique o princípio matemático antes de apresentar o problema.
+- Para resolução de problemas: exija que o aluno justifique cada passo.
+- Nunca apresente fórmula sem explicar o que ela representa estruturalmente.`,
           ementa: [
             'A Lógica por trás das Frações e Proporções',
             'A Matemática do Comércio (Porcentagem)',
             'Equações do Primeiro Grau e Modelagem',
             'Geometria do Espaço e Pitágoras',
             'Funções como Máquinas de Transformação',
-            'Introdução à Análise Combinatória'
+            'Introdução à Análise Combinatória',
+            'Equações do Segundo Grau e a Fórmula de Bhaskara',
+            'Progressões Aritméticas e Geométricas',
+            'Logaritmos: A Escala Invisível do Mundo',
+            'Trigonometria: Seno, Cosseno e Tangente',
+            'Números Complexos e o Plano de Argand',
+            'Vetores e Geometria Analítica',
+            'Matrizes e Determinantes',
+            'Introdução ao Cálculo: Limites e Derivadas',
+            'Integrais: A Área sob a Curva',
+            'Equações Diferenciais Básicas',
+            'Teoria dos Números: Primos e Divisibilidade',
+            'Matemática Discreta e Grafos'
           ]
         },
         {
@@ -45,14 +57,25 @@ Abordagem obrigatória:
           contexto: `Foco: intuição física real — fenômenos, forças, conservação.
 
 Abordagem obrigatória:
-- Comece pelo fenômeno físico descrito em palavras. Explique o mecanismo intuitivo antes de qualquer equação.
-- A fórmula é a última etapa — ela formaliza o que o aluno já deve ter compreendido conceitualmente.`,
+- Comece pelo fenômeno físico descrito em palavras. A fórmula é a última etapa.`,
           ementa: [
             'Cinemática: O Estudo do Movimento',
             'As 3 Leis de Newton',
             'Trabalho, Energia e Conservação',
             'Termodinâmica (Calor e Desordem)',
-            'Eletromagnetismo Básico'
+            'Eletromagnetismo Básico',
+            'Dinâmica: Forças, Atrito e Planos Inclinados',
+            'Gravitação Universal e Órbitas',
+            'Oscilações e Ondas Mecânicas',
+            'Som: Física da Acústica',
+            'Óptica Geométrica: Lentes e Espelhos',
+            'Eletrostática e Campo Elétrico',
+            'Circuitos Elétricos (Lei de Ohm)',
+            'Magnetismo e Indução Eletromagnética',
+            'Física Moderna: Relatividade Especial',
+            'Física Quântica: O Princípio da Incerteza',
+            'Física Nuclear e Radioatividade',
+            'Astrofísica: Estrelas, Buracos Negros e Cosmologia'
           ]
         },
         {
@@ -67,7 +90,17 @@ Abordagem obrigatória:
             'A Tabela Periódica (Leitura de Propriedades)',
             'Ligações Químicas',
             'Estequiometria (A Receita da Reação)',
-            'Ácidos, Bases e pH'
+            'Ácidos, Bases e pH',
+            'Reações de Oxirredução',
+            'Soluções e Concentrações',
+            'Cinética Química e Catalisadores',
+            'Equilíbrio Químico e Le Chatelier',
+            'Química Orgânica: Hidrocarbonetos',
+            'Funções Orgânicas Essenciais',
+            'Polímeros: Do Petróleo ao Plástico',
+            'Bioquímica: Aminoácidos e Proteínas',
+            'Eletroquímica e Pilhas',
+            'Termodinâmica Química e Entalpia'
           ]
         },
         {
@@ -76,13 +109,23 @@ Abordagem obrigatória:
           emoji: '🧬',
           parent: 'ciencias-exatas',
           descricao: 'O estudo da vida, da célula aos ecossistemas complexos.',
-          contexto: `Foco: mecanismos biológicos reais. Use a teoria da evolução como lente principal: "qual pressão seletiva produziu isso?"`,
+          contexto: `Foco: mecanismos biológicos reais. Use a teoria da evolução como lente principal.`,
           ementa: [
             'A Célula: A Fábrica da Vida',
             'Genética e DNA',
             'Evolução e Seleção Natural',
             'Sistemas Fisiológicos Humanos',
-            'Ecologia e Teias Alimentares'
+            'Ecologia e Teias Alimentares',
+            'Divisão Celular: Mitose e Meiose',
+            'Hereditariedade e as Leis de Mendel',
+            'Mutações e Engenharia Genética (CRISPR)',
+            'Virologia: Como os Vírus Funcionam',
+            'Imunologia: O Sistema Imune em Detalhe',
+            'Endocrinologia: Hormônios e Regulação',
+            'Neurobiologia: Neurônios e Sinapses',
+            'Ecossistemas: Ciclos Biogeoquímicos',
+            'Biodiversidade e Extinção de Espécies',
+            'Biotecnologia e Aplicações Modernas'
           ]
         },
         {
@@ -93,13 +136,23 @@ Abordagem obrigatória:
           layout: 'split',
           widget: 'EconGraph',
           descricao: 'A linguagem da incerteza. Interpretar dados, viés e pensamento probabilístico.',
-          contexto: `Foco: raciocínio probabilístico. O aluno deve entender a intuição por trás da estatística para não ser enganado por números mal utilizados.`,
+          contexto: `Foco: raciocínio probabilístico. O aluno deve entender a intuição por trás da estatística.`,
           ementa: [
             'Média, Mediana e Moda',
             'Distribuição Normal e Desvio',
             'Probabilidade Condicional (Bayes)',
             'Correlação vs Causalidade',
-            'Viés de Amostragem'
+            'Viés de Amostragem',
+            'Variância e Desvio Padrão',
+            'Testes de Hipótese: p-valor e Significância',
+            'Intervalos de Confiança',
+            'Regressão Linear e Múltipla',
+            'Qui-Quadrado e Análise Categórica',
+            'Distribuições: Binomial, Poisson e Exponencial',
+            'ANOVA: Comparando Grupos',
+            'Visualização de Dados: Princípios de Edward Tufte',
+            'A/B Testing na Prática',
+            'Estatística Bayesiana vs Frequentista'
           ]
         }
       ]
@@ -118,14 +171,25 @@ Abordagem obrigatória:
           emoji: '⏳',
           parent: 'humanidades',
           descricao: 'Compreensão causal de eventos humanos e ciclos de civilizações.',
-          contexto: `Foco: causalidade histórica real. Nunca comece por datas ou nomes isolados. Comece pelas condições estruturais que tornaram um evento possível.`,
+          contexto: `Foco: causalidade histórica real. Nunca comece por datas ou nomes isolados.`,
           ementa: [
             'Revolução Agrícola e Cidades',
             'Império Romano: Ascensão e Queda',
             'Idade Média e Feudalismo',
             'Grandes Navegações e Globalização',
             'Revolução Industrial',
-            'Grandes Guerras (Visão Geopolítica)'
+            'Grandes Guerras (Visão Geopolítica)',
+            'Mesopotâmia, Egito e as Primeiras Civilizações',
+            'Grécia Antiga: Democracia e Filosofia',
+            'A Expansão Islâmica e o Califado',
+            'Renascimento e Reforma Protestante',
+            'Iluminismo e a Revolução Francesa',
+            'Colonialismo e o Impacto na América Latina',
+            'Guerra Fria: Ideologias e Proxy Wars',
+            'Descolonização da África e Ásia',
+            'A Queda do Muro e o Fim da URSS',
+            'Globalização: A Nova Ordem Mundial',
+            'Brasil: Da Colônia à República'
           ]
         },
         {
@@ -141,7 +205,19 @@ Abordagem obrigatória:
             'Aristóteles e a Ética',
             'Estoicismo (Controle da Mente)',
             'O Iluminismo e Kant',
-            'Nihilismo e Existencialismo'
+            'Nihilismo e Existencialismo',
+            'Filosofia Pré-Socrática: Os Primeiros Princípios',
+            'Epicurismo: A Filosofia do Prazer Consciente',
+            'Filosofia Medieval: Tomás de Aquino',
+            'Descartes e o Cogito Ergo Sum',
+            'Hume e o Problema da Indução',
+            'Utilitarismo: Bentham e Stuart Mill',
+            'Nietzsche: A Morte de Deus e o Super-Homem',
+            'Marxismo: Dialética Materialista',
+            'Fenomenologia: Husserl e Heidegger',
+            'Filosofia da Linguagem: Wittgenstein',
+            'Filosofia da Mente: Consciência e Qualia',
+            'Bioética e os Dilemas do Século XXI'
           ]
         },
         {
@@ -156,7 +232,17 @@ Abordagem obrigatória:
             'Clima e Biomas',
             'Demografia e Migrações',
             'Geopolítica Contemporânea',
-            'Cadeias Produtivas Globais'
+            'Cadeias Produtivas Globais',
+            'Placas Tectônicas e Desastres Naturais',
+            'Recursos Naturais e Conflitos',
+            'Urbanização e Metrópoles Globais',
+            'Desenvolvimento Humano (IDH)',
+            'Desigualdade Global: Norte vs Sul',
+            'Mudanças Climáticas e Consequências Geográficas',
+            'Geopolítica da Energia (Petróleo, Gás, Renováveis)',
+            'Blocos Econômicos: UE, Mercosul, ASEAN',
+            'A Nova Rota da Seda Chinesa',
+            'Conflitos Territoriais e Fronteiras Disputadas'
           ]
         },
         {
@@ -174,7 +260,17 @@ Abordagem obrigatória:
             'Custo de Oportunidade',
             'Inflação e Política Monetária',
             'Comércio Internacional',
-            'Ciclos Econômicos'
+            'Ciclos Econômicos',
+            'Elasticidade: Sensibilidade de Mercados',
+            'Falhas de Mercado e Externalidades',
+            'Teoria dos Jogos e Equilíbrio de Nash',
+            'Economia Comportamental (Kahneman & Thaler)',
+            'Política Fiscal: Impostos e Gastos do Governo',
+            'Sistema Financeiro: Bancos e Banco Central',
+            'Crescimento Econômico: Capital, Trabalho e Tecnologia',
+            'Desigualdade: Coeficiente de Gini',
+            'Economia Digital e Plataformas',
+            'Criptomoedas como Fenômeno Econômico'
           ]
         },
         {
@@ -189,7 +285,17 @@ Abordagem obrigatória:
             'Trovadorismo e Romantismo',
             'Machado de Assis e Realismo',
             'Modernismo',
-            'Ficção Científica e Distopias'
+            'Ficção Científica e Distopias',
+            'Tragédia Grega: Estrutura e Catarse',
+            'Shakespeare: Linguagem e Temas Universais',
+            'Realismo Mágico: García Márquez',
+            'Kafka e o Absurdo',
+            'Dostoiévski e a Psicologia Humana',
+            'Poesia: Métrica, Ritmo e Imagem',
+            'Narratologia: Narrador, Foco e Tempo',
+            'Literatura Brasileira: Do Barroco ao Contemporâneo',
+            'Ensaio e Não-Ficção como Forma Literária',
+            'Literatura e Poder: Como Textos Mudam Sociedades'
           ]
         },
         {
@@ -198,13 +304,23 @@ Abordagem obrigatória:
           emoji: '👥',
           parent: 'humanidades',
           descricao: 'O estudo das estruturas, normas e dinâmicas da sociedade.',
-          contexto: `Foco: Como estruturas invisíveis de poder, cultura e capital moldam as ações individuais. Ensine Weber, Marx e Durkheim pelas lentes de seus mecanismos explicativos.`,
+          contexto: `Foco: Como estruturas invisíveis de poder, cultura e capital moldam as ações individuais.`,
           ementa: [
             'Fato Social e Coesão (Durkheim)',
             'Classes e Conflito (Marx)',
             'Ação Social e Burocracia (Weber)',
             'Capital Cultural (Bourdieu)',
-            'Modernidade Líquida (Bauman)'
+            'Modernidade Líquida (Bauman)',
+            'Instituições Sociais: Família, Escola, Estado',
+            'Estratificação Social e Mobilidade',
+            'Deviance: Desvio e Controle Social',
+            'Racismo Estrutural e Interseccionalidade',
+            'Gênero como Construção Social',
+            'Globalização e Identidade Cultural',
+            'Movimentos Sociais e Ação Coletiva',
+            'Religião como Fenômeno Social',
+            'Sociologia Digital: Redes Sociais e Bolhas',
+            'Trabalho e Alienação na Pós-Modernidade'
           ]
         }
       ]
@@ -229,7 +345,17 @@ Abordagem obrigatória:
             'Acordes Menores (Am, Em)',
             'Acordes Maiores (C, G, D)',
             'Transição e Memória Muscular',
-            'Ritmo e Levadas'
+            'Ritmo e Levadas',
+            'Afinação e o Uso do Afinador',
+            'Acordes de Barra (F, Bm)',
+            'Pestana: Técnica e Desenvolvimento',
+            'Dedilhado Básico (Fingerpicking)',
+            'A Escala Pentatônica e o Solo de Blues',
+            'Improvisação sobre Progressões Comuns',
+            'Leitura de Cifras Avançadas (Sus4, Maj7, 9)',
+            'Ritmos Brasileiros: Samba, Baião e Bossa Nova',
+            'Violão Solo: Melodia com Acompanhamento',
+            'Efeitos de Dinâmica: Staccato, Vibrato e Hammer-On'
           ]
         },
         {
@@ -243,7 +369,18 @@ Abordagem obrigatória:
             'Postura e Numeração',
             'Acordes Naturais (Tríades)',
             'Progressões Pop',
-            'Independência das Mãos'
+            'Independência das Mãos',
+            'A Escala de Dó Maior e suas Posições',
+            'Leitura de Partitura: Clave de Sol e Fá',
+            'Arpejos e Quebra de Acordes',
+            'Acordes de Sétima (Dominant 7, Major 7)',
+            'O Ciclo de Quintas na Prática',
+            'Harmonia Funcional: Tônica, Dominante, Subdominante',
+            'Progressões de Jazz: ii-V-I',
+            'Dinâmica ao Piano: Piano, Forte, Crescendo',
+            'Ritmo na Mão Esquerda (Stride e Alberti Bass)',
+            'Improvisação com Escala Pentatônica',
+            'Leitura à Primeira Vista'
           ]
         },
         {
@@ -257,7 +394,18 @@ Abordagem obrigatória:
             'Escalas Maiores e Menores',
             'Formação de Tríades',
             'Intervalos Musicais',
-            'Campos Harmônicos'
+            'Campos Harmônicos',
+            'Notas e Figuras Rítmicas',
+            'Compassos: 2/4, 3/4, 4/4 e 6/8',
+            'Modos Gregos: Dórico, Frígio, Lídio...',
+            'Escala de Blues e Pentatônica',
+            'Cifras e Notação de Acordes',
+            'Progressões Clássicas e suas Funções',
+            'Harmonia Cromática e Tensões',
+            'Transposição: Mudando de Tom',
+            'Análise Harmônica de Músicas Reais',
+            'Contraponto Básico: Duas Vozes',
+            'Forma Musical: Verso, Refrão, Bridge'
           ]
         },
         {
@@ -266,13 +414,23 @@ Abordagem obrigatória:
           emoji: '🎨',
           parent: 'musica',
           descricao: 'A evolução visual da humanidade e análise de movimentos artísticos.',
-          contexto: `Foco: Como as correntes artísticas respondem aos avanços tecnológicos e crises sociais da sua época. Ensine a ler uma pintura antes de decorá-la.`,
+          contexto: `Foco: Como as correntes artísticas respondem aos avanços tecnológicos e crises sociais. Ensine a ler uma pintura antes de decorá-la.`,
           ementa: [
             'Renascimento (A Perspectiva)',
             'Barroco (O Drama e a Luz)',
             'Impressionismo (A Cor em Movimento)',
             'Modernismo e Cubismo',
-            'A Arte Contemporânea'
+            'A Arte Contemporânea',
+            'Arte Pré-histórica e o Surgimento do Símbolo',
+            'Arte Egípcia: Hierarquia e Eternidade',
+            'Arte Grega e Escultura Clássica',
+            'Arte Medieval: Ícones e Iluminuras',
+            'Romantismo: O Sublime e o Emocional',
+            'Realismo: A Arte como Crítica Social',
+            'Surrealismo e o Inconsciente',
+            'Arte Abstrata: Kandinsky e Mondrian',
+            'Pop Art: Warhol e a Cultura de Massa',
+            'Design como Arte: Bauhaus e Forma+Função'
           ]
         }
       ]

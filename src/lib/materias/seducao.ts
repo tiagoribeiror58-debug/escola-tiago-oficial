@@ -13,8 +13,8 @@ export const seducaoHub: MateriaConfig = {
       emoji: '🧠',
       descricao: 'A base de todo sucesso social. Construa uma autoimagem inabalável, destrua a ansiedade de aproximação e desenvolva a verdadeira independência emocional.',
       parent: 'seducao-hub',
-      whyStart: 'Comece aqui ou você vai desperdiçar todas as técnicas. Sem o estado interno correto, cada abordagem vai parecer forçada e vai ser percebida como tal. Esta é a fundação — nenhum outro módulo funciona sem ela.',
-      contexto: 'Foque em psicologia comportamental, estoicismo prático e reestruturação cognitiva. Ensine que a verdadeira confiança não é "saber que vai dar certo", mas "saber que ficará bem independente do resultado". Seja pragmático, não motivacional barato.',
+      whyStart: 'Comece aqui ou você vai desperdiçar todas as técnicas. Sem o estado interno correto, cada abordagem vai parecer forçada e vai ser percebida como tal.',
+      contexto: 'Foque em psicologia comportamental, estoicismo prático e reestruturação cognitiva. Ensine que a verdadeira confiança não é "saber que vai dar certo", mas "saber que ficará bem independente do resultado".',
       fases: [
         {
           nome: 'Fase 1: Fundação Mental',
@@ -22,7 +22,10 @@ export const seducaoHub: MateriaConfig = {
             'Desconstrução de Crenças Limitantes sobre Atração',
             'Ansiedade de Aproximação (AA): Entendendo a Resposta de Luta/Fuga',
             'Independência de Resultado: O Paradoxo da Atração',
-            'Validação Interna vs. Externa (O Fim da Necessidade)'
+            'Validação Interna vs. Externa (O Fim da Necessidade)',
+            'Identidade e Auto-Conceito: Quem você é quando ninguém está olhando',
+            'Masculinidade e Propósito: A Missão como Âncora',
+            'Superando o Nice Guy: Por que agradou demais não funciona'
           ]
         },
         {
@@ -31,7 +34,20 @@ export const seducaoHub: MateriaConfig = {
             'Controle de Frame: Quem dita a realidade da interação?',
             'Presença e Grounding (Ancoragem Física)',
             'Lidando com Rejeição como Feedback Direto',
-            'Abundância vs. Escassez na Prática'
+            'Abundância vs. Escassez na Prática',
+            'Estado Emocional: Como Calibrar sua Energia',
+            'Congruência: Alinhar o que você Pensa, Fala e Faz',
+            'Desapego do Resultado em Tempo Real'
+          ]
+        },
+        {
+          nome: 'Fase 3: Alta Performance Social',
+          topicos: [
+            'Construindo uma Rotina de Desenvolvimento Pessoal',
+            'Saindo da Zona de Conforto: O Protocolo de Exposição',
+            'Comunidade e Accountability para Inner Game',
+            'Meditação e Mindfulness para Presença Social',
+            'Alto Status: O que Realmente Projeta Dominância Social'
           ]
         }
       ]
@@ -42,8 +58,8 @@ export const seducaoHub: MateriaConfig = {
       emoji: '🚶‍♂️',
       descricao: 'A arte de iniciar interações do zero absoluto. Domine a linguagem corporal, as quebras de gelo e as transições rápidas em qualquer ambiente.',
       parent: 'seducao-hub',
-      whyStart: 'Com o estado interno calibrado, é hora de agir. Esta etapa desmonta o medo de abordar desconstruindo a mecânica da aproximação — ângulo, tonalidade, primeiros 10 segundos. Sem praticar isso, tudo fica só na teoria.',
-      contexto: 'Foque em mecânica pura: ângulos de aproximação, tonalidade de voz, calibração social e transições. Ensine "O Quê" e "Como" fazer, desmistificando a abordagem a frio como uma habilidade sistêmica.',
+      whyStart: 'Com o estado interno calibrado, é hora de agir. Esta etapa desmonta o medo de abordar desconstruindo a mecânica da aproximação.',
+      contexto: 'Foque em mecânica pura: ângulos de aproximação, tonalidade de voz, calibração social e transições.',
       fases: [
         {
           nome: 'Fase 1: O Abre-Alas',
@@ -51,7 +67,10 @@ export const seducaoHub: MateriaConfig = {
             'Linguagem Corporal de Alto Status (Postura, Contato Visual)',
             'A Regra dos 3 Segundos',
             'Abridores Diretos vs. Indiretos: Quando usar cada um',
-            'O Falso Limite de Tempo (False Time Constraint)'
+            'O Falso Limite de Tempo (False Time Constraint)',
+            'Tonalidade de Voz: Ascendente vs. Descendente',
+            'Onde Abordar: Dia vs. Noite, Ambientes e Contextos',
+            'O Stack: Encadeando Observações para Manter a Conversa'
           ]
         },
         {
@@ -60,7 +79,19 @@ export const seducaoHub: MateriaConfig = {
             'Assumindo Familiaridade (Assume Rapport)',
             'Transições Naturais: Saindo do Abridor para a Conversa',
             'Calibração Social: Lendo Sinais de Interesse (IOIs)',
-            'Como Pedir o Contato de Forma Fluida'
+            'Como Pedir o Contato de Forma Fluida',
+            'A Arte de Interromper e Voltar (False Exit)',
+            'Grupo Dinâmico: Abordando Quando Ela Não Está Sozinha',
+            'Lidando com Obstáculos (Cockblockers e Amigos)'
+          ]
+        },
+        {
+          nome: 'Fase 3: Volume e Consistência',
+          topicos: [
+            'Desenvolvendo uma Rotina Semanal de Abordagem',
+            'Field Reports: Como Analisar suas Saídas',
+            'Os 5 Estágios do Aprendizado de Cold Approach',
+            'Ambiente Day Game vs Night Game: Diferenças Táticas'
           ]
         }
       ]
@@ -71,8 +102,8 @@ export const seducaoHub: MateriaConfig = {
       emoji: '🔥',
       descricao: 'A atração não é lógica, é emocional. Aprenda a gerar tensão, quebrar a previsibilidade e criar picos emocionais que ancoram interesse real.',
       parent: 'seducao-hub',
-      whyStart: 'Você já sabe abrir. Agora precisa sustentar. Conversas lógicas matam o interesse — esta etapa ensina a criar variação emocional, tensão e mistério. É o que separa quem fica na zona de amizade de quem gera atração real.',
-      contexto: 'Foque em dinâmicas de conversação avançadas: Push/Pull, qualificação, tensão sexual e storytelling. Ensine a evocar emoções em vez de apenas trocar informações lógicas (entrevistas).',
+      whyStart: 'Você já sabe abrir. Agora precisa sustentar. Conversas lógicas matam o interesse — esta etapa ensina a criar variação emocional, tensão e mistério.',
+      contexto: 'Foque em dinâmicas de conversação avançadas: Push/Pull, qualificação, tensão sexual e storytelling.',
       fases: [
         {
           nome: 'Fase 1: Dinâmicas de Tensão',
@@ -80,7 +111,10 @@ export const seducaoHub: MateriaConfig = {
             'Fuga da Entrevista Lógica: Como Evocar Emoções',
             'A Mecânica do Push e Pull (Afastar e Puxar)',
             'Quebra de Rapport vs. Busca de Rapport',
-            'Provocações e Teasing Calibrado'
+            'Provocações e Teasing Calibrado',
+            'Misoginia vs. Playfulness: A Diferença Crítica',
+            'O Olhar e a Comunicação Não-Verbal',
+            'Criando Loops Abertos: O Interesse da Antecipação'
           ]
         },
         {
@@ -89,7 +123,18 @@ export const seducaoHub: MateriaConfig = {
             'Qualificação: O Jogo de Fazer a Pessoa Investir',
             'Storytelling Magnético: Estrutura de Boas Histórias',
             'Vulnerabilidade Forte: Conectando Níveis Profundos',
-            'Tensão Sexual: Escalação Verbal e Subtexto'
+            'Tensão Sexual: Escalação Verbal e Subtexto',
+            'Humor Como Ferramenta de Atração',
+            'Rapport Profundo: Encontrando Valores Comuns',
+            'A Transição do Flerte para a Conexão Real'
+          ]
+        },
+        {
+          nome: 'Fase 3: Maestria Conversacional',
+          topicos: [
+            'Fluxo de Estado: Conversando sem Esforço',
+            'Improvisação Emocional: Reagindo, não Planejando',
+            'Calibração Avançada: Lendo Microexpressões'
           ]
         }
       ]
@@ -100,8 +145,8 @@ export const seducaoHub: MateriaConfig = {
       emoji: '📱',
       descricao: 'O jogo mudou para as telas. Domine a escalada via WhatsApp/Instagram, como manter o interesse alto e fechar encontros de forma rápida e eficiente.',
       parent: 'seducao-hub',
-      whyStart: 'Depois da abordagem, o jogo vai para o celular. Aqui você aprende a não destruir pelo texto o que construiu pessoalmente — menos é mais, o objetivo é único: marcar o encontro.',
-      contexto: 'Foque na utilidade do texto: o objetivo do texto é marcar o encontro, não virar amigo por chat. Ensine economia de palavras, resposta a "shit tests" textuais, uso estratégico de mídias e geração de FOMO.',
+      whyStart: 'Depois da abordagem, o jogo vai para o celular. O objetivo é único: marcar o encontro.',
+      contexto: 'Foque na utilidade do texto: o objetivo do texto é marcar o encontro, não virar amigo por chat.',
       fases: [
         {
           nome: 'Fase 1: Fundamentos Digitais',
@@ -109,7 +154,10 @@ export const seducaoHub: MateriaConfig = {
             'A Primeira Mensagem (O Callback Humorístico)',
             'A Regra do Ouro do Texto: Objetivo é o Encontro',
             'Proporção de Investimento (Quem escreve mais?)',
-            'Tempo de Resposta Estratégico (Pacing)'
+            'Tempo de Resposta Estratégico (Pacing)',
+            'Tom e Calibração no Texto vs Ao Vivo',
+            'Emojis e Linguagem Informal: Quando usar',
+            'Como se Distinguir de 100 Outros Caras no Celular Dela'
           ]
         },
         {
@@ -118,7 +166,10 @@ export const seducaoHub: MateriaConfig = {
             'Shit Tests via Mensagem: Como Desarmar e Inverter',
             'Uso de Áudios e Fotos para Gerar Proximidade',
             'Reengajamento: Ressuscitando Contatos Frios (Ping Texts)',
-            'Fechamento Sólido: Extraindo o Sim para o Date'
+            'Fechamento Sólido: Extraindo o Sim para o Date',
+            'Instagram como Canal de Aquecimento',
+            'Quando e Como Ligar (Phone Game)',
+            'Gestão de Múltiplas Conversas sem Perder o Fio'
           ]
         }
       ]
@@ -129,8 +180,8 @@ export const seducaoHub: MateriaConfig = {
       emoji: '🌍',
       descricao: 'Pessoas atraentes têm vidas atraentes. Aprenda a estruturar seus círculos sociais, redes sociais e estilo de vida para que as interações ocorram no automático.',
       parent: 'seducao-hub',
-      whyStart: 'Até aqui você aprendeu a jogar o jogo. Agora você muda o tabuleiro. Esta etapa é sobre construir uma vida que gera atração passivamente — sem precisar de técnica toda vez que encontra alguém interessante.',
-      contexto: 'Foque em valor social, pré-seleção, e criação de eventos/comunidades onde o aluno seja o centro (Hub). Aborde também a vitrine digital (Instagram).',
+      whyStart: 'Até aqui você aprendeu a jogar o jogo. Agora você muda o tabuleiro.',
+      contexto: 'Foque em valor social, pré-seleção, e criação de eventos/comunidades onde o aluno seja o centro (Hub).',
       fases: [
         {
           nome: 'Fase 1: O Círculo de Valor',
@@ -138,7 +189,10 @@ export const seducaoHub: MateriaConfig = {
             'O Paradigma do Organizador (Seja o Conector)',
             'Valor Social Pré-Comunicado (Pré-Seleção)',
             'Efeito Halo: Grooming, Estilo e Primeira Impressão',
-            'Como Entrar em Círculos de Alto Valor'
+            'Como Entrar em Círculos de Alto Valor',
+            'Networking Estratégico: Conhecendo as Pessoas Certas',
+            'O Estilo como Comunicação Não-Verbal',
+            'Fitness como Base de Atração e Confiança'
           ]
         },
         {
@@ -147,7 +201,10 @@ export const seducaoHub: MateriaConfig = {
             'Vitrine Digital: Otimização Rápida de Instagram',
             'Wingman Dynamics: Como Agir em Dupla na Noite',
             'Hospedando Eventos: O Jogo de Morar Sozinho',
-            'Transição de Status: De Conhecido a Convidado VIP'
+            'Transição de Status: De Conhecido a Convidado VIP',
+            'Construindo uma Vida que Atrai sem Esforço Consciente',
+            'Missão e Propósito como o Maior Afrodisíaco',
+            'Viagens e Experiências como Capital Social'
           ]
         }
       ]
@@ -158,8 +215,8 @@ export const seducaoHub: MateriaConfig = {
       emoji: '👑',
       descricao: 'Atrair é a primeira parte. Aprenda a conduzir o encontro, fazer a manutenção do interesse e estabelecer limites de liderança em relacionamentos longos.',
       parent: 'seducao-hub',
-      whyStart: 'O módulo final. Tudo que você aprendeu antes era para chegar aqui. Relacionamentos de longo prazo exigem uma camada a mais: polaridade, liderança e manutenção da tensão sem perder a conexão.',
-      contexto: 'Foque na liderança masculina pragmática, dinâmica de encontros (locais, transições), e definição de limites. Aborde o conceito de polaridade sexual e como evitar a zona de conforto conjugal.',
+      whyStart: 'O módulo final. Tudo que você aprendeu antes era para chegar aqui. Relacionamentos de longo prazo exigem polaridade, liderança e manutenção da tensão.',
+      contexto: 'Foque na liderança masculina pragmática, dinâmica de encontros e definição de limites.',
       fases: [
         {
           nome: 'Fase 1: A Condução do Date',
@@ -167,7 +224,10 @@ export const seducaoHub: MateriaConfig = {
             'A Arquitetura do Encontro Perfeito (Múltiplos Venues)',
             'Liderança Decisiva: "Nós Vamos Ali" vs. "O Que Você Quer?"',
             'Escalada Física (Kino): Fluidez e Consentimento',
-            'A Transição para a Logística Final (A Casa)'
+            'A Transição para a Logística Final (A Casa)',
+            'O Primeiro Date: Objetivos, Duração e Dinâmica',
+            'Como Recuperar um Date que Está Esfriando',
+            'Pagando a Conta: A Abordagem Estratégica'
           ]
         },
         {
@@ -176,7 +236,18 @@ export const seducaoHub: MateriaConfig = {
             'Estabelecimento de Limites (Boundaries) no Início',
             'Polaridade Sexual: O Papel da Energia Masculina',
             'Lidando com Testes de Congruência em Relacionamentos',
-            'Prevenção do Efeito Amigo: Como Manter a Tensão Ativa'
+            'Prevenção do Efeito Amigo: Como Manter a Tensão Ativa',
+            'Relacionamento Aberto vs. Exclusivo: A Conversa',
+            'Ciúme e Possessividade: Gestão Estrutural',
+            'Saindo de um Relacionamento sem Dramas'
+          ]
+        },
+        {
+          nome: 'Fase 3: O Homem Completo',
+          topicos: [
+            'Integrando Tudo: Inner Game + Habilidades Sociais + Lifestyle',
+            'Saúde Mental em Relacionamentos Intensos',
+            'Quando Parar e Avaliar sua Vida Amorosa'
           ]
         }
       ]
