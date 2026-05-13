@@ -3,7 +3,7 @@ import { useFolhasEstado, useSessoes, calcularOfensiva, useEmentaConcluida } fro
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import MateriaCard from '@/components/MateriaCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen, ScrollText, Library, Flame, Play } from 'lucide-react';
+import { BookOpen, Library, Flame, Play } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -33,11 +33,6 @@ export default function Index() {
   
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
-
-  // Total de provas pendentes em todas as matérias
-  const totalProvasPendentes = estados
-    .filter(e => !e.config.isCategory)
-    .reduce((acc, e) => acc + e.provasPendentes, 0);
 
   const estadosFocados = foco.length > 0 
     ? estados.filter(e => foco.includes(e.config.slug))
@@ -106,19 +101,6 @@ export default function Index() {
               {ofensiva} {ofensiva === 1 ? 'dia' : 'dias'}
             </div>
 
-            {/* Atalho para o Portão de Avaliação */}
-            <button
-              onClick={() => navigate('/avaliacoes')}
-              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border border-border bg-card hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-all shadow-sm"
-            >
-              <ScrollText className="w-3.5 h-3.5" />
-              Avaliações
-              {totalProvasPendentes > 0 && (
-                <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-foreground text-background text-[10px] font-bold leading-none">
-                  {totalProvasPendentes}
-                </span>
-              )}
-            </button>
           </div>
         </div>
 
@@ -215,13 +197,9 @@ export default function Index() {
         )}
 
         {heroEstado && !isLoading && (() => {
-          const isMasteryReady = heroEstado.provasPendentes > 0;
-          // Quantas sessões o aluno fez no ciclo atual (0-9) — display-only
-          const sessoesNoCiclo = heroEstado.totalSessoes % 10;
           return (
             <div className="mb-8 relative overflow-hidden rounded-[2rem] border border-border/50 bg-gradient-to-b from-card to-background p-6 sm:p-8 shadow-2xl transition-all hover:border-border/80">
               <div className="absolute inset-0 bg-foreground/5 opacity-50 blur-3xl pointer-events-none" />
-              
               <div className="relative z-10 flex flex-col gap-6 sm:gap-8">
                 <div className="flex justify-between items-start">
                   <div>
@@ -229,46 +207,21 @@ export default function Index() {
                       {heroEstado.config.nome}
                     </h2>
                     <p className="text-muted-foreground mt-1 text-sm sm:text-base pr-8">
-                      {isMasteryReady
-                        ? 'Área dominada! Está na hora de provar seus conhecimentos.'
-                        : `Sua matéria de maior foco. Faltam ${10 - sessoesNoCiclo} sessões para o Desafio de Maestria.`}
+                      Sua matéria de maior foco.
                     </p>
                   </div>
                   <div className="w-14 h-14 rounded-full bg-foreground/5 flex items-center justify-center text-2xl shrink-0">
                     {heroEstado.config.emoji}
                   </div>
                 </div>
-                
                 <div className="flex flex-col gap-3">
                   <button
-                    onClick={() => {
-                      if (isMasteryReady) {
-                        navigate(`/sessao/${heroEstado.config.slug}?modo=desafio`);
-                      } else {
-                        navigate(`/sessao/${heroEstado.config.slug}?sub=${encodeURIComponent(nextTopic)}`);
-                      }
-                    }}
-                    className={cn(
-                      "w-full sm:w-auto self-start px-8 py-3.5 rounded-xl font-medium transition-all text-sm shadow-xl flex items-center justify-center gap-2",
-                      isMasteryReady
-                        ? "bg-[hsl(var(--success))] text-white shadow-[hsl(var(--success)/0.2)] hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
-                        : "bg-foreground text-background shadow-foreground/10 hover:opacity-90 active:scale-95"
-                    )}
+                    onClick={() => navigate(`/sessao/${heroEstado.config.slug}?sub=${encodeURIComponent(nextTopic)}`)}
+                    className="w-full sm:w-auto self-start px-8 py-3.5 rounded-xl font-medium transition-all text-sm shadow-xl flex items-center justify-center gap-2 bg-foreground text-background shadow-foreground/10 hover:opacity-90 active:scale-95"
                   >
-                    {!isMasteryReady && <Play className="w-4 h-4 fill-current" />}
-                    {isMasteryReady 
-                      ? `Desafio de Maestria` 
-                      : `Continuar: ${nextTopic}`}
+                    <Play className="w-4 h-4 fill-current" />
+                    {`Continuar: ${nextTopic}`}
                   </button>
-
-                  {isMasteryReady && (
-                    <button
-                      onClick={() => handleCardClick(heroEstado)}
-                      className="text-xs text-muted-foreground hover:text-foreground transition-colors underline-offset-4 hover:underline self-start px-1"
-                    >
-                      Agora não — continuar estudando
-                    </button>
-                  )}
                 </div>
               </div>
             </div>

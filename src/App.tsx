@@ -7,7 +7,6 @@ import Index from "./pages/Index.tsx";
 import Sessao from "./pages/Sessao.tsx";
 import Historico from "./pages/Historico.tsx";
 import Categoria from "./pages/Categoria.tsx";
-import Avaliacoes from "./pages/Avaliacoes.tsx";
 import Biblioteca from "./pages/Biblioteca.tsx";
 import EmentaPage from "./pages/EmentaPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -26,7 +25,6 @@ const App = () => (
           <Route path="/historico/:materia" element={<Historico />} />
           <Route path="/categoria/:slug" element={<Categoria />} />
           <Route path="/categoria/:slug/:sub" element={<Categoria />} />
-          <Route path="/avaliacoes" element={<Avaliacoes />} />
           <Route path="/biblioteca" element={<Biblioteca />} />
           <Route path="/ementa/:slug" element={<EmentaPage />} />
           <Route path="*" element={<NotFound />} />

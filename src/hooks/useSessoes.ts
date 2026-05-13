@@ -11,7 +11,7 @@ export function useSessoes() {
       // Use useSessionMessages(id) para carregar lazy quando necessario
       const { data, error } = await supabase
         .from('sessoes')
-        .select('id, materia, topico, data, erros, dificuldade, duracao_min, observacoes, proximo_topico, created_at, nivel, decisao_proxima, proxima_revisao, session_key, is_mastery')
+        .select('id, materia, topico, data, erros, dificuldade, duracao_min, observacoes, proximo_topico, created_at, nivel, decisao_proxima, proxima_revisao, session_key')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -81,22 +81,12 @@ export function buildMateriaEstado(config: MateriaConfig, sessoes: Sessao[]): Ma
   const diasParada = ultimaSessao ? calcularDiasParada(ultimaSessao.data) : null;
   const diasAteRevisao = ultimaSessao ? calcularDiasAteRevisao(ultimaSessao.proxima_revisao) : null;
 
-  // Cálculo de provas pendentes:
-  // Sessões normais = todas que não são desafios
-  // A cada 10 sessões normais completas, o aluno "ganhou" 1 prova
-  // provasPendentes = ciclosCompletados - provas já realizadas
-  const sessoesNormais = sessoesMateria.filter(s => !s.is_mastery).length;
-  const provasRealizadas = sessoesMateria.filter(s => s.is_mastery).length;
-  const ciclosCompletados = Math.floor(sessoesNormais / 10);
-  const provasPendentes = Math.max(0, ciclosCompletados - provasRealizadas);
-
   return {
     config,
     ultimaSessao,
     totalSessoes: sessoesMateria.length,
     diasParada,
     diasAteRevisao,
-    provasPendentes,
   };
 }
 
@@ -155,7 +145,7 @@ export function useRecentSessoes(materia: string, limit = 6) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('sessoes')
-        .select('id, topico, dificuldade, erros, nivel, data, created_at, proximo_topico, observacoes, is_mastery')
+        .select('id, topico, dificuldade, erros, nivel, data, created_at, proximo_topico, observacoes')
         .eq('materia', materia)
         .order('created_at', { ascending: false })
         .limit(limit);

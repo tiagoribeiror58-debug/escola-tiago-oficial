@@ -14,7 +14,6 @@ export interface Sessao {
   proxima_revisao: string | null;
   session_key?: string | null;
   messages_json?: ChatMessage[] | null; // snapshot da conversa salvo ao encerrar
-  is_mastery?: boolean | null; // true se esta sessão foi um Desafio de Maestria
 }
 
 export interface EmentaFase {
@@ -45,7 +44,6 @@ export interface MateriaEstado {
   totalSessoes: number;
   diasParada: number | null;
   diasAteRevisao: number | null;
-  provasPendentes: number; // quantos Desafios de Maestria o aluno desbloqueou mas não fez
 }
 
 export interface ChatMessage {

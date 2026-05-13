@@ -4,7 +4,7 @@ import { buildSystemPrompt } from '@/lib/buildPrompt';
 import { useSaveChatMessage } from '@/hooks/useChatMessages';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
-import { ArrowUp, Loader2, Zap, ZapOff, History, Volume2, VolumeX, Mic, MicOff, Music2 } from 'lucide-react';
+import { ArrowUp, Loader2, Zap, ZapOff, History, Volume2, VolumeX, Music2 } from 'lucide-react';
 import { playPopSound, playThinkingDoneSound, playSuccessSound } from '@/lib/audioUtils';
 import confetti from 'canvas-confetti';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -43,45 +43,24 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const autoStartFiredRef = useRef(false); // guard contra double auto-start (StrictMode)
-  const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [ttsRate, setTtsRate] = useState(1.0);
-  const recognitionRef = useRef<any>(null);
   const musicRef = useRef<HTMLAudioElement | null>(null);
+  const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
 
-  // Initialize Speech Recognition
+
+
+  // Carrega vozes assim que o browser disponibiliza (evento assíncrono)
+  // Sem esse listener, getVoices() retorna [] na primeira chamada e a voz cai
+  // para o padrão do sistema (geralmente inglês).
   useEffect(() => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = false;
-      recognitionRef.current.interimResults = true;
-      recognitionRef.current.lang = 'pt-BR';
-
-      recognitionRef.current.onresult = (event: any) => {
-        let interimTranscript = '';
-        let finalTranscript = '';
-
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript;
-          } else {
-            interimTranscript += event.results[i][0].transcript;
-          }
-        }
-        
-        if (finalTranscript) {
-          setInput(prev => prev + ' ' + finalTranscript.trim());
-        }
-      };
-
-      recognitionRef.current.onend = () => setIsListening(false);
-      recognitionRef.current.onerror = (event: any) => {
-        console.error('Speech recognition error', event.error);
-        setIsListening(false);
-      };
-    }
+    const loadVoices = () => {
+      voicesRef.current = window.speechSynthesis.getVoices();
+    };
+    loadVoices(); // tenta imediatamente (já estão carregadas em recargas)
+    window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
+    return () => window.speechSynthesis.removeEventListener('voiceschanged', loadVoices);
   }, []);
 
   // Initialize ambient music player
@@ -96,28 +75,21 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     };
   }, []);
 
-  const toggleListening = () => {
-    if (isListening) {
-      recognitionRef.current?.stop();
-      setIsListening(false);
-    } else {
-      try {
-        recognitionRef.current?.start();
-        setIsListening(true);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  };
 
-  // Seleciona a voz mais natural disponível.
-  // Prioridade: Google Neural (pt-BR) → qualquer pt-BR → qualquer pt
-  // Vozes "Google" no Chrome são sintetizadas online e soam bem mais naturais.
+  // Seleciona a voz mais natural disponível a partir do cache assíncrono.
+  // Hierarquia de prioridade (do mais natural ao mais genérico):
+  //   1. "Google português do Brasil" — voz neural online do Chrome (melhor)
+  //   2. Qualquer Google pt
+  //   3. Qualquer voz pt-BR nativa do SO
+  //   4. Qualquer voz pt
   const getBestVoice = (): SpeechSynthesisVoice | null => {
-    const voices = window.speechSynthesis.getVoices();
+    const voices = voicesRef.current.length
+      ? voicesRef.current
+      : window.speechSynthesis.getVoices(); // fallback síncrono
     return (
-      voices.find(v => v.name.toLowerCase().includes('google') && v.lang.includes('pt')) ||
-      voices.find(v => v.lang.includes('pt-BR') || v.lang.includes('pt_BR')) ||
+      voices.find(v => v.name === 'Google português do Brasil') ||
+      voices.find(v => v.name.toLowerCase().includes('google') && v.lang.startsWith('pt')) ||
+      voices.find(v => v.lang === 'pt-BR' || v.lang === 'pt_BR') ||
       voices.find(v => v.lang.startsWith('pt')) ||
       null
     );
@@ -153,6 +125,9 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     const utterance = new SpeechSynthesisUtterance(clean);
     utterance.lang = 'pt-BR';
     utterance.rate = ttsRate;
+    // Pitch 0.95 → ligeiramente mais grave que o padrão (1.0).
+    // Vozes Google pt-BR soam mais naturais e autoritativas nesse range.
+    utterance.pitch = 0.95;
     const voice = getBestVoice();
     if (voice) utterance.voice = voice;
     utterance.onend = () => setIsSpeaking(false);
@@ -350,24 +325,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
         onTopicComplete?.();
       }
 
-      // Detect mastery_passed signal
-      if (assistantContent.includes('<mastery_passed/>')) {
-        assistantContent = assistantContent.replace(/<mastery_passed\/>/gi, '').trimEnd();
-        setMessages(prev => prev.map((m, i) =>
-          i === prev.length - 1 ? { ...m, content: assistantContent } : m
-        ));
-        confetti({
-          particleCount: 200,
-          spread: 100,
-          origin: { y: 0.6 },
-          colors: ['#eab308', '#f59e0b', '#fbbf24'],
-          disableForReducedMotion: true
-        });
-        playSuccessSound();
-        onTopicComplete?.();
-      }
 
-      // ==== GENERATIVE UI: Widget Store Injection ====
       const codeMatch = assistantContent.match(/```(?:javascript|js|typescript|ts)\n([\s\S]*?)```/);
       if (codeMatch) {
          useWidgetStore.getState().setCodeSnippet(codeMatch[1].trim());
@@ -653,28 +611,8 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                 {/* Spacer quando chips estão desabilitados */}
                 {showChipsRow && !chipsEnabled && <div className="flex-1" />}
 
-                {/* Grupo direito: velocidade + toggle chips */}
+                {/* Grupo direito: toggle chips */}
                 <div className="flex items-center gap-1.5 ml-auto shrink-0">
-                  {/* Controles de velocidade do narrador */}
-                  {hasTTS && (
-                    <div className="flex items-center gap-0.5 bg-muted rounded-lg px-1 py-1">
-                      {([0.75, 1, 1.25, 1.5] as const).map(speed => (
-                        <button
-                          key={speed}
-                          onClick={() => setTtsRate(speed)}
-                          className={cn(
-                            'text-[10px] font-mono px-1.5 py-0.5 rounded-md transition-all',
-                            ttsRate === speed
-                              ? 'bg-foreground text-background font-bold'
-                              : 'text-muted-foreground hover:text-foreground'
-                          )}
-                          title={`Velocidade ${speed}x`}
-                        >
-                          {speed}×
-                        </button>
-                      ))}
-                    </div>
-                  )}
                   {/* Toggle chips */}
                   {showChipsRow && (dynamicChips.length > 0 || !chipsEnabled) && (
                     <button
@@ -692,6 +630,27 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               </div>
             );
           })()}
+
+          {/* Barra de velocidade do narrador — aparece APENAS quando está narrando */}
+          {isSpeaking && (
+            <div className="flex items-center gap-1 mb-1 w-full justify-center animate-in fade-in-0 slide-in-from-bottom-1 duration-200">
+              <span className="text-[9px] text-muted-foreground/50 uppercase tracking-widest mr-1">velocidade</span>
+              {([0.75, 1, 1.25, 1.5] as const).map(speed => (
+                <button
+                  key={speed}
+                  onClick={() => setTtsRate(speed)}
+                  className={cn(
+                    'text-[10px] font-mono px-2 py-0.5 rounded-full transition-all',
+                    ttsRate === speed
+                      ? 'bg-foreground text-background font-bold'
+                      : 'text-muted-foreground/60 hover:text-muted-foreground'
+                  )}
+                >
+                  {speed}×
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Linha do input — apenas textarea + botões de ação */}
           <div className="flex items-end gap-2 w-full">
@@ -725,18 +684,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               <Music2 className="w-4 h-4" />
             </button>
 
-            {recognitionRef.current && (
-              <button
-                onClick={toggleListening}
-                className={cn(
-                  'flex items-center justify-center w-9 h-9 rounded-full shrink-0 transition-all',
-                  isListening ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80'
-                )}
-                title={isListening ? 'Parar de ouvir' : 'Falar'}
-              >
-                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-              </button>
-            )}
+
             <button
               onClick={() => {
                 playPopSound();

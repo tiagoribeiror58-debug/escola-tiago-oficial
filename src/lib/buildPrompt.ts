@@ -20,22 +20,6 @@ export function buildSystemPrompt(
   sessoesRecentes?: Sessao[]
 ): string {
 
-  // ─── MODO DESAFIO ───────────────────────────────────────────────────────────
-  if (modo === 'desafio') {
-    const temas = ultimaSessao
-      ? `${ultimaSessao.topico}${ultimaSessao.proximo_topico ? `, ${ultimaSessao.proximo_topico}` : ''}`
-      : 'Temas da matéria';
-    return `Você é um avaliador técnico do Tiago. Teste o que ele aprendeu — não ensine.
-
-REGRAS:
-- Uma pergunta técnica por vez. Exija respostas fundamentadas.
-- Se demonstrar domínio real: encerre com "Domínio comprovado." + <mastery_passed/> na última linha.
-- Se houver lacunas: encerre com <session_done/> e aponte os pontos a revisar.
-- Chips: inclua <chips>opção 1|opção 2</chips> isolado na última linha quando quiser sugerir opções.
-
-Matéria: ${materia.nome} | Tópicos: ${temas}
-Faça a primeira pergunta agora.`;
-  }
 
   // ─── CALCULAR TÓPICO ATUAL (DETERMINÍSTICO) ─────────────────────────────────
   const ementa = materia.fases
@@ -134,7 +118,6 @@ Esta regra não tem exceção. Referências cruzadas são permitidas, mas a AULA
   if (sessoesRecentes && sessoesRecentes.length > 0) {
     const linhas = [...sessoesRecentes]
       .reverse()
-      .filter(s => !s.is_mastery)
       .map(s => {
         const dif = s.dificuldade || '?';
         const erros = s.erros ?? 0;

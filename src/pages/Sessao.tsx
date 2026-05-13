@@ -168,7 +168,6 @@ export default function Sessao() {
         duracao_min: duracaoMin > 0 ? duracaoMin : 1,
         session_key: sessionKey,
         messages_json: messagesSnapshot,
-        is_mastery: modo === 'avaliacao' || modo === 'desafio', // marca se foi um Exame de Proficiência (ambos os caminhos: Avaliações e Hero Card)
       });
 
       if (error) throw error;
