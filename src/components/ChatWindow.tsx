@@ -620,17 +620,22 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
 
       <div className="border-t border-border p-3">
         <div className="flex items-end gap-2 max-w-3xl mx-auto flex-col w-full">
-          {/* Quick Action Chips + Toggle */}
-          {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (() => {
-            const lastMsg = messages[messages.length - 1];
-            const match = lastMsg.content.match(/<chips>([\s\S]*?)<\/chips>/i);
+          {/* Quick Action Chips + Speed Controls + Toggle — linha superior */}
+          {(() => {
+            const showChipsRow =
+              !isLoading &&
+              messages.length > 0 &&
+              messages[messages.length - 1].role === 'assistant';
+            const lastMsg = showChipsRow ? messages[messages.length - 1] : null;
+            const match = lastMsg?.content.match(/<chips>([\s\S]*?)<\/chips>/i);
             const dynamicChips = match ? match[1].split('|').map(c => c.trim()).filter(Boolean) : [];
-            if (dynamicChips.length === 0 && !chipsEnabled) return null;
+            const hasTTS = 'speechSynthesis' in window;
+            if (!showChipsRow && !hasTTS) return null;
             return (
-              <div className="flex items-center gap-2 mb-2 w-full">
-                {/* Chips visíveis apenas se enabled */}
-                {chipsEnabled && (
-                  <div className="flex flex-wrap gap-2 flex-1">
+              <div className="flex items-center gap-2 mb-2 w-full flex-wrap">
+                {/* Chips visíveis apenas se enabled e se há chips */}
+                {showChipsRow && chipsEnabled && dynamicChips.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 flex-1 min-w-0">
                     {dynamicChips.map((action, idx) => (
                       <button
                         key={idx}
@@ -638,29 +643,57 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                           playPopSound();
                           handleSend(action);
                         }}
-                        className="text-[11px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-foreground hover:text-background transition-colors active:scale-95"
+                        className="text-[11px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-foreground hover:text-background transition-colors active:scale-95 whitespace-nowrap"
                       >
                         {action}
                       </button>
                     ))}
                   </div>
                 )}
-                {!chipsEnabled && <div className="flex-1" />}
-                {/* Toggle button */}
-                <button
-                  onClick={() => setChipsEnabled(v => !v)}
-                  title={chipsEnabled ? 'Desativar sugestões' : 'Ativar sugestões'}
-                  className="shrink-0 p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted transition-colors"
-                >
-                  {chipsEnabled
-                    ? <Zap className="w-3.5 h-3.5" />
-                    : <ZapOff className="w-3.5 h-3.5" />
-                  }
-                </button>
+                {/* Spacer quando chips estão desabilitados */}
+                {showChipsRow && !chipsEnabled && <div className="flex-1" />}
+
+                {/* Grupo direito: velocidade + toggle chips */}
+                <div className="flex items-center gap-1.5 ml-auto shrink-0">
+                  {/* Controles de velocidade do narrador */}
+                  {hasTTS && (
+                    <div className="flex items-center gap-0.5 bg-muted rounded-lg px-1 py-1">
+                      {([0.75, 1, 1.25, 1.5] as const).map(speed => (
+                        <button
+                          key={speed}
+                          onClick={() => setTtsRate(speed)}
+                          className={cn(
+                            'text-[10px] font-mono px-1.5 py-0.5 rounded-md transition-all',
+                            ttsRate === speed
+                              ? 'bg-foreground text-background font-bold'
+                              : 'text-muted-foreground hover:text-foreground'
+                          )}
+                          title={`Velocidade ${speed}x`}
+                        >
+                          {speed}×
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {/* Toggle chips */}
+                  {showChipsRow && (dynamicChips.length > 0 || !chipsEnabled) && (
+                    <button
+                      onClick={() => setChipsEnabled(v => !v)}
+                      title={chipsEnabled ? 'Desativar sugestões' : 'Ativar sugestões'}
+                      className="shrink-0 p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted transition-colors"
+                    >
+                      {chipsEnabled
+                        ? <Zap className="w-3.5 h-3.5" />
+                        : <ZapOff className="w-3.5 h-3.5" />
+                      }
+                    </button>
+                  )}
+                </div>
               </div>
             );
           })()}
 
+          {/* Linha do input — apenas textarea + botões de ação */}
           <div className="flex items-end gap-2 w-full">
             <textarea
               ref={inputRef}
@@ -677,26 +710,6 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               )}
               style={{ minHeight: '40px', maxHeight: '128px' }}
             />
-            {/* Controles de velocidade do narrador — aparecem apenas se TTS está disponível */}
-            {'speechSynthesis' in window && (
-              <div className="flex items-center gap-0.5 bg-muted rounded-lg px-1 py-1">
-                {([0.75, 1, 1.25, 1.5] as const).map(speed => (
-                  <button
-                    key={speed}
-                    onClick={() => setTtsRate(speed)}
-                    className={cn(
-                      'text-[10px] font-mono px-1.5 py-0.5 rounded-md transition-all',
-                      ttsRate === speed
-                        ? 'bg-foreground text-background font-bold'
-                        : 'text-muted-foreground hover:text-foreground'
-                    )}
-                    title={`Velocidade ${speed}x`}
-                  >
-                    {speed}×
-                  </button>
-                ))}
-              </div>
-            )}
 
             {/* Botão de ruído branco ambiente */}
             <button
