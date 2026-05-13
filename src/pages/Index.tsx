@@ -8,7 +8,8 @@ import { MateriaEstado } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
-import { Search } from 'lucide-react';
+import { Search, History } from 'lucide-react';
+import { HistoricoGlobalDrawer } from '@/components/HistoricoGlobalDrawer';
 
 function getGreeting(): string {
   const h = new Date().getHours();
@@ -33,6 +34,7 @@ export default function Index() {
   
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
+  const [isHistoricoOpen, setIsHistoricoOpen] = useState(false);
 
   const estadosFocados = foco.length > 0 
     ? estados.filter(e => foco.includes(e.config.slug))
@@ -90,6 +92,15 @@ export default function Index() {
           </div>
           
           <div className="flex items-center gap-2">
+            {/* Botão do Histórico */}
+            <button
+              onClick={() => setIsHistoricoOpen(true)}
+              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
+            >
+              <History className="w-3.5 h-3.5" />
+              Histórico
+            </button>
+
             {/* Atalho Ofensiva */}
             <div className={cn(
               "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all shadow-sm",
@@ -235,6 +246,11 @@ export default function Index() {
         estado={selectedEstado} 
         open={modalOpen} 
         onOpenChange={setModalOpen} 
+      />
+
+      <HistoricoGlobalDrawer
+        open={isHistoricoOpen}
+        onOpenChange={setIsHistoricoOpen}
       />
     </div>
   );
