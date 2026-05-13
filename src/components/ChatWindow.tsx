@@ -4,7 +4,7 @@ import { buildSystemPrompt } from '@/lib/buildPrompt';
 import { useSaveChatMessage } from '@/hooks/useChatMessages';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
-import { ArrowUp, Loader2, Zap, ZapOff, History, Volume2, Mic, MicOff } from 'lucide-react';
+import { ArrowUp, Loader2, Zap, ZapOff, History, Volume2, VolumeX, Mic, MicOff, Music2 } from 'lucide-react';
 import { playPopSound, playThinkingDoneSound, playSuccessSound } from '@/lib/audioUtils';
 import confetti from 'canvas-confetti';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -43,7 +43,10 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const autoStartFiredRef = useRef(false); // guard contra double auto-start (StrictMode)
   const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const recognitionRef = useRef<any>(null);
+  const musicRef = useRef<HTMLAudioElement | null>(null);
 
   // Initialize Speech Recognition
   useEffect(() => {
@@ -66,23 +69,29 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
           }
         }
         
-        // Update input with the recognized text
         if (finalTranscript) {
           setInput(prev => prev + ' ' + finalTranscript.trim());
-        } else if (interimTranscript) {
-           // Optional: You could show interim text if desired
         }
       };
 
-      recognitionRef.current.onend = () => {
-        setIsListening(false);
-      };
-      
+      recognitionRef.current.onend = () => setIsListening(false);
       recognitionRef.current.onerror = (event: any) => {
         console.error('Speech recognition error', event.error);
         setIsListening(false);
       };
     }
+  }, []);
+
+  // Initialize ambient music player
+  useEffect(() => {
+    const audio = new Audio('/ruido-branco.mp3');
+    audio.loop = true;
+    audio.volume = 0.4;
+    musicRef.current = audio;
+    return () => {
+      audio.pause();
+      audio.src = '';
+    };
   }, []);
 
   const toggleListening = () => {
@@ -99,17 +108,53 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     }
   };
 
-  const playTTS = (text: string) => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel(); // Stop any ongoing speech
-      const utterance = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, ''));
-      utterance.lang = 'pt-BR';
-      // Find a good Portuguese voice if available
-      const voices = window.speechSynthesis.getVoices();
-      const ptVoice = voices.find(v => v.lang.includes('pt-BR') || v.lang.includes('pt_BR'));
-      if (ptVoice) utterance.voice = ptVoice;
-      
-      window.speechSynthesis.speak(utterance);
+  // Remove markdown antes de enviar para o TTS — evita que ele leia "asterisco asterisco", "hashtag" etc.
+  const stripMarkdown = (text: string) =>
+    text
+      .replace(/```[\s\S]*?```/g, 'bloco de código.')   // code blocks
+      .replace(/`[^`]+`/g, '')                           // inline code
+      .replace(/\*\*(.+?)\*\*/g, '$1')                   // negrito
+      .replace(/\*(.+?)\*/g, '$1')                       // itálico
+      .replace(/__(.+?)__/g, '$1')                       // negrito underscore
+      .replace(/_(.+?)_/g, '$1')                         // itálico underscore
+      .replace(/#{1,6}\s+/g, '')                         // headers
+      .replace(/\[(.+?)\]\(.+?\)/g, '$1')               // links
+      .replace(/>\s*/g, '')                              // blockquotes
+      .replace(/^[-*+]\s+/gm, '')                        // listas
+      .replace(/<[^>]+>/g, '')                           // tags HTML
+      .replace(/\n{2,}/g, '. ')                          // quebras duplas viram pausa
+      .replace(/\n/g, ' ')                               // quebras simples viram espaço
+      .trim();
+
+  const toggleTTS = (text: string) => {
+    if (!('speechSynthesis' in window)) return;
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const clean = stripMarkdown(text);
+    const utterance = new SpeechSynthesisUtterance(clean);
+    utterance.lang = 'pt-BR';
+    utterance.rate = 0.92;  // levemente mais lento = mais natural
+    const voices = window.speechSynthesis.getVoices();
+    const ptVoice = voices.find(v => v.lang.includes('pt-BR') || v.lang.includes('pt_BR'));
+    if (ptVoice) utterance.voice = ptVoice;
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    setIsSpeaking(true);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const toggleMusic = () => {
+    if (!musicRef.current) return;
+    if (isMusicPlaying) {
+      musicRef.current.pause();
+      setIsMusicPlaying(false);
+    } else {
+      musicRef.current.play().catch(() => {});
+      setIsMusicPlaying(true);
     }
   };
 
@@ -479,11 +524,19 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                   {mainContent && (
                     <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 whitespace-pre-wrap break-words relative group">
                       <button 
-                        onClick={() => playTTS(mainContent)}
-                        className="absolute -right-2 -top-2 p-1.5 rounded-md bg-background/80 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:text-foreground"
-                        title="Ouvir"
+                        onClick={() => toggleTTS(mainContent)}
+                        className={cn(
+                          'absolute -right-2 -top-2 p-1.5 rounded-md bg-background/80 transition-opacity hover:text-foreground',
+                          isSpeaking
+                            ? 'opacity-100 text-primary'
+                            : 'text-muted-foreground opacity-0 group-hover:opacity-100'
+                        )}
+                        title={isSpeaking ? 'Pausar narração' : 'Ouvir'}
                       >
-                        <Volume2 className="w-3.5 h-3.5" />
+                        {isSpeaking
+                          ? <VolumeX className="w-3.5 h-3.5" />
+                          : <Volume2 className="w-3.5 h-3.5" />
+                        }
                       </button>
                       <ReactMarkdown
                         components={{
@@ -588,6 +641,20 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               )}
               style={{ minHeight: '40px', maxHeight: '128px' }}
             />
+            {/* Botão de ruído branco ambiente */}
+            <button
+              onClick={toggleMusic}
+              className={cn(
+                'flex items-center justify-center w-9 h-9 rounded-full shrink-0 transition-all',
+                isMusicPlaying
+                  ? 'bg-emerald-500/20 text-emerald-400 animate-pulse'
+                  : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80'
+              )}
+              title={isMusicPlaying ? 'Pausar ruído branco' : 'Tocar ruído branco para foco'}
+            >
+              <Music2 className="w-4 h-4" />
+            </button>
+
             {recognitionRef.current && (
               <button
                 onClick={toggleListening}
@@ -595,7 +662,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                   'flex items-center justify-center w-9 h-9 rounded-full shrink-0 transition-all',
                   isListening ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80'
                 )}
-                title={isListening ? "Parar de ouvir" : "Falar"}
+                title={isListening ? 'Parar de ouvir' : 'Falar'}
               >
                 {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
               </button>
