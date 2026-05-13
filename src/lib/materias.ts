@@ -13,8 +13,8 @@ export const MATERIAS: MateriaConfig[] = [
   comunicacaoInfluencia,
   fundamentosAcademicos,
   tecnologiaHub,
+  primeirosprincipiosHub,
   seducaoHub,
-  primeirosprincipiosHub
 ];
 
 export function getMateriaBySlug(slug: string, list: MateriaConfig[] = MATERIAS): MateriaConfig | undefined {
