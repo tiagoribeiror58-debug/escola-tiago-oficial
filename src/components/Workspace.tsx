@@ -1,13 +1,4 @@
 import { MateriaConfig } from '@/types';
-import { cn } from '@/lib/utils';
-import { FinanceLab } from '@/components/widgets/FinanceLab';
-import { LegalViewer } from '@/components/widgets/LegalViewer';
-import { CodeLab } from '@/components/widgets/CodeLab';
-import { NegotiationBoard } from '@/components/widgets/NegotiationBoard';
-import { ArgumentMap } from '@/components/widgets/ArgumentMap';
-import { FlashcardDeck } from '@/components/widgets/FlashcardDeck';
-import { EconGraph } from '@/components/widgets/EconGraph';
-import { UserStoryBuilder } from '@/components/widgets/UserStoryBuilder';
 
 interface Props {
   materia: MateriaConfig;

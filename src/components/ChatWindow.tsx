@@ -10,7 +10,6 @@ import confetti from 'canvas-confetti';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
-import { useWidgetStore } from '@/hooks/useWidgetStore';
 
 interface Props {
   materia: MateriaConfig;
@@ -324,22 +323,6 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
         playSuccessSound();
         onTopicComplete?.();
       }
-
-
-      const codeMatch = assistantContent.match(/```(?:javascript|js|typescript|ts)\n([\s\S]*?)```/);
-      if (codeMatch) {
-         useWidgetStore.getState().setCodeSnippet(codeMatch[1].trim());
-      }
-      const jsonMatch = assistantContent.match(/```json\n([\s\S]*?)```/);
-      if (jsonMatch) {
-         try {
-             const parsed = JSON.parse(jsonMatch[1].trim());
-             if (Array.isArray(parsed)) {
-                 useWidgetStore.getState().setFlashcards(parsed);
-             }
-         } catch (e) {}
-      }
-      // ===============================================
 
       const contentToSave = assistantContent
         .replace(/<details[\s\S]*?<\/details>/ig, '')
