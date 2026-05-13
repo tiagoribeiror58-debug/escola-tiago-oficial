@@ -56,6 +56,7 @@ export default function Sessao() {
   const isSavingRef = useRef(false); // BUG-02: guard contra double-save
   const [saving, setSaving] = useState(false);
   const [topicComplete, setTopicComplete] = useState(false);
+  const [continuandoAposConclusion, setContinuandoAposConclusion] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [messageCount, setMessageCount] = useState(0);
 
@@ -185,6 +186,7 @@ export default function Sessao() {
       queryClient.invalidateQueries({ queryKey: ['sessoes'] });
       queryClient.invalidateQueries({ queryKey: ['chat-sessions', slug] });
       queryClient.invalidateQueries({ queryKey: ['ultima-sessao', slug] });
+      queryClient.invalidateQueries({ queryKey: ['ementa-concluida', slug] }); // garante que o progresso aparece imediatamente
       toast.success('Sessão salva ✓');
       setSaving(false);
       playSuccessSound();
@@ -214,6 +216,12 @@ export default function Sessao() {
 
   const handleTopicComplete = useCallback(() => {
     setTopicComplete(true);
+    setContinuandoAposConclusion(false);
+  }, []);
+
+  // Permite continuar conversando mesmo após a IA emitir session_done
+  const handleContinuarConversando = useCallback(() => {
+    setContinuandoAposConclusion(true);
   }, []);
 
   if (!materiaConfig) {
@@ -255,6 +263,16 @@ export default function Sessao() {
           </span>
         )}
 
+        {/* Botão "Continuar conversando" — aparece após session_done, antes de encerrar */}
+        {topicComplete && !continuandoAposConclusion && (
+          <button
+            onClick={handleContinuarConversando}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 shrink-0 bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-border"
+          >
+            Continuar
+          </button>
+        )}
+
         {/* Botão Encerrar — SEMPRE visível (Regra 5 do principal.md) */}
         <button
           onClick={handleEncerrar}
@@ -262,7 +280,7 @@ export default function Sessao() {
           className={cn(
             'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 shrink-0',
             'disabled:opacity-50',
-            topicComplete
+            topicComplete && !continuandoAposConclusion
               ? 'bg-[hsl(var(--success))] text-white ring-2 ring-[hsl(var(--success)/0.4)] animate-pulse hover:brightness-110'
               : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-border'
           )}

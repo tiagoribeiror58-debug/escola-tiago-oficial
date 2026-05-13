@@ -45,6 +45,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [ttsRate, setTtsRate] = useState(1.0);
   const recognitionRef = useRef<any>(null);
   const musicRef = useRef<HTMLAudioElement | null>(null);
 
@@ -108,6 +109,19 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     }
   };
 
+  // Seleciona a voz mais natural disponível.
+  // Prioridade: Google Neural (pt-BR) → qualquer pt-BR → qualquer pt
+  // Vozes "Google" no Chrome são sintetizadas online e soam bem mais naturais.
+  const getBestVoice = (): SpeechSynthesisVoice | null => {
+    const voices = window.speechSynthesis.getVoices();
+    return (
+      voices.find(v => v.name.toLowerCase().includes('google') && v.lang.includes('pt')) ||
+      voices.find(v => v.lang.includes('pt-BR') || v.lang.includes('pt_BR')) ||
+      voices.find(v => v.lang.startsWith('pt')) ||
+      null
+    );
+  };
+
   // Remove markdown antes de enviar para o TTS — evita que ele leia "asterisco asterisco", "hashtag" etc.
   const stripMarkdown = (text: string) =>
     text
@@ -137,10 +151,9 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     const clean = stripMarkdown(text);
     const utterance = new SpeechSynthesisUtterance(clean);
     utterance.lang = 'pt-BR';
-    utterance.rate = 0.92;  // levemente mais lento = mais natural
-    const voices = window.speechSynthesis.getVoices();
-    const ptVoice = voices.find(v => v.lang.includes('pt-BR') || v.lang.includes('pt_BR'));
-    if (ptVoice) utterance.voice = ptVoice;
+    utterance.rate = ttsRate;
+    const voice = getBestVoice();
+    if (voice) utterance.voice = voice;
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);
     setIsSpeaking(true);
@@ -641,6 +654,27 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               )}
               style={{ minHeight: '40px', maxHeight: '128px' }}
             />
+            {/* Controles de velocidade do narrador — aparecem apenas se TTS está disponível */}
+            {'speechSynthesis' in window && (
+              <div className="flex items-center gap-0.5 bg-muted rounded-lg px-1 py-1">
+                {([0.75, 1, 1.25, 1.5] as const).map(speed => (
+                  <button
+                    key={speed}
+                    onClick={() => setTtsRate(speed)}
+                    className={cn(
+                      'text-[10px] font-mono px-1.5 py-0.5 rounded-md transition-all',
+                      ttsRate === speed
+                        ? 'bg-foreground text-background font-bold'
+                        : 'text-muted-foreground hover:text-foreground'
+                    )}
+                    title={`Velocidade ${speed}x`}
+                  >
+                    {speed}×
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Botão de ruído branco ambiente */}
             <button
               onClick={toggleMusic}
