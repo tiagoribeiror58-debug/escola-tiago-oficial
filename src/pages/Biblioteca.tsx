@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useFolhasEstado } from '@/hooks/useSessoes';
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowLeft, Pin, PinOff } from 'lucide-react';
+import { ArrowLeft, Pin, PinOff, ChevronRight } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -63,10 +63,28 @@ export default function Biblioteca() {
 
               return (
                 <div key={cat.slug} className="mb-12">
-                  <h2 className="text-lg font-semibold tracking-tight text-foreground flex items-center gap-2 mb-4 px-1">
-                    <span className="text-xl">{cat.emoji}</span>
-                    {cat.nome}
-                  </h2>
+                  {/* Hub header — clicável, navega para a página do hub */}
+                  <div
+                    onClick={() => navigate(`/categoria/${cat.slug}`)}
+                    className="group flex items-start gap-3 mb-5 cursor-pointer"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-foreground/[0.06] border border-border/40 flex items-center justify-center text-xl shrink-0 mt-0.5 group-hover:bg-foreground/10 transition-colors">
+                      {cat.emoji}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-base font-semibold tracking-tight text-foreground group-hover:text-foreground/80 transition-colors">
+                          {cat.nome}
+                        </h2>
+                        <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-muted-foreground/70 transition-colors" />
+                      </div>
+                      {cat.descricao && (
+                        <p className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed line-clamp-2">
+                          {cat.descricao}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {catEstados.map((estado, index) => {
                       const pinned = isFocado(estado.config.slug);
