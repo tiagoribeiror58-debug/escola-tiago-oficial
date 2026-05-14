@@ -6,6 +6,11 @@ import { fundamentosAcademicos } from './materias/fundamentos';
 import { tecnologiaHub } from './materias/tecnologia';
 import { seducaoHub } from './materias/seducao';
 import { primeirosprincipiosHub } from './materias/primeiros-principios';
+import { riquezaHub } from './materias/riqueza';
+import { comportamentoHub } from './materias/comportamento';
+import { biohackingHub } from './materias/biohacking';
+import { geopoliticaHub } from './materias/geopolitica';
+import { realidadeHub } from './materias/realidade';
 
 export const MATERIAS: MateriaConfig[] = [
   performanceIntelecto,
@@ -15,6 +20,11 @@ export const MATERIAS: MateriaConfig[] = [
   tecnologiaHub,
   primeirosprincipiosHub,
   seducaoHub,
+  riquezaHub,
+  comportamentoHub,
+  biohackingHub,
+  geopoliticaHub,
+  realidadeHub,
 ];
 
 export function getMateriaBySlug(slug: string, list: MateriaConfig[] = MATERIAS): MateriaConfig | undefined {
