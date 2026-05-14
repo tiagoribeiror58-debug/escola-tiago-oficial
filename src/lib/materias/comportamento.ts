@@ -16,24 +16,35 @@ export const comportamentoHub: MateriaConfig = {
       whyStart: 'Nossas decisões parecem lógicas, mas são guiadas por falhas evolutivas do nosso cérebro. Domine seus vieses antes de prever o dos outros.',
       descricao: 'Vieses cognitivos, heurísticas e arquitetura de escolhas.',
       contexto: 'Foco no trabalho de Kahneman e Tversky. Rápido e Devagar. Não seja óbvio, desafie o senso comum lógico do aluno.',
-      fases: [
-        {
-          nome: 'Fase 1: O Sistema 1 e Sistema 2',
-          topicos: [
-            'Pensamento Rápido vs Devagar: Anatomia da Decisão',
-            'Viés de Confirmação e a Cegueira Induzida',
-            'Aversão à Perda: A matemática de não querer perder',
-            'Heurística de Disponibilidade e Ancoragem'
-          ]
-        },
-        {
-          nome: 'Fase 2: Arquitetura de Escolha (Nudge)',
-          topicos: [
-            'Como desenhar sistemas que induzem ações (Nudge)',
-            'Efeito Halo e Dissonância Cognitiva',
-            'O Paradoxo da Escolha: Menos é Mais'
-          ]
-        }
+      ementa: [
+        'A Arquitetura do Sistema 1 (Automático) vs. Sistema 2 (Deliberativo) de Kahneman',
+        'Viés de Confirmação e a Fisiologia da Redução da Dissonância Cognitiva',
+        'Heurística da Disponibilidade: Como a Mídia Hackeia o Cálculo de Probabilidade',
+        'Heurística da Representatividade e a Falácia da Conjunção (O Problema de Linda)',
+        'Efeito de Ancoragem (Anchoring) em Negociações e Precificação',
+        'Ilusão de Foco e Erro de Projeção na Estimação de Utilidade Futura',
+        'Cegueira Desatencional e o Processamento Seletivo de Informações Críticas',
+        'A Função de Valor na Teoria da Perspectiva (Prospect Theory): O Ponto de Referência',
+        'Aversão à Perda e a Assimetria Neurológica da Dor da Perda vs. Prazer do Ganho',
+        'Efeito Posse (Endowment Effect) e a Supervalorização do Ativo Próprio',
+        'A Falácia do Custo Irrecuperável (Sunk Cost Fallacy) em Negócios e Relacionamentos',
+        'Contabilidade Mental (Mental Accounting) e as Contradições de Alocação de Gastos',
+        'Preferência Pelo Status Quo e o Custo Friccional da Mudança',
+        'O Paradoxo da Escolha, Fadiga de Decisão e Paralisia por Análise',
+        'A Ciência do Nudge (Empurrãozinho): Guiando Comportamentos sem Restrição Direta',
+        'O Poder do Design Padrão (Defaults) em Contratos e Inscrições',
+        'Normas Descritivas vs Normas Injuntivas: Utilizando Prova Social Invisível',
+        'Gatilhos de Salience: Destacando a Informação Correta no Momento da Decisão',
+        'A Ilusão de Controle e como Superestimamos Nossa Agência em Sistemas Caóticos',
+        'Efeito Halo (Halo Effect) e a Transferência Irracional de Atributos Positivos',
+        'Priming Subliminar: Como o Ambiente Imediato Altera a Escolha do Consumidor',
+        'O Comportamento de Manada (Herd Behavior) e a Anatomia das Bolhas Especulativas',
+        'Excesso de Confiança (Overconfidence Bias) e as Falhas de Previsão de Especialistas',
+        'A Ilusão de Entendimento Retrospectivo (Hindsight Bias) Pós-Crise',
+        'Teoria dos Jogos Comportamental: O Jogo do Ultimato e a Irracionalidade da Punição Altruísta',
+        'O Dilema do Prisioneiro e as Condições para a Cooperação em Jogos Iterados',
+        'Sinalização Custa (Costly Signaling) e Consumo Conspícuo (Veblen Goods)',
+        'O Impacto do Ruído (Noise) Estatístico em Processos de Avaliação Profissional'
       ]
     },
     {
@@ -45,23 +56,35 @@ export const comportamentoHub: MateriaConfig = {
       whyStart: 'Indivíduos são espertos, multidões são burras e controláveis. Entenda como a opinião pública é fabricada.',
       descricao: 'Relações públicas, propaganda estrutural e engenharia de consentimento.',
       contexto: 'Base em Edward Bernays e Gustave Le Bon. Mostre a engenharia fria por trás da criação de modas e crenças sociais.',
-      fases: [
-        {
-          nome: 'Fase 1: A Mente da Multidão',
-          topicos: [
-            'Gustave Le Bon e a Alma das Multidões',
-            'Contágio Mental e Comportamento de Manada',
-            'Desindividualização em Massa'
-          ]
-        },
-        {
-          nome: 'Fase 2: Engenharia de Consentimento',
-          topicos: [
-            'Edward Bernays e o Nascimento do PR Moderno',
-            'A Estrutura da Propaganda Invisível',
-            'Autoridade Fabricada e o Papel do Porta-Voz'
-          ]
-        }
+      ementa: [
+        'Gustave Le Bon e os Fundamentos Neurológicos do Contágio Mental em Massas',
+        'A Desindividualização e o Rebaixamento Crítico do Quociente Intelectual em Grupo',
+        'O Anonimato e a Supressão da Responsabilidade Moral em Multidões Físicas e Digitais',
+        'A Força Mítica e Sugestionabilidade Extrema: Imagens, Não Lógica',
+        'O Arquétipo do Líder de Massa e a Necessidade do "Mestre" e da "Ideia Fixa"',
+        'O Papel da Repetição e da Afirmação Contagiosa (O Efeito Illusory Truth)',
+        'A Catarse Coletiva e a Violência Legitimada Pela Massa',
+        'Edward Bernays, Sigmund Freud e a Aplicação do Inconsciente à Propaganda de Consumo',
+        'A Engenharia do Consentimento: Manipulando Hábitos e Opiniões Invisivelmente',
+        'A Fabricação de Pseudo-Eventos e a Criação de Demanda Emocional (Torchas da Liberdade)',
+        'O Paradigma de Chomsky-Herman e os Cinco Filtros da Mídia de Massa',
+        'Autoridade Fabricada e a Utilização de Especialistas de Terceira Parte (Third-Party Endorsement)',
+        'O Papel dos Relações Públicas no Controle de Crise e Limpeza Narrativa',
+        'A Distinção entre Marketing (Vender o Produto) e PR (Vender a Sociedade para o Produto)',
+        'A Arquitetura das Câmaras de Eco (Echo Chambers) e Filtros Bolha (Filter Bubbles)',
+        'A Mecânica das Seitas de Alto Controle: O Modelo BITE de Steven Hassan',
+        'Linguagem Carregada (Thought-Terminating Clichés) e Parada de Pensamento Crítico',
+        'A Dicotomia Nós vs. Eles e a Engenharia do Ódio ao Exogrupo',
+        'Bombardeio de Amor (Love Bombing) e o Ciclo de Dependência Emocional e Isolamento',
+        'A Economia da Atenção e como Algoritmos Otimizam pela Indignação Constante',
+        'A Mecânica da Pureza Ideológica e o Pânico Moral como Ferramenta de Controle Interno',
+        'A Janela de Overton (Overton Window): Expandindo e Movendo o Aceitável no Discurso Político',
+        'Operações Psicológicas Modernas (PsyOps), Astroturfing e Campanhas de Falsa Base',
+        'A Estrutura das "Fake News" e a Lei de Brandolini (Princípio da Assimetria da Besteira)',
+        'Gaslighting Social e a Destruição do Consenso de Realidade (Guerra Híbrida Russa)',
+        'A Teoria da Inoculação: Pré-Bunking contra Desinformação e Resistência Cognitiva',
+        'Meme Warfare e a Viralidade Sintética como Vetor Tático',
+        'A Subversão Ideológica de Yuri Bezmenov: Desmoralização, Desestabilização e Crise'
       ]
     }
   ]

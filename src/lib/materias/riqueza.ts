@@ -16,24 +16,28 @@ export const riquezaHub: MateriaConfig = {
       whyStart: 'Você não pode jogar o jogo se não entender as regras do tabuleiro em que a inflação e os juros operam.',
       descricao: 'Ciclos de mercado, políticas monetárias e leitura de cenário global.',
       contexto: 'Foco técnico e não ideológico. Entenda como Bancos Centrais movem o dinheiro e como isso afeta ativos reais.',
-      fases: [
-        {
-          nome: 'Fase 1: O Motor da Economia',
-          topicos: [
-            'O que é Moeda Fiduciária e Efeito Cantillon',
-            'Como os Bancos Centrais Controlam Juros e Liquidez',
-            'Inflação vs Deflação: O Verdadeiro Imposto Oculto',
-            'Ciclos de Crédito e Expansão Econômica'
-          ]
-        },
-        {
-          nome: 'Fase 2: Leitura de Cenários',
-          topicos: [
-            'Análise de Curva de Juros (Yield Curve)',
-            'Relação entre Dólar, Ouro e Ativos de Risco',
-            'Como Governos gerenciam Dívida Pública'
-          ]
-        }
+      ementa: [
+        'A Transição do Padrão-Ouro para a Hegemonia Fiduciária (Choque de Nixon de 1971)',
+        'O Efeito Cantillon e a Distribuição Assimétrica da Inflação',
+        'Balanço do Federal Reserve: Quantitative Easing (QE) e Quantitative Tightening (QT)',
+        'Operações de Mercado Aberto (Open Market) e Taxas de Desconto',
+        'O Sistema de Reservas Fracionárias e o Efeito Multiplicador Bancário M1/M2',
+        'A Dinâmica do Credit Default Swap e Alavancagem Sintética',
+        'Inflação de Ativos vs. Inflação de Consumo (CPI vs. Preço de Imóveis/Ações)',
+        'A Mecânica da Curva de Juros (Yield Curve) e a Inversão da Curva',
+        'Títulos Públicos, T-Bills, T-Notes e T-Bonds: O Espectro de Maturidade',
+        'O Prêmio de Risco Soberano e a Formação da Taxa Livre de Risco',
+        'Duration de Macaulay e Sensibilidade de Títulos a Choques de Juros',
+        'O Custo de Carregamento da Dívida e o Teorema da Equivalência Ricardiana',
+        'Dívida Corporativa (High Yield vs. Investment Grade) e Ciclos de Calote',
+        'Repressão Financeira e a Diluição da Dívida pelo Imposto Inflacionário',
+        'O Sistema SWIFT, CHIPS e a Arquitetura de Pagamentos Transfronteiriços',
+        'A Teoria das Vantagens Comparativas e o Déficit Comercial Estrutural',
+        'Eurodólares, o Mercado de Repos e o Colateral Escasso (Repo Crisis de 2019)',
+        'Desdolarização Sistêmica: O Papel dos BRICS+ e Liquidações Bilaterais',
+        'Doença Holandesa (Dutch Disease) e a Maldição dos Recursos Naturais',
+        'O Paradoxo de Triffin e o Dilema da Moeda de Reserva Global',
+        'CBDCs (Moedas Digitais de Banco Central), Controle de Capitais e Vigilância Financeira'
       ]
     },
     {
@@ -45,23 +49,35 @@ export const riquezaHub: MateriaConfig = {
       whyStart: 'Ganhar dinheiro é diferente de protegê-lo. A verdadeira riqueza está em expor-se a riscos assimétricos positivos.',
       descricao: 'Opções, Hedge, estruturação de portfólio antifrágil e proteção patrimonial.',
       contexto: 'Foco em mitigação de ruína (Nassim Taleb). Como estruturar um portfólio para sobreviver ao caos.',
-      fases: [
-        {
-          nome: 'Fase 1: Matemática do Risco',
-          topicos: [
-            'Valor Esperado vs Probabilidade de Ruína',
-            'A Filosofia Antifrágil (Nassim Taleb) em Portfólios',
-            'Estratégia Barbell: Extremo conservadorismo + Extrema agressividade'
-          ]
-        },
-        {
-          nome: 'Fase 2: Instrumentos de Defesa',
-          topicos: [
-            'Derivativos e Opções para Seguro de Portfólio (Hedge)',
-            'Diversificação Geográfica e Descorrelação de Ativos',
-            'Engenharia Tributária: Fundos Exclusivos e Estruturação Offshore Básica'
-          ]
-        }
+      ementa: [
+        'Esperança Matemática (EV) e Probabilidade de Ruína (Ergodicidade)',
+        'O Paradoxo de São Petersburgo e a Teoria da Utilidade Esperada',
+        'Cisnes Negros, Caudas Gordas (Fat Tails) e Distribuição de Pareto nos Mercados',
+        'Estratégia Barbell de Nassim Taleb: Minimização de Ruína com Maximização de Convexidade',
+        'A Falácia do Jogador e a Diferença entre Volatilidade e Risco Genuíno',
+        'Descorrelação Estrutural: Construindo um Portfólio Resistente a Choques Simultâneos',
+        'A Relação Sharpe, Índice Sortino e a Matemática do Rebalanceamento Dinâmico',
+        'Opções Vanilla (Calls e Puts): Precificação Básica e Valor Intrínseco vs. Extrínseco',
+        'As Gregas na Prática: Delta, Gamma, Theta e Vega na Defesa de Capital',
+        'Montagem de Hedges Estruturais: Protective Puts e Collar Strategies',
+        'Mercado de Futuros e Contratos a Termo (Forwards) para Travamento de Preço',
+        'Hedge Cambial e Proteção de Portfólio contra Risco Soberano',
+        'A Venda a Descoberto (Short Selling) e as Mecânicas de Short Squeeze',
+        'Seguros de Cauda: Quando comprar Volatilidade Barata para Proteger o Portfólio',
+        'A Lei de Potência (Power Law) e a Curva-J no Retorno de Venture Capital',
+        'Avaliação de Startups Iniciais: Valuation pré-receita, TAM, SAM e SOM',
+        'Análise de Term Sheets Avançada: Preferência de Liquidação e Cláusulas Antidiluição',
+        'Private Equity vs. Angel Investing: O Ciclo de Vida do Capital Privado',
+        'Estruturação Offshore: Fundos Exclusivos (FIC), Trusts e Holdings Familiares',
+        'A Compra de Opções em Negócios Físicos: Contratos de Exclusividade e Joint Ventures',
+        'Arbitragem de Assimetria de Informação no Mercado Imobiliário Distress',
+        'O Problema dos Generais Bizantinos e a Arquitetura da Escassez Digital Absoluta',
+        'Tokenomics Profunda: Modelos de Emissão, Queima e Inflação de Tokens',
+        'Automated Market Makers (AMMs) e a Matemática do Impermanent Loss em Liquidez',
+        'Lending Protocols (Aave, Maker) e o Risco de Liquidação em Cadeia',
+        'Arbitragem Triangular em DEXes (Decentralized Exchanges) vs CEXes',
+        'O Risco de Custódia (Not your keys, not your coins) e Arquitetura Multi-Sig',
+        'Teoria dos Jogos em Algorithmic Stablecoins e a Espiral da Morte'
       ]
     }
   ]

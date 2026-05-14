@@ -15,41 +15,26 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'Comece aqui ou você vai desperdiçar todas as técnicas. Sem o estado interno correto, cada abordagem vai parecer forçada e vai ser percebida como tal.',
       contexto: 'Foque em psicologia comportamental, estoicismo prático e reestruturação cognitiva. Ensine que a verdadeira confiança não é "saber que vai dar certo", mas "saber que ficará bem independente do resultado".',
-      fases: [
-        {
-          nome: 'Fase 1: Fundação Mental',
-          topicos: [
-            'Desconstrução de Crenças Limitantes sobre Atração',
-            'Ansiedade de Aproximação (AA): Entendendo a Resposta de Luta/Fuga',
-            'Independência de Resultado: O Paradoxo da Atração',
-            'Validação Interna vs. Externa (O Fim da Necessidade)',
-            'Identidade e Auto-Conceito: Quem você é quando ninguém está olhando',
-            'Masculinidade e Propósito: A Missão como Âncora',
-            'Superando o Nice Guy: Por que agradou demais não funciona'
-          ]
-        },
-        {
-          nome: 'Fase 2: Projeção de Realidade',
-          topicos: [
-            'Controle de Frame: Quem dita a realidade da interação?',
-            'Presença e Grounding (Ancoragem Física)',
-            'Lidando com Rejeição como Feedback Direto',
-            'Abundância vs. Escassez na Prática',
-            'Estado Emocional: Como Calibrar sua Energia',
-            'Congruência: Alinhar o que você Pensa, Fala e Faz',
-            'Desapego do Resultado em Tempo Real'
-          ]
-        },
-        {
-          nome: 'Fase 3: Alta Performance Social',
-          topicos: [
-            'Construindo uma Rotina de Desenvolvimento Pessoal',
-            'Saindo da Zona de Conforto: O Protocolo de Exposição',
-            'Comunidade e Accountability para Inner Game',
-            'Meditação e Mindfulness para Presença Social',
-            'Alto Status: O que Realmente Projeta Dominância Social'
-          ]
-        }
+      ementa: [
+        'Desconstrução de Crenças Limitantes sobre Atração',
+        'Ansiedade de Aproximação (AA): Entendendo a Resposta de Luta/Fuga',
+        'Independência de Resultado: O Paradoxo da Atração',
+        'Validação Interna vs. Externa (O Fim da Necessidade)',
+        'Identidade e Auto-Conceito: Quem você é quando ninguém está olhando',
+        'Masculinidade e Propósito: A Missão como Âncora',
+        'Superando o Nice Guy: Por que agradou demais não funciona',
+        'Controle de Frame: Quem dita a realidade da interação?',
+        'Presença e Grounding (Ancoragem Física)',
+        'Lidando com Rejeição como Feedback Direto',
+        'Abundância vs. Escassez na Prática',
+        'Estado Emocional: Como Calibrar sua Energia',
+        'Congruência: Alinhar o que você Pensa, Fala e Faz',
+        'Desapego do Resultado em Tempo Real',
+        'Construindo uma Rotina de Desenvolvimento Pessoal',
+        'Saindo da Zona de Conforto: O Protocolo de Exposição',
+        'Comunidade e Accountability para Inner Game',
+        'Meditação e Mindfulness para Presença Social',
+        'Alto Status: O que Realmente Projeta Dominância Social'
       ]
     },
     {
@@ -60,40 +45,25 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'Com o estado interno calibrado, é hora de agir. Esta etapa desmonta o medo de abordar desconstruindo a mecânica da aproximação.',
       contexto: 'Foque em mecânica pura: ângulos de aproximação, tonalidade de voz, calibração social e transições.',
-      fases: [
-        {
-          nome: 'Fase 1: O Abre-Alas',
-          topicos: [
-            'Linguagem Corporal de Alto Status (Postura, Contato Visual)',
-            'A Regra dos 3 Segundos',
-            'Abridores Diretos vs. Indiretos: Quando usar cada um',
-            'O Falso Limite de Tempo (False Time Constraint)',
-            'Tonalidade de Voz: Ascendente vs. Descendente',
-            'Onde Abordar: Dia vs. Noite, Ambientes e Contextos',
-            'O Stack: Encadeando Observações para Manter a Conversa'
-          ]
-        },
-        {
-          nome: 'Fase 2: O Meio-Jogo',
-          topicos: [
-            'Assumindo Familiaridade (Assume Rapport)',
-            'Transições Naturais: Saindo do Abridor para a Conversa',
-            'Calibração Social: Lendo Sinais de Interesse (IOIs)',
-            'Como Pedir o Contato de Forma Fluida',
-            'A Arte de Interromper e Voltar (False Exit)',
-            'Grupo Dinâmico: Abordando Quando Ela Não Está Sozinha',
-            'Lidando com Obstáculos (Cockblockers e Amigos)'
-          ]
-        },
-        {
-          nome: 'Fase 3: Volume e Consistência',
-          topicos: [
-            'Desenvolvendo uma Rotina Semanal de Abordagem',
-            'Field Reports: Como Analisar suas Saídas',
-            'Os 5 Estágios do Aprendizado de Cold Approach',
-            'Ambiente Day Game vs Night Game: Diferenças Táticas'
-          ]
-        }
+      ementa: [
+        'Linguagem Corporal de Alto Status (Postura, Contato Visual)',
+        'A Regra dos 3 Segundos',
+        'Abridores Diretos vs. Indiretos: Quando usar cada um',
+        'O Falso Limite de Tempo (False Time Constraint)',
+        'Tonalidade de Voz: Ascendente vs. Descendente',
+        'Onde Abordar: Dia vs. Noite, Ambientes e Contextos',
+        'O Stack: Encadeando Observações para Manter a Conversa',
+        'Assumindo Familiaridade (Assume Rapport)',
+        'Transições Naturais: Saindo do Abridor para a Conversa',
+        'Calibração Social: Lendo Sinais de Interesse (IOIs)',
+        'Como Pedir o Contato de Forma Fluida',
+        'A Arte de Interromper e Voltar (False Exit)',
+        'Grupo Dinâmico: Abordando Quando Ela Não Está Sozinha',
+        'Lidando com Obstáculos (Cockblockers e Amigos)',
+        'Desenvolvendo uma Rotina Semanal de Abordagem',
+        'Field Reports: Como Analisar suas Saídas',
+        'Os 5 Estágios do Aprendizado de Cold Approach',
+        'Ambiente Day Game vs Night Game: Diferenças Táticas'
       ]
     },
     {
@@ -104,39 +74,24 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'Você já sabe abrir. Agora precisa sustentar. Conversas lógicas matam o interesse — esta etapa ensina a criar variação emocional, tensão e mistério.',
       contexto: 'Foque em dinâmicas de conversação avançadas: Push/Pull, qualificação, tensão sexual e storytelling.',
-      fases: [
-        {
-          nome: 'Fase 1: Dinâmicas de Tensão',
-          topicos: [
-            'Fuga da Entrevista Lógica: Como Evocar Emoções',
-            'A Mecânica do Push e Pull (Afastar e Puxar)',
-            'Quebra de Rapport vs. Busca de Rapport',
-            'Provocações e Teasing Calibrado',
-            'Misoginia vs. Playfulness: A Diferença Crítica',
-            'O Olhar e a Comunicação Não-Verbal',
-            'Criando Loops Abertos: O Interesse da Antecipação'
-          ]
-        },
-        {
-          nome: 'Fase 2: Conexão e Atração Profunda',
-          topicos: [
-            'Qualificação: O Jogo de Fazer a Pessoa Investir',
-            'Storytelling Magnético: Estrutura de Boas Histórias',
-            'Vulnerabilidade Forte: Conectando Níveis Profundos',
-            'Tensão Sexual: Escalação Verbal e Subtexto',
-            'Humor Como Ferramenta de Atração',
-            'Rapport Profundo: Encontrando Valores Comuns',
-            'A Transição do Flerte para a Conexão Real'
-          ]
-        },
-        {
-          nome: 'Fase 3: Maestria Conversacional',
-          topicos: [
-            'Fluxo de Estado: Conversando sem Esforço',
-            'Improvisação Emocional: Reagindo, não Planejando',
-            'Calibração Avançada: Lendo Microexpressões'
-          ]
-        }
+      ementa: [
+        'Fuga da Entrevista Lógica: Como Evocar Emoções',
+        'A Mecânica do Push e Pull (Afastar e Puxar)',
+        'Quebra de Rapport vs. Busca de Rapport',
+        'Provocações e Teasing Calibrado',
+        'Misoginia vs. Playfulness: A Diferença Crítica',
+        'O Olhar e a Comunicação Não-Verbal',
+        'Criando Loops Abertos: O Interesse da Antecipação',
+        'Qualificação: O Jogo de Fazer a Pessoa Investir',
+        'Storytelling Magnético: Estrutura de Boas Histórias',
+        'Vulnerabilidade Forte: Conectando Níveis Profundos',
+        'Tensão Sexual: Escalação Verbal e Subtexto',
+        'Humor Como Ferramenta de Atração',
+        'Rapport Profundo: Encontrando Valores Comuns',
+        'A Transição do Flerte para a Conexão Real',
+        'Fluxo de Estado: Conversando sem Esforço',
+        'Improvisação Emocional: Reagindo, não Planejando',
+        'Calibração Avançada: Lendo Microexpressões'
       ]
     },
     {
@@ -147,31 +102,21 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'Depois da abordagem, o jogo vai para o celular. O objetivo é único: marcar o encontro.',
       contexto: 'Foque na utilidade do texto: o objetivo do texto é marcar o encontro, não virar amigo por chat.',
-      fases: [
-        {
-          nome: 'Fase 1: Fundamentos Digitais',
-          topicos: [
-            'A Primeira Mensagem (O Callback Humorístico)',
-            'A Regra do Ouro do Texto: Objetivo é o Encontro',
-            'Proporção de Investimento (Quem escreve mais?)',
-            'Tempo de Resposta Estratégico (Pacing)',
-            'Tom e Calibração no Texto vs Ao Vivo',
-            'Emojis e Linguagem Informal: Quando usar',
-            'Como se Distinguir de 100 Outros Caras no Celular Dela'
-          ]
-        },
-        {
-          nome: 'Fase 2: Escalada e Fechamento',
-          topicos: [
-            'Shit Tests via Mensagem: Como Desarmar e Inverter',
-            'Uso de Áudios e Fotos para Gerar Proximidade',
-            'Reengajamento: Ressuscitando Contatos Frios (Ping Texts)',
-            'Fechamento Sólido: Extraindo o Sim para o Date',
-            'Instagram como Canal de Aquecimento',
-            'Quando e Como Ligar (Phone Game)',
-            'Gestão de Múltiplas Conversas sem Perder o Fio'
-          ]
-        }
+      ementa: [
+        'A Primeira Mensagem (O Callback Humorístico)',
+        'A Regra do Ouro do Texto: Objetivo é o Encontro',
+        'Proporção de Investimento (Quem escreve mais?)',
+        'Tempo de Resposta Estratégico (Pacing)',
+        'Tom e Calibração no Texto vs Ao Vivo',
+        'Emojis e Linguagem Informal: Quando usar',
+        'Como se Distinguir de 100 Outros Caras no Celular Dela',
+        'Shit Tests via Mensagem: Como Desarmar e Inverter',
+        'Uso de Áudios e Fotos para Gerar Proximidade',
+        'Reengajamento: Ressuscitando Contatos Frios (Ping Texts)',
+        'Fechamento Sólido: Extraindo o Sim para o Date',
+        'Instagram como Canal de Aquecimento',
+        'Quando e Como Ligar (Phone Game)',
+        'Gestão de Múltiplas Conversas sem Perder o Fio'
       ]
     },
     {
@@ -182,31 +127,21 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'Até aqui você aprendeu a jogar o jogo. Agora você muda o tabuleiro.',
       contexto: 'Foque em valor social, pré-seleção, e criação de eventos/comunidades onde o aluno seja o centro (Hub).',
-      fases: [
-        {
-          nome: 'Fase 1: O Círculo de Valor',
-          topicos: [
-            'O Paradigma do Organizador (Seja o Conector)',
-            'Valor Social Pré-Comunicado (Pré-Seleção)',
-            'Efeito Halo: Grooming, Estilo e Primeira Impressão',
-            'Como Entrar em Círculos de Alto Valor',
-            'Networking Estratégico: Conhecendo as Pessoas Certas',
-            'O Estilo como Comunicação Não-Verbal',
-            'Fitness como Base de Atração e Confiança'
-          ]
-        },
-        {
-          nome: 'Fase 2: Presença e Posicionamento',
-          topicos: [
-            'Vitrine Digital: Otimização Rápida de Instagram',
-            'Wingman Dynamics: Como Agir em Dupla na Noite',
-            'Hospedando Eventos: O Jogo de Morar Sozinho',
-            'Transição de Status: De Conhecido a Convidado VIP',
-            'Construindo uma Vida que Atrai sem Esforço Consciente',
-            'Missão e Propósito como o Maior Afrodisíaco',
-            'Viagens e Experiências como Capital Social'
-          ]
-        }
+      ementa: [
+        'O Paradigma do Organizador (Seja o Conector)',
+        'Valor Social Pré-Comunicado (Pré-Seleção)',
+        'Efeito Halo: Grooming, Estilo e Primeira Impressão',
+        'Como Entrar em Círculos de Alto Valor',
+        'Networking Estratégico: Conhecendo as Pessoas Certas',
+        'O Estilo como Comunicação Não-Verbal',
+        'Fitness como Base de Atração e Confiança',
+        'Vitrine Digital: Otimização Rápida de Instagram',
+        'Wingman Dynamics: Como Agir em Dupla na Noite',
+        'Hospedando Eventos: O Jogo de Morar Sozinho',
+        'Transição de Status: De Conhecido a Convidado VIP',
+        'Construindo uma Vida que Atrai sem Esforço Consciente',
+        'Missão e Propósito como o Maior Afrodisíaco',
+        'Viagens e Experiências como Capital Social'
       ]
     },
     {
@@ -217,39 +152,24 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'O módulo final. Tudo que você aprendeu antes era para chegar aqui. Relacionamentos de longo prazo exigem polaridade, liderança e manutenção da tensão.',
       contexto: 'Foque na liderança masculina pragmática, dinâmica de encontros e definição de limites.',
-      fases: [
-        {
-          nome: 'Fase 1: A Condução do Date',
-          topicos: [
-            'A Arquitetura do Encontro Perfeito (Múltiplos Venues)',
-            'Liderança Decisiva: "Nós Vamos Ali" vs. "O Que Você Quer?"',
-            'Escalada Física (Kino): Fluidez e Consentimento',
-            'A Transição para a Logística Final (A Casa)',
-            'O Primeiro Date: Objetivos, Duração e Dinâmica',
-            'Como Recuperar um Date que Está Esfriando',
-            'Pagando a Conta: A Abordagem Estratégica'
-          ]
-        },
-        {
-          nome: 'Fase 2: Polaridade e Manutenção',
-          topicos: [
-            'Estabelecimento de Limites (Boundaries) no Início',
-            'Polaridade Sexual: O Papel da Energia Masculina',
-            'Lidando com Testes de Congruência em Relacionamentos',
-            'Prevenção do Efeito Amigo: Como Manter a Tensão Ativa',
-            'Relacionamento Aberto vs. Exclusivo: A Conversa',
-            'Ciúme e Possessividade: Gestão Estrutural',
-            'Saindo de um Relacionamento sem Dramas'
-          ]
-        },
-        {
-          nome: 'Fase 3: O Homem Completo',
-          topicos: [
-            'Integrando Tudo: Inner Game + Habilidades Sociais + Lifestyle',
-            'Saúde Mental em Relacionamentos Intensos',
-            'Quando Parar e Avaliar sua Vida Amorosa'
-          ]
-        }
+      ementa: [
+        'A Arquitetura do Encontro Perfeito (Múltiplos Venues)',
+        'Liderança Decisiva: "Nós Vamos Ali" vs. "O Que Você Quer?"',
+        'Escalada Física (Kino): Fluidez e Consentimento',
+        'A Transição para a Logística Final (A Casa)',
+        'O Primeiro Date: Objetivos, Duração e Dinâmica',
+        'Como Recuperar um Date que Está Esfriando',
+        'Pagando a Conta: A Abordagem Estratégica',
+        'Estabelecimento de Limites (Boundaries) no Início',
+        'Polaridade Sexual: O Papel da Energia Masculina',
+        'Lidando com Testes de Congruência em Relacionamentos',
+        'Prevenção do Efeito Amigo: Como Manter a Tensão Ativa',
+        'Relacionamento Aberto vs. Exclusivo: A Conversa',
+        'Ciúme e Possessividade: Gestão Estrutural',
+        'Saindo de um Relacionamento sem Dramas',
+        'Integrando Tudo: Inner Game + Habilidades Sociais + Lifestyle',
+        'Saúde Mental em Relacionamentos Intensos',
+        'Quando Parar e Avaliar sua Vida Amorosa'
       ]
     }
   ]

@@ -113,7 +113,7 @@ ${listaProibidos}
 Esta regra não tem exceção. Referências cruzadas são permitidas, mas a AULA é sobre "${topicoObrigatorio}".${progressoVisual ? `\n\nProgresso na ementa:\n${progressoVisual}` : ''}`;
   }
 
-  // ─── HISTÓRICO DE PERFORMANCE (contexto, não controle) ───────────────────────
+  // ─── CONEXÃO GLOBAL E HISTÓRICO DE PERFORMANCE ──────────────────────────────
   let historicoBloco = '';
   if (sessoesRecentes && sessoesRecentes.length > 0) {
     const linhas = [...sessoesRecentes]
@@ -121,10 +121,16 @@ Esta regra não tem exceção. Referências cruzadas são permitidas, mas a AULA
       .map(s => {
         const dif = s.dificuldade || '?';
         const erros = s.erros ?? 0;
-        return `  • "${s.topico}" — dificuldade: ${dif}, erros: ${erros}`;
+        return `  • [${s.materia}] "${s.topico}" (dificuldade: ${dif}, erros: ${erros})`;
       });
     if (linhas.length > 0) {
-      historicoBloco = `\n\nHistórico recente do aluno (use para calibrar ritmo):\n${linhas.join('\n')}`;
+      historicoBloco = `\n\n═══════════════════════════════════
+CONEXÃO GLOBAL DE CONCEITOS (HISTÓRICO RECENTE)
+═══════════════════════════════════
+Abaixo está o histórico recente de tópicos já estudados pelo aluno (incluindo outras matérias):
+${linhas.join('\n')}
+
+DIRETRIZ DE ENSINO: Sempre que fizer sentido e enriquecer a explicação, crie analogias cruzadas utilizando os tópicos que o aluno já dominou (acima) para explicar o NOVO tópico atual. Isso gera ancoragem cognitiva e constrói uma teia de conhecimento interdisciplinar poderosa na mente dele.`;
     }
   }
 

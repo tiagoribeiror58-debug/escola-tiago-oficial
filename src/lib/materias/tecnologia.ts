@@ -123,33 +123,23 @@ Abordagem obrigatória:
           descricao: 'Uso diário para ganho massivo de eficiência pessoal. Fluxos de trabalho, GPT, Claude.',
           contexto: `Foco: táticas brutais de eficiência pessoal e fluxos de trabalho do dia a dia.
 O aluno é um "Pedreiro de Prompt", quer resolver tarefas rapidamente, de forma pragmática.`,
-          fases: [
-            {
-              nome: 'Fase 1: O Operador Eficiente',
-              topicos: [
-                'O Mindset do Operador Centauro',
-                'Anatomia de um Prompt de Alta Precisão (Role, Context, Constraints)',
-                'Iteração e Refinamento de Contexto (Chaining)',
-                'Automatizando Tarefas Repetitivas (Copywriting, Resumos, Emails)',
-                'Few-Shot Prompting: Guiando com Exemplos',
-                'Chain-of-Thought: Fazendo a IA Pensar em Voz Alta',
-                'Prompts para Análise de Dados e Planilhas',
-                'Usando IA para Pesquisa e Síntese de Informações',
-              ]
-            },
-            {
-              nome: 'Fase 2: Automações Complexas',
-              topicos: [
-                'Análise de Dados Avançada via Agentes (Code Interpreter)',
-                'Automações No-Code conectadas a IA (Zapier/Make + OpenAI)',
-                'Criação de Prompts Dinâmicos (Templates)',
-                'Sistemas Multi-Agente Básicos',
-                'Construindo GPTs Customizados',
-                'API da OpenAI/Anthropic: Primeira Integração',
-                'Avaliação de Outputs: Como Medir Qualidade da IA',
-                'Custo de Token: Otimizando sua Fatura de API',
-              ]
-            }
+          ementa: [
+            'O Mindset do Operador Centauro',
+            'Anatomia de um Prompt de Alta Precisão (Role, Context, Constraints)',
+            'Iteração e Refinamento de Contexto (Chaining)',
+            'Automatizando Tarefas Repetitivas (Copywriting, Resumos, Emails)',
+            'Few-Shot Prompting: Guiando com Exemplos',
+            'Chain-of-Thought: Fazendo a IA Pensar em Voz Alta',
+            'Prompts para Análise de Dados e Planilhas',
+            'Usando IA para Pesquisa e Síntese de Informações',
+            'Análise de Dados Avançada via Agentes (Code Interpreter)',
+            'Automações No-Code conectadas a IA (Zapier/Make + OpenAI)',
+            'Criação de Prompts Dinâmicos (Templates)',
+            'Sistemas Multi-Agente Básicos',
+            'Construindo GPTs Customizados',
+            'API da OpenAI/Anthropic: Primeira Integração',
+            'Avaliação de Outputs: Como Medir Qualidade da IA',
+            'Custo de Token: Otimizando sua Fatura de API'
           ]
         },
         {
@@ -160,42 +150,27 @@ O aluno é um "Pedreiro de Prompt", quer resolver tarefas rapidamente, de forma 
           whyStart: 'LLMs são só uma fatia da IA. Dados tabulares, regressões e árvores de decisão ainda resolvem 80% dos problemas reais de negócio.',
           descricao: 'Análise de dados estatística, regressões, clusterização e árvores de decisão.',
           contexto: `Foco: extração de valor estatístico de dados tabulares. Nem tudo precisa de um LLM.`,
-          fases: [
-            {
-              nome: 'Fase 1: Estatística e Preparação',
-              topicos: [
-                'Limpeza de Dados e Feature Engineering',
-                'Regressão Linear e Logística (Os Fundamentos)',
-                'Árvores de Decisão e Random Forests',
-                'Clusterização e Segmentação (K-Means)',
-                'Análise Exploratória de Dados (EDA)',
-                'Seleção de Features: Correlação e Importância',
-                'Tratamento de Dados Desbalanceados',
-                'Encoding de Variáveis Categóricas',
-              ]
-            },
-            {
-              nome: 'Fase 2: Modelagem Avançada',
-              topicos: [
-                'Gradient Boosting (XGBoost, LightGBM)',
-                'Séries Temporais e Previsão de Demanda',
-                'Detecção de Anomalias (Fraudes e Risco)',
-                'Interpretabilidade de Modelos (SHAP Values)',
-                'AutoML: Automatizando a Seleção de Modelos',
-                'Ensemble Methods: Combinando Modelos',
-                'Redução de Dimensionalidade (PCA, UMAP)',
-                'Sistemas de Recomendação',
-              ]
-            },
-            {
-              nome: 'Fase 3: Produção e Métricas',
-              topicos: [
-                'Métricas de Avaliação: Precision, Recall, F1, AUC',
-                'Validação Cruzada e Prevenção de Data Leakage',
-                'Deploy de Modelos de ML com FastAPI',
-                'Monitoramento de Modelos em Produção',
-              ]
-            }
+          ementa: [
+            'Limpeza de Dados e Feature Engineering',
+            'Regressão Linear e Logística (Os Fundamentos)',
+            'Árvores de Decisão e Random Forests',
+            'Clusterização e Segmentação (K-Means)',
+            'Análise Exploratória de Dados (EDA)',
+            'Seleção de Features: Correlação e Importância',
+            'Tratamento de Dados Desbalanceados',
+            'Encoding de Variáveis Categóricas',
+            'Gradient Boosting (XGBoost, LightGBM)',
+            'Séries Temporais e Previsão de Demanda',
+            'Detecção de Anomalias (Fraudes e Risco)',
+            'Interpretabilidade de Modelos (SHAP Values)',
+            'AutoML: Automatizando a Seleção de Modelos',
+            'Ensemble Methods: Combinando Modelos',
+            'Redução de Dimensionalidade (PCA, UMAP)',
+            'Sistemas de Recomendação',
+            'Métricas de Avaliação: Precision, Recall, F1, AUC',
+            'Validação Cruzada e Prevenção de Data Leakage',
+            'Deploy de Modelos de ML com FastAPI',
+            'Monitoramento de Modelos em Produção'
           ]
         },
         {
@@ -207,42 +182,27 @@ O aluno é um "Pedreiro de Prompt", quer resolver tarefas rapidamente, de forma 
           descricao: 'Design de sistemas distribuídos, RAG, Bancos Vetoriais e Fine-Tuning.',
           contexto: `Foco: fundamentos da engenharia de software aplicada a Modelos Fundacionais.
 O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI Engineer.`,
-          fases: [
-            {
-              nome: 'Fase 1: Fundamentos da Inferência',
-              topicos: [
-                'A Anatomia de um LLM: Transformers e Atenção',
-                'Tokenização e Cálculo de Custos de Inferência',
-                'Engenharia de Prompting Avançada (Few-Shot, CoT)',
-                'Limites Cognitivos dos LLMs (Alucinação e Janela de Contexto)',
-                'Escolhendo o Modelo Certo: Trade-offs de Qualidade/Custo',
-                'Streaming de Respostas via SSE',
-                'Structured Outputs: JSON Mode e Function Calling',
-              ]
-            },
-            {
-              nome: 'Fase 2: Arquitetura e RAG',
-              topicos: [
-                'Embeddings e Representação Vetorial de Dados',
-                'Construindo Pipelines RAG (Retrieval-Augmented Generation)',
-                'Fine-Tuning vs In-Context Learning: Trade-offs',
-                'Tool Calling e Orquestração de Agentes (LangChain/LlamaIndex)',
-                'Bancos Vetoriais: Pinecone, Weaviate e pgvector',
-                'Chunking Strategies para RAG de Alta Precisão',
-                'Hybrid Search: Vetorial + BM25',
-                'Avaliação de Sistemas RAG (RAGAS)',
-              ]
-            },
-            {
-              nome: 'Fase 3: Agentes Autônomos',
-              topicos: [
-                'Arquitetura de Agentes: ReAct, Plan-and-Execute',
-                'Memória de Longo Prazo para Agentes',
-                'Multi-Agent Systems: Crews e Swarms',
-                'Computer Use: Agentes que Controlam Interfaces',
-                'Guardrails: Como Conter Agentes Autônomos',
-              ]
-            }
+          ementa: [
+            'A Anatomia de um LLM: Transformers e Atenção',
+            'Tokenização e Cálculo de Custos de Inferência',
+            'Engenharia de Prompting Avançada (Few-Shot, CoT)',
+            'Limites Cognitivos dos LLMs (Alucinação e Janela de Contexto)',
+            'Escolhendo o Modelo Certo: Trade-offs de Qualidade/Custo',
+            'Streaming de Respostas via SSE',
+            'Structured Outputs: JSON Mode e Function Calling',
+            'Embeddings e Representação Vetorial de Dados',
+            'Construindo Pipelines RAG (Retrieval-Augmented Generation)',
+            'Fine-Tuning vs In-Context Learning: Trade-offs',
+            'Tool Calling e Orquestração de Agentes (LangChain/LlamaIndex)',
+            'Bancos Vetoriais: Pinecone, Weaviate e pgvector',
+            'Chunking Strategies para RAG de Alta Precisão',
+            'Hybrid Search: Vetorial + BM25',
+            'Avaliação de Sistemas RAG (RAGAS)',
+            'Arquitetura de Agentes: ReAct, Plan-and-Execute',
+            'Memória de Longo Prazo para Agentes',
+            'Multi-Agent Systems: Crews e Swarms',
+            'Computer Use: Agentes que Controlam Interfaces',
+            'Guardrails: Como Conter Agentes Autônomos'
           ]
         },
         {
@@ -253,33 +213,23 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
           whyStart: 'Saber treinar um modelo não é suficiente — você precisa colocá-lo em produção de forma confiável e escalável.',
           descricao: 'Treinamento, Fine-Tuning, Deploy escalável e monitoramento de modelos em produção.',
           contexto: `Foco: infraestrutura e engenharia pesada de Machine Learning.`,
-          fases: [
-            {
-              nome: 'Fase 1: Preparação e Treinamento',
-              topicos: [
-                'Pipelines de Dados para Treinamento',
-                'Técnicas de Fine-Tuning (SFT, RLHF)',
-                'Quantização e Otimização de Pesos (LoRA, GGML)',
-                'Avaliação de Modelos (Benchmarks e Evals)',
-                'DPO (Direct Preference Optimization): Alternativa ao RLHF',
-                'Data Curation: Qualidade > Quantidade',
-                'Synthetic Data Generation para Fine-Tuning',
-                'Experimentos com MLflow e Weights & Biases',
-              ]
-            },
-            {
-              nome: 'Fase 2: Infraestrutura e Produção',
-              topicos: [
-                'Deploy de Modelos (HuggingFace, vLLM, TensorRT)',
-                'Monitoramento de Data Drift e Model Decay',
-                'Orquestração de GPUs e Custos de Nuvem',
-                'Segurança em APIs de Modelos Abertos',
-                'Batching de Inferência para Escala',
-                'Continuous Training e Retraining Pipelines',
-                'A/B Testing de Modelos em Produção',
-                'SLAs de IA: Latência, Throughput e Disponibilidade',
-              ]
-            }
+          ementa: [
+            'Pipelines de Dados para Treinamento',
+            'Técnicas de Fine-Tuning (SFT, RLHF)',
+            'Quantização e Otimização de Pesos (LoRA, GGML)',
+            'Avaliação de Modelos (Benchmarks e Evals)',
+            'DPO (Direct Preference Optimization): Alternativa ao RLHF',
+            'Data Curation: Qualidade > Quantidade',
+            'Synthetic Data Generation para Fine-Tuning',
+            'Experimentos com MLflow e Weights & Biases',
+            'Deploy de Modelos (HuggingFace, vLLM, TensorRT)',
+            'Monitoramento de Data Drift e Model Decay',
+            'Orquestração de GPUs e Custos de Nuvem',
+            'Segurança em APIs de Modelos Abertos',
+            'Batching de Inferência para Escala',
+            'Continuous Training e Retraining Pipelines',
+            'A/B Testing de Modelos em Produção',
+            'SLAs de IA: Latência, Throughput e Disponibilidade'
           ]
         },
         {
@@ -290,30 +240,20 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
           whyStart: 'Com as fundações teóricas prontas, explore a fronteira da geração visual, auditiva e 3D.',
           descricao: 'Domínio sobre geração de Imagem, Áudio, Vídeo e 3D usando modelos fundacionais.',
           contexto: `Foco: a fronteira criativa e sensorial da inteligência artificial.`,
-          fases: [
-            {
-              nome: 'Fase 1: Síntese Visual',
-              topicos: [
-                'Como funcionam os Modelos de Difusão',
-                'Engenharia de Imagem Avançada (Midjourney, Stable Diffusion)',
-                'Controle e Consistência (ControlNet, IP-Adapter)',
-                'Geração de Vídeo e Interpolação (Runway, Sora, Pika)',
-                'Inpainting e Outpainting: Editando com IA',
-                'LoRA para Estilos Consistentes',
-                'Workflows no ComfyUI',
-              ]
-            },
-            {
-              nome: 'Fase 2: Áudio e Espacial',
-              topicos: [
-                'Clonagem de Voz e Síntese de Fala (TTS)',
-                'Geração Musical e Sound Design (Suno, Udio)',
-                'Modelos de Geração 3D e NeRFs',
-                'Visão Computacional Aplicada a Negócios',
-                'Modelos Multimodais Nativos (GPT-4o, Gemini)',
-                'Real-time IA: Processamento de Stream de Vídeo',
-              ]
-            }
+          ementa: [
+            'Como funcionam os Modelos de Difusão',
+            'Engenharia de Imagem Avançada (Midjourney, Stable Diffusion)',
+            'Controle e Consistência (ControlNet, IP-Adapter)',
+            'Geração de Vídeo e Interpolação (Runway, Sora, Pika)',
+            'Inpainting e Outpainting: Editando com IA',
+            'LoRA para Estilos Consistentes',
+            'Workflows no ComfyUI',
+            'Clonagem de Voz e Síntese de Fala (TTS)',
+            'Geração Musical e Sound Design (Suno, Udio)',
+            'Modelos de Geração 3D e NeRFs',
+            'Visão Computacional Aplicada a Negócios',
+            'Modelos Multimodais Nativos (GPT-4o, Gemini)',
+            'Real-time IA: Processamento de Stream de Vídeo'
           ]
         },
         {
@@ -324,32 +264,22 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
           whyStart: 'Saber como funciona é diferente de saber quando usar. Aqui você foca em ROI, defesa competitiva e alinhamento do negócio com a IA.',
           descricao: 'Estratégia corporativa, ROI de IA e liderança de times AI-first.',
           contexto: `Foco: visão estratégica e econômica da IA. O aluno é um founder, executivo ou líder.`,
-          fases: [
-            {
-              nome: 'Fase 1: O Custo Cognitivo e a Automação',
-              topicos: [
-                'O Paradigma da Empresa AI-First',
-                'Mapeamento de Gargalos Cognitivos na Operação',
-                'ROI de Automação: Quando usar humanos vs agentes',
-                'Riscos Estratégicos: Lock-in de Plataforma e Privacidade',
-                'Open Source vs Proprietário: Análise Estratégica',
-                'Construindo um Roadmap de IA para sua Empresa',
-                'Avaliando Ferramentas de IA: Critérios e Red Flags',
-                'Casos de Uso de Maior ROI por Setor',
-              ]
-            },
-            {
-              nome: 'Fase 2: Estruturação de Times e Processos',
-              topicos: [
-                'Contratando e Gerenciando "AI Engineers" e Pedreiros de Prompt',
-                'Redesenho de Processos (BPR) com Agentes Autônomos',
-                'Defesa Competitiva na Era dos Modelos de Código Aberto',
-                'Implementação Cultural: Vencendo a resistência interna',
-                'IA como Produto: Construindo Features com LLMs',
-                'Métricas de Sucesso para Iniciativas de IA',
-                'Ética Corporativa na Adoção de IA',
-              ]
-            }
+          ementa: [
+            'O Paradigma da Empresa AI-First',
+            'Mapeamento de Gargalos Cognitivos na Operação',
+            'ROI de Automação: Quando usar humanos vs agentes',
+            'Riscos Estratégicos: Lock-in de Plataforma e Privacidade',
+            'Open Source vs Proprietário: Análise Estratégica',
+            'Construindo um Roadmap de IA para sua Empresa',
+            'Avaliando Ferramentas de IA: Critérios e Red Flags',
+            'Casos de Uso de Maior ROI por Setor',
+            'Contratando e Gerenciando "AI Engineers" e Pedreiros de Prompt',
+            'Redesenho de Processos (BPR) com Agentes Autônomos',
+            'Defesa Competitiva na Era dos Modelos de Código Aberto',
+            'Implementação Cultural: Vencendo a resistência interna',
+            'IA como Produto: Construindo Features com LLMs',
+            'Métricas de Sucesso para Iniciativas de IA',
+            'Ética Corporativa na Adoção de IA'
           ]
         },
         {
@@ -360,31 +290,21 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
           whyStart: 'A fronteira final. Construir inteligência traz responsabilidade cibernética e ética extrema.',
           descricao: 'AI Safety, regulamentação, mitigação de viés e defesa contra ataques adversariais.',
           contexto: `Foco: as grades de proteção da inteligência artificial.`,
-          fases: [
-            {
-              nome: 'Fase 1: Vulnerabilidades Técnicas',
-              topicos: [
-                'Prompt Injection e Jailbreaks',
-                'Data Poisoning e Ataques Adversariais',
-                'Vazamento de Dados Pessoais (PII) em LLMs',
-                'Práticas de Red Teaming em IA',
-                'Model Inversion e Membership Inference Attacks',
-                'Defesas: Guardrails, Content Filtering e Input Sanitization',
-                'Avaliação de Robustez de Modelos',
-              ]
-            },
-            {
-              nome: 'Fase 2: Governança e Ética',
-              topicos: [
-                'O Problema do Alinhamento (Alignment Problem)',
-                'Mitigação de Viés e Fairness',
-                'Regulamentação e Compliance (AI Act, LGPD/GDPR aplicadas à IA)',
-                'Direitos Autorais e Propriedade Intelectual Sintética',
-                'Superinteligência e Risco Existencial: O Debate Sério',
-                'Governança de IA nas Empresas: Frameworks Práticos',
-                'Transparência e Explicabilidade (XAI)',
-              ]
-            }
+          ementa: [
+            'Prompt Injection e Jailbreaks',
+            'Data Poisoning e Ataques Adversariais',
+            'Vazamento de Dados Pessoais (PII) em LLMs',
+            'Práticas de Red Teaming em IA',
+            'Model Inversion e Membership Inference Attacks',
+            'Defesas: Guardrails, Content Filtering e Input Sanitization',
+            'Avaliação de Robustez de Modelos',
+            'O Problema do Alinhamento (Alignment Problem)',
+            'Mitigação de Viés e Fairness',
+            'Regulamentação e Compliance (AI Act, LGPD/GDPR aplicadas à IA)',
+            'Direitos Autorais e Propriedade Intelectual Sintética',
+            'Superinteligência e Risco Existencial: O Debate Sério',
+            'Governança de IA nas Empresas: Frameworks Práticos',
+            'Transparência e Explicabilidade (XAI)'
           ]
         }
       ]

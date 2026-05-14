@@ -16,24 +16,45 @@ export const biohackingHub: MateriaConfig = {
       whyStart: 'Seu cérebro roda em um servidor biológico. Se o servidor capengar, seu intelecto não importa.',
       descricao: 'Otimização de sono, ritmo circadiano e vias metabólicas (mTOR, AMPK).',
       contexto: 'Foco científico puro (Huberman, Peter Attia). Sem pseudociência. Explique a via metabólica antes de falar o que fazer.',
-      fases: [
-        {
-          nome: 'Fase 1: O Ciclo de Restauração',
-          topicos: [
-            'Arquitetura do Sono (REM, Slow-Wave) e Pressão de Adenosina',
-            'O Ritmo Circadiano e os Fótons no Olho',
-            'Cronobiologia e Picos de Cortisol'
-          ]
-        },
-        {
-          nome: 'Fase 2: Vias Metabólicas & Longevidade',
-          topicos: [
-            'A Via mTOR: Crescimento celular vs Envelhecimento',
-            'AMPK e Autofagia: Reciclagem Celular pelo Jejum',
-            'Sensibilidade à Insulina e Energia Mitocondrial',
-            'Zona 2 de Cardio: A base da resistência física'
-          ]
-        }
+      ementa: [
+        'O Sistema Glinfático e a Lavagem Cerebral Noturna',
+        'Arquitetura do Sono: Transição N1, N2, N3 e REM',
+        'A Pressão Homestática de Adenosina',
+        'A Glândula Pineal e a Secreção de Melatonina Endógena',
+        'O Efeito da Luz Azul Suprimindo a Melatonina',
+        'Cronotipos Genéticos (Ursos, Lobos, Leões, Golfinhos)',
+        'Jet Lag Social e a Desincronização Circadiana',
+        'Micro-despertares (Arousals) e Apneia Oculta',
+        'Métricas de Polissonografia (HRV durante o sono)',
+        'O Papel do Magnésio (Treonato/Bisglicinato) e Apigenina',
+        'O que é a Via mTOR e o paradoxo do Crescimento Celular',
+        'AMPK: O Interruptor de Energia e Sobrevivência',
+        'Autofagia e Senescência Celular (Células Zumbi)',
+        'Sensibilidade à Insulina vs Resistência Periférica',
+        'Flexibilidade Metabólica: Queimando Glicose vs Cetona',
+        'Biogênese Mitocondrial: Aumentando o motor da célula',
+        'NAD+ e as Sirtuínas (O gene da longevidade)',
+        'A Matemática da Zona 2 de Cardio (Ácido Lático Baseline)',
+        'VO2 Max como o maior preditor de expectativa de vida',
+        'Telômeros e a Enzima Telomerase',
+        'Biodisponibilidade vs Densidade Nutricional',
+        'O Eixo Intestino-Cérebro e o Nervo Vago',
+        'O Microbioma e a Produção de Serotonina Intestinal',
+        'Equilíbrio Sódio-Potássio na Bomba Celular',
+        'Ômega-3 (EPA/DHA) e a Fluidez da Membrana Neural',
+        'Carb Cycling Estratégico para Picos de Glicogênio',
+        'Dieta Cetogênica e Produção de Beta-Hidroxibutirato',
+        'Fatores Antinutricionais (Fitatos, Oxalatos, Lectinas)',
+        'A Fisiologia do Jejum Intermitente Prolongado (48h+)',
+        'Hormesis: A dose certa de estresse biológico',
+        'Exposição Ativa ao Frio (Crioterapia) e Vasoconstrição',
+        'Ativação do Tecido Adiposo Marrom (Gordura Marrom)',
+        'Liberação de Noradrenalina Induzida pelo Frio',
+        'Terapia de Choque Térmico (Sauna) e Proteínas Heat Shock (HSP)',
+        'O Sistema Linfático e a Eliminação de Metabólitos',
+        'Terapia de Luz Vermelha (Fotobiomodulação) em ATP',
+        'Aterramento (Earthing) e Transferência de Elétrons',
+        'Exercícios Isométricos de Super-compensação'
       ]
     },
     {
@@ -45,23 +66,19 @@ export const biohackingHub: MateriaConfig = {
       whyStart: 'Motivação é um mito; o que existe é balanço de dopamina. Domine a química e você domina o comportamento.',
       descricao: 'Gestão de Dopamina, estado de Flow e resistência a estresse agudo.',
       contexto: 'Foco na engenharia de neurotransmissores. Tratamento do corpo como máquina de outputs.',
-      fases: [
-        {
-          nome: 'Fase 1: Os Circuitos Base',
-          topicos: [
-            'O Erro de Previsão de Recompensa (Mecânica da Dopamina)',
-            'Serotonina vs Dopamina: Saciedade vs Busca',
-            'Reset de Receptores: "Jejum" de Dopamina'
-          ]
-        },
-        {
-          nome: 'Fase 2: Performance sob Fogo',
-          topicos: [
-            'O Sistema Nervoso Autônomo (Simpático vs Parassimpático)',
-            'Controle de Estresse Agudo via Respiração (Physiological Sigh)',
-            'Neuroplasticidade Dirigida: Como forçar o cérebro a aprender'
-          ]
-        }
+      ementa: [
+        'O Erro de Previsão de Recompensa (Mecânica da Dopamina)',
+        'Serotonina vs Dopamina: Saciedade vs Busca',
+        'Reset de Receptores: "Jejum" de Dopamina',
+        'O Sistema Nervoso Autônomo (Simpático vs Parassimpático)',
+        'Controle de Estresse Agudo via Respiração (Physiological Sigh)',
+        'Neuroplasticidade Dirigida: Como forçar o cérebro a aprender',
+        'Cafeína e o Bloqueio da Adenosina (Uso Estratégico)',
+        'L-Teanina, Creatina e Suplementação Cognitiva',
+        'Microdosing e a Ciência Emergente dos Psicodélicos',
+        'A Matemática do Flow: Equação de Desafio vs Habilidade',
+        'Redução da Atividade do Córtex Pré-Frontal (Transient Hypofrontality)',
+        'Gatilhos Ambientais para Indução Rápida'
       ]
     }
   ]
