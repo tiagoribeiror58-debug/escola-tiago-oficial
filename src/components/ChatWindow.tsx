@@ -377,7 +377,8 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+      <div className="flex-1 overflow-y-auto w-full">
+        <div className="max-w-3xl mx-auto px-4 py-6 space-y-6 w-full">
 
         {/* Histórico da sessão anterior — display-only, não vai para IA */}
         {hasHistory && (
@@ -557,6 +558,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
         )}
 
         <div ref={bottomRef} />
+        </div>
       </div>
 
       <div className="border-t border-border p-3">

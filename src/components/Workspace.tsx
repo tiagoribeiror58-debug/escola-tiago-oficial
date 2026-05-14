@@ -23,7 +23,7 @@ export default function Workspace({ materia, children }: Props) {
   // Os widgets laterais foram desativados para simplificar a experiência.
   // Para reativar: restaurar os blocos 'split' e 'canvas' abaixo.
   return (
-    <div className="h-full w-full overflow-hidden bg-background">
+    <div className="h-full w-full bg-gradient-to-b from-background to-muted/20 overflow-hidden">
       {children}
     </div>
   );
