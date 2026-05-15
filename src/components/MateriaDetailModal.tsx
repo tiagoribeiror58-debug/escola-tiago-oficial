@@ -88,12 +88,21 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const sessoesMateria = (todasSessoes || [])
     .filter(s => s.materia === config.slug)
     .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime());
+    
+  // Identifica se o tópico selecionado está pausado (tem sessão inacabada)
+  const sessaoDesteTopico = sessoesMateria.find(s => s.topico === selectedSub && !ementaConcluida.includes(s.topico));
+  const isSelectedSubPaused = !!(selectedSub && sessaoDesteTopico);
 
   const handleNewSession = () => {
     playPopSound();
     onOpenChange(false);
     let url = `/sessao/${config.slug}`;
-    if (selectedSub) url += `?sub=${encodeURIComponent(selectedSub)}`;
+    if (selectedSub) {
+      url += `?sub=${encodeURIComponent(selectedSub)}`;
+      if (isSelectedSubPaused) {
+        url += `&resume=${sessaoDesteTopico.session_key}`;
+      }
+    }
     navigate(url);
   };
 
@@ -144,9 +153,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   </div>
                 )}
                 {proximoTopicoReal && (
-                  <div className="flex-1 px-3 py-2 rounded-xl bg-muted/50 border border-border">
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Próximo</p>
-                    <p className="text-xs font-semibold text-foreground mt-0.5 line-clamp-2">
+                  <div className="flex-1 px-3 py-2 rounded-xl bg-primary/10 border border-primary/20">
+                    <p className="text-[10px] text-primary uppercase tracking-wide font-medium">Próximo</p>
+                    <p className="text-xs font-medium text-foreground mt-0.5 line-clamp-2">
                       {proximoTopicoReal}
                     </p>
                   </div>
@@ -199,23 +208,24 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                             </div>
                           </div>
                         )}
-                        {visibleEmenta.map((topico, i) => {
+                        {visibleEmenta.map((step, i) => {
                           const idx = startIdx + i;
-                          const isCompleted = ementaConcluida.includes(topico);
-                          const isCurrent = idx === currentIdx;
-                          const isFuture = idx > currentIdx;
+                          const norm = (s: string) => s.toLowerCase().trim();
+                          const isCompleted = ementaConcluida.some(d => norm(d).includes(norm(step)) || norm(step).includes(norm(d)));
+                          const isCurrent = currentIdx === idx;
+                          // Regra corrigida: é pausado se tiver sessão e não estiver concluído. Independe de ser o currentIdx.
+                          const isPaused = !isCompleted && sessoesMateria.some(s => s.topico === step);
                           const isLast = idx === flatEmenta.length - 1;
-                          const isPaused = Boolean(!isCompleted && ultimaSessao?.topico && (topico.toLowerCase().includes(ultimaSessao.topico.toLowerCase()) || ultimaSessao.topico.toLowerCase().includes(topico.toLowerCase())));
 
                           return (
-                            <div key={idx} className="flex gap-3">
-                              {/* Coluna da linha + nó */}
+                            <div key={idx} className={cn(
+                              "flex gap-3 relative group transition-opacity",
+                              !isCompleted && !isCurrent && !isPaused && "opacity-40"
+                            )}>
+                              {/* Indicador Visual */}
                               <div className="flex flex-col items-center">
-                                {/* Nó */}
-                                <button
-                                  ref={isCurrent ? currentTopicRef : null}
-                                  onClick={(e) => handleToggleTopico(e, topico, isCompleted)}
-                                  title={isCompleted ? 'Marcar como não concluído' : 'Marcar como concluído'}
+                                <button 
+                                  onClick={() => !isCompleted && setSelectedSub(step)}
                                   className={cn(
                                     "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] font-bold transition-all duration-200 hover:scale-110 z-10",
                                     isCompleted
@@ -232,56 +242,59 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                 {/* Linha conectora (não aparece no último item) */}
                                 {!isLast && (
                                   <div className={cn(
-                                    "w-px flex-1 min-h-[20px] my-0.5 transition-colors",
-                                    isCompleted ? "bg-[hsl(var(--success)/0.3)]" : "bg-border/40"
+                                    "w-px h-full min-h-[1.5rem] mt-1 -mb-1",
+                                    isCompleted ? "bg-[hsl(var(--success)/0.4)]" : "bg-border/50"
                                   )} />
                                 )}
                               </div>
 
-                              {/* Conteúdo do passo */}
-                              <button
-                                onClick={() => setSelectedSub(selectedSub === topico ? null : topico)}
-                                className={cn(
-                                  "flex-1 text-left pb-3 text-sm transition-colors rounded-lg px-2 -mx-2",
-                                  isCurrent && "font-semibold text-foreground",
-                                  isCompleted && !isCurrent && "text-muted-foreground",
-                                  isFuture && "text-muted-foreground/60",
-                                  selectedSub === topico && "bg-muted/40"
+                              {/* Conteúdo */}
+                              <div className="flex-1 pb-4">
+                                <button 
+                                  onClick={() => !isCompleted && setSelectedSub(step)}
+                                  className={cn(
+                                    "text-sm font-medium text-left leading-tight transition-colors",
+                                    isCompleted ? "text-foreground" : isCurrent || isPaused ? "text-foreground" : "text-muted-foreground",
+                                    !isCompleted && "hover:text-primary cursor-pointer"
+                                  )}
+                                  disabled={isCompleted}
+                                >
+                                  {step}
+                                </button>
+                                {isPaused && (
+                                  <p className="text-[10px] text-[hsl(var(--warning))] font-medium uppercase mt-1 tracking-wider">
+                                    Sessão pausada
+                                  </p>
                                 )}
-                                style={{ paddingTop: '3px' }}
-                              >
-                                <span className={cn(
-                                  "line-clamp-2",
-                                  isCompleted && selectedSub !== topico && "line-through decoration-muted-foreground/30"
-                                )}>
-                                  {topico}
-                                </span>
-                                {isCurrent && (
-                                  <span className={cn(
-                                    "block text-[10px] font-bold uppercase tracking-widest mt-0.5",
-                                    isPaused ? "text-[hsl(var(--warning))]" : "text-primary"
-                                  )}>
-                                    {isPaused ? 'Pausado em andamento' : 'Você está aqui'}
-                                  </span>
+                                {isCurrent && !isPaused && (
+                                  <p className="text-[10px] text-primary font-medium uppercase mt-1 tracking-wider">
+                                    Próximo tópico
+                                  </p>
                                 )}
-                              </button>
+                                {isCompleted && (
+                                  <p className="text-[10px] text-[hsl(var(--success))] font-medium uppercase mt-1 tracking-wider">
+                                    Concluído
+                                  </p>
+                                )}
+                              </div>
                             </div>
                           );
                         })}
+
                         {!isExpandedRoadmap && endIdx < flatEmenta.length && (
-                          <div className="flex gap-3 mt-1 opacity-50">
+                          <div className="flex gap-3 opacity-50 mt-2">
                             <div className="flex flex-col items-center">
                               <div className="w-6 h-6 flex items-center justify-center shrink-0 text-muted-foreground">⋮</div>
                             </div>
+                            <div className="flex-1 pb-4">
+                              <button 
+                                onClick={() => setIsExpandedRoadmap(true)}
+                                className="text-xs font-medium text-primary hover:underline"
+                              >
+                                Ver mais {flatEmenta.length - endIdx} tópicos
+                              </button>
+                            </div>
                           </div>
-                        )}
-                        {flatEmenta.length > 5 && (
-                          <button 
-                            onClick={() => setIsExpandedRoadmap(!isExpandedRoadmap)}
-                            className="w-full mt-2 py-2 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted/30 rounded-lg transition-colors border border-transparent hover:border-border/50"
-                          >
-                            {isExpandedRoadmap ? 'Esconder tópicos' : `Mostrar todos os ${flatEmenta.length} tópicos`}
-                          </button>
                         )}
                       </>
                     );
@@ -344,11 +357,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
           )}
 
           {/* Spacer para o sticky footer não cobrir o conteúdo do final do scroll */}
-          {(selectedSub || allDone) && <div className="h-24" />}
+          <div className="h-24 shrink-0" />
 
           {/* Action — CTA Começar Sessão (Pop-up Modal Style) */}
           {(selectedSub || allDone) && (
-            <div className="sticky bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-md border-t border-border shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)] animate-in slide-in-from-bottom-8 duration-300 z-10 rounded-t-[2rem]">
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-md border-t border-border shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)] animate-in slide-in-from-bottom-8 duration-300 z-10 rounded-t-[2rem]">
               {allDone ? (
                 <button
                   onClick={handleNewSession}
@@ -378,14 +391,14 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   onClick={handleNewSession}
                   className={cn(
                     'flex items-center gap-4 w-full p-4 rounded-2xl border',
-                    ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                    isSelectedSubPaused
                       ? 'bg-[hsl(var(--warning)/0.1)] border-[hsl(var(--warning)/0.3)] hover:bg-[hsl(var(--warning)/0.15)]'
                       : 'bg-white/5 border-white/10 hover:bg-white/10',
                     'transition-all active:scale-[0.98] shadow-lg'
                   )}
                 >
                   <div className={cn("p-2.5 rounded-xl", 
-                    ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                    isSelectedSubPaused
                       ? "bg-[hsl(var(--warning)/0.2)] text-[hsl(var(--warning))]"
                       : "bg-white/10 text-white"
                   )}>
@@ -393,23 +406,23 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   </div>
                   <div className="text-left flex-1">
                     <span className={cn("block text-[15px] font-semibold",
-                      ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                      isSelectedSubPaused
                         ? "text-[hsl(var(--warning))]" : "text-white"
                     )}>
-                      {ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico) 
+                      {isSelectedSubPaused 
                         ? `Retomar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}` 
                         : `Estudar: ${selectedSub?.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}`}
                     </span>
                     <span className={cn("block text-[12px] leading-tight mt-0.5",
-                      ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                      isSelectedSubPaused
                         ? "text-[hsl(var(--warning))/0.7]" : "text-white/60"
                     )}>
-                      {ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                      {isSelectedSubPaused
                         ? 'Sessão pausada em andamento' : 'Iniciar uma nova sessão de estudos'}
                     </span>
                   </div>
                   <ChevronRight className={cn("w-4 h-4", 
-                    ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                    isSelectedSubPaused
                       ? "text-[hsl(var(--warning))/0.7]" : "text-white/40"
                   )} />
                 </button>
