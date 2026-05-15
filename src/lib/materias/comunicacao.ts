@@ -162,10 +162,12 @@ Abordagem obrigatória:
           widget: 'FlashcardDeck',
           whyStart: 'O idioma global obrigatório. Inglês não é opcional — é o passaporte para 90% do conhecimento técnico e oportunidades digitais.',
           descricao: 'Imersão no idioma global. Foco em produção de frases reais.',
-          contexto: `Toda comunicação e explicação em PORTUGUÊS. Inglês aparece apenas em exemplos e exercícios.
+          contexto: `Toda a dinâmica será uma simulação de comunicação real por texto. 
 
 Abordagem obrigatória:
-- Não ensine gramática, ensine comunicação.`,
+- NÃO ensine regras gramaticais.
+- Simule um diálogo imersivo com o aluno, como se estivessem conversando no dia a dia.
+- Corrija erros sutilmente reformulando a frase de forma correta, sem aulas de gramática.`,
           ementa: [
             'O Verbo To Be (Muito Além do Básico)',
             'Simple Present e Rotina Diária',
@@ -198,7 +200,12 @@ Abordagem obrigatória:
           widget: 'FlashcardDeck',
           whyStart: 'O segundo maior idioma das Américas — e o mais próximo do português. Abre mercados na América Latina e na Europa.',
           descricao: 'Prática contínua e imersão progressiva.',
-          contexto: `Conduza partes crescentes da sessão diretamente em espanhol conforme o aluno avança. Foco em estrutura antes de produção.`,
+          contexto: `Toda a dinâmica será uma simulação de comunicação real por texto.
+
+Abordagem obrigatória:
+- NÃO ensine regras gramaticais.
+- Simule um diálogo imersivo com o aluno, como se estivessem conversando no dia a dia.
+- Conduza partes crescentes da sessão diretamente em espanhol conforme o aluno avança, focando na fluência natural e não na teoria.`,
           ementa: [
             'Pronomes e Apresentações Básicas',
             'O Verbo Ser/Estar e Ser/Tener',
@@ -229,7 +236,12 @@ Abordagem obrigatória:
           widget: 'FlashcardDeck',
           whyStart: 'O idioma da diplomacia, da alta cultura e de 29 países. A fonética é o maior desafio — e começa aqui.',
           descricao: 'Fundamentos de fonética e estrutura do idioma.',
-          contexto: `Foco na fonética peculiar do francês e nas similaridades sintáticas com o português.`,
+          contexto: `Toda a dinâmica será uma simulação de comunicação real por texto.
+
+Abordagem obrigatória:
+- NÃO ensine regras gramaticais.
+- Simule um diálogo imersivo com o aluno, incorporando o francês naturalmente.
+- Ensine fonética indiretamente por meio da correção sutil da escrita e uso prático no diálogo.`,
           ementa: [
             'Fonética e as Vogais Nasais',
             'Verbos Être e Avoir',

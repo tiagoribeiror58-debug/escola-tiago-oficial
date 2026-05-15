@@ -171,6 +171,33 @@ export const seducaoHub: MateriaConfig = {
         'Saúde Mental em Relacionamentos Intensos',
         'Quando Parar e Avaliar sua Vida Amorosa'
       ]
+    },
+    {
+      slug: 'comportamento-masculino-alita',
+      nome: 'Comportamento Masculino & Realismo',
+      emoji: '👁️',
+      descricao: 'O estudo da natureza feminina e do comportamento masculino sem ilusões românticas. Desconstrução do idealismo e fortalecimento da força interior e independência emocional.',
+      parent: 'seducao-hub',
+      whyStart: 'Esta etapa atua como um antídoto contra as ilusões românticas. É essencial para o homem entender as dinâmicas de poder e não ser refém emocional das interações.',
+      contexto: 'Foque nos conceitos discorridos por Nessahan Alita e teóricos da praxeologia masculina. Explique a lógica por trás da paixão como fraqueza, as armadilhas emocionais (testes e manipulações) e a busca por autenticidade e fortaleza interior, sempre mantendo o rigor técnico e evitando misoginia barata.',
+      ementa: [
+        'A Desconstrução do Mito do Amor Romântico',
+        'O Magnetismo da Frieza e o Paradoxo da Paixão',
+        'A Dinâmica do Desprezo e a Inversão do Jogo',
+        'Testes de Congruência e as Armadilhas Emocionais',
+        'O Ego Masculino como Ponto Cego e Alvo',
+        'A Ilusão do Especialismo ("Ela é Diferente"): Padrões Comportamentais',
+        'A Dependência Emocional e a Síndrome do Cavaleiro Branco',
+        'Como a Ansiedade e a Carência Destroem a Atração Real',
+        'O Desapego Verdadeiro vs Desapego Falsificado (Atuação)',
+        'Jogos de Poder e Submissão Psicológica nas Relações',
+        'O Sofrimento Masculino e o Crescimento através da Ruptura',
+        'A Postura de Fortaleza: Lidando com a Indiferença',
+        'Autocontrole Emocional: A Arte do Não Reagir',
+        'O Perigo da Validação Excessiva e o Silêncio Estratégico',
+        'Compreensão Praxeológica: A Natureza Hipergâmica em Ação'
+      ],
+      layout: 'narrative'
     }
   ]
 };

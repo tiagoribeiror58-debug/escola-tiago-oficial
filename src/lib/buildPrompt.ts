@@ -96,9 +96,9 @@ Não repita nenhum tópico básico já coberto.`;
     const progressoVisual = ementa.length > 0
       ? ementa.map(step => {
           const feito = concluidos.some(d => d.toLowerCase().includes(step.toLowerCase()) || step.toLowerCase().includes(d.toLowerCase()));
-          if (feito) return `  ✅ ${step}`;
+          if (feito) return `  ✅ ${step} (Concluído)`;
           if (step === topicoObrigatorio) return `  ▶ ${step}  ← VOCÊ ESTÁ AQUI`;
-          return `  ⬜ ${step}`;
+          return `  ⬜ ${step} (NÃO Estudado)`;
         }).join('\n')
       : '';
 
@@ -110,7 +110,8 @@ TÓPICO DESTA SESSÃO — REGRA ABSOLUTA
 TÓPICOS PROIBIDOS (já concluídos — NÃO podem ser tema principal):
 ${listaProibidos}
 
-Esta regra não tem exceção. Referências cruzadas são permitidas, mas a AULA é sobre "${topicoObrigatorio}".${progressoVisual ? `\n\nProgresso na ementa:\n${progressoVisual}` : ''}`;
+Esta regra não tem exceção. Referências cruzadas e analogias só são permitidas com tópicos expressamente marcados como CONCLUÍDOS.
+${progressoVisual ? `\nProgresso na ementa:\n${progressoVisual}\n\nIMPORTANTE: Só mencione tópicos da ementa se estiverem marcados como ✅ (Concluído). Tópicos marcados como ⬜ (NÃO Estudado) foram pulados pelo usuário ou ainda não foram vistos, portanto JAMAIS presuma conhecimento sobre eles e não os use em exemplos.` : ''}`;
   }
 
   // ─── CONEXÃO GLOBAL E HISTÓRICO DE PERFORMANCE ──────────────────────────────
