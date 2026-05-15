@@ -140,3 +140,50 @@ Soberania de Dados do Aluno: Garantir que o progresso do aluno seja exportável 
 
 Este parecer serve como base estratégica para as próximas etapas de desenvolvimento, garantindo que a Escola Tiago não seja apenas uma plataforma de ensino, mas um ecossistema de inteligência atualizado e pertinente ao seu tempo.
 
+O Gráfico de Conhecimento (Knowledge Graph) é o que transforma o seu sistema de um "Chat que responde" em um "Cérebro que entende".
+
+Se você quer vencer as Big Techs, você não compete no processamento (elas têm mais servidores), você compete na especificidade do dado.
+
+1. O que é isso (Explicando para uma criança)
+Imagine que o conhecimento do aluno é como um conjunto de Lego.
+
+No Chat comum: O aluno monta um carrinho, depois desmonta e joga as peças numa caixa. No dia seguinte, ele começa do zero. A caixa não sabe que ele já sabe fazer rodas.
+No Gráfico de Conhecimento: Cada vez que o aluno aprende algo (ex: "Juros Compostos"), nós pregamos essa peça numa placa na parede. Se amanhã ele for aprender "Investimentos", nós puxamos uma linha de lã ligando o "Investimento" ao "Juros Compostos".
+Com o tempo, a parede está cheia de peças conectadas. O sistema não vê apenas "texto", ele vê um Mapa Mental do que está dentro da cabeça do usuário.
+
+2. Como isso funcionaria na prática (Técnico)
+Hoje, nossa Sessao.tsx salva mensagens. No Gráfico de Conhecimento, teríamos uma camada extra.
+
+O Fluxo Técnico:
+
+Extração: Ao final de cada sessão, uma função de IA analisa a conversa e diz: "O usuário demonstrou domínio sobre [Conceito A] e [Conceito B]".
+Associação: O sistema olha no banco de dados e vê: "[Conceito A] é um pré-requisito para [Conceito C]".
+Personalização (O "Fosso"): Na próxima vez que o usuário abrir o app, o buildPrompt.ts vai receber:
+"O aluno já domina 80% de Macroeconomia, mas ainda não entende a conexão entre Inflação e Taxa de Juros. Foque nisso."
+
+3. Visualização do Gráfico (Exemplo)
+Imagine uma tela no seu app onde o aluno vê isso:
+
+mermaid
+graph TD
+    A[Juros Compostos] -->|Conecta com| B[Aposentadoria]
+    A -->|Base para| C[Análise de Ações]
+    D[Inflação] -->|Afeta| A
+    E[Psicologia Comportamental] -->|Influencia| B
+    
+    style A fill:#f9f,stroke:#333,stroke-width:4px
+    style D fill:#dfd,stroke:#333
+As bolas brilhantes são o que ele já domina. As cinzas são o que ele ainda vai aprender.
+
+4. Por que isso é "Anti-Big Tech"?
+O ChatGPT não sabe quem você é: Ele esquece o que você falou 3 dias atrás ou mistura com outros contextos.
+O Gráfico é Privado e Único: É o "Curriculum Vitae" intelectual do usuário. Se ele sair da sua plataforma, ele perde o mapa do próprio cérebro. Isso gera retenção.
+Boas Práticas (Onde o "Professor" te orienta):
+Fazer isso manualmente no banco de dados (SQL puro) é um pesadelo. A dica técnica: Use uma estrutura de JSONB no seu banco atual ou uma tabela de conhecimentos_adquiridos que ligue o user_id a um id_do_topico_da_ementa.
+
+O que pode estar impreciso aqui e por quê:
+
+A complexidade: Implementar um Gráfico de Conhecimento real (com bancos de dados de grafos como Neo4j) é caro e complexo. No começo, recomendo simular isso usando metadados simples no seu banco de dados atual.
+Quer que eu tente rascunhar como seria a estrutura de dados (uma nova tabela ou campo) para começarmos a "marcar" o que o aluno aprendeu? Isso daria um "tapa" de maturidade brutal no projeto.
+
+8:07 PM
