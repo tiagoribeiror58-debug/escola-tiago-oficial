@@ -287,19 +287,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     );
                   })()}
 
-                  {/* Fronteira do conhecimento (quando tudo concluído) */}
-                  {allDone && (
-                    <div className="flex gap-3 mt-1">
-                      <div className="flex flex-col items-center">
-                        <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[11px] bg-primary/15 border-primary/50 text-primary">
-                          ∞
-                        </div>
-                      </div>
-                      <p className="flex-1 text-sm font-semibold text-foreground pb-2 pt-0.5">
-                        Fronteira do Conhecimento
-                      </p>
-                    </div>
-                  )}
+
                 </div>
               </div>
             );
