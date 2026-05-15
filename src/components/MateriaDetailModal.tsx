@@ -5,7 +5,7 @@ import { useSessoes, useEmentaConcluida, useToggleEmenta } from '@/hooks/useSess
 import { useSessionMessages } from '@/hooks/useChatMessages';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map } from 'lucide-react';
+import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map, History } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { playPopSound } from '@/lib/audioUtils';
