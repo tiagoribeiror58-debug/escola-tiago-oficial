@@ -250,7 +250,13 @@ export default function Sessao() {
 
       <header className="flex items-center gap-3 px-4 py-3 border-b border-border">
         <button
-          onClick={() => navigate(`/?materia=${slug}`)}
+          onClick={() => {
+            if (!topicComplete && messageCount > 0) {
+              handlePausar();
+            } else {
+              navigate(`/?materia=${slug}`);
+            }
+          }}
           className="p-1.5 -ml-1.5 rounded-lg hover:bg-muted transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
