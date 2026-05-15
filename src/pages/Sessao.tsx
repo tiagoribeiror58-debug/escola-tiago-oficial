@@ -182,10 +182,12 @@ export default function Sessao() {
         console.error('Falha ao deletar chat_messages da sessão', delError);
       }
 
-      queryClient.invalidateQueries({ queryKey: ['sessoes'] });
-      queryClient.invalidateQueries({ queryKey: ['chat-sessions', slug] });
-      queryClient.invalidateQueries({ queryKey: ['ultima-sessao', slug] });
-      queryClient.invalidateQueries({ queryKey: ['ementa-concluida', slug] }); // garante que o progresso aparece imediatamente
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['sessoes'] }),
+        queryClient.invalidateQueries({ queryKey: ['chat-sessions', slug] }),
+        queryClient.invalidateQueries({ queryKey: ['ultima-sessao', slug] }),
+        queryClient.invalidateQueries({ queryKey: ['ementa-concluida', slug] })
+      ]);
       toast.success('Sessão salva ✓');
       setSaving(false);
       playSuccessSound();
