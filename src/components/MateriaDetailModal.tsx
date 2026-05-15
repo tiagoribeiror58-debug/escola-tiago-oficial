@@ -205,7 +205,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                           const isCurrent = idx === currentIdx;
                           const isFuture = idx > currentIdx;
                           const isLast = idx === flatEmenta.length - 1;
-                          const isPaused = Boolean(isCurrent && ultimaSessao?.topico && (topico.toLowerCase().includes(ultimaSessao.topico.toLowerCase()) || ultimaSessao.topico.toLowerCase().includes(topico.toLowerCase())));
+                          const isPaused = Boolean(!isCompleted && ultimaSessao?.topico && (topico.toLowerCase().includes(ultimaSessao.topico.toLowerCase()) || ultimaSessao.topico.toLowerCase().includes(topico.toLowerCase())));
 
                           return (
                             <div key={idx} className="flex gap-3">
@@ -374,27 +374,27 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   <ChevronRight className={cn("w-4 h-4", selectedSub ? "text-muted-foreground" : "text-[hsl(var(--success))/0.7]")} />
                 </button>
               ) : (
-                <button
+              <button
                   onClick={handleNewSession}
                   className={cn(
                     'flex items-center gap-4 w-full p-4 rounded-2xl border',
                     ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
                       ? 'bg-[hsl(var(--warning)/0.1)] border-[hsl(var(--warning)/0.3)] hover:bg-[hsl(var(--warning)/0.15)]'
-                      : 'bg-foreground border-foreground hover:bg-foreground/90 text-background',
+                      : 'bg-white/5 border-white/10 hover:bg-white/10',
                     'transition-all active:scale-[0.98] shadow-lg'
                   )}
                 >
                   <div className={cn("p-2.5 rounded-xl", 
                     ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
                       ? "bg-[hsl(var(--warning)/0.2)] text-[hsl(var(--warning))]"
-                      : "bg-background/20 text-background"
+                      : "bg-white/10 text-white"
                   )}>
                     <BookOpen className="w-5 h-5" />
                   </div>
                   <div className="text-left flex-1">
                     <span className={cn("block text-[15px] font-semibold",
                       ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
-                        ? "text-[hsl(var(--warning))]" : "text-background"
+                        ? "text-[hsl(var(--warning))]" : "text-white"
                     )}>
                       {ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico) 
                         ? `Retomar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}` 
@@ -402,7 +402,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     </span>
                     <span className={cn("block text-[12px] leading-tight mt-0.5",
                       ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
-                        ? "text-[hsl(var(--warning))/0.7]" : "text-background/70"
+                        ? "text-[hsl(var(--warning))/0.7]" : "text-white/60"
                     )}>
                       {ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
                         ? 'Sessão pausada em andamento' : 'Iniciar uma nova sessão de estudos'}
@@ -410,7 +410,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   </div>
                   <ChevronRight className={cn("w-4 h-4", 
                     ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
-                      ? "text-[hsl(var(--warning))/0.7]" : "text-background/70"
+                      ? "text-[hsl(var(--warning))/0.7]" : "text-white/40"
                   )} />
                 </button>
               )}
