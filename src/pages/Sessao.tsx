@@ -6,7 +6,7 @@ import { useChatHistory, useSessionMessages } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 import Workspace from '@/components/Workspace';
 
-import { ArrowLeft, Square, Loader2 } from 'lucide-react';
+import { ArrowLeft, Square, Loader2, Pause } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatMessage } from '@/types';
 import { extractSession } from '@/lib/extractSession';
@@ -198,6 +198,10 @@ export default function Sessao() {
     }
   }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey, modo, navigate]);
 
+  const handlePausar = useCallback(() => {
+    doEncerrar();
+  }, [doEncerrar]);
+
   const handleEncerrar = useCallback(() => {
     // Regra 5: botão sempre acessível. Se sessão não concluiu, pede confirmação.
     if (!topicComplete) {
@@ -269,6 +273,18 @@ export default function Sessao() {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 shrink-0 bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-border"
           >
             Continuar
+          </button>
+        )}
+
+        {/* Botão Pausar — apenas se o tópico não foi concluído e tem mensagens para salvar */}
+        {!topicComplete && messageCount > 0 && (
+          <button
+            onClick={handlePausar}
+            disabled={saving}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 shrink-0 bg-[hsl(var(--warning)/0.15)] text-[hsl(var(--warning))] hover:bg-[hsl(var(--warning)/0.25)] border border-[hsl(var(--warning)/0.3)]"
+          >
+            <Pause className="w-3 h-3 fill-current" />
+            Pausar
           </button>
         )}
 

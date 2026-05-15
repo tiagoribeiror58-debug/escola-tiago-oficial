@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { playPopSound } from '@/lib/audioUtils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -23,6 +24,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const navigate = useNavigate();
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
   const [expandedSession, setExpandedSession] = useState<number | null>(null);
+  const [isExpandedRoadmap, setIsExpandedRoadmap] = useState(false);
   const { data: todasSessoes } = useSessoes();
 
   // REGRA DOS HOOKS: todos os hooks devem ser chamados ANTES de qualquer early return
@@ -152,7 +154,19 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             {config.whyStart && <WhyStartSection text={config.whyStart} />}
           </div>
 
-          {/* Ementa / Roadmap Timeline */}
+          <Tabs defaultValue="roadmap" className="w-full flex-1 flex flex-col">
+            <div className="px-6 pb-2">
+              <TabsList className="w-full grid grid-cols-2">
+                <TabsTrigger value="roadmap">Roadmap</TabsTrigger>
+                <TabsTrigger value="history">
+                  Sessões Anteriores
+                  {sessoesMateria.length > 0 && <span className="ml-2 bg-muted-foreground/20 text-[10px] px-1.5 rounded-full">{sessoesMateria.length}</span>}
+                </TabsTrigger>
+              </TabsList>
+            </div>
+
+            <TabsContent value="roadmap" className="flex-1 mt-0 outline-none flex flex-col">
+              {/* Ementa / Roadmap Timeline */}
           {flatEmenta.length > 0 && (() => {
             const firstUncompletedIdx = flatEmenta.findIndex(t => !ementaConcluida.includes(t));
             const currentIdx = firstUncompletedIdx === -1 ? flatEmenta.length : firstUncompletedIdx;
@@ -171,68 +185,107 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
 
                 {/* Timeline vertical */}
                 <div className="relative">
-                  {flatEmenta.map((topico, idx) => {
-                    const isCompleted = ementaConcluida.includes(topico);
-                    const isCurrent = idx === currentIdx;
-                    const isFuture = idx > currentIdx;
-                    const isLast = idx === flatEmenta.length - 1;
-
+                  {(() => {
+                    const startIdx = isExpandedRoadmap ? 0 : Math.max(0, currentIdx - 1);
+                    const endIdx = isExpandedRoadmap ? flatEmenta.length : Math.min(flatEmenta.length, currentIdx + 4);
+                    const visibleEmenta = flatEmenta.slice(startIdx, endIdx);
+                    
                     return (
-                      <div key={idx} className="flex gap-3">
-                        {/* Coluna da linha + nó */}
-                        <div className="flex flex-col items-center">
-                          {/* Nó */}
-                          <button
-                            ref={isCurrent ? currentTopicRef : null}
-                            onClick={(e) => handleToggleTopico(e, topico, isCompleted)}
-                            title={isCompleted ? 'Marcar como não concluído' : 'Marcar como concluído'}
-                            className={cn(
-                              "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] font-bold transition-all duration-200 hover:scale-110 z-10",
-                              isCompleted
-                                ? "bg-[hsl(var(--success)/0.15)] border-[hsl(var(--success)/0.4)] text-[hsl(var(--success))]"
-                                : isCurrent
-                                ? "bg-primary/15 border-primary/50 text-primary ring-2 ring-primary/25 ring-offset-1 ring-offset-background animate-pulse"
-                                : "bg-muted/20 border-border/40 text-muted-foreground/50"
-                            )}
-                          >
-                            {isCompleted ? '✓' : isCurrent ? '●' : (idx + 1)}
-                          </button>
-                          {/* Linha conectora (não aparece no último item) */}
-                          {!isLast && (
-                            <div className={cn(
-                              "w-px flex-1 min-h-[20px] my-0.5 transition-colors",
-                              isCompleted ? "bg-[hsl(var(--success)/0.3)]" : "bg-border/40"
-                            )} />
-                          )}
-                        </div>
+                      <>
+                        {!isExpandedRoadmap && startIdx > 0 && (
+                          <div className="flex gap-3 mb-2 opacity-50">
+                            <div className="flex flex-col items-center">
+                              <div className="w-6 h-6 flex items-center justify-center shrink-0 text-muted-foreground">⋮</div>
+                            </div>
+                          </div>
+                        )}
+                        {visibleEmenta.map((topico, i) => {
+                          const idx = startIdx + i;
+                          const isCompleted = ementaConcluida.includes(topico);
+                          const isCurrent = idx === currentIdx;
+                          const isFuture = idx > currentIdx;
+                          const isLast = idx === flatEmenta.length - 1;
+                          const isPaused = isCurrent && ultimaSessao?.topico === topico;
 
-                        {/* Conteúdo do passo */}
-                        <button
-                          onClick={() => setSelectedSub(selectedSub === topico ? null : topico)}
-                          className={cn(
-                            "flex-1 text-left pb-3 text-sm transition-colors rounded-lg px-2 -mx-2",
-                            isCurrent && "font-semibold text-foreground",
-                            isCompleted && !isCurrent && "text-muted-foreground",
-                            isFuture && "text-muted-foreground/60",
-                            selectedSub === topico && "bg-muted/40"
-                          )}
-                          style={{ paddingTop: '3px' }}
-                        >
-                          <span className={cn(
-                            "line-clamp-2",
-                            isCompleted && selectedSub !== topico && "line-through decoration-muted-foreground/30"
-                          )}>
-                            {topico}
-                          </span>
-                          {isCurrent && (
-                            <span className="block text-[10px] font-bold uppercase tracking-widest text-primary mt-0.5">
-                              Você está aqui
-                            </span>
-                          )}
-                        </button>
-                      </div>
+                          return (
+                            <div key={idx} className="flex gap-3">
+                              {/* Coluna da linha + nó */}
+                              <div className="flex flex-col items-center">
+                                {/* Nó */}
+                                <button
+                                  ref={isCurrent ? currentTopicRef : null}
+                                  onClick={(e) => handleToggleTopico(e, topico, isCompleted)}
+                                  title={isCompleted ? 'Marcar como não concluído' : 'Marcar como concluído'}
+                                  className={cn(
+                                    "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] font-bold transition-all duration-200 hover:scale-110 z-10",
+                                    isCompleted
+                                      ? "bg-[hsl(var(--success)/0.15)] border-[hsl(var(--success)/0.4)] text-[hsl(var(--success))]"
+                                      : isPaused
+                                      ? "bg-[hsl(var(--warning)/0.15)] border-[hsl(var(--warning)/0.5)] text-[hsl(var(--warning))] ring-2 ring-[hsl(var(--warning)/0.25)] ring-offset-1 ring-offset-background animate-pulse"
+                                      : isCurrent
+                                      ? "bg-primary/15 border-primary/50 text-primary ring-2 ring-primary/25 ring-offset-1 ring-offset-background animate-pulse"
+                                      : "bg-muted/20 border-border/40 text-muted-foreground/50"
+                                  )}
+                                >
+                                  {isCompleted ? '✓' : isPaused ? '⏸' : isCurrent ? '●' : (idx + 1)}
+                                </button>
+                                {/* Linha conectora (não aparece no último item) */}
+                                {!isLast && (
+                                  <div className={cn(
+                                    "w-px flex-1 min-h-[20px] my-0.5 transition-colors",
+                                    isCompleted ? "bg-[hsl(var(--success)/0.3)]" : "bg-border/40"
+                                  )} />
+                                )}
+                              </div>
+
+                              {/* Conteúdo do passo */}
+                              <button
+                                onClick={() => setSelectedSub(selectedSub === topico ? null : topico)}
+                                className={cn(
+                                  "flex-1 text-left pb-3 text-sm transition-colors rounded-lg px-2 -mx-2",
+                                  isCurrent && "font-semibold text-foreground",
+                                  isCompleted && !isCurrent && "text-muted-foreground",
+                                  isFuture && "text-muted-foreground/60",
+                                  selectedSub === topico && "bg-muted/40"
+                                )}
+                                style={{ paddingTop: '3px' }}
+                              >
+                                <span className={cn(
+                                  "line-clamp-2",
+                                  isCompleted && selectedSub !== topico && "line-through decoration-muted-foreground/30"
+                                )}>
+                                  {topico}
+                                </span>
+                                {isCurrent && (
+                                  <span className={cn(
+                                    "block text-[10px] font-bold uppercase tracking-widest mt-0.5",
+                                    isPaused ? "text-[hsl(var(--warning))]" : "text-primary"
+                                  )}>
+                                    {isPaused ? 'Pausado em andamento' : 'Você está aqui'}
+                                  </span>
+                                )}
+                              </button>
+                            </div>
+                          );
+                        })}
+                        {!isExpandedRoadmap && endIdx < flatEmenta.length && (
+                          <div className="flex gap-3 mt-1 opacity-50">
+                            <div className="flex flex-col items-center">
+                              <div className="w-6 h-6 flex items-center justify-center shrink-0 text-muted-foreground">⋮</div>
+                            </div>
+                          </div>
+                        )}
+                        {flatEmenta.length > 5 && (
+                          <button 
+                            onClick={() => setIsExpandedRoadmap(!isExpandedRoadmap)}
+                            className="w-full mt-2 py-2 text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted/30 rounded-lg transition-colors border border-transparent hover:border-border/50"
+                          >
+                            {isExpandedRoadmap ? 'Esconder tópicos' : `Mostrar todos os ${flatEmenta.length} tópicos`}
+                          </button>
+                        )}
+                      </>
                     );
-                  })}
+                  })()}
 
                   {/* Fronteira do conhecimento (quando tudo concluído) */}
                   {allDone && (
@@ -279,28 +332,68 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
           <div className="border-t border-border" />
 
           {/* Action — CTA Começar Sessão */}
-          <div className="px-4 py-3">
-            <button
-              onClick={handleNewSession}
-              className={cn(
-                'flex items-center gap-4 w-full p-4 rounded-2xl border',
-                'bg-foreground/5 border-border',
-                'hover:bg-foreground/10 transition-all active:scale-[0.98]'
-              )}
-            >
-              <div className="bg-foreground/10 p-2.5 rounded-xl">
-                <BookOpen className="w-5 h-5 text-foreground" />
-              </div>
-              <div className="text-left flex-1">
-                <span className="block text-[15px] font-semibold text-foreground">
-                  {selectedSub ? `Estudar: ${selectedSub.length > 30 ? selectedSub.slice(0, 30) + '…' : selectedSub}` : 'Começar Sessão'}
-                </span>
-                <span className="block text-[12px] text-muted-foreground leading-tight mt-0.5">
-                  {ultimaSessao ? `Continua de: ${proximoTopicoReal || ultimaSessao.topico}` : 'Primeira sessão nesta matéria'}
-                </span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-muted-foreground" />
-            </button>
+          <div className="px-4 py-3 mt-auto">
+            {allDone ? (
+              <button
+                onClick={handleNewSession}
+                className={cn(
+                  'flex items-center gap-4 w-full p-4 rounded-2xl border',
+                  'bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)]',
+                  'hover:bg-[hsl(var(--success)/0.15)] transition-all active:scale-[0.98]'
+                )}
+              >
+                <div className="bg-[hsl(var(--success)/0.2)] p-2.5 rounded-xl">
+                  <BookOpen className="w-5 h-5 text-[hsl(var(--success))]" />
+                </div>
+                <div className="text-left flex-1">
+                  <span className="block text-[15px] font-semibold text-[hsl(var(--success))]">
+                    Revisão / Consolidação
+                  </span>
+                  <span className="block text-[12px] text-[hsl(var(--success))/0.7] leading-tight mt-0.5">
+                    Você já concluiu toda a base. Reforce seu conhecimento.
+                  </span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-[hsl(var(--success))/0.7]" />
+              </button>
+            ) : (
+              <button
+                onClick={handleNewSession}
+                className={cn(
+                  'flex items-center gap-4 w-full p-4 rounded-2xl border',
+                  ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                    ? 'bg-[hsl(var(--warning)/0.1)] border-[hsl(var(--warning)/0.3)] hover:bg-[hsl(var(--warning)/0.15)]'
+                    : 'bg-foreground/5 border-border hover:bg-foreground/10',
+                  'transition-all active:scale-[0.98]'
+                )}
+              >
+                <div className={cn("p-2.5 rounded-xl", 
+                  ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                    ? "bg-[hsl(var(--warning)/0.2)] text-[hsl(var(--warning))]"
+                    : "bg-foreground/10 text-foreground"
+                )}>
+                  <BookOpen className="w-5 h-5" />
+                </div>
+                <div className="text-left flex-1">
+                  <span className={cn("block text-[15px] font-semibold",
+                    ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                      ? "text-[hsl(var(--warning))]" : "text-foreground"
+                  )}>
+                    {selectedSub ? `Estudar: ${selectedSub.length > 30 ? selectedSub.slice(0, 30) + '…' : selectedSub}` : 
+                     (ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico) ? 'Retomar Sessão Pausada' : 'Começar Sessão')}
+                  </span>
+                  <span className={cn("block text-[12px] leading-tight mt-0.5",
+                    ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                      ? "text-[hsl(var(--warning))/0.7]" : "text-muted-foreground"
+                  )}>
+                    {ultimaSessao ? `Continua de: ${proximoTopicoReal || ultimaSessao.topico}` : 'Primeira sessão nesta matéria'}
+                  </span>
+                </div>
+                <ChevronRight className={cn("w-4 h-4", 
+                  ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                    ? "text-[hsl(var(--warning))/0.7]" : "text-muted-foreground"
+                )} />
+              </button>
+            )}
 
             {/* Link para Jornada Completa */}
             {flatEmenta.length > 0 && (
@@ -314,42 +407,48 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             )}
           </div>
 
-          {/* Histórico de Sessões */}
-          {sessoesMateria.length > 0 && (
-            <>
-              <div className="border-t border-border" />
-              <div className="px-4 py-3 pb-6">
-                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest mb-3">
-                  Sessões anteriores
-                </p>
-                <div className="space-y-2">
-                  {sessoesMateria.map(sessao => {
-                    const hasChat = !!sessao.session_key;
-                    return (
-                      <SessaoItem
-                        key={sessao.id}
-                        sessao={sessao}
-                        hasChat={hasChat}
-                        isExpanded={expandedSession === sessao.id}
-                        onToggle={() => {
-                          if (hasChat) {
-                            playPopSound();
-                            setExpandedSession(expandedSession === sessao.id ? null : sessao.id);
-                          }
-                        }}
-                        onOpenChat={() => {
-                          playPopSound();
-                          onOpenChange(false);
-                          navigate(`/sessao/${config.slug}?resume=${sessao.session_key}`);
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            </>
-          )}
+            </TabsContent>
 
+            <TabsContent value="history" className="flex-1 mt-0 outline-none pb-4">
+              {/* Histórico de Sessões */}
+              {sessoesMateria.length > 0 ? (
+                <div className="px-4 py-3">
+                  <div className="space-y-2">
+                    {sessoesMateria.map(sessao => {
+                      const hasChat = !!sessao.session_key;
+                      return (
+                        <SessaoItem
+                          key={sessao.id}
+                          sessao={sessao}
+                          hasChat={hasChat}
+                          isExpanded={expandedSession === sessao.id}
+                          onToggle={() => {
+                            if (hasChat) {
+                              playPopSound();
+                              setExpandedSession(expandedSession === sessao.id ? null : sessao.id);
+                            }
+                          }}
+                          onOpenChat={() => {
+                            playPopSound();
+                            onOpenChange(false);
+                            navigate(`/sessao/${config.slug}?resume=${sessao.session_key}`);
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <div className="py-12 flex flex-col items-center justify-center text-center px-4">
+                  <History className="w-8 h-8 text-muted-foreground/30 mb-3" />
+                  <p className="text-sm font-medium text-foreground">Nenhuma sessão anterior</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Comece a estudar esta matéria para ver seu histórico aqui.
+                  </p>
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
         </div> {/* fim do scroll unificado */}
       </DialogContent>
     </Dialog>
