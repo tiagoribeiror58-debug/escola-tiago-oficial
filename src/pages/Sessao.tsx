@@ -79,7 +79,7 @@ export default function Sessao() {
 
   const doEncerrar = useCallback(async () => {
     if (resumeKey) {
-      navigate('/');
+      navigate(`/?materia=${slug}`);
       return;
     }
 
@@ -95,12 +95,24 @@ export default function Sessao() {
       const hoje = new Date().toISOString().split('T')[0];
       const duracaoMin = Math.round((Date.now() - startTimeRef.current) / 60000);
 
+      // Passa a ementa e o tópico atual para que a edge function calcule
+      // o proximo_topico de forma determinística (sem o Haiku ter que adivinhar)
+      const ementaFlat = materiaConfig.fases
+        ? materiaConfig.fases.flatMap(f => f.topicos)
+        : (materiaConfig.ementa || []);
+        
+      let topicoAtualParaExtrair = ultimaSessao?.proximo_topico || ultimaSessao?.topico || '';
+      
+      // Usa a mesma lógica determinística do buildPrompt para saber qual foi o tópico DESTA sessão
+      const resultadoDeterministico = resolverTopicoAtual(ementaFlat, ementaConcluida);
+      const topicoDestaSessao = sub || (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair);
+
       if (messages.length < 4) {
         // BUGFIX: sessão curta NÃO copia proximo_topico para topico.
         // Antes: topico = proximo_topico, proximo_topico = proximo_topico → loop!
         // Agora: preserva o estado anterior intacto — nada mudou de fato.
         sessionData = {
-          topico: ultimaSessao?.topico || 'Sessão curta',
+          topico: topicoDestaSessao || 'Sessão curta',
           erros: 0,
           dificuldade: 'media',
           nivel: ultimaSessao?.nivel || 1,
@@ -109,18 +121,6 @@ export default function Sessao() {
           observacoes: 'Sessão curta',
         };
       } else {
-        // Passa a ementa e o tópico atual para que a edge function calcule
-        // o proximo_topico de forma determinística (sem o Haiku ter que adivinhar)
-        const ementaFlat = materiaConfig.fases
-          ? materiaConfig.fases.flatMap(f => f.topicos)
-          : (materiaConfig.ementa || []);
-          
-        let topicoAtualParaExtrair = ultimaSessao?.proximo_topico || ultimaSessao?.topico || '';
-        
-        // Usa a mesma lógica determinística do buildPrompt para saber qual foi o tópico DESTA sessão
-        const resultadoDeterministico = resolverTopicoAtual(ementaFlat, ementaConcluida);
-        const topicoDestaSessao = sub || (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair);
-
         sessionData = await extractSession(
           messages,
           slug!,
@@ -189,7 +189,7 @@ export default function Sessao() {
       toast.success('Sessão salva ✓');
       setSaving(false);
       playSuccessSound();
-      navigate('/');
+      navigate(`/?materia=${slug}`);
     } catch (err) {
       console.error(err);
       toast.error('Erro ao salvar — tente novamente');
@@ -248,7 +248,7 @@ export default function Sessao() {
 
       <header className="flex items-center gap-3 px-4 py-3 border-b border-border">
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate(`/?materia=${slug}`)}
           className="p-1.5 -ml-1.5 rounded-lg hover:bg-muted transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />

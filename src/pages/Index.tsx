@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFolhasEstado, useSessoes, calcularOfensiva, useEmentaConcluida } from '@/hooks/useSessoes';
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import MateriaCard from '@/components/MateriaCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookOpen, Library, Flame, Play } from 'lucide-react';
 import { MateriaEstado } from '@/types';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
 import { Search, History } from 'lucide-react';
@@ -23,6 +23,7 @@ export default function Index() {
   const { foco } = useMateriasFoco();
   const { data: sessoes } = useSessoes();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const hoje = new Date().toLocaleDateString('pt-BR', {
     weekday: 'long',
@@ -65,6 +66,22 @@ export default function Index() {
     setSelectedEstado(estado);
     setModalOpen(true);
   };
+
+  // Reabre o modal automaticamente se vier do redirecionamento de sessão encerrada/pausada
+  const openMateriaParam = searchParams.get('materia');
+
+  useEffect(() => {
+    if (openMateriaParam && !isLoading && estados.length > 0) {
+      const estadoParaAbrir = estados.find(e => e.config.slug === openMateriaParam);
+      if (estadoParaAbrir) {
+        setSelectedEstado(estadoParaAbrir);
+        setModalOpen(true);
+      }
+      // Limpa a URL para não reabrir se recarregar a página
+      searchParams.delete('materia');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [openMateriaParam, isLoading, estados, searchParams, setSearchParams]);
 
   const outrosEstados = heroEstado ? estadosFocados.filter(e => e.config.slug !== heroEstado.config.slug) : estadosFocados;
   const displayedEstados = outrosEstados; // Sempre mostrar todos os focados

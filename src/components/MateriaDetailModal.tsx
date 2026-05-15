@@ -205,7 +205,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                           const isCurrent = idx === currentIdx;
                           const isFuture = idx > currentIdx;
                           const isLast = idx === flatEmenta.length - 1;
-                          const isPaused = isCurrent && ultimaSessao?.topico === topico;
+                          const isPaused = Boolean(isCurrent && ultimaSessao?.topico && (topico.toLowerCase().includes(ultimaSessao.topico.toLowerCase()) || ultimaSessao.topico.toLowerCase().includes(topico.toLowerCase())));
 
                           return (
                             <div key={idx} className="flex gap-3">
@@ -355,19 +355,19 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 </div>
                 <ChevronRight className="w-4 h-4 text-[hsl(var(--success))/0.7]" />
               </button>
-            ) : (
+            ) : selectedSub ? (
               <button
                 onClick={handleNewSession}
                 className={cn(
                   'flex items-center gap-4 w-full p-4 rounded-2xl border',
-                  ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                  ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
                     ? 'bg-[hsl(var(--warning)/0.1)] border-[hsl(var(--warning)/0.3)] hover:bg-[hsl(var(--warning)/0.15)]'
                     : 'bg-foreground/5 border-border hover:bg-foreground/10',
                   'transition-all active:scale-[0.98]'
                 )}
               >
                 <div className={cn("p-2.5 rounded-xl", 
-                  ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                  ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
                     ? "bg-[hsl(var(--warning)/0.2)] text-[hsl(var(--warning))]"
                     : "bg-foreground/10 text-foreground"
                 )}>
@@ -375,24 +375,34 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 </div>
                 <div className="text-left flex-1">
                   <span className={cn("block text-[15px] font-semibold",
-                    ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                    ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
                       ? "text-[hsl(var(--warning))]" : "text-foreground"
                   )}>
-                    {selectedSub ? `Estudar: ${selectedSub.length > 30 ? selectedSub.slice(0, 30) + '…' : selectedSub}` : 
-                     (ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico) ? 'Retomar Sessão Pausada' : 'Começar Sessão')}
+                    {ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico) 
+                      ? `Retomar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}` 
+                      : `Estudar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}`}
                   </span>
                   <span className={cn("block text-[12px] leading-tight mt-0.5",
-                    ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                    ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
                       ? "text-[hsl(var(--warning))/0.7]" : "text-muted-foreground"
                   )}>
-                    {ultimaSessao ? `Continua de: ${proximoTopicoReal || ultimaSessao.topico}` : 'Primeira sessão nesta matéria'}
+                    {ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                      ? 'Sessão pausada em andamento' : 'Nova sessão para este tópico'}
                   </span>
                 </div>
                 <ChevronRight className={cn("w-4 h-4", 
-                  ultimaSessao && proximoTopicoReal === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                  ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
                     ? "text-[hsl(var(--warning))/0.7]" : "text-muted-foreground"
                 )} />
               </button>
+            ) : (
+              <div className="flex flex-col items-center justify-center p-4 py-5 text-center border rounded-2xl bg-muted/10 border-dashed border-border/60">
+                <BookOpen className="w-5 h-5 text-muted-foreground/40 mb-2" />
+                <p className="text-sm font-medium text-foreground/80">Selecione um tópico acima</p>
+                <p className="text-[11px] text-muted-foreground mt-0.5 max-w-[85%] mx-auto">
+                  Clique em um dos tópicos do Roadmap para iniciar sua sessão de estudos ou retomar de onde parou.
+                </p>
+              </div>
             )}
 
             {/* Link para Jornada Completa */}
