@@ -279,6 +279,9 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
             'Implementação Cultural: Vencendo a resistência interna',
             'IA como Produto: Construindo Features com LLMs',
             'Métricas de Sucesso para Iniciativas de IA',
+            'IA Agêntica: Orquestração de Agentes Autônomos em Escala',
+            'Identidade Sintética e Validação de Realidade via Blockchain',
+            'Soberania de Dados e IA Local: O Fim da Dependência de APIs'
             'Ética Corporativa na Adoção de IA'
           ]
         },

@@ -53,9 +53,12 @@ export const biohackingHub: MateriaConfig = {
         'Terapia de Choque Térmico (Sauna) e Proteínas Heat Shock (HSP)',
         'O Sistema Linfático e a Eliminação de Metabólitos',
         'Terapia de Luz Vermelha (Fotobiomodulação) em ATP',
-        'Aterramento (Earthing) e Transferência de Elétrons',
-        'Exercícios Isométricos de Super-compensação'
-      ]
+            'Aterramento (Earthing) e Transferência de Elétrons',
+            'Exercícios Isométricos de Super-compensação',
+            'Engenharia da Longevidade: Protocolos de Reversão Biológica',
+            'Nutrição Baseada em Biomarcadores em Tempo Real',
+            'Biohacking de Terceira Geração: Senolíticos e Reprogramação Celular'
+          ]
     },
     {
       slug: 'neuroquimica-foco',

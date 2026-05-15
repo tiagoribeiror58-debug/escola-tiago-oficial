@@ -110,7 +110,10 @@ Abordagem obrigatória:
             'Influência Social: Conformismo e Obediência (Milgram)',
             'Psicologia Positiva e Bem-Estar (Seligman)',
             'Narcisismo, Maquiavelismo e Psicopatia (Dark Triad)',
-            'Mecanismos de Defesa e Autoengano'
+            'Mecanismos de Defesa e Autoengano',
+            'Flexibilidade Cognitiva: Desaprender e Reaprender na Era da IA',
+            'Psicologia da Colaboração Humano-IA: Identidade e Valor Próprio',
+            'Antifragilidade Emocional: Transformando Estresse em Crescimento'
           ]
         },
         {
@@ -136,7 +139,10 @@ Abordagem obrigatória:
             'Perfeccionismo Adaptativo vs Desadaptativo',
             'Construindo uma Rotina de Recuperação (Recovery Stack)',
             'Journaling Terapêutico e Processamento de Experiências',
-            'Encontrando Propósito: Ikigai e Sentido na Vida'
+            'Encontrando Propósito: Ikigai e Sentido na Vida',
+            'Resiliência em Ambientes de Mudança Exponencial',
+            'Gestão de Tecnoestresse e Sobrecarga de Informação',
+            'Estoicismo Digital: Equilíbrio em Mercados Voláteis'
           ]
         }
       ]
