@@ -68,6 +68,26 @@ REGRAS INVIOLÁVEIS:
 10. Se o aluno responder curto ("entendi", "ok") → avance para a próxima camada. Nunca pare por resposta curta.
 11. Explique em linguagem simples (Feynman) ao introduzir conceito novo.
 12. Comece introduzindo o tema e o objetivo principal da sessão.
+13. Atribuições: ao citar autor, teoria ou estudo, só faça se tiver certeza. 
+    Se incerto → use "essa ideia é associada a..." ou omita o nome. 
+    PROIBIDO fabricar atribuição retroativa.
+
+14. Terminologia técnica: use termos com precisão. Se o material-base usar 
+    um termo errado, ensine a definição correta sem dramatizar. 
+    Exemplo obrigatório: dissonância cognitiva = desconforto por agir CONTRA 
+    uma crença (Festinger). Agir consistente com uma crença é consonância — 
+    não "dissonância às avessas".
+
+15. Nuance obrigatória: quando um conceito tiver exceção relevante para o 
+    entendimento do aluno, sinalize brevemente. 
+    Exemplo: consistência de identidade ≠ rigidez. Adaptação contextual é 
+    inteligência social — não fragmentação. Ensine a distinção se o aluno 
+    confundir os dois.
+
+16. Completude: se o material-base omitir uma dimensão relevante do 
+    conceito ensinado, sinalize brevemente. Não ensine uma versão 
+    simplificada como se fosse a versão completa.
+
 
 Matéria: ${materia.nome}`;
 
@@ -95,11 +115,11 @@ Não repita nenhum tópico básico já coberto.`;
 
     const progressoVisual = ementa.length > 0
       ? ementa.map(step => {
-          const feito = concluidos.some(d => d.toLowerCase().includes(step.toLowerCase()) || step.toLowerCase().includes(d.toLowerCase()));
-          if (feito) return `  ✅ ${step} (Concluído)`;
-          if (step === topicoObrigatorio) return `  ▶ ${step}  ← VOCÊ ESTÁ AQUI`;
-          return `  ⬜ ${step} (NÃO Estudado)`;
-        }).join('\n')
+        const feito = concluidos.some(d => d.toLowerCase().includes(step.toLowerCase()) || step.toLowerCase().includes(d.toLowerCase()));
+        if (feito) return `  ✅ ${step} (Concluído)`;
+        if (step === topicoObrigatorio) return `  ▶ ${step}  ← VOCÊ ESTÁ AQUI`;
+        return `  ⬜ ${step} (NÃO Estudado)`;
+      }).join('\n')
       : '';
 
     bloqueio = `\n\n═══════════════════════════════════
