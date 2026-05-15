@@ -319,73 +319,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
           {/* Divider */}
           <div className="border-t border-border" />
 
-          {/* Action — CTA Começar Sessão */}
-          <div className="px-4 py-3 mt-auto">
-            {allDone ? (
-              <button
-                onClick={handleNewSession}
-                className={cn(
-                  'flex items-center gap-4 w-full p-4 rounded-2xl border',
-                  selectedSub 
-                    ? 'bg-foreground/5 border-border hover:bg-foreground/10' 
-                    : 'bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)] hover:bg-[hsl(var(--success)/0.15)]',
-                  'transition-all active:scale-[0.98]'
-                )}
-              >
-                <div className={cn("p-2.5 rounded-xl", selectedSub ? "bg-foreground/10 text-foreground" : "bg-[hsl(var(--success)/0.2)] text-[hsl(var(--success))]")}>
-                  <BookOpen className="w-5 h-5" />
-                </div>
-                <div className="text-left flex-1">
-                  <span className={cn("block text-[15px] font-semibold", selectedSub ? "text-foreground" : "text-[hsl(var(--success))]")}>
-                    {selectedSub ? `Revisar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}` : 'Revisão / Consolidação'}
-                  </span>
-                  <span className={cn("block text-[12px] leading-tight mt-0.5", selectedSub ? "text-muted-foreground" : "text-[hsl(var(--success))/0.7]")}>
-                    {selectedSub ? 'Iniciar sessão de consolidação para este tópico.' : 'Você já concluiu toda a base. Reforce seu conhecimento.'}
-                  </span>
-                </div>
-                <ChevronRight className={cn("w-4 h-4", selectedSub ? "text-muted-foreground" : "text-[hsl(var(--success))/0.7]")} />
-              </button>
-            ) : selectedSub ? (
-              <button
-                onClick={handleNewSession}
-                className={cn(
-                  'flex items-center gap-4 w-full p-4 rounded-2xl border',
-                  ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
-                    ? 'bg-[hsl(var(--warning)/0.1)] border-[hsl(var(--warning)/0.3)] hover:bg-[hsl(var(--warning)/0.15)]'
-                    : 'bg-foreground/5 border-border hover:bg-foreground/10',
-                  'transition-all active:scale-[0.98]'
-                )}
-              >
-                <div className={cn("p-2.5 rounded-xl", 
-                  ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
-                    ? "bg-[hsl(var(--warning)/0.2)] text-[hsl(var(--warning))]"
-                    : "bg-foreground/10 text-foreground"
-                )}>
-                  <BookOpen className="w-5 h-5" />
-                </div>
-                <div className="text-left flex-1">
-                  <span className={cn("block text-[15px] font-semibold",
-                    ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
-                      ? "text-[hsl(var(--warning))]" : "text-foreground"
-                  )}>
-                    {ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico) 
-                      ? `Retomar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}` 
-                      : `Estudar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}`}
-                  </span>
-                  <span className={cn("block text-[12px] leading-tight mt-0.5",
-                    ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
-                      ? "text-[hsl(var(--warning))/0.7]" : "text-muted-foreground"
-                  )}>
-                    {ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
-                      ? 'Sessão pausada em andamento' : 'Nova sessão para este tópico'}
-                  </span>
-                </div>
-                <ChevronRight className={cn("w-4 h-4", 
-                  ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
-                    ? "text-[hsl(var(--warning))/0.7]" : "text-muted-foreground"
-                )} />
-              </button>
-            ) : (
+          {/* Empty State do CTA no fluxo normal */}
+          {!selectedSub && !allDone && (
+            <div className="px-4 py-3 mt-auto">
               <div className="flex flex-col items-center justify-center p-4 py-5 text-center border rounded-2xl bg-muted/10 border-dashed border-border/60">
                 <BookOpen className="w-5 h-5 text-muted-foreground/40 mb-2" />
                 <p className="text-sm font-medium text-foreground/80">Selecione um tópico acima</p>
@@ -393,19 +329,93 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   Clique em um dos tópicos do Roadmap para iniciar sua sessão de estudos ou retomar de onde parou.
                 </p>
               </div>
-            )}
+              
+              {/* Link para Jornada Completa */}
+              {flatEmenta.length > 0 && (
+                <button
+                  onClick={() => { playPopSound(); onOpenChange(false); navigate(`/ementa/${config.slug}`); }}
+                  className="mt-2 w-full flex items-center justify-center gap-2 py-2 rounded-xl text-[12px] text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
+                >
+                  <Map className="w-3.5 h-3.5" />
+                  Ver jornada completa ({ementaConcluida.length}/{flatEmenta.length} tópicos)
+                </button>
+              )}
+            </div>
+          )}
 
-            {/* Link para Jornada Completa */}
-            {flatEmenta.length > 0 && (
-              <button
-                onClick={() => { playPopSound(); onOpenChange(false); navigate(`/ementa/${config.slug}`); }}
-                className="mt-2 w-full flex items-center justify-center gap-2 py-2 rounded-xl text-[12px] text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
-              >
-                <Map className="w-3.5 h-3.5" />
-                Ver jornada completa ({ementaConcluida.length}/{flatEmenta.length} tópicos)
-              </button>
-            )}
-          </div>
+          {/* Spacer para o sticky footer não cobrir o conteúdo do final do scroll */}
+          {(selectedSub || allDone) && <div className="h-24" />}
+
+          {/* Action — CTA Começar Sessão (Pop-up Modal Style) */}
+          {(selectedSub || allDone) && (
+            <div className="sticky bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-md border-t border-border shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)] animate-in slide-in-from-bottom-8 duration-300 z-10 rounded-t-[2rem]">
+              {allDone ? (
+                <button
+                  onClick={handleNewSession}
+                  className={cn(
+                    'flex items-center gap-4 w-full p-4 rounded-2xl border',
+                    selectedSub 
+                      ? 'bg-foreground/5 border-border hover:bg-foreground/10' 
+                      : 'bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)] hover:bg-[hsl(var(--success)/0.15)]',
+                    'transition-all active:scale-[0.98]'
+                  )}
+                >
+                  <div className={cn("p-2.5 rounded-xl", selectedSub ? "bg-foreground/10 text-foreground" : "bg-[hsl(var(--success)/0.2)] text-[hsl(var(--success))]")}>
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  <div className="text-left flex-1">
+                    <span className={cn("block text-[15px] font-semibold", selectedSub ? "text-foreground" : "text-[hsl(var(--success))]")}>
+                      {selectedSub ? `Revisar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}` : 'Revisão / Consolidação'}
+                    </span>
+                    <span className={cn("block text-[12px] leading-tight mt-0.5", selectedSub ? "text-muted-foreground" : "text-[hsl(var(--success))/0.7]")}>
+                      {selectedSub ? 'Iniciar sessão de consolidação para este tópico.' : 'Você concluiu a base. Reforce seu conhecimento.'}
+                    </span>
+                  </div>
+                  <ChevronRight className={cn("w-4 h-4", selectedSub ? "text-muted-foreground" : "text-[hsl(var(--success))/0.7]")} />
+                </button>
+              ) : (
+                <button
+                  onClick={handleNewSession}
+                  className={cn(
+                    'flex items-center gap-4 w-full p-4 rounded-2xl border',
+                    ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                      ? 'bg-[hsl(var(--warning)/0.1)] border-[hsl(var(--warning)/0.3)] hover:bg-[hsl(var(--warning)/0.15)]'
+                      : 'bg-foreground border-foreground hover:bg-foreground/90 text-background',
+                    'transition-all active:scale-[0.98] shadow-lg'
+                  )}
+                >
+                  <div className={cn("p-2.5 rounded-xl", 
+                    ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                      ? "bg-[hsl(var(--warning)/0.2)] text-[hsl(var(--warning))]"
+                      : "bg-background/20 text-background"
+                  )}>
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  <div className="text-left flex-1">
+                    <span className={cn("block text-[15px] font-semibold",
+                      ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                        ? "text-[hsl(var(--warning))]" : "text-background"
+                    )}>
+                      {ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico) 
+                        ? `Retomar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}` 
+                        : `Estudar: ${selectedSub?.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}`}
+                    </span>
+                    <span className={cn("block text-[12px] leading-tight mt-0.5",
+                      ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                        ? "text-[hsl(var(--warning))/0.7]" : "text-background/70"
+                    )}>
+                      {ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                        ? 'Sessão pausada em andamento' : 'Iniciar uma nova sessão de estudos'}
+                    </span>
+                  </div>
+                  <ChevronRight className={cn("w-4 h-4", 
+                    ultimaSessao && selectedSub === ultimaSessao.topico && !ementaConcluida.includes(ultimaSessao.topico)
+                      ? "text-[hsl(var(--warning))/0.7]" : "text-background/70"
+                  )} />
+                </button>
+              )}
+            </div>
+          )}
 
             </TabsContent>
 
