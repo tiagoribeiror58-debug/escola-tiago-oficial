@@ -77,12 +77,7 @@ export default function Sessao() {
     return () => window.removeEventListener('beforeunload', handler);
   }, []);
 
-  const doEncerrar = useCallback(async () => {
-    if (resumeKey) {
-      navigate(`/?materia=${slug}`);
-      return;
-    }
-
+  const doEncerrar = useCallback(async (forceComplete: boolean = false) => {
     // BUG-02: impede duplo encerramento (ex: usuário clica 2x após erro)
     if (isSavingRef.current) return;
     isSavingRef.current = true;
@@ -141,8 +136,8 @@ export default function Sessao() {
       // Snapshot das mensagens para guardar no banco
       const messagesSnapshot = messagesRef.current.map(({ role, content }) => ({ role, content }));
 
-      // NOVO: Se a sessão foi concluída com sucesso (topicComplete), marca na ementa_concluida automaticamente!
-      if (topicComplete && sessionData.topico) {
+      // NOVO: Se a sessão foi concluída com sucesso (topicComplete) ou o usuário forçou, marca na ementa_concluida automaticamente!
+      if ((topicComplete || forceComplete) && sessionData.topico) {
         const jaConcluido = ementaConcluida.some(d => d.toLowerCase().includes(sessionData.topico.toLowerCase()) || sessionData.topico.toLowerCase().includes(d.toLowerCase()));
         if (!jaConcluido) {
           const { error: ementaError } = await supabase.from('ementa_concluida').insert({
@@ -155,7 +150,7 @@ export default function Sessao() {
         }
       }
 
-      const { error } = await supabase.from('sessoes').insert({
+      const sessionPayload = {
         materia: slug!,
         topico: sessionData.topico,
         data: hoje,
@@ -166,11 +161,24 @@ export default function Sessao() {
         decisao_proxima: sessionData.decisao_proxima,
         observacoes: sessionData.observacoes || null,
         duracao_min: duracaoMin > 0 ? duracaoMin : 1,
-        session_key: sessionKey,
         messages_json: messagesSnapshot,
-      });
+      };
 
-      if (error) throw error;
+      if (resumeKey) {
+        // Atualiza a sessão existente se for retomada
+        const { error } = await supabase
+          .from('sessoes')
+          .update(sessionPayload)
+          .eq('session_key', resumeKey);
+        if (error) throw error;
+      } else {
+        // Insere nova sessão
+        const { error } = await supabase.from('sessoes').insert({
+          ...sessionPayload,
+          session_key: sessionKey,
+        });
+        if (error) throw error;
+      }
 
       // Deletar chat_messages após salvar snapshot
       const { error: delError } = await supabase
@@ -201,16 +209,16 @@ export default function Sessao() {
   }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey, modo, navigate]);
 
   const handlePausar = useCallback(() => {
-    doEncerrar();
+    doEncerrar(false);
   }, [doEncerrar]);
 
   const handleEncerrar = useCallback(() => {
     // Regra 5: botão sempre acessível. Se sessão não concluiu, pede confirmação.
     if (!topicComplete) {
-      const ok = window.confirm('A sessão ainda não foi concluída pela IA. Encerrar mesmo assim?');
+      const ok = window.confirm('A sessão ainda não foi concluída pela IA. Encerrar e marcar como concluída mesmo assim?');
       if (!ok) return;
     }
-    doEncerrar();
+    doEncerrar(true);
   }, [doEncerrar, topicComplete]);
 
   const handleMessagesChange = useCallback((messages: ChatMessage[]) => {

@@ -221,13 +221,13 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                     isCompleted
                                       ? "bg-[hsl(var(--success)/0.15)] border-[hsl(var(--success)/0.4)] text-[hsl(var(--success))]"
                                       : isPaused
-                                      ? "bg-[hsl(var(--warning)/0.15)] border-[hsl(var(--warning)/0.5)] text-[hsl(var(--warning))] ring-2 ring-[hsl(var(--warning)/0.25)] ring-offset-1 ring-offset-background animate-pulse"
+                                      ? "bg-[hsl(var(--warning)/0.15)] border-[hsl(var(--warning)/0.5)] text-[hsl(var(--warning))] ring-2 ring-[hsl(var(--warning)/0.25)] ring-offset-1 ring-offset-background"
                                       : isCurrent
-                                      ? "bg-primary/15 border-primary/50 text-primary ring-2 ring-primary/25 ring-offset-1 ring-offset-background animate-pulse"
+                                      ? "bg-primary/15 border-primary/50 text-primary ring-2 ring-primary/25 ring-offset-1 ring-offset-background"
                                       : "bg-muted/20 border-border/40 text-muted-foreground/50"
                                   )}
                                 >
-                                  {isCompleted ? '✓' : isPaused ? '⏸' : isCurrent ? '●' : (idx + 1)}
+                                  {isCompleted ? '✓' : isCurrent ? '●' : (idx + 1)}
                                 </button>
                                 {/* Linha conectora (não aparece no último item) */}
                                 {!isLast && (
