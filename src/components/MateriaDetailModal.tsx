@@ -64,6 +64,10 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
     proximoTopicoReal = flatEmenta[currIdx] || proximoTopicoReal;
   }
 
+  const firstUncompletedIdx = flatEmenta.findIndex(t => !ementaConcluida.includes(t));
+  const currentIdx = firstUncompletedIdx === -1 ? flatEmenta.length : firstUncompletedIdx;
+  const allDone = flatEmenta.length > 0 && ementaConcluida.length >= flatEmenta.length;
+
   const handleToggleTopico = (e: React.MouseEvent, topico: string, isCompleted: boolean) => {
     e.stopPropagation();
     if (config) {
@@ -168,10 +172,6 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             <TabsContent value="roadmap" className="flex-1 mt-0 outline-none flex flex-col">
               {/* Ementa / Roadmap Timeline */}
           {flatEmenta.length > 0 && (() => {
-            const firstUncompletedIdx = flatEmenta.findIndex(t => !ementaConcluida.includes(t));
-            const currentIdx = firstUncompletedIdx === -1 ? flatEmenta.length : firstUncompletedIdx;
-            const allDone = ementaConcluida.length >= flatEmenta.length;
-
             return (
               <div className="px-6 pb-4">
                 <div className="flex items-center justify-between mb-4">
