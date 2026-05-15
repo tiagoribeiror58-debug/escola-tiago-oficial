@@ -338,22 +338,24 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 onClick={handleNewSession}
                 className={cn(
                   'flex items-center gap-4 w-full p-4 rounded-2xl border',
-                  'bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)]',
-                  'hover:bg-[hsl(var(--success)/0.15)] transition-all active:scale-[0.98]'
+                  selectedSub 
+                    ? 'bg-foreground/5 border-border hover:bg-foreground/10' 
+                    : 'bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)] hover:bg-[hsl(var(--success)/0.15)]',
+                  'transition-all active:scale-[0.98]'
                 )}
               >
-                <div className="bg-[hsl(var(--success)/0.2)] p-2.5 rounded-xl">
-                  <BookOpen className="w-5 h-5 text-[hsl(var(--success))]" />
+                <div className={cn("p-2.5 rounded-xl", selectedSub ? "bg-foreground/10 text-foreground" : "bg-[hsl(var(--success)/0.2)] text-[hsl(var(--success))]")}>
+                  <BookOpen className="w-5 h-5" />
                 </div>
                 <div className="text-left flex-1">
-                  <span className="block text-[15px] font-semibold text-[hsl(var(--success))]">
-                    Revisão / Consolidação
+                  <span className={cn("block text-[15px] font-semibold", selectedSub ? "text-foreground" : "text-[hsl(var(--success))]")}>
+                    {selectedSub ? `Revisar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}` : 'Revisão / Consolidação'}
                   </span>
-                  <span className="block text-[12px] text-[hsl(var(--success))/0.7] leading-tight mt-0.5">
-                    Você já concluiu toda a base. Reforce seu conhecimento.
+                  <span className={cn("block text-[12px] leading-tight mt-0.5", selectedSub ? "text-muted-foreground" : "text-[hsl(var(--success))/0.7]")}>
+                    {selectedSub ? 'Iniciar sessão de consolidação para este tópico.' : 'Você já concluiu toda a base. Reforce seu conhecimento.'}
                   </span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[hsl(var(--success))/0.7]" />
+                <ChevronRight className={cn("w-4 h-4", selectedSub ? "text-muted-foreground" : "text-[hsl(var(--success))/0.7]")} />
               </button>
             ) : selectedSub ? (
               <button
