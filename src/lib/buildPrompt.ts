@@ -106,9 +106,7 @@ Matéria: ${materia.nome}`;
   let bloqueio = '';
 
   if (ementaCompleta) {
-    bloqueio = `\n\n═══════════════════════════════════
-EMENTA COMPLETA
-═══════════════════════════════════
+    bloqueio = `\n\n[EMENTA COMPLETA]
 O aluno concluiu todos os tópicos do currículo de ${materia.nome}.
 Ofereça aprofundamento, aplicações avançadas ou conexões interdisciplinares.
 Não repita nenhum tópico básico já coberto.`;
@@ -121,22 +119,20 @@ Não repita nenhum tópico básico já coberto.`;
     const progressoVisual = ementa.length > 0
       ? ementa.map(step => {
         const feito = concluidos.some(d => d.toLowerCase().includes(step.toLowerCase()) || step.toLowerCase().includes(d.toLowerCase()));
-        if (feito) return `  ✅ ${step} (Concluído)`;
-        if (step === topicoObrigatorio) return `  ▶ ${step}  ← VOCÊ ESTÁ AQUI`;
-        return `  ⬜ ${step} (NÃO Estudado)`;
+        if (feito) return `[✅] ${step}`;
+        if (step === topicoObrigatorio) return `[▶ ATUAL] ${step}`;
+        return `[⬜] ${step}`;
       }).join('\n')
       : '';
 
-    bloqueio = `\n\n═══════════════════════════════════
-TÓPICO DESTA SESSÃO — REGRA ABSOLUTA
-═══════════════════════════════════
-▶ VOCÊ DEVE ENSINAR EXCLUSIVAMENTE: "${topicoObrigatorio}"
+    bloqueio = `\n\n[TÓPICO DESTA SESSÃO]
+▶ ENSINE EXCLUSIVAMENTE: "${topicoObrigatorio}"
 
-TÓPICOS PROIBIDOS (já concluídos — NÃO podem ser tema principal):
+TÓPICOS PROIBIDOS (já concluídos):
 ${listaProibidos}
 
-Esta regra não tem exceção. Referências cruzadas e analogias só são permitidas com tópicos expressamente marcados como CONCLUÍDOS.
-${progressoVisual ? `\nProgresso na ementa:\n${progressoVisual}\n\nIMPORTANTE: Só mencione tópicos da ementa se estiverem marcados como ✅ (Concluído). Tópicos marcados como ⬜ (NÃO Estudado) foram pulados pelo usuário ou ainda não foram vistos, portanto JAMAIS presuma conhecimento sobre eles e não os use em exemplos.` : ''}`;
+Referências cruzadas só são permitidas com tópicos CONCLUÍDOS.
+${progressoVisual ? `\nProgresso:\n${progressoVisual}\nRegra: Só use em exemplos tópicos com [✅]. Jamais presuma conhecimento de tópicos [⬜].` : ''}`;
   }
 
   // ─── CONEXÃO GLOBAL E HISTÓRICO DE PERFORMANCE ──────────────────────────────
@@ -150,13 +146,11 @@ ${progressoVisual ? `\nProgresso na ementa:\n${progressoVisual}\n\nIMPORTANTE: S
         return `  • [${s.materia}] "${s.topico}" (dificuldade: ${dif}, erros: ${erros})`;
       });
     if (linhas.length > 0) {
-      historicoBloco = `\n\n═══════════════════════════════════
-CONEXÃO GLOBAL DE CONCEITOS (HISTÓRICO RECENTE)
-═══════════════════════════════════
-Abaixo está o histórico recente de tópicos já estudados pelo aluno (incluindo outras matérias):
+      historicoBloco = `\n\n[CONEXÃO GLOBAL - HISTÓRICO]
+Abaixo estão tópicos já estudados (incluindo outras matérias):
 ${linhas.join('\n')}
 
-DIRETRIZ DE ENSINO: Sempre que fizer sentido e enriquecer a explicação, crie analogias cruzadas utilizando os tópicos que o aluno já dominou (acima) para explicar o NOVO tópico atual. Isso gera ancoragem cognitiva e constrói uma teia de conhecimento interdisciplinar poderosa na mente dele.`;
+DIRETRIZ: Sempre que enriquecer a explicação, use tópicos dominados acima para criar analogias com o tópico atual. Isso gera ancoragem cognitiva.`;
     }
   }
 
