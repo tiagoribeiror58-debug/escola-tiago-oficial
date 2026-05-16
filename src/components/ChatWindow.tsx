@@ -43,23 +43,19 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const autoStartFiredRef = useRef(false); // guard contra double auto-start (StrictMode)
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isTtsLoading, setIsTtsLoading] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [ttsRate, setTtsRate] = useState(1.0);
   const musicRef = useRef<HTMLAudioElement | null>(null);
-  const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
 
 
-  // Carrega vozes assim que o browser disponibiliza (evento assíncrono)
-  // Sem esse listener, getVoices() retorna [] na primeira chamada e a voz cai
-  // para o padrão do sistema (geralmente inglês).
+  // Para o áudio TTS ao desmontar o componente
   useEffect(() => {
-    const loadVoices = () => {
-      voicesRef.current = window.speechSynthesis.getVoices();
+    return () => {
+      audioRef.current?.pause();
     };
-    loadVoices(); // tenta imediatamente (já estão carregadas em recargas)
-    window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
-    return () => window.speechSynthesis.removeEventListener('voiceschanged', loadVoices);
   }, []);
 
   // Initialize ambient music player
@@ -72,67 +68,63 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       audio.pause();
       audio.src = '';
     };
-  }, []);
-
-
-  // Seleciona a voz mais natural disponível a partir do cache assíncrono.
-  // Hierarquia de prioridade (do mais natural ao mais genérico):
-  //   1. "Google português do Brasil" — voz neural online do Chrome (melhor)
-  //   2. Qualquer Google pt
-  //   3. Qualquer voz pt-BR nativa do SO
-  //   4. Qualquer voz pt
-  const getBestVoice = (): SpeechSynthesisVoice | null => {
-    const voices = voicesRef.current.length
-      ? voicesRef.current
-      : window.speechSynthesis.getVoices(); // fallback síncrono
-    return (
-      voices.find(v => v.name === 'Google português do Brasil') ||
-      voices.find(v => v.name.toLowerCase().includes('google') && v.lang.startsWith('pt')) ||
-      voices.find(v => v.lang === 'pt-BR' || v.lang === 'pt_BR') ||
-      voices.find(v => v.lang.startsWith('pt')) ||
-      null
-    );
-  };
-
-  // Remove markdown antes de enviar para o TTS — evita que ele leia "asterisco asterisco", "hashtag" etc.
+  },   // Remove markdown antes de enviar ao TTS
   const stripMarkdown = (text: string) =>
     text
-      .replace(/```[\s\S]*?```/g, 'bloco de código.')   // code blocks
-      .replace(/`[^`]+`/g, '')                           // inline code
-      .replace(/\*\*(.+?)\*\*/g, '$1')                   // negrito
-      .replace(/\*(.+?)\*/g, '$1')                       // itálico
-      .replace(/__(.+?)__/g, '$1')                       // negrito underscore
-      .replace(/_(.+?)_/g, '$1')                         // itálico underscore
-      .replace(/#{1,6}\s+/g, '')                         // headers
-      .replace(/\[(.+?)\]\(.+?\)/g, '$1')               // links
-      .replace(/>\s*/g, '')                              // blockquotes
-      .replace(/^[-*+]\s+/gm, '')                        // listas
-      .replace(/<[^>]+>/g, '')                           // tags HTML
-      .replace(/\n{2,}/g, '. ')                          // quebras duplas viram pausa
-      .replace(/\n/g, ' ')                               // quebras simples viram espaço
+      .replace(/```[\s\S]*?```/g, 'bloco de código.')
+      .replace(/`[^`]+`/g, '')
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/\*(.+?)\*/g, '$1')
+      .replace(/__(.+?)__/g, '$1')
+      .replace(/_(.+?)_/g, '$1')
+      .replace(/#{1,6}\s+/g, '')
+      .replace(/\[(.+?)\]\(.+?\)/g, '$1')
+      .replace(/>\s*/g, '')
+      .replace(/^[-*+]\s+/gm, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\n{2,}/g, '. ')
+      .replace(/\n/g, ' ')
       .trim();
 
-  const toggleTTS = (text: string) => {
-    if (!('speechSynthesis' in window)) return;
+  // TTS via Google Cloud Neural2 (Edge Function /tts)
+  // Substitui a Web Speech API do navegador por voz neural real em pt-BR.
+  const toggleTTS = async (text: string) => {
+    // Se já está tocando, para
     if (isSpeaking) {
-      window.speechSynthesis.cancel();
+      audioRef.current?.pause();
+      if (audioRef.current) audioRef.current.src = '';
       setIsSpeaking(false);
       return;
     }
-    window.speechSynthesis.cancel();
-    const clean = stripMarkdown(text);
-    const utterance = new SpeechSynthesisUtterance(clean);
-    utterance.lang = 'pt-BR';
-    utterance.rate = ttsRate;
-    // Pitch 0.95 → ligeiramente mais grave que o padrão (1.0).
-    // Vozes Google pt-BR soam mais naturais e autoritativas nesse range.
-    utterance.pitch = 0.95;
-    const voice = getBestVoice();
-    if (voice) utterance.voice = voice;
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-    setIsSpeaking(true);
-    window.speechSynthesis.speak(utterance);
+
+    setIsTtsLoading(true);
+    try {
+      const clean = stripMarkdown(text);
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tts`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ text: clean, speed: ttsRate }),
+        }
+      );
+      if (!resp.ok) throw new Error('TTS request failed');
+      const { audioContent } = await resp.json();
+      const audio = new Audio(`data:audio/mp3;base64,${audioContent}`);
+      audioRef.current = audio;
+      audio.onended = () => setIsSpeaking(false);
+      audio.onerror = () => setIsSpeaking(false);
+      setIsSpeaking(true);
+      audio.play();
+    } catch (err) {
+      console.error('TTS error:', err);
+      setIsSpeaking(false);
+    } finally {
+      setIsTtsLoading(false);
+    }
   };
 
   const toggleMusic = () => {
@@ -481,15 +473,18 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                     <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-headings:my-2 whitespace-pre-wrap break-words relative group">
                       <button 
                         onClick={() => toggleTTS(mainContent)}
+                        disabled={isTtsLoading}
                         className={cn(
                           'absolute -right-2 -top-2 p-1.5 rounded-md bg-background/80 transition-opacity hover:text-foreground',
-                          isSpeaking
+                          isSpeaking || isTtsLoading
                             ? 'opacity-100 text-primary'
                             : 'text-muted-foreground opacity-0 group-hover:opacity-100'
                         )}
-                        title={isSpeaking ? 'Pausar narração' : 'Ouvir'}
+                        title={isSpeaking ? 'Pausar narração' : isTtsLoading ? 'Gerando áudio...' : 'Ouvir com voz neural'}
                       >
-                        {isSpeaking
+                        {isTtsLoading
+                          ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          : isSpeaking
                           ? <VolumeX className="w-3.5 h-3.5" />
                           : <Volume2 className="w-3.5 h-3.5" />
                         }
@@ -617,7 +612,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
           })()}
 
           {/* Barra de velocidade do narrador — aparece APENAS quando está narrando */}
-          {isSpeaking && (
+          {(isSpeaking || isTtsLoading) && (
             <div className="flex items-center gap-1 mb-1 w-full justify-center animate-in fade-in-0 slide-in-from-bottom-1 duration-200">
               <span className="text-[9px] text-muted-foreground/50 uppercase tracking-widest mr-1">velocidade</span>
               {([0.75, 1, 1.25, 1.5] as const).map(speed => (
