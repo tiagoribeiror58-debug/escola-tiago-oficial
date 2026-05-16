@@ -11,6 +11,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { playPopSound } from '@/lib/audioUtils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { supabase } from '@/lib/supabase';
 
 interface Props {
   estado: MateriaEstado | null;
@@ -25,6 +26,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
   const [expandedSession, setExpandedSession] = useState<number | null>(null);
   const [isExpandedRoadmap, setIsExpandedRoadmap] = useState(false);
+  
+  // Novos estados para a preview do tópico via IA
+  const [topicPreview, setTopicPreview] = useState<string | null>(null);
+  const [isPreviewLoading, setIsPreviewLoading] = useState(false);
+
   const { data: todasSessoes } = useSessoes();
 
   // REGRA DOS HOOKS: todos os hooks devem ser chamados ANTES de qualquer early return
@@ -45,6 +51,41 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
       }, 160);
     }
   }, [open]);
+
+  // Efeito para carregar a prévia do tópico quando selecionado
+  useEffect(() => {
+    async function fetchPreview() {
+      if (!selectedSub || !estado) {
+        setTopicPreview(null);
+        return;
+      }
+      
+      setIsPreviewLoading(true);
+      setTopicPreview(null); // Reseta a prévia anterior
+
+      try {
+        const { data, error } = await supabase.functions.invoke('topic-preview', {
+          body: {
+            materiaName: estado.config.nome,
+            topicName: selectedSub,
+            descricaoMateria: estado.config.descricao
+          }
+        });
+
+        if (error) throw error;
+        if (data?.preview) {
+          setTopicPreview(data.preview);
+        }
+      } catch (err) {
+        console.error("Erro ao buscar prévia do tópico:", err);
+        setTopicPreview("Pronto para iniciar este tópico de estudos."); // Fallback
+      } finally {
+        setIsPreviewLoading(false);
+      }
+    }
+
+    fetchPreview();
+  }, [selectedSub, estado]);
 
   if (!estado) return null;
 
@@ -418,7 +459,17 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                         ? "text-[hsl(var(--warning))/0.7]" : "text-white/60"
                     )}>
                       {isSelectedSubPaused
-                        ? 'Sessão pausada em andamento' : 'Iniciar uma nova sessão de estudos'}
+                        ? 'Sessão pausada em andamento' : (
+                          isPreviewLoading ? (
+                            <span className="flex items-center gap-1.5 opacity-70">
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                              Gerando prévia...
+                            </span>
+                          ) : (
+                            topicPreview || 'Iniciar uma nova sessão de estudos'
+                          )
+                        )
+                      }
                     </span>
                   </div>
                   <ChevronRight className={cn("w-4 h-4", 
