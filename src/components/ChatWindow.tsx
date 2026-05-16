@@ -42,6 +42,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const autoStartFiredRef = useRef(false); // guard contra double auto-start (StrictMode)
+  const autoTtsEnabledRef = useRef(false); // rastreia se o usuário ativou o áudio para manter auto-play
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isTtsLoading, setIsTtsLoading] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
@@ -88,17 +89,8 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       .replace(/\n/g, ' ')
       .trim();
 
-  // TTS via Google Cloud Neural2 (Edge Function /tts)
-  // Substitui a Web Speech API do navegador por voz neural real em pt-BR.
-  const toggleTTS = async (text: string) => {
-    // Se já está tocando, para
-    if (isSpeaking) {
-      audioRef.current?.pause();
-      if (audioRef.current) audioRef.current.src = '';
-      setIsSpeaking(false);
-      return;
-    }
-
+  // Chamada interna para o TTS (usada tanto pelo botão quanto pelo auto-play)
+  const fetchAndPlayTTS = async (text: string) => {
     setIsTtsLoading(true);
     try {
       const clean = stripMarkdown(text);
@@ -128,6 +120,22 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     } finally {
       setIsTtsLoading(false);
     }
+  };
+
+  // TTS via Google Cloud Neural2 (Edge Function /tts)
+  // Substitui a Web Speech API do navegador por voz neural real em pt-BR.
+  const toggleTTS = async (text: string) => {
+    // Se já está tocando, para
+    if (isSpeaking) {
+      audioRef.current?.pause();
+      if (audioRef.current) audioRef.current.src = '';
+      setIsSpeaking(false);
+      autoTtsEnabledRef.current = false; // Usuário pausou, desativa o auto-play
+      return;
+    }
+
+    autoTtsEnabledRef.current = true; // Usuário deu play, ativa auto-play para as próximas mensagens
+    await fetchAndPlayTTS(text);
   };
 
   const toggleMusic = () => {
@@ -331,6 +339,11 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
         role: 'assistant',
         content: contentToSave,
       });
+
+      // Dispara o TTS automático caso o usuário tenha ativado o áudio
+      if (autoTtsEnabledRef.current && contentToSave) {
+        fetchAndPlayTTS(contentToSave);
+      }
     } catch (e) {
       console.error(e);
       const isOverloaded = e instanceof Error && e.message === 'OVERLOADED';
