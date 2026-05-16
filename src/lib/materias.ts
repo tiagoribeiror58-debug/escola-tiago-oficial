@@ -4,6 +4,8 @@ import { tecnologiaNegocios } from './materias/negocios';
 import { comunicacaoInfluencia } from './materias/comunicacao';
 import { fundamentosAcademicos } from './materias/fundamentos';
 import { tecnologiaHub } from './materias/tecnologia';
+import { iaHub } from './materias/inteligencia-artificial';
+import { produtoHub } from './materias/produto';
 import { seducaoHub } from './materias/seducao';
 import { primeirosprincipiosHub } from './materias/primeiros-principios';
 import { riquezaHub } from './materias/riqueza';
@@ -18,6 +20,8 @@ export const MATERIAS: MateriaConfig[] = [
   comunicacaoInfluencia,
   fundamentosAcademicos,
   tecnologiaHub,
+  iaHub,
+  produtoHub,
   primeirosprincipiosHub,
   seducaoHub,
   riquezaHub,
