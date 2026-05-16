@@ -68,7 +68,9 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       audio.pause();
       audio.src = '';
     };
-  },   // Remove markdown antes de enviar ao TTS
+  }, []);
+
+  // Remove markdown antes de enviar ao TTS
   const stripMarkdown = (text: string) =>
     text
       .replace(/```[\s\S]*?```/g, 'bloco de código.')
