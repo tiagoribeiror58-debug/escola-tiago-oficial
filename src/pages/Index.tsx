@@ -95,7 +95,14 @@ export default function Index() {
       .replace(/[\u0300-\u036f]/g, '');
 
   const searchResults = searchQuery.trim().length > 0
-    ? estados.filter(e => normalizeString(e.config.nome).includes(normalizeString(searchQuery)))
+    ? estados.filter(e => {
+        const query = normalizeString(searchQuery);
+        const matchesNome = normalizeString(e.config.nome).includes(query);
+        const matchesDescricao = e.config.descricao ? normalizeString(e.config.descricao).includes(query) : false;
+        const matchesEmenta = e.config.ementa ? e.config.ementa.some(t => normalizeString(t).includes(query)) : false;
+        const matchesFases = e.config.fases ? e.config.fases.some(f => f.topicos?.some(t => normalizeString(t).includes(query))) : false;
+        return matchesNome || matchesDescricao || matchesEmenta || matchesFases;
+      })
     : [];
 
   return (
