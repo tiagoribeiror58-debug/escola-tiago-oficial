@@ -46,7 +46,10 @@ Abordagem obrigatória:
             'A Arte da Pergunta Socrática',
             'Retórica Digital: Argumentar em Texto e Vídeo',
             'Lógica Informal e Heurísticas de Julgamento',
-            'Debate Estruturado: Regras e Estratégias'
+            'Debate Estruturado: Regras e Estratégias',
+            'Retórica em Redes Sociais: Threads e Posts Persuasivos',
+            'Pensamento Crítico: Desconstruindo Narrativas Midiáticas',
+            'Comunicação Intercultural: Adaptando Argumentos ao Contexto'
           ]
         },
         {
@@ -79,7 +82,10 @@ Abordagem obrigatória:
             'Coalização e Negociação em Grupos',
             'Negociação por E-mail e Texto: Diferenças Chave',
             'Mediação e Arbitragem como Alternativa',
-            'Negociação de Alto Risco: Reféns e Crises'
+            'Negociação de Alto Risco: Reféns e Crises',
+            'Negociação com IA: Usando Modelos para Simular Cenários',
+            'Gestão de Conflitos em Times: Facilitação Estruturada',
+            'Negociação de Partnerships e M&A: A Mesa Complexa'
           ]
         },
         {
@@ -109,7 +115,10 @@ Abordagem obrigatória:
             'Humor na Oratória: Quando e Como Usar',
             'Gerenciando Nervosismo Fisiológico',
             'Debate Ao Vivo e Agilidade Verbal',
-            'Retrospecto e Feedback de Apresentações'
+            'Retrospecto e Feedback de Apresentações',
+            'Apresentações com IA: Usando AI para Estruturar Conteúdo',
+            'Podcast e YouTube: Oratória para Mídias Longas',
+            'Live Streaming: Engajando Audiências em Tempo Real'
           ]
         },
       ]
@@ -150,7 +159,11 @@ Abordagem obrigatória:
             'Storytelling em Texto: Arco Narrativo e Tensão',
             'SEO Writing: Escrever para Humanos e Buscadores',
             'Ghostwriting e Adaptação de Voz',
-            'Edição Implacável: Revisando como um Profissional'
+            'Edição Implacável: Revisando como um Profissional',
+            'Escrita com IA: Co-Criação sem Perder a Voz Autoral',
+            'Newsletters: Construindo Audiência por E-mail',
+            'Escrita para LinkedIn: Personal Branding Textual',
+            'Microcopy: Escrevendo para Interfaces e Chatbots'
           ]
         },
         {
@@ -220,7 +233,11 @@ Abordagem obrigatória:
             'Nível C2: Nuances de Significado (Synonyms & Antonyms)',
             'Nível C2: Ironia, Sarcasmo e Humor em Inglês',
             'Inglês Literário: Analisando Textos Complexos',
-            'Imersão Total: Pensando Diretamente em Inglês'
+            'Imersão Total: Pensando Diretamente em Inglês',
+            'Inglês para Tech: Vocabulário de Programação e Cloud',
+            'Listening Avançado: Podcasts e Audiobooks como Ferramenta',
+            'Escrita Profissional: Reports, Proposals e Documentation',
+            'Small Talk: A Arte da Conversa Casual em Inglês'
           ]
         },
         {
@@ -256,7 +273,9 @@ Abordagem obrigatória:
             'Compreensão Auditiva: Diferentes Sotaques',
             'Produção Escrita: Cartas e E-mails Formais',
             'Espanhol para Viagens e Situações Reais',
-            'Nível B2: Expressão de Opinião e Debate'
+            'Nível B2: Expressão de Opinião e Debate',
+            'Espanhol para Tech: Vocabulário Técnico',
+            'Compreensão de Séries e Filmes em Espanhol'
           ]
         },
         {
@@ -290,7 +309,9 @@ Abordagem obrigatória:
             'Futur Simple e Conditionnel',
             'Vocabulário de Gastronomia e Cultura',
             'Francês Profissional: Reuniões e E-mails',
-            'Subjonctif Présent: Expressão de Sentimentos'
+            'Subjonctif Présent: Expressão de Sentimentos',
+            'Francês para Cultura: Cinema, Música e Culinária',
+            'Pronomes Relativos e Frases Complexas'
           ]
         }
       ]

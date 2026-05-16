@@ -45,7 +45,10 @@ Abordagem obrigatória:
             'Integrais: A Área sob a Curva',
             'Equações Diferenciais Básicas',
             'Teoria dos Números: Primos e Divisibilidade',
-            'Matemática Discreta e Grafos'
+            'Matemática Discreta e Grafos',
+            'Probabilidade: Da Intuição ao Bayes',
+            'Otimização: Mínimos, Máximos e Lagrange',
+            'Matemática Financeira: TVM e Fluxos de Caixa'
           ]
         },
         {
@@ -75,7 +78,10 @@ Abordagem obrigatória:
             'Física Moderna: Relatividade Especial',
             'Física Quântica: O Princípio da Incerteza',
             'Física Nuclear e Radioatividade',
-            'Astrofísica: Estrelas, Buracos Negros e Cosmologia'
+            'Astrofísica: Estrelas, Buracos Negros e Cosmologia',
+            'Física de Partículas: O Modelo Padrão',
+            'Superfluidez e Supercondutividade',
+            'Física Computacional: Simulações e Modelos'
           ]
         },
         {
@@ -100,7 +106,9 @@ Abordagem obrigatória:
             'Polímeros: Do Petróleo ao Plástico',
             'Bioquímica: Aminoácidos e Proteínas',
             'Eletroquímica e Pilhas',
-            'Termodinâmica Química e Entalpia'
+            'Termodinâmica Química e Entalpia',
+            'Nanotecnologia: Química em Escala Atômica',
+            'Química Medicinal: Fármacos e Alvos Moleculares'
           ]
         },
         {
@@ -125,7 +133,11 @@ Abordagem obrigatória:
             'Neurobiologia: Neurônios e Sinapses',
             'Ecossistemas: Ciclos Biogeoquímicos',
             'Biodiversidade e Extinção de Espécies',
-            'Biotecnologia e Aplicações Modernas'
+            'Biotecnologia e Aplicações Modernas',
+            'CRISPR-Cas9: Edição Genética de Precisão',
+            'Biologia Sintética: Projetando Organismos',
+            'Epigenética: Genes que Ligam e Desligam',
+            'Microbioma Humano: O Segundo Genoma'
           ]
         },
         {
@@ -152,7 +164,10 @@ Abordagem obrigatória:
             'ANOVA: Comparando Grupos',
             'Visualização de Dados: Princípios de Edward Tufte',
             'A/B Testing na Prática',
-            'Estatística Bayesiana vs Frequentista'
+            'Estatística Bayesiana vs Frequentista',
+            'Visualização Interativa: Dashboards e Storytelling com Dados',
+            'Estatística para Machine Learning: Overfitting e Regularização',
+            'Causal Inference: Correlação ≠ Causação (Com Rigor)'
           ]
         }
       ]
@@ -189,7 +204,10 @@ Abordagem obrigatória:
             'Descolonização da África e Ásia',
             'A Queda do Muro e o Fim da URSS',
             'Globalização: A Nova Ordem Mundial',
-            'Brasil: Da Colônia à República'
+            'Brasil: Da Colônia à República',
+            'História da Tecnologia: Da Prensa ao Computador',
+            'Revoluções Digitais: Internet, Mobile e IA',
+            'Pandemia como Força Histórica: COVID-19 e Seus Efeitos'
           ]
         },
         {
@@ -217,7 +235,10 @@ Abordagem obrigatória:
             'Fenomenologia: Husserl e Heidegger',
             'Filosofia da Linguagem: Wittgenstein',
             'Filosofia da Mente: Consciência e Qualia',
-            'Bioética e os Dilemas do Século XXI'
+            'Bioética e os Dilemas do Século XXI',
+            'Filosofia da IA: Consciência Artificial é Possível?',
+            'Pós-Humanismo: Transcender o Biológico',
+            'Efetivo Altruísmo: Ética Utilitária Aplicada (Peter Singer)'
           ]
         },
         {
@@ -242,7 +263,10 @@ Abordagem obrigatória:
             'Geopolítica da Energia (Petróleo, Gás, Renováveis)',
             'Blocos Econômicos: UE, Mercosul, ASEAN',
             'A Nova Rota da Seda Chinesa',
-            'Conflitos Territoriais e Fronteiras Disputadas'
+            'Conflitos Territoriais e Fronteiras Disputadas',
+            'Geopolitica da Água: O Recurso do Século XXI',
+            'Migrações Climáticas e Refugiados Ambientais',
+            'Cidades Inteligentes: Urbanismo do Futuro'
           ]
         },
         {
@@ -270,7 +294,10 @@ Abordagem obrigatória:
             'Crescimento Econômico: Capital, Trabalho e Tecnologia',
             'Desigualdade: Coeficiente de Gini',
             'Economia Digital e Plataformas',
-            'Criptomoedas como Fenômeno Econômico'
+            'Criptomoedas como Fenômeno Econômico',
+            'Economia da IA: Automação e o Futuro do Trabalho',
+            'MMT (Teoria Monetária Moderna): Debate e Críticas',
+            'Economia Circular e Sustentabilidade'
           ]
         },
         {
@@ -295,7 +322,9 @@ Abordagem obrigatória:
             'Narratologia: Narrador, Foco e Tempo',
             'Literatura Brasileira: Do Barroco ao Contemporâneo',
             'Ensaio e Não-Ficção como Forma Literária',
-            'Literatura e Poder: Como Textos Mudam Sociedades'
+            'Literatura e Poder: Como Textos Mudam Sociedades',
+            'Literatura e IA: Criatividade Sintética e Autoria',
+            'Graphic Novels: Literatura Visual Contemporânea'
           ]
         },
         {
@@ -320,7 +349,10 @@ Abordagem obrigatória:
             'Movimentos Sociais e Ação Coletiva',
             'Religião como Fenômeno Social',
             'Sociologia Digital: Redes Sociais e Bolhas',
-            'Trabalho e Alienação na Pós-Modernidade'
+            'Trabalho e Alienação na Pós-Modernidade',
+            'Sociedade de Vigilância: Privacidade na Era Digital',
+            'Sociologia da IA: Impacto em Classes e Emprego',
+            'Cancel Culture: Dinâmicas de Poder nas Redes'
           ]
         }
       ]

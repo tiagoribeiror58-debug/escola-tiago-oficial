@@ -47,7 +47,12 @@ Abordagem obrigatória:
             'Calibração de Conhecimento: Saber o Que Você Não Sabe',
             'Construindo um Segundo Cérebro (PKM System)',
             'Produtividade Profunda: Cal Newport na Prática',
-            'Estratégias para Estudar Matérias Difíceis'
+            'Estratégias para Estudar Matérias Difíceis',
+            'IA como Parceira de Estudo: Usando LLMs para Aprender Melhor',
+            'Técnica Pomodoro vs Time Blocking: Quando Usar Cada',
+            'Digital Detox: Recuperando Atenção na Era das Notificações',
+            'Curva do Esquecimento de Ebbinghaus: A Matemática da Memória',
+            'Mapas Mentais e Visual Thinking para Retenção'
           ]
         },
         {
@@ -78,7 +83,10 @@ Abordagem obrigatória:
             'Teoria dos Jogos: Decisões Interdependentes',
             'Análise de Custo-Benefício e Decisão Racional',
             'Raciocínio Contrafactual (E Se?)',
-            'Limites do Raciocínio Formal: O Teorema de Gödel'
+            'Limites do Raciocínio Formal: O Teorema de Gödel',
+            'Lógica Bayesiana: Atualizando Crenças com Evidências',
+            'Argumentação Probabilística vs Determinística',
+            'Viés Narrativo: Quando Histórias Enganam a Lógica'
           ]
         },
         {
@@ -113,7 +121,11 @@ Abordagem obrigatória:
             'Mecanismos de Defesa e Autoengano',
             'Flexibilidade Cognitiva: Desaprender e Reaprender na Era da IA',
             'Psicologia da Colaboração Humano-IA: Identidade e Valor Próprio',
-            'Antifragilidade Emocional: Transformando Estresse em Crescimento'
+            'Antifragilidade Emocional: Transformando Estresse em Crescimento',
+            'Dopamine Detox: Restaurando o Circuito de Recompensa',
+            'Psicologia da Procrastinação: Raízes e Soluções',
+            'Flow States: Psicologia do Desempenho Ótimo',
+            'Síndrome do Impostor: Mecanismo e Superação'
           ]
         },
         {
@@ -142,7 +154,11 @@ Abordagem obrigatória:
             'Encontrando Propósito: Ikigai e Sentido na Vida',
             'Resiliência em Ambientes de Mudança Exponencial',
             'Gestão de Tecnoestresse e Sobrecarga de Informação',
-            'Estoicismo Digital: Equilíbrio em Mercados Voláteis'
+            'Estoicismo Digital: Equilíbrio em Mercados Voláteis',
+            'Eco-Ansiedade e Incerteza Existencial na Era da IA',
+            'Limites Saudáveis com Tecnologia e Redes Sociais',
+            'Solitude Produtiva: O Poder de Estar Só',
+            'Terapia Baseada em Evidências: Quando Procurar Ajuda'
           ]
         }
       ]
@@ -184,7 +200,11 @@ Abordagem obrigatória:
             'Neurodegeneração e Prevenção do Alzheimer',
             'Psilocibina e Neuroplasticidade (Pesquisa Atual)',
             'Sono e Consolidação de Memória (Sistema Glinfático)',
-            'Neurociência do Medo e Extinção do Condicionamento'
+            'Neurociência do Medo e Extinção do Condicionamento',
+            'Microbioma e Neurotransmissores: O Eixo Intestino-Cérebro',
+            'Neurofeedback: Treinando o Cérebro com Dados em Tempo Real',
+            'Neurociência da Criatividade: Redes de Insight',
+            'Brain-Computer Interfaces: O Futuro da Neurotecnologia'
           ]
         },
         {
@@ -214,7 +234,11 @@ Abordagem obrigatória:
             'Jejum Prolongado: Benefícios e Riscos Estruturais',
             'Técnicas de Respiração (Wim Hof, Box Breathing)',
             'Monitoring Wearables: O Que Vale Medir',
-            'Longevidade: O Protocolo de Bryan Johnson'
+            'Longevidade: O Protocolo de Bryan Johnson',
+            'Terapia de Luz Vermelha (Fotobiomodulação)',
+            'Grounding (Earthing): Evidências e Limitações',
+            'CGM (Continuous Glucose Monitor): Monitorando Glicose em Tempo Real',
+            'Peptídeos e Hormesis: Fronteiras da Otimização'
           ]
         },
         {
@@ -240,7 +264,11 @@ Abordagem obrigatória:
             'Hidratação e Eletrólitos na Performance',
             'Leitura de Rótulos: O Que Realmente Importa',
             'Nutrição para Cognição: O Cérebro na Mesa',
-            'Comer para Longevidade: Azul Blue Zones'
+            'Comer para Longevidade: Azul Blue Zones',
+            'GLP-1 e Semaglutida: A Ciência por Trás da Revolução',
+            'Nutrigenômica: Dieta Personalizada por DNA',
+            'Ultra-Processados: O Impacto Neurológico da Comida Industrial',
+            'Suplementação Estratégica: O Stack Baseado em Evidências'
           ]
         },
         {
@@ -266,7 +294,11 @@ Abordagem obrigatória:
             'Hormônios e Treino: Testosterona, GH e Cortisol',
             'Mobilidade e Flexibilidade para Longevidade',
             'Nutrição Peri-Treino: O Que Comer e Quando',
-            'Monitoramento de Performance: RPE, HRV e Métricas'
+            'Monitoramento de Performance: RPE, HRV e Métricas',
+            'Exercícios Isométricos e Excêntricos para Tendões',
+            'Treinamento Funcional vs Bodybuilding: Trade-offs',
+            'Longevidade Física: O Protocolo de Peter Attia',
+            'Rucking e Zone 2: O Cardio mais Eficiente que Existe'
           ]
         }
       ]

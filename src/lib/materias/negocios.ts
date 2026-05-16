@@ -45,7 +45,12 @@ Abordagem obrigatória:
             'Pivoting: Quando e Como Mudar de Direção',
             'Fundraising Pré-Seed: Bootstrapping vs Capital Externo',
             'Churn, Retenção e o Vazamento no Balde',
-            'Construindo para Escala vs Construindo para Validação'
+            'Construindo para Escala vs Construindo para Validação',
+            'Solo Founder vs Co-Founder: Trade-offs Estruturais',
+            'Bootstrapping Lucrativo: Crescendo sem Investimento Externo',
+            'Network Effects: Quando o Produto Melhora com Mais Usuários',
+            'Marketplace Dynamics: Problema do Ovo e da Galinha',
+            'Due Diligence do Investidor: O que Olham Além dos Números'
           ]
         },
         {
@@ -77,7 +82,11 @@ Abordagem obrigatória:
             'Matemática do Vesting (Cliff e Carve-outs)',
             'Rendimentos Compostos vs Simples na Prática',
             'Análise de Sensibilidade: E Se o Cenário Mudar?',
-            'Retorno Esperado e Gestão de Portfólio Pessoal'
+            'Retorno Esperado e Gestão de Portfólio Pessoal',
+            'Burn Rate e Runway: Quanto Tempo Você Tem?',
+            'Bridge Rounds e Financiamentos Emergenciais',
+            'Revenue-Based Financing: Alternativa ao Equity',
+            'Modelagem de Cenários com Monte Carlo'
           ]
         },
         {
@@ -108,7 +117,11 @@ Abordagem obrigatória:
             'Reestruturação Financeira e Turnaround',
             'IPO: O Processo de Abertura de Capital',
             'IFRS vs GAAP: As Linguagens Contábeis do Mundo',
-            'Corporate Governance: Conselho, Auditoria e Compliance'
+            'Corporate Governance: Conselho, Auditoria e Compliance',
+            'Transfer Pricing: Preços de Transferência entre Subsidiárias',
+            'Spin-offs e Carve-outs Estratégicos',
+            'ESG e Relatórios de Sustentabilidade Corporativa',
+            'Forensic Accounting: Detectando Fraudes Contábeis'
           ]
         },
         {
@@ -134,7 +147,12 @@ Abordagem obrigatória:
             'Métricas de Marketing: MQL, SQL, CPL e ROAS',
             'A/B Testing e Otimização de Conversão (CRO)',
             'Product-Led Growth (PLG): O Produto como Canal',
-            'Expansão Internacional: Go-To-Market em Novos Mercados'
+            'Expansão Internacional: Go-To-Market em Novos Mercados',
+            'Marketing com IA: Personalização em Escala (1:1)',
+            'Community-Led Growth: Construindo Comunidades que Vendem',
+            'Dark Social: O Tráfego Invisível de Mensagens Privadas',
+            'Attribution Modeling: De Onde Vem o Cliente de Verdade?',
+            'Creator Economy: Parcerias com Criadores de Conteúdo'
           ]
         },
         {
@@ -160,7 +178,11 @@ Abordagem obrigatória:
             'Vendas por Indicação (Referral) e Expansão de Conta',
             'Gestão de Cota e Comissionamento',
             'Análise Win/Loss: Por que você perdeu e o que fazer',
-            'Customer Success: A Venda que Nunca Termina'
+            'Customer Success: A Venda que Nunca Termina',
+            'AI-Augmented Sales: Usando IA no Processo de Vendas',
+            'Revenue Operations (RevOps): Alinhando Marketing, Vendas e CS',
+            'Sales Enablement: Conteúdo e Ferramentas para o Vendedor',
+            'Vendas por PLG: O Papel do Sales-Assist em Self-Serve'
           ],
           layout: 'narrative'
         },
@@ -187,7 +209,11 @@ Abordagem obrigatória:
             'Comunicação Interna em Escala (All-Hands, 1:1s)',
             'Remuneração Estratégica e Equity para Funcionários',
             'Liderança em Crise: Tomada de Decisão sob Pressão',
-            'Construindo Times de Alta Performance'
+            'Construindo Times de Alta Performance',
+            'Gestão de Times com IA: Automação de Rotinas Operacionais',
+            'Diversidade e Inclusão como Vantagem Competitiva',
+            'Employer Branding: Atraindo Talento pela Marca',
+            'Gestão de Mudança Organizacional (Change Management)'
           ]
         },
         {
@@ -213,7 +239,10 @@ Abordagem obrigatória:
             'Relações com Investidores: Due Diligence Jurídica',
             'Dissolução e Liquidação Societária',
             'Tributação Internacional para Empresas Digitais',
-            'Resolução de Disputas: Arbitragem vs Litígio'
+            'Resolução de Disputas: Arbitragem vs Litígio',
+            'Regulamentação de IA: Implicações Jurídicas para Startups',
+            'Contratos de SaaS: MRR, ARR e Cláusulas de Renovação',
+            'Marco Legal das Criptomoedas e Ativos Digitais'
           ],
           layout: 'split',
           widget: 'LegalViewer'
@@ -241,7 +270,11 @@ Abordagem obrigatória:
             'Planejamento de Demanda e S&OP',
             'Logística Reversa e Sustentabilidade',
             'Gestão de Projetos: PMBOK e Metodologias Ágeis',
-            'Business Continuity Planning (BCP)'
+            'Business Continuity Planning (BCP)',
+            'Automação Inteligente: RPA + IA para Processos Complexos',
+            'Cadeia de Suprimentos Digital (Digital Twin de Supply Chain)',
+            'Sustentabilidade Operacional e Economia Circular',
+            'Reshoring e Nearshoring: Reconfigurando Cadeias Globais'
           ]
         },
         {
@@ -304,7 +337,11 @@ Abordagem obrigatória:
             'Alavancagem de Código e Mídia (Sem custo marginal de replicação)',
             'A Engenharia do Momento (Timing): Surfar vs Criar a Onda',
             'Monopólios Naturais e Escalabilidade Geopolítica',
-            'Pensamento Assintótico: Enxergando o Limite Teórico da Eficiência'
+            'Pensamento Assintótico: Enxergando o Limite Teórico da Eficiência',
+            'IA como Alavanca de Escala Infinita: O Novo Paradigma',
+            'Defensibilidade no Mundo AI-First: O que Não é Copiável',
+            'Second-Order Thinking: Consequências das Consequências',
+            'Antifragilidade Empresarial: Ganhando com o Caos (Taleb)'
           ],
           layout: 'narrative'
         }
