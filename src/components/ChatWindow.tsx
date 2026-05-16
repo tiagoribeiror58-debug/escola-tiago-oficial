@@ -110,13 +110,14 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
             'Content-Type': 'application/json',
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
           },
-          body: JSON.stringify({ text: clean, speed: ttsRate }),
+          body: JSON.stringify({ text: clean, speed: 1.0 }),
         }
       );
       if (!resp.ok) throw new Error('TTS request failed');
       const { audioContent } = await resp.json();
       const audio = new Audio(`data:audio/mp3;base64,${audioContent}`);
       audioRef.current = audio;
+      audio.playbackRate = ttsRate;
       audio.onended = () => setIsSpeaking(false);
       audio.onerror = () => setIsSpeaking(false);
       setIsSpeaking(true);
@@ -620,7 +621,12 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               {([0.75, 1, 1.25, 1.5] as const).map(speed => (
                 <button
                   key={speed}
-                  onClick={() => setTtsRate(speed)}
+                  onClick={() => {
+                    setTtsRate(speed);
+                    if (audioRef.current) {
+                      audioRef.current.playbackRate = speed;
+                    }
+                  }}
                   className={cn(
                     'text-[10px] font-mono px-2 py-0.5 rounded-full transition-all',
                     ttsRate === speed
