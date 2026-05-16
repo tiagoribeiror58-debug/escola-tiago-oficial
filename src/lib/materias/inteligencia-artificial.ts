@@ -17,6 +17,7 @@ export const iaHub: MateriaConfig = {
       contexto: `Foco: táticas brutais de eficiência pessoal e fluxos de trabalho do dia a dia.
 O aluno é um "Pedreiro de Prompt", quer resolver tarefas rapidamente, de forma pragmática.`,
       ementa: [
+        // === EXISTENTES ===
         'O Mindset do Operador Centauro',
         'Anatomia de um Prompt de Alta Precisão (Role, Context, Constraints)',
         'Iteração e Refinamento de Contexto (Chaining)',
@@ -32,7 +33,18 @@ O aluno é um "Pedreiro de Prompt", quer resolver tarefas rapidamente, de forma 
         'Construindo GPTs Customizados',
         'API da OpenAI/Anthropic: Primeira Integração',
         'Avaliação de Outputs: Como Medir Qualidade da IA',
-        'Custo de Token: Otimizando sua Fatura de API'
+        'Custo de Token: Otimizando sua Fatura de API',
+        // === NOVOS ===
+        'Tree-of-Thought: Explorando Ramificações de Raciocínio',
+        'Meta-Prompting: Usando IA para Gerar Prompts Melhores',
+        'Prompt Caching e Otimização de Latência',
+        'System Prompts vs User Prompts: Arquitetura de Instruções',
+        'Comparando Modelos: GPT vs Claude vs Gemini vs Open Source',
+        'IA para Programação: Copilot, Cursor e Vibe Coding',
+        'Usando IA para Criação de Conteúdo (Blog, LinkedIn, X)',
+        'IA para Gestão de Projetos e Documentação Técnica',
+        'Workflows Compostos: Encadeando Múltiplas IAs',
+        'MCP (Model Context Protocol): Conectando IA a Ferramentas'
       ]
     },
     {
@@ -44,6 +56,7 @@ O aluno é um "Pedreiro de Prompt", quer resolver tarefas rapidamente, de forma 
       descricao: 'Análise de dados estatística, regressões, clusterização e árvores de decisão.',
       contexto: `Foco: extração de valor estatístico de dados tabulares. Nem tudo precisa de um LLM.`,
       ementa: [
+        // === EXISTENTES ===
         'Limpeza de Dados e Feature Engineering',
         'Regressão Linear e Logística (Os Fundamentos)',
         'Árvores de Decisão e Random Forests',
@@ -63,7 +76,46 @@ O aluno é um "Pedreiro de Prompt", quer resolver tarefas rapidamente, de forma 
         'Métricas de Avaliação: Precision, Recall, F1, AUC',
         'Validação Cruzada e Prevenção de Data Leakage',
         'Deploy de Modelos de ML com FastAPI',
-        'Monitoramento de Modelos em Produção'
+        'Monitoramento de Modelos em Produção',
+        // === NOVOS ===
+        'Redes Neurais Introdutórias: Perceptron ao MLP',
+        'Support Vector Machines (SVM) e Kernel Trick',
+        'Naive Bayes e Classificação de Texto',
+        'Processamento de Linguagem Natural Clássico (NLP pré-Transformers)',
+        'Análise de Sobrevivência (Survival Analysis)',
+        'Bayesian Optimization para Hiperparâmetros',
+        'Causal Inference: Correlação vs Causalidade em Dados',
+        'Augmented Analytics: IA Automatizando Análise de Dados',
+        'Feature Store: Centralizando Features para Reutilização',
+        'Teste A/B Estatístico: Power Analysis e Significância'
+      ]
+    },
+    {
+      slug: 'deep-learning',
+      nome: 'Deep Learning & Redes Neurais',
+      emoji: '🧠',
+      parent: 'ia-hub',
+      whyStart: 'Depois de dominar ML clássico, você precisa entender as redes neurais profundas que tornaram possíveis LLMs, visão computacional e geração de imagens.',
+      descricao: 'Redes neurais convolucionais, recorrentes, Transformers e os fundamentos matemáticos da IA moderna.',
+      contexto: `Foco: fundamentos de deep learning para quem quer entender o que há por baixo dos LLMs.
+O aluno precisa de álgebra linear e cálculo básico. Explique gradientes de forma visual antes de fórmulas.`,
+      ementa: [
+        'Neurônio Artificial e Função de Ativação',
+        'Redes Feedforward (MLP) e Backpropagation',
+        'Gradient Descent: SGD, Adam e Learning Rate Scheduling',
+        'Overfitting e Regularização (Dropout, L1/L2, Early Stopping)',
+        'Redes Neurais Convolucionais (CNNs) para Imagens',
+        'Redes Neurais Recorrentes (RNNs) e LSTMs',
+        'Arquitetura Transformer: Atenção é Tudo que Você Precisa',
+        'Self-Attention e Multi-Head Attention na Prática',
+        'Positional Encoding e Janela de Contexto',
+        'Transfer Learning: Reutilizando Modelos Pré-Treinados',
+        'Batch Normalization e Técnicas de Treinamento',
+        'Autoencoders e Representação Latente',
+        'GANs (Generative Adversarial Networks): Conceito e Aplicações',
+        'Loss Functions: Cross-Entropy, MSE e Contrastive Loss',
+        'Frameworks: PyTorch vs TensorFlow (Quando usar qual)',
+        'GPU Computing: CUDA, cuDNN e Aceleração de Treinamento'
       ]
     },
     {
@@ -76,6 +128,7 @@ O aluno é um "Pedreiro de Prompt", quer resolver tarefas rapidamente, de forma 
       contexto: `Foco: fundamentos da engenharia de software aplicada a Modelos Fundacionais.
 O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI Engineer.`,
       ementa: [
+        // === EXISTENTES ===
         'A Anatomia de um LLM: Transformers e Atenção',
         'Tokenização e Cálculo de Custos de Inferência',
         'Engenharia de Prompting Avançada (Few-Shot, CoT)',
@@ -95,7 +148,23 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
         'Memória de Longo Prazo para Agentes',
         'Multi-Agent Systems: Crews e Swarms',
         'Computer Use: Agentes que Controlam Interfaces',
-        'Guardrails: Como Conter Agentes Autônomos'
+        'Guardrails: Como Conter Agentes Autônomos',
+        // === NOVOS ===
+        'GraphRAG: Combinando Grafos de Conhecimento com Vetores',
+        'Agentic RAG: Retrieval Ativo e Adaptativo',
+        'Query Routing e Multi-Index Strategies',
+        'Reranking: Cross-Encoders e Modelos de Reordenação',
+        'Context Window Management: Compressão e Sumarização',
+        'LLM-Agnostic Architecture: Evitando Vendor Lock-in',
+        'Model Context Protocol (MCP): Padrão Universal de Conectividade',
+        'Durable Execution para Agentes (Temporal, Inngest)',
+        'Self-Correcting Agents: Reflection e Auto-Avaliação',
+        'Human-in-the-Loop: Quando o Agente Precisa de Aprovação',
+        'Caching de Inferência: KV Cache e Semantic Cache',
+        'Multimodal RAG: Indexando Imagens, PDFs e Vídeo',
+        'Evaluation-Driven Development: Evals como Testes Unitários de IA',
+        'Arquiteturas de Chat: Histórico, Resumo e Janela Deslizante',
+        'Voice Agents: Pipelines de Voz para Agentes (STT + LLM + TTS)'
       ]
     },
     {
@@ -107,6 +176,7 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
       descricao: 'Treinamento, Fine-Tuning, Deploy escalável e monitoramento de modelos em produção.',
       contexto: `Foco: infraestrutura e engenharia pesada de Machine Learning.`,
       ementa: [
+        // === EXISTENTES ===
         'Pipelines de Dados para Treinamento',
         'Técnicas de Fine-Tuning (SFT, RLHF)',
         'Quantização e Otimização de Pesos (LoRA, GGML)',
@@ -122,7 +192,18 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
         'Batching de Inferência para Escala',
         'Continuous Training e Retraining Pipelines',
         'A/B Testing de Modelos em Produção',
-        'SLAs de IA: Latência, Throughput e Disponibilidade'
+        'SLAs de IA: Latência, Throughput e Disponibilidade',
+        // === NOVOS ===
+        'Distributed Training: Data Parallelism e Model Parallelism',
+        'ONNX: Formato Universal para Portabilidade de Modelos',
+        'Edge Deployment: Rodando Modelos em Dispositivos (ONNX Runtime, Core ML)',
+        'Model Registry: Versionamento e Governança de Modelos',
+        'Feature Pipelines em Tempo Real (Feast, Tecton)',
+        'Prompt Management em Produção: Versionamento e Rollback',
+        'LLMOps: CI/CD Específico para Pipelines de LLM',
+        'Cost Management: Otimizando Gastos com GPU e Inferência',
+        'Canary Deployments para Modelos de ML',
+        'Observabilidade de LLMs: LangSmith, Langfuse, Phoenix'
       ]
     },
     {
@@ -134,6 +215,7 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
       descricao: 'Domínio sobre geração de Imagem, Áudio, Vídeo e 3D usando modelos fundacionais.',
       contexto: `Foco: a fronteira criativa e sensorial da inteligência artificial.`,
       ementa: [
+        // === EXISTENTES ===
         'Como funcionam os Modelos de Difusão',
         'Engenharia de Imagem Avançada (Midjourney, Stable Diffusion)',
         'Controle e Consistência (ControlNet, IP-Adapter)',
@@ -146,7 +228,18 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
         'Modelos de Geração 3D e NeRFs',
         'Visão Computacional Aplicada a Negócios',
         'Modelos Multimodais Nativos (GPT-4o, Gemini)',
-        'Real-time IA: Processamento de Stream de Vídeo'
+        'Real-time IA: Processamento de Stream de Vídeo',
+        // === NOVOS ===
+        'Flow Matching: A Nova Geração de Modelos Generativos',
+        'Consistência de Personagens: Estilos e Identidades em Série',
+        'Gaussian Splatting: Alternativa aos NeRFs para 3D',
+        'Lip Sync e Avatares Digitais em Tempo Real',
+        'Tradução e Dublagem Automática com Preservação de Voz',
+        'Document AI: Extração Inteligente de PDFs e Imagens',
+        'OCR Avançado com Modelos de Visão (Vision LLMs)',
+        'Text-to-CAD e Geração de Modelos Industriais',
+        'IA para Motion Capture sem Sensores',
+        'Pipelines de Produção Audiovisual com IA'
       ]
     },
     {
@@ -158,6 +251,7 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
       descricao: 'Estratégia corporativa, ROI de IA e liderança de times AI-first.',
       contexto: `Foco: visão estratégica e econômica da IA. O aluno é um founder, executivo ou líder.`,
       ementa: [
+        // === EXISTENTES ===
         'O Paradigma da Empresa AI-First',
         'Mapeamento de Gargalos Cognitivos na Operação',
         'ROI de Automação: Quando usar humanos vs agentes',
@@ -175,7 +269,16 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
         'IA Agêntica: Orquestração de Agentes Autônomos em Escala',
         'Identidade Sintética e Validação de Realidade via Blockchain',
         'Soberania de Dados e IA Local: O Fim da Dependência de APIs',
-        'Ética Corporativa na Adoção de IA'
+        'Ética Corporativa na Adoção de IA',
+        // === NOVOS ===
+        'IA e Margem Bruta: Impacto nos Unit Economics',
+        'Build vs Buy vs Fine-Tune: Framework de Decisão',
+        'Compliance de IA: EU AI Act, LGPD e Regulação Global',
+        'AI Governance Board: Estruturando Comitê Interno de IA',
+        'Upskilling: Treinando Equipes Não-Técnicas para Usar IA',
+        'IA para Customer Success: Reduzindo Churn com Automação',
+        'Competitive Intelligence com IA: Monitoramento de Mercado',
+        'Total Cost of Ownership (TCO) de Soluções de IA'
       ]
     },
     {
@@ -187,6 +290,7 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
       descricao: 'AI Safety, regulamentação, mitigação de viés e defesa contra ataques adversariais.',
       contexto: `Foco: as grades de proteção da inteligência artificial.`,
       ementa: [
+        // === EXISTENTES ===
         'Prompt Injection e Jailbreaks',
         'Data Poisoning e Ataques Adversariais',
         'Vazamento de Dados Pessoais (PII) em LLMs',
@@ -200,7 +304,16 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
         'Direitos Autorais e Propriedade Intelectual Sintética',
         'Superinteligência e Risco Existencial: O Debate Sério',
         'Governança de IA nas Empresas: Frameworks Práticos',
-        'Transparência e Explicabilidade (XAI)'
+        'Transparência e Explicabilidade (XAI)',
+        // === NOVOS ===
+        'Deepfakes: Detecção e Mitigação',
+        'Watermarking de Conteúdo Gerado por IA',
+        'Sandboxing de Agentes: Isolamento e Permissões',
+        'Auditoria de Modelos: Testes de Fairness em Escala',
+        'Responsible AI by Design: Checklist para Lançamento',
+        'Shadow AI: Riscos do Uso Não-Autorizado de IA nas Empresas',
+        'Supply Chain Attack em Modelos Open Source',
+        'Constitutional AI: Treinando Modelos com Princípios Éticos'
       ]
     }
   ]

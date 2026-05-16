@@ -18,6 +18,7 @@ export const produtoHub: MateriaConfig = {
       descricao: 'Descoberta de produto, priorização de backlog e métricas de engajamento.',
       contexto: `Foco: a ponte entre engenharia, negócios e design.`,
       ementa: [
+        // === EXISTENTES ===
         'O Papel do PM: Engenharia, UX e Negócios',
         'Product Discovery e Entrevistas de Usuário',
         'Frameworks de Priorização (RICE, Kano)',
@@ -32,7 +33,23 @@ export const produtoHub: MateriaConfig = {
         'Ciclo de Vida do Produto: Introdução a Declínio',
         'Platform Products vs End-User Products',
         'Produto Internacional: Localização e Adaptação',
-        'Ethical Product Design: Dark Patterns e Responsabilidade'
+        'Ethical Product Design: Dark Patterns e Responsabilidade',
+        // === NOVOS ===
+        'Product-Led Growth (PLG): Aquisição pelo Próprio Produto',
+        'AI-First Product Management: Gerenciando Features de IA',
+        'Testes A/B e Experimentação Contínua',
+        'North Star Metric: Encontrando a Métrica que Importa',
+        'Opportunity Solution Tree: Mapeando Oportunidades',
+        'Continuous Discovery Habits: Pesquisa Semanal com Usuários',
+        'Unit Economics: CAC, LTV e Payback Period',
+        'Feedback Loops: NPS, CSAT e CES na Prática',
+        'Roadmap Now/Next/Later vs Roadmap Baseado em Datas',
+        'Stakeholder Management: Alinhando Expectativas de Liderança',
+        'Product Ops: Escalando a Função de Produto',
+        'Pricing Strategy: Modelos de Monetização (Freemium, Usage-Based)',
+        'Growth Loops: Construindo Ciclos Virais Sustentáveis',
+        'Competitive Analysis: Frameworks para Análise de Concorrentes',
+        'API as a Product: Vendendo para Desenvolvedores'
       ]
     },
     {
@@ -48,6 +65,7 @@ Abordagem obrigatória:
 - Explique o princípio perceptivo ou cognitivo por trás de cada decisão de design.
 - Só depois: peça que o aluno critique um design real.`,
       ementa: [
+        // === EXISTENTES ===
         'Leis da Gestalt Aplicadas a Interfaces',
         'Teoria das Cores e Contraste',
         'Tipografia e Escala Tipográfica',
@@ -62,7 +80,23 @@ Abordagem obrigatória:
         'Microinterações e Animações de Feedback',
         'Dark Patterns: O que Nunca Fazer',
         'Design de Onboarding: Reduzindo Fricção',
-        'Motion Design: Movimento com Propósito'
+        'Motion Design: Movimento com Propósito',
+        // === NOVOS ===
+        'Design para IA: Interfaces Conversacionais e Probabilísticas',
+        'Machine Experience (MX): Otimizando para Humanos e Agentes',
+        'Explainable UX: Transparência em Decisões de IA',
+        'Adaptive UI: Interfaces que se Ajustam ao Contexto do Usuário',
+        'Design Multimodal: Voz, Gesto e Toque Integrados',
+        'Calm Design: Reduzindo Sobrecarga Cognitiva',
+        'Design Emocional: Microcopies que Geram Conexão',
+        'UX Writing: Escrevendo para Interfaces',
+        'Information Architecture: Organizando Conteúdo Complexo',
+        'Design Sprint: Prototipando em 5 Dias (Google Ventures)',
+        'Atomic Design: Átomos, Moléculas e Organismos',
+        'Psicologia Cognitiva Aplicada a UX: Hick, Fitts e Miller',
+        'Design de Dashboards e Visualização de Dados',
+        'Design de Formulários: Reduzindo Abandono',
+        'Sustentabilidade Digital: Design Eco-Consciente'
       ],
       layout: 'canvas',
       widget: 'DesignPreview'
@@ -76,6 +110,7 @@ Abordagem obrigatória:
       descricao: 'Criptografia, Blockchain, DeFi e contratos inteligentes.',
       contexto: `Foco: os fundamentos técnicos da descentralização. Evite o viés de investimento e especulação.`,
       ementa: [
+        // === EXISTENTES ===
         'O Problema do Gasto Duplo e o Bitcoin',
         'Algoritmos de Consenso (PoW vs PoS)',
         'Ethereum e Smart Contracts',
@@ -90,7 +125,18 @@ Abordagem obrigatória:
         'Riscos: Rug Pulls, Hacks e Bugs em Contratos',
         'Regulamentação Cripto Global',
         'CBDCs: Moedas Digitais de Bancos Centrais',
-        'ZK Proofs: Privacidade sem Revelar Informação'
+        'ZK Proofs: Privacidade sem Revelar Informação',
+        // === NOVOS ===
+        'Account Abstraction: UX Simplificada em Wallets (ERC-4337)',
+        'Bridges e Interoperabilidade Cross-Chain',
+        'Real World Assets (RWA): Tokenização de Ativos Reais',
+        'DePIN: Infraestrutura Física Descentralizada',
+        'MEV (Maximal Extractable Value): O Lado Sombrio das Transações',
+        'Auditorias de Smart Contracts: Ferramentas e Processo',
+        'Stablecoins: Mecanismos e Riscos de Despegging',
+        'Oráculos (Chainlink): Conectando Blockchain ao Mundo Real',
+        'Ethereum Roadmap: Danksharding e Proto-Danksharding',
+        'SocialFi e On-Chain Identity (Lens, Farcaster)'
       ]
     }
   ]
