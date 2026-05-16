@@ -377,8 +377,8 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     <BookOpen className="w-5 h-5" />
                   </div>
                   <div className="text-left flex-1">
-                    <span className={cn("block text-[15px] font-semibold", selectedSub ? "text-foreground" : "text-[hsl(var(--success))]")}>
-                      {selectedSub ? `Revisar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}` : 'Revisão / Consolidação'}
+                    <span className={cn("block text-[15px] font-semibold line-clamp-3", selectedSub ? "text-foreground" : "text-[hsl(var(--success))]")}>
+                      {selectedSub ? `Revisar: ${selectedSub}` : 'Revisão / Consolidação'}
                     </span>
                     <span className={cn("block text-[12px] leading-tight mt-0.5", selectedSub ? "text-muted-foreground" : "text-[hsl(var(--success))/0.7]")}>
                       {selectedSub ? 'Iniciar sessão de consolidação para este tópico.' : 'Você concluiu a base. Reforce seu conhecimento.'}
@@ -405,13 +405,13 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     <BookOpen className="w-5 h-5" />
                   </div>
                   <div className="text-left flex-1">
-                    <span className={cn("block text-[15px] font-semibold",
+                    <span className={cn("block text-[15px] font-semibold line-clamp-3",
                       isSelectedSubPaused
                         ? "text-[hsl(var(--warning))]" : "text-white"
                     )}>
                       {isSelectedSubPaused 
-                        ? `Retomar: ${selectedSub.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}` 
-                        : `Estudar: ${selectedSub?.length > 25 ? selectedSub.slice(0, 25) + '…' : selectedSub}`}
+                        ? `Retomar: ${selectedSub}` 
+                        : `Estudar: ${selectedSub}`}
                     </span>
                     <span className={cn("block text-[12px] leading-tight mt-0.5",
                       isSelectedSubPaused
