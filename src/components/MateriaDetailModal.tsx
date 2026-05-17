@@ -135,10 +135,15 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const isSelectedSubPaused = !!(selectedSub && sessaoDesteTopico);
 
   const isSelectedSubCompleted = !!(selectedSub && ementaConcluida.includes(selectedSub));
-  // BUGFIX: Pega a sessão mais substancial (maior duração) para evitar carregar sessões de cliques acidentais
+  // BUGFIX: Filtra sessões que realmente possuem chave de chat (session_key), priorizando a de maior duração ou mais recente.
   const sessaoConcluidaDesteTopico = sessoesMateria
-    .filter(s => s.topico === selectedSub)
-    .sort((a, b) => (b.duracao_min || 0) - (a.duracao_min || 0))[0];
+    .filter(s => s.topico === selectedSub && !!s.session_key)
+    .sort((a, b) => {
+      if ((b.duracao_min || 0) !== (a.duracao_min || 0)) {
+        return (b.duracao_min || 0) - (a.duracao_min || 0);
+      }
+      return new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime();
+    })[0];
 
   const handleNewSession = () => {
     playPopSound();
