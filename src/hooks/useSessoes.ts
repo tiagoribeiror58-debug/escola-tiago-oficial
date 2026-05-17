@@ -139,6 +139,23 @@ export function useUltimaSessao(materia: string) {
   });
 }
 
+export function useSessionByKey(sessionKey: string | null) {
+  return useQuery({
+    queryKey: ['sessao-by-key', sessionKey],
+    enabled: !!sessionKey,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('sessoes')
+        .select('*')
+        .eq('session_key', sessionKey)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data as Sessao | null;
+    },
+  });
+}
+
 export function useRecentSessoes(materia: string, limit = 6) {
   return useQuery({
     queryKey: ['recent-sessoes', materia, limit],

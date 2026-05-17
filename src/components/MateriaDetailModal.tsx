@@ -134,14 +134,21 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const sessaoDesteTopico = sessoesMateria.find(s => s.topico === selectedSub && !ementaConcluida.includes(s.topico));
   const isSelectedSubPaused = !!(selectedSub && sessaoDesteTopico);
 
+  const isSelectedSubCompleted = !!(selectedSub && ementaConcluida.includes(selectedSub));
+  const sessaoConcluidaDesteTopico = sessoesMateria.find(s => s.topico === selectedSub && ementaConcluida.includes(s.topico));
+
   const handleNewSession = () => {
     playPopSound();
     onOpenChange(false);
     let url = `/sessao/${config.slug}`;
     if (selectedSub) {
-      url += `?sub=${encodeURIComponent(selectedSub)}`;
-      if (isSelectedSubPaused) {
-        url += `&resume=${sessaoDesteTopico.session_key}`;
+      if (isSelectedSubCompleted && sessaoConcluidaDesteTopico?.session_key) {
+        url += `?resume=${sessaoConcluidaDesteTopico.session_key}`;
+      } else {
+        url += `?sub=${encodeURIComponent(selectedSub)}`;
+        if (isSelectedSubPaused) {
+          url += `&resume=${sessaoDesteTopico.session_key}`;
+        }
       }
     }
     navigate(url);
@@ -266,7 +273,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                               {/* Indicador Visual */}
                               <div className="flex flex-col items-center">
                                 <button 
-                                  onClick={() => !isCompleted && setSelectedSub(step)}
+                                  onClick={() => setSelectedSub(step)}
                                   className={cn(
                                     "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] font-bold transition-all duration-200 hover:scale-110 z-10",
                                     isCompleted
@@ -292,13 +299,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                               {/* Conteúdo */}
                               <div className="flex-1 pb-4">
                                 <button 
-                                  onClick={() => !isCompleted && setSelectedSub(step)}
+                                  onClick={() => setSelectedSub(step)}
                                   className={cn(
-                                    "text-sm font-medium text-left leading-tight transition-colors",
-                                    isCompleted ? "text-foreground" : isCurrent || isPaused ? "text-foreground" : "text-muted-foreground",
-                                    !isCompleted && "hover:text-primary cursor-pointer"
+                                    "text-sm font-medium text-left leading-tight transition-colors hover:text-primary cursor-pointer",
+                                    isCompleted ? "text-foreground" : isCurrent || isPaused ? "text-foreground" : "text-muted-foreground"
                                   )}
-                                  disabled={isCompleted}
                                 >
                                   {step}
                                 </button>
@@ -398,34 +403,32 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
           )}
 
           {/* Spacer para o sticky footer não cobrir o conteúdo do final do scroll */}
-          <div className="h-24 shrink-0" />
+          <div className="h-36 shrink-0" />
 
           {/* Action — CTA Começar Sessão (Pop-up Modal Style) */}
           {(selectedSub || allDone) && (
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-md border-t border-border shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)] animate-in slide-in-from-bottom-8 duration-300 z-10 rounded-t-[2rem]">
-              {allDone ? (
+              {allDone && !selectedSub ? (
                 <button
                   onClick={handleNewSession}
                   className={cn(
                     'flex items-center gap-4 w-full p-4 rounded-2xl border',
-                    selectedSub 
-                      ? 'bg-foreground/5 border-border hover:bg-foreground/10' 
-                      : 'bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)] hover:bg-[hsl(var(--success)/0.15)]',
+                    'bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)] hover:bg-[hsl(var(--success)/0.15)]',
                     'transition-all active:scale-[0.98]'
                   )}
                 >
-                  <div className={cn("p-2.5 rounded-xl", selectedSub ? "bg-foreground/10 text-foreground" : "bg-[hsl(var(--success)/0.2)] text-[hsl(var(--success))]")}>
+                  <div className="p-2.5 rounded-xl bg-[hsl(var(--success)/0.2)] text-[hsl(var(--success))]">
                     <BookOpen className="w-5 h-5" />
                   </div>
                   <div className="text-left flex-1">
-                    <span className={cn("block text-[15px] font-semibold line-clamp-3", selectedSub ? "text-foreground" : "text-[hsl(var(--success))]")}>
-                      {selectedSub ? `Revisar: ${selectedSub}` : 'Revisão / Consolidação'}
+                    <span className="block text-[15px] font-semibold line-clamp-3 text-[hsl(var(--success))]">
+                      Revisão / Consolidação
                     </span>
-                    <span className={cn("block text-[12px] leading-tight mt-0.5", selectedSub ? "text-muted-foreground" : "text-[hsl(var(--success))/0.7]")}>
-                      {selectedSub ? 'Iniciar sessão de consolidação para este tópico.' : 'Você concluiu a base. Reforce seu conhecimento.'}
+                    <span className="block text-[12px] leading-tight mt-0.5 text-[hsl(var(--success))/0.7]">
+                      Você concluiu a base. Reforce seu conhecimento.
                     </span>
                   </div>
-                  <ChevronRight className={cn("w-4 h-4", selectedSub ? "text-muted-foreground" : "text-[hsl(var(--success))/0.7]")} />
+                  <ChevronRight className="w-4 h-4 text-[hsl(var(--success))/0.7]" />
                 </button>
               ) : (
               <button
@@ -434,6 +437,8 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     'flex items-center gap-4 w-full p-4 rounded-2xl border',
                     isSelectedSubPaused
                       ? 'bg-[hsl(var(--warning)/0.1)] border-[hsl(var(--warning)/0.3)] hover:bg-[hsl(var(--warning)/0.15)]'
+                      : isSelectedSubCompleted
+                      ? 'bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)] hover:bg-[hsl(var(--success)/0.15)]'
                       : 'bg-white/5 border-white/10 hover:bg-white/10',
                     'transition-all active:scale-[0.98] shadow-lg'
                   )}
@@ -441,6 +446,8 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   <div className={cn("p-2.5 rounded-xl", 
                     isSelectedSubPaused
                       ? "bg-[hsl(var(--warning)/0.2)] text-[hsl(var(--warning))]"
+                      : isSelectedSubCompleted
+                      ? "bg-[hsl(var(--success)/0.2)] text-[hsl(var(--success))]"
                       : "bg-white/10 text-white"
                   )}>
                     <BookOpen className="w-5 h-5" />
@@ -448,18 +455,29 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   <div className="text-left flex-1">
                     <span className={cn("block text-[15px] font-semibold line-clamp-3",
                       isSelectedSubPaused
-                        ? "text-[hsl(var(--warning))]" : "text-white"
+                        ? "text-[hsl(var(--warning))]" 
+                        : isSelectedSubCompleted
+                        ? "text-[hsl(var(--success))]"
+                        : "text-white"
                     )}>
                       {isSelectedSubPaused 
                         ? `Retomar: ${selectedSub}` 
+                        : isSelectedSubCompleted
+                        ? `Ver Histórico: ${selectedSub}`
                         : `Estudar: ${selectedSub}`}
                     </span>
                     <span className={cn("block text-[12px] leading-tight mt-0.5",
                       isSelectedSubPaused
-                        ? "text-[hsl(var(--warning))/0.7]" : "text-white/60"
+                        ? "text-[hsl(var(--warning))/0.7]" 
+                        : isSelectedSubCompleted
+                        ? "text-[hsl(var(--success))/0.7]"
+                        : "text-white/60"
                     )}>
                       {isSelectedSubPaused
-                        ? 'Sessão pausada em andamento' : (
+                        ? 'Sessão pausada em andamento' 
+                        : isSelectedSubCompleted
+                        ? (sessaoConcluidaDesteTopico?.session_key ? 'Abrir conversa anterior desta sessão' : 'Iniciar revisão deste tópico')
+                        : (
                           isPreviewLoading ? (
                             <span className="flex items-center gap-1.5 opacity-70">
                               <Loader2 className="w-3 h-3 animate-spin" />
@@ -474,7 +492,10 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   </div>
                   <ChevronRight className={cn("w-4 h-4", 
                     isSelectedSubPaused
-                      ? "text-[hsl(var(--warning))/0.7]" : "text-white/40"
+                      ? "text-[hsl(var(--warning))/0.7]" 
+                      : isSelectedSubCompleted
+                      ? "text-[hsl(var(--success))/0.7]"
+                      : "text-white/40"
                   )} />
                 </button>
               )}

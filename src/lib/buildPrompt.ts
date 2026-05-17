@@ -138,19 +138,24 @@ ${progressoVisual ? `\nProgresso:\n${progressoVisual}\nRegra: Só use em exemplo
   // ─── CONEXÃO GLOBAL E HISTÓRICO DE PERFORMANCE ──────────────────────────────
   let historicoBloco = '';
   if (sessoesRecentes && sessoesRecentes.length > 0) {
-    const linhas = [...sessoesRecentes]
-      .reverse()
-      .map(s => {
-        const dif = s.dificuldade || '?';
-        const erros = s.erros ?? 0;
-        return `  • [${s.materia}] "${s.topico}" (dificuldade: ${dif}, erros: ${erros})`;
-      });
-    if (linhas.length > 0) {
+    // BUGFIX: Filtrar sessoesRecentes para incluir apenas tópicos que estão de fato concluídos!
+    const sessoesDominadas = sessoesRecentes.filter(s => 
+      (concluidos || []).some(c => c.toLowerCase().includes(s.topico.toLowerCase()) || s.topico.toLowerCase().includes(c.toLowerCase()))
+    );
+
+    if (sessoesDominadas.length > 0) {
+      const linhas = [...sessoesDominadas]
+        .reverse()
+        .map(s => {
+          const dif = s.dificuldade || '?';
+          const erros = s.erros ?? 0;
+          return `  • [${s.materia}] "${s.topico}" (dificuldade: ${dif}, erros: ${erros})`;
+        });
       historicoBloco = `\n\n[CONEXÃO GLOBAL - HISTÓRICO]
-Abaixo estão tópicos já estudados (incluindo outras matérias):
+Abaixo estão tópicos já estudados e concluídos pelo aluno:
 ${linhas.join('\n')}
 
-DIRETRIZ: Sempre que enriquecer a explicação, use tópicos dominados acima para criar analogias com o tópico atual. Isso gera ancoragem cognitiva.`;
+DIRETRIZ: Sempre que enriquecer a explicação, use tópicos concluídos acima para criar analogias com o tópico atual. Isso gera ancoragem cognitiva.`;
     }
   }
 

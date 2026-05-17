@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSessoes } from '@/hooks/useSessoes';
 import { getMateriaBySlug } from '@/lib/materias';
 import { ChatMessage } from '@/types';
-import { ArrowLeft, Clock, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowLeft, Clock, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -12,6 +12,7 @@ import { ptBR } from 'date-fns/locale';
 
 export default function Historico() {
   const { materia: slug } = useParams<{ materia: string }>();
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const { data: sessoes, isLoading } = useSessoes();
   const materiaConfig = getMateriaBySlug(slug || '');
@@ -24,9 +25,28 @@ export default function Historico() {
     );
   }
 
+  const normalizeString = (str: string) =>
+    str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
   const sessoesMateria = (sessoes || [])
     .filter(s => s.materia === slug)
-    .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime());
+    .filter(s => {
+      if (!searchQuery.trim()) return true;
+      const query = normalizeString(searchQuery);
+      return normalizeString(s.topico).includes(query);
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.created_at ? (a.created_at.endsWith('Z') || a.created_at.includes('+') ? a.created_at : a.created_at + 'Z') : a.data);
+      const dateB = new Date(b.created_at ? (b.created_at.endsWith('Z') || b.created_at.includes('+') ? b.created_at : b.created_at + 'Z') : b.data);
+      return dateB.getTime() - dateA.getTime();
+    });
+
+  const parseDateUTCtoLocal = (dateStr: string) => {
+    if (!dateStr) return new Date();
+    // Se a data do supabase não tiver Z, forçamos o Z para que o JS entenda como UTC.
+    const isoStr = dateStr.endsWith('Z') || dateStr.includes('+') ? dateStr : dateStr + 'Z';
+    return new Date(isoStr);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -48,7 +68,20 @@ export default function Historico() {
         </div>
       </header>
 
-      <div className="flex-1 p-4 max-w-2xl mx-auto w-full">
+      <div className="flex-1 p-4 max-w-2xl mx-auto w-full flex flex-col gap-4">
+        {/* Barra de Pesquisa do Histórico */}
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <input
+            type="text"
+            placeholder="Pesquisar tópico no histórico..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 bg-card border border-border/50 rounded-xl text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all shadow-sm"
+          />
+        </div>
         {isLoading ? (
           <div className="flex items-center justify-center h-40">
             <div className="w-6 h-6 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin" />
@@ -72,7 +105,7 @@ export default function Historico() {
                       <div>
                         <h3 className="font-medium text-foreground">{sessao.topico}</h3>
                         <p className="text-xs text-muted-foreground mt-1 capitalize">
-                          {format(new Date(sessao.created_at || sessao.data), "eeee, d 'de' MMMM", { locale: ptBR })}
+                          {format(parseDateUTCtoLocal(sessao.created_at || sessao.data), "eeee, d 'de' MMMM 'às' HH:mm", { locale: ptBR })}
                         </p>
                       </div>
                       {hasChat && sessao.session_key && (

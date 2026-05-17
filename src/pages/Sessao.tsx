@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
-import { useUltimaSessao, useEmentaConcluida, useRecentSessoes } from '@/hooks/useSessoes';
+import { useUltimaSessao, useEmentaConcluida, useRecentSessoes, useSessionByKey } from '@/hooks/useSessoes';
 import { useChatHistory, useSessionMessages } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 import Workspace from '@/components/Workspace';
@@ -37,6 +37,7 @@ export default function Sessao() {
   const { data: ementaConcluidaData } = useEmentaConcluida(slug || '');
   const ementaConcluida = ementaConcluidaData || [];
   const { data: sessoesRecentes } = useRecentSessoes(slug || '', 6);
+  const { data: resumedSessionData } = useSessionByKey(resumeKey);
   const { data: resumeMessages, isLoading: loadingResume } = useChatHistory(slug || '', resumeKey);
   // Histórico visual da última sessão — exibido no chat, mas NÃO enviado à IA
   const { data: historyMessages, isLoading: loadingHistory } = useSessionMessages(
@@ -99,7 +100,9 @@ export default function Sessao() {
       
       // Usa a mesma lógica determinística do buildPrompt para saber qual foi o tópico DESTA sessão
       const resultadoDeterministico = resolverTopicoAtual(ementaFlat, ementaConcluida);
-      const topicoDestaSessao = sub || (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair);
+      
+      // FIX: Se estivermos retomando uma sessão (resumeKey), preserva o tópico original dela!
+      const topicoDestaSessao = sub || (resumeKey && resumedSessionData ? resumedSessionData.topico : (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair));
 
       if (messages.length < 4) {
         // BUGFIX: sessão curta NÃO copia proximo_topico para topico.
@@ -205,7 +208,7 @@ export default function Sessao() {
       isSavingRef.current = false; // libera o lock para permitir retry
       setSaving(false);
     }
-  }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey, modo, navigate]);
+  }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey, modo, navigate, resumedSessionData, ementaConcluida, materiaConfig, sub]);
 
   const handlePausar = useCallback(() => {
     doEncerrar(false);

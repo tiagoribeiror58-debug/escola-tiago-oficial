@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format, isToday, isYesterday, isThisWeek, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -8,7 +8,7 @@ import { useSessionMessages } from '@/hooks/useChatMessages';
 import { getMateriaBySlug } from '@/lib/materias';
 import { Sessao } from '@/types';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronUp, Loader2, Clock } from 'lucide-react';
+import { ChevronDown, ChevronUp, Loader2, Clock, Search } from 'lucide-react';
 import { playPopSound } from '@/lib/audioUtils';
 
 interface Props {
@@ -19,30 +19,55 @@ interface Props {
 export function HistoricoGlobalDrawer({ open, onOpenChange }: Props) {
   const { data: sessoes = [] } = useSessoes();
   const [expandedSession, setExpandedSession] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
-  // Ordena todas as sessões das mais recentes para as mais antigas
-  const sessoesOrdenadas = [...sessoes].sort(
-    (a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime()
-  );
+  // Função para normalizar strings (remover acentos e lowercase)
+  const normalizeString = (str: string) => 
+    str.toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, '');
+
+  // Ordena todas as sessões das mais recentes para as mais antigas E filtra
+  const sessoesFiltradasEOrdenadas = useMemo(() => {
+    return [...sessoes]
+      .filter(s => {
+        if (!searchQuery.trim()) return true;
+        const query = normalizeString(searchQuery);
+        const topico = normalizeString(s.topico || '');
+        const materiaStr = normalizeString(getMateriaBySlug(s.materia)?.nome || s.materia || '');
+        return topico.includes(query) || materiaStr.includes(query);
+      })
+      .sort((a, b) => {
+        // Garantindo o parsing como UTC se não tiver o 'Z'
+        const dateAStr = a.created_at || a.data;
+        const dateBStr = b.created_at || b.data;
+        const dateA = new Date(dateAStr.endsWith('Z') ? dateAStr : `${dateAStr}Z`);
+        const dateB = new Date(dateBStr.endsWith('Z') ? dateBStr : `${dateBStr}Z`);
+        return dateB.getTime() - dateA.getTime();
+      });
+  }, [sessoes, searchQuery]);
 
   // Função de agrupamento
-  const groupedSessions = sessoesOrdenadas.reduce((acc, sessao) => {
-    const dataSessao = new Date(sessao.created_at || sessao.data);
-    let grupo = 'Anteriores';
+  const groupedSessions = useMemo(() => {
+    return sessoesFiltradasEOrdenadas.reduce((acc, sessao) => {
+      const dateStr = sessao.created_at || sessao.data;
+      const dataSessao = new Date(dateStr.endsWith('Z') ? dateStr : `${dateStr}Z`);
+      let grupo = 'Anteriores';
 
-    if (isToday(dataSessao)) {
-      grupo = 'Hoje';
-    } else if (isYesterday(dataSessao)) {
-      grupo = 'Ontem';
-    } else if (isThisWeek(dataSessao, { weekStartsOn: 0 })) { // Considerando domingo como inicio
-      grupo = 'Últimos 7 dias';
-    }
+      if (isToday(dataSessao)) {
+        grupo = 'Hoje';
+      } else if (isYesterday(dataSessao)) {
+        grupo = 'Ontem';
+      } else if (isThisWeek(dataSessao, { weekStartsOn: 0 })) { // Considerando domingo como inicio
+        grupo = 'Últimos 7 dias';
+      }
 
-    if (!acc[grupo]) acc[grupo] = [];
-    acc[grupo].push(sessao);
-    return acc;
-  }, {} as Record<string, Sessao[]>);
+      if (!acc[grupo]) acc[grupo] = [];
+      acc[grupo].push(sessao);
+      return acc;
+    }, {} as Record<string, Sessao[]>);
+  }, [sessoesFiltradasEOrdenadas]);
 
   const order = ['Hoje', 'Ontem', 'Últimos 7 dias', 'Anteriores'];
 
@@ -50,23 +75,42 @@ export function HistoricoGlobalDrawer({ open, onOpenChange }: Props) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-md overflow-y-auto p-0 border-l border-border/50 bg-background/95 backdrop-blur-xl">
         <SheetHeader className="p-6 pb-2 sticky top-0 bg-background/95 backdrop-blur-xl z-20 border-b border-border/50">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center border border-border/40">
-              <Clock className="w-5 h-5 text-foreground" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center border border-border/40">
+                <Clock className="w-5 h-5 text-foreground" />
+              </div>
+              <div>
+                <SheetTitle className="text-xl font-semibold tracking-tight text-left">
+                  Histórico de Sessões
+                </SheetTitle>
+                <p className="text-xs text-muted-foreground mt-0.5 text-left">
+                  Todas as suas interações recentes
+                </p>
+              </div>
             </div>
-            <div>
-              <SheetTitle className="text-xl font-semibold tracking-tight text-left">
-                Histórico de Sessões
-              </SheetTitle>
-              <p className="text-xs text-muted-foreground mt-0.5 text-left">
-                Todas as suas interações recentes
-              </p>
-            </div>
+            <button 
+              onClick={() => onOpenChange(false)}
+              className="p-2 rounded-full bg-muted/50 text-muted-foreground hover:bg-muted transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
           </div>
         </SheetHeader>
 
-        <div className="p-6 space-y-8">
-          {sessoesOrdenadas.length === 0 ? (
+        <div className="p-6 pt-4 space-y-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Buscar no histórico global..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-muted/50 border border-border/50 rounded-xl pl-9 pr-4 py-2.5 text-[13px] outline-none focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-muted-foreground/70"
+            />
+          </div>
+
+          {sessoesFiltradasEOrdenadas.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-12">
               Nenhuma sessão encontrada.
             </p>
@@ -113,7 +157,7 @@ export function HistoricoGlobalDrawer({ open, onOpenChange }: Props) {
                                 </span>
                                 <span>•</span>
                                 <span className="capitalize shrink-0">
-                                  {format(new Date(sessao.created_at || sessao.data), "d MMM, HH:mm", { locale: ptBR })}
+                                  {format(new Date(sessao.created_at?.endsWith('Z') ? sessao.created_at : `${sessao.created_at}Z` || (sessao.data.endsWith('Z') ? sessao.data : `${sessao.data}Z`)), "d MMM, HH:mm", { locale: ptBR })}
                                 </span>
                               </div>
                             </div>

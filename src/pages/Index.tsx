@@ -95,14 +95,26 @@ export default function Index() {
       .replace(/[\u0300-\u036f]/g, '');
 
   const searchResults = searchQuery.trim().length > 0
-    ? estados.filter(e => {
+    ? estados.map(e => {
         const query = normalizeString(searchQuery);
         const matchesNome = normalizeString(e.config.nome).includes(query);
         const matchesDescricao = e.config.descricao ? normalizeString(e.config.descricao).includes(query) : false;
-        const matchesEmenta = e.config.ementa ? e.config.ementa.some(t => normalizeString(t).includes(query)) : false;
-        const matchesFases = e.config.fases ? e.config.fases.some(f => f.topicos?.some(t => normalizeString(t).includes(query))) : false;
-        return matchesNome || matchesDescricao || matchesEmenta || matchesFases;
-      })
+        
+        let matchedTopics: string[] = [];
+        if (e.config.ementa) {
+          matchedTopics = [...matchedTopics, ...e.config.ementa.filter(t => normalizeString(t).includes(query))];
+        }
+        if (e.config.fases) {
+          e.config.fases.forEach(f => {
+            if (f.topicos) {
+              matchedTopics = [...matchedTopics, ...f.topicos.filter(t => normalizeString(t).includes(query))];
+            }
+          });
+        }
+        
+        const isMatch = matchesNome || matchesDescricao || matchedTopics.length > 0;
+        return isMatch ? { estado: e, matchedTopics } : null;
+      }).filter(Boolean) as { estado: MateriaEstado, matchedTopics: string[] }[]
     : [];
 
   return (
@@ -160,12 +172,28 @@ export default function Index() {
             </h3>
             {searchResults.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-                {searchResults.map(estado => (
-                  <MateriaCard
-                    key={estado.config.slug}
-                    estado={estado}
-                    onClick={() => handleCardClick(estado)}
-                  />
+                {searchResults.map(result => (
+                  <div key={result.estado.config.slug} className="flex flex-col gap-1">
+                    <MateriaCard
+                      estado={result.estado}
+                      onClick={() => handleCardClick(result.estado)}
+                    />
+                    {result.matchedTopics.length > 0 && (
+                      <div className="ml-2 pl-2 border-l-2 border-border text-[11px] text-muted-foreground mt-1 space-y-1">
+                        {result.matchedTopics.slice(0, 3).map((topic, i) => (
+                          <div key={i} className="line-clamp-1 flex items-center gap-1.5 opacity-80">
+                            <span className="w-1 h-1 rounded-full bg-muted-foreground/50 shrink-0" />
+                            {topic}
+                          </div>
+                        ))}
+                        {result.matchedTopics.length > 3 && (
+                          <div className="text-[10px] text-muted-foreground/50 italic pl-2.5">
+                            +{result.matchedTopics.length - 3} tópicos
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
             ) : (

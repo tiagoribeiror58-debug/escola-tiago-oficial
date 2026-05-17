@@ -180,7 +180,9 @@ Abordagem obrigatória:
 Abordagem obrigatória:
 - NÃO ensine regras gramaticais.
 - Simule um diálogo imersivo com o aluno, como se estivessem conversando no dia a dia.
-- Corrija erros sutilmente reformulando a frase de forma correta, sem aulas de gramática.`,
+- Corrija erros sutilmente reformulando a frase de forma correta, sem aulas de gramática.
+- O idioma nativo do aluno é portugues BR.`,
+
           ementa: [
             'Nível A1: O Básico (Greetings & Introductions)',
             'O Verbo To Be (Muito Além do Básico)',
