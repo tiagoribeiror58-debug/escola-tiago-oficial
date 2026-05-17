@@ -381,12 +381,15 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   >
                     {sub.nome}
                   </button>
-                ))}
-            {/* Spacer para o sticky footer não cobrir o conteúdo do final do scroll */}
+                ))}</div>
+            </div>
+          )}
+
+          {/* Spacer para o sticky footer não cobrir o conteúdo do final do scroll */}
           <div className="h-32 sm:h-36 shrink-0" />
 
           {/* Sticky Footer Area */}
-          <div className="absolute bottom-0 left-0 right-0 bg-background/95 backdrop-blur-xl border-t border-border z-10 sm:rounded-b-3xl p-4 shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)] animate-in slide-in-from-bottom-8 duration-300">
+          <div className="absolute bottom-0 left-0 right-0 bg-background/95 backdrop-blur-xl border-t border-border z-10 sm:rounded-b-3xl p-4 shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)]">
             {(!selectedSub && !allDone) ? (
               <div className="flex flex-col items-center text-center">
                  <p className="text-[13px] font-medium text-foreground mb-1">Selecione um tópico</p>
@@ -404,7 +407,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                  )}
               </div>
             ) : (
-              <div className="p-4 shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)] animate-in slide-in-from-bottom-8 duration-300">
+              <>
               {allDone && !selectedSub ? (
                 <Link
                   to={ctaUrl}
@@ -498,7 +501,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   )} />
                 </Link>
               )}
-              </div>
+              </>
             )}
           </div>
 
