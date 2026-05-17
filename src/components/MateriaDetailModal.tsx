@@ -5,13 +5,14 @@ import { useSessoes, useEmentaConcluida, useToggleEmenta } from '@/hooks/useSess
 import { useSessionMessages } from '@/hooks/useChatMessages';
 import { useNavigate, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map, History } from 'lucide-react';
+import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map as MapIcon, History } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { playPopSound } from '@/lib/audioUtils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { supabase } from '@/integrations/supabase/client';
+
 
 interface Props {
   estado: MateriaEstado | null;
@@ -26,10 +27,12 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
   const [expandedSession, setExpandedSession] = useState<number | null>(null);
   const [isExpandedRoadmap, setIsExpandedRoadmap] = useState(false);
-  
-  // Novos estados para a preview do tópico via IA
+
+  // Preview do tópico via IA — com cache em memória para não chamar a API 2x pelo mesmo tópico
   const [topicPreview, setTopicPreview] = useState<string | null>(null);
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
+  const previewCacheRef = useRef<Map<string, string>>(new Map());
+
 
   const { data: todasSessoes } = useSessoes();
 
@@ -52,40 +55,41 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
     }
   }, [open]);
 
-  // Efeito para carregar a prévia do tópico quando selecionado
+  // Busca prévia do tópico — usa cache para não repetir chamada pelo mesmo tópico
   useEffect(() => {
-    async function fetchPreview() {
-      if (!selectedSub || !estado) {
-        setTopicPreview(null);
-        return;
-      }
-      
-      setIsPreviewLoading(true);
-      setTopicPreview(null); // Reseta a prévia anterior
-
-      try {
-        const { data, error } = await supabase.functions.invoke('topic-preview', {
-          body: {
-            materiaName: estado.config.nome,
-            topicName: selectedSub,
-            descricaoMateria: estado.config.descricao
-          }
-        });
-
-        if (error) throw error;
-        if (data?.preview) {
-          setTopicPreview(data.preview);
-        }
-      } catch (err) {
-        console.error("Erro ao buscar prévia do tópico:", err);
-        setTopicPreview("Pronto para iniciar este tópico de estudos."); // Fallback
-      } finally {
-        setIsPreviewLoading(false);
-      }
+    if (!selectedSub || !estado) {
+      setTopicPreview(null);
+      return;
     }
 
-    fetchPreview();
+    // Cache hit: já buscou esse tópico antes, não chama a API de novo
+    if (previewCacheRef.current.has(selectedSub)) {
+      setTopicPreview(previewCacheRef.current.get(selectedSub)!);
+      return;
+    }
+
+    let cancelled = false;
+    setIsPreviewLoading(true);
+    setTopicPreview(null);
+
+    supabase.functions.invoke('topic-preview', {
+      body: {
+        materiaName: estado.config.nome,
+        topicName: selectedSub,
+        descricaoMateria: estado.config.descricao,
+      },
+    }).then(({ data, error }) => {
+      if (cancelled) return;
+      const preview = (!error && data?.preview) ? data.preview : 'Iniciar uma nova sessão de estudos';
+      previewCacheRef.current.set(selectedSub, preview); // salva no cache
+      setTopicPreview(preview);
+    }).finally(() => {
+      if (!cancelled) setIsPreviewLoading(false);
+    });
+
+    return () => { cancelled = true; };
   }, [selectedSub, estado]);
+
 
   if (!estado) return null;
 
@@ -401,7 +405,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     onClick={() => { playPopSound(); onOpenChange(false); navigate(`/ementa/${config.slug}`); }}
                     className="w-full sm:w-auto flex items-center justify-center gap-2 py-2 px-6 rounded-xl text-[12px] font-medium bg-muted/30 border border-border/50 hover:bg-muted text-foreground transition-all active:scale-95"
                   >
-                    <Map className="w-3.5 h-3.5 opacity-60" />
+                    <MapIcon className="w-3.5 h-3.5 opacity-60" />
                     Ver jornada completa ({ementaConcluida.length}/{flatEmenta.length})
                   </button>
                  )}
@@ -479,16 +483,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                         ? 'Sessão pausada em andamento' 
                         : isSelectedSubCompleted
                         ? (sessaoConcluidaDesteTopico?.session_key ? 'Abrir conversa anterior desta sessão' : 'Iniciar revisão deste tópico')
-                        : (
-                          isPreviewLoading ? (
-                            <span className="flex items-center gap-1.5 opacity-70">
-                              <Loader2 className="w-3 h-3 animate-spin" />
-                              Gerando prévia...
-                            </span>
-                          ) : (
-                            topicPreview || 'Iniciar uma nova sessão de estudos'
-                          )
-                        )
+                        : isPreviewLoading
+                          ? 'Gerando prévia...'
+                          : (topicPreview || 'Iniciar uma nova sessão de estudos')
                       }
                     </span>
                   </div>

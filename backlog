@@ -1,0 +1,335 @@
+Vou organizar o que entendi dessas conversas em blocos claros.
+
+---
+
+# Escola Tiago — Ideias em Organização
+
+## Bloco 1: Como o aluno estuda (A Experiência)
+
+**O problema atual:** plataformas de estudo são engessadas. Você entra, tem matérias fixas, e estuda do jeito que alguém decidiu por você.
+
+**A ideia:** o aluno chega com um objetivo vago — *"quero passar na OAB"* ou *"quero aprender IA"* — e a plataforma monta o curso pra ele na hora, como um arquiteto que desenha a planta da sua casa enquanto você descreve como quer viver.
+
+O fluxo seria:
+1. Aluno fala o que quer (ou sobe um PDF, como um edital)
+2. A IA propõe uma estrutura de curso
+3. Aluno ajusta — *"tira o básico, coloca mais prática"*
+4. Com um clique, o curso está no painel dele, pronto pra estudar
+
+---
+
+## Bloco 2: Como a IA ensina (O Comportamento)
+
+Aqui tem uma distinção importante que surgiu nas conversas:
+
+**"Como falar"** → isso é fixo. A IA sempre age como um professor socrático: faz perguntas, não entrega respostas prontas, usa analogias.
+
+**"O que falar"** → isso muda por curso. Se o aluno estuda Direito, a IA sabe Direito. Se estuda Rust, sabe Rust.
+
+É como um professor experiente que sabe dar aula de qualquer coisa — o jeito de ensinar é sempre o mesmo, o conteúdo muda.
+
+---
+
+## Bloco 3: Como a plataforma "lembra" do aluno (O Cérebro)
+
+**O problema:** a maioria das IAs esquecem tudo. Cada conversa começa do zero.
+
+**A ideia do Gráfico de Conhecimento:** ao invés de só salvar mensagens, o sistema vai marcando o que o aluno já entende. Como pregar peças de Lego numa parede — com o tempo, forma um mapa do que está dentro da cabeça dele.
+
+Na prática:
+- Aluno aprende *Juros Compostos* → sistema marca isso
+- Quando for estudar *Investimentos*, o sistema já sabe pular o básico
+- O professor IA recebe: *"esse aluno já domina X, foque em Y"*
+
+Isso cria algo que nenhuma Big Tech oferece: **um retrato intelectual único e privado do aluno.** Se ele sair da plataforma, perde o mapa do próprio progresso.
+
+---
+
+## Bloco 4: Como o conteúdo é apresentado (O Visual)
+
+Duas ideias distintas aqui:
+
+**Opção A — Whiteboard animado** (igual ao canal "Seja Uma Pessoa Melhor")
+Uma mão desenha no quadro enquanto uma voz explica. O desenho aparece linha por linha — o olho humano segue naturalmente o traço, o cérebro presta mais atenção. Voz + imagem juntas = o conteúdo fica gravado em duas "gavetas" na memória. *(Teoria da Dupla Codificação — Allan Paivio, 1971)*
+
+**Opção B — Conversa por voz em tempo real**
+O aluno fala, a IA responde falando. Como uma ligação telefônica com um professor. Dá pra interromper, dá pra mudar de assunto, é fluido.
+
+As duas podem coexistir — o whiteboard pra explicar conceitos, a voz pra tirar dúvidas.
+
+---
+
+## Bloco 5: O que ainda precisa de resposta antes de construir
+
+Estas são as perguntas em aberto — **não verificadas, precisam de decisão:**
+
+| Questão | Por que importa |
+|---|---|
+| Como evitar que a IA invente conteúdo que não estava no edital do aluno? | Confiança zero se isso acontecer |
+| O gráfico de conhecimento começa simples (tabela no Supabase) ou complexo (banco de grafos)? | Define custo e tempo de dev |
+| O whiteboard funciona bem no celular? | Maioria dos alunos acessa pelo mobile |
+| A voz em português funciona tão bem quanto em inglês? | Não verificado — precisa testar |
+
+---
+# Escola Tiago — Duas Ideias em Análise
+
+---
+
+## Ideia 1: Marketplace de Rotas (Professores vendem cursos na plataforma)
+
+**O que é:** qualquer professor ou criador poderia montar uma trilha de estudo e vender dentro da plataforma. Alunos avaliam com estrelas.
+
+---
+
+**O que é bom:**
+- Você não precisa criar todo o conteúdo sozinho
+- Especialistas em nichos que você nunca cobriria (Física Quântica, Direito Tributário) entram naturalmente
+- Avaliações filtram o que presta do que não presta
+
+**O que é perigoso:**
+- A plataforma pode virar bagunça. Hoje ela tem uma identidade visual e pedagógica clara — se qualquer pessoa puder publicar qualquer coisa, isso some
+- Problema do ovo e da galinha: professores não criam se não tiver aluno, aluno não entra se não tiver conteúdo
+- Infraestrutura financeira brasileira é complexa — split de pagamento, nota fiscal, reembolso. Não é trivial nem barato
+
+**Como fazer do jeito certo:**
+Não abre pra todo mundo de uma vez. Começa com 5 a 10 professores convidados, que criam dentro de um painel padronizado — o mesmo formato que a plataforma já usa. Curadoria fechada antes de qualquer "marketplace aberto".
+
+> Como um shopping de luxo: você escolhe quais lojas entram, não deixa qualquer barraquinha no corredor.
+
+---
+
+**Limitações não resolvidas:**
+- Custo de manter infraestrutura de pagamento com volume baixo pode inviabilizar nos primeiros meses
+- Sem verificado: quanto custaria integrar Pagar.me ou Stripe com split automático no contexto brasileiro atual
+
+---
+
+## Ideia 2: IA com Busca na Internet em Tempo Real
+
+**O que é:** ao invés da IA responder só com o que ela "aprendeu" (que pode estar desatualizado), ela pesquisa na internet antes de responder — como um professor que consulta o jornal de hoje antes de dar aula de geopolítica.
+
+---
+
+**O que é bom:**
+- Elimina respostas erradas sobre eventos recentes
+- Aluno que estuda para concurso recebe conteúdo baseado no edital atual, não numa versão antiga
+- Gera confiança — a IA cita de onde veio a informação
+
+**O que é perigoso:**
+- Custa mais por resposta — cada busca tem taxa adicional
+- Deixa a resposta 1 a 3 segundos mais lenta
+- Para matérias que não mudam (Matemática, Fotossíntese, Lógica), é desperdício puro de dinheiro
+
+**Como fazer do jeito certo:**
+Não ativa pra todo mundo. Cria um campo simples no banco de dados da matéria: *"essa matéria precisa de busca na web: sim ou não."* Geopolítica e Mercado Financeiro: sim. Metacognição e Programação básica: não.
+
+> Como uma enciclopédia em casa: se te perguntam quem descobriu o Brasil, você não precisa sair pra comprar jornal. Só sai se a pergunta for sobre o jogo de ontem.
+
+---
+
+**Limitações não resolvidas:**
+- Não verificado: a API do Gemini às vezes retorna fontes de baixa qualidade ou com paywall em perguntas muito nichadas — precisaria de um filtro de domínios confiáveis no código
+- Custo exato por requisição de busca: não verificado, muda com frequência
+
+---
+
+## Comparativo Rápido
+
+| | Marketplace | Busca na Web |
+|---|---|---|
+| Complexidade técnica | Alta | Média |
+| Risco de identidade | Alto | Baixo |
+| Custo inicial | Alto | Médio |
+| Quando faz sentido | Com base de usuários estabelecida | Desde o início, mas só onde importa |
+| Pode começar agora? | Não — curadoria fechada primeiro | Sim — com ativação seletiva |
+
+---
+
+Algum dos dois você quer aprofundar ou tem dúvida específica que ficou em aberto?
+# Escola Tiago — Duas Ideias em Análise
+
+---
+
+## Ideia 1: Marketplace de Rotas (Professores vendem cursos na plataforma)
+
+**O que é:** qualquer professor ou criador poderia montar uma trilha de estudo e vender dentro da plataforma. Alunos avaliam com estrelas.
+
+---
+
+**O que é bom:**
+- Você não precisa criar todo o conteúdo sozinho
+- Especialistas em nichos que você nunca cobriria (Física Quântica, Direito Tributário) entram naturalmente
+- Avaliações filtram o que presta do que não presta
+
+**O que é perigoso:**
+- A plataforma pode virar bagunça. Hoje ela tem uma identidade visual e pedagógica clara — se qualquer pessoa puder publicar qualquer coisa, isso some
+- Problema do ovo e da galinha: professores não criam se não tiver aluno, aluno não entra se não tiver conteúdo
+- Infraestrutura financeira brasileira é complexa — split de pagamento, nota fiscal, reembolso. Não é trivial nem barato
+
+**Como fazer do jeito certo:**
+Não abre pra todo mundo de uma vez. Começa com 5 a 10 professores convidados, que criam dentro de um painel padronizado — o mesmo formato que a plataforma já usa. Curadoria fechada antes de qualquer "marketplace aberto".
+
+> Como um shopping de luxo: você escolhe quais lojas entram, não deixa qualquer barraquinha no corredor.
+
+---
+
+**Limitações não resolvidas:**
+- Custo de manter infraestrutura de pagamento com volume baixo pode inviabilizar nos primeiros meses
+- Sem verificado: quanto custaria integrar Pagar.me ou Stripe com split automático no contexto brasileiro atual
+
+---
+
+## Ideia 2: IA com Busca na Internet em Tempo Real
+
+**O que é:** ao invés da IA responder só com o que ela "aprendeu" (que pode estar desatualizado), ela pesquisa na internet antes de responder — como um professor que consulta o jornal de hoje antes de dar aula de geopolítica.
+
+---
+
+**O que é bom:**
+- Elimina respostas erradas sobre eventos recentes
+- Aluno que estuda para concurso recebe conteúdo baseado no edital atual, não numa versão antiga
+- Gera confiança — a IA cita de onde veio a informação
+
+**O que é perigoso:**
+- Custa mais por resposta — cada busca tem taxa adicional
+- Deixa a resposta 1 a 3 segundos mais lenta
+- Para matérias que não mudam (Matemática, Fotossíntese, Lógica), é desperdício puro de dinheiro
+
+**Como fazer do jeito certo:**
+Não ativa pra todo mundo. Cria um campo simples no banco de dados da matéria: *"essa matéria precisa de busca na web: sim ou não."* Geopolítica e Mercado Financeiro: sim. Metacognição e Programação básica: não.
+
+> Como uma enciclopédia em casa: se te perguntam quem descobriu o Brasil, você não precisa sair pra comprar jornal. Só sai se a pergunta for sobre o jogo de ontem.
+
+---
+
+**Limitações não resolvidas:**
+- Não verificado: a API do Gemini às vezes retorna fontes de baixa qualidade ou com paywall em perguntas muito nichadas — precisaria de um filtro de domínios confiáveis no código
+- Custo exato por requisição de busca: não verificado, muda com frequência
+
+---
+
+## Comparativo Rápido
+
+| | Marketplace | Busca na Web |
+|---|---|---|
+| Complexidade técnica | Alta | Média |
+| Risco de identidade | Alto | Baixo |
+| Custo inicial | Alto | Médio |
+| Quando faz sentido | Com base de usuários estabelecida | Desde o início, mas só onde importa |
+| Pode começar agora? | Não — curadoria fechada primeiro | Sim — com ativação seletiva |
+
+---
+
+Algum dos dois você quer aprofundar ou tem dúvida específica que ficou em aberto?
+
+Vou montar isso como uma jornada — o aluno do primeiro acesso até meses depois.
+
+---
+
+# A Experiência do Aluno na Escola Tiago
+
+---
+
+## Dia 1 — Primeiro Acesso
+
+O aluno abre a plataforma. Não cai numa lista de matérias. Cai numa pergunta simples:
+
+> *"O que você quer aprender ou conquistar?"*
+
+Ele digita ou fala: *"Quero passar no concurso da Receita Federal."*
+
+A plataforma responde como um professor que acabou de sentar na mesa com ele. Faz duas ou três perguntas rápidas:
+
+- *"Você já estudou algo sobre isso antes?"*
+- *"Tem uma data de prova em mente?"*
+- *"Prefere estudar mais teoria ou exercícios?"*
+
+Enquanto ele responde, do lado direito da tela um mapa começa a se formar — blocos aparecendo um a um, como se alguém estivesse montando um quebra-cabeça na sua frente. Cada bloco é um módulo do curso dele.
+
+Ao final, o aluno vê algo assim:
+
+```
+Fase 1 — Base (3 semanas)
+Fase 2 — Raciocínio Lógico (2 semanas)  
+Fase 3 — Direito Tributário (4 semanas)
+Fase 4 — Simulados (2 semanas)
+```
+
+Ele pode arrastar, remover, pedir pra IA ajustar. Quando estiver satisfeito, clica num botão. O mapa "voa" para o painel dele e vira o curso dele.
+
+---
+
+## Dia 2 em diante — Estudando
+
+Ele abre a primeira aula. Não é um vídeo gravado. É uma conversa ao vivo com o professor IA.
+
+Três modos disponíveis:
+
+**Modo Leitura + Desenho**
+O professor explica o conceito enquanto um quadro branco ao lado vai sendo preenchido — texto aparecendo palavra por palavra, diagramas sendo desenhados em tempo real. Como aqueles vídeos do YouTube, mas gerado na hora, pra aquele conteúdo específico.
+
+**Modo Voz**
+O aluno fala, o professor responde falando. Como uma ligação. Pode interromper, pode perguntar no meio, pode pedir pra repetir mais devagar.
+
+**Modo Chat**
+Texto simples, pra quem prefere ler e escrever.
+
+---
+
+## Durante a Aula — Como o Professor Age
+
+O professor não entrega resposta pronta. Ele pergunta primeiro.
+
+> Aluno: *"Não entendi o que é fato gerador."*
+> 
+> Professor: *"Me diz uma coisa — quando você compra algo numa loja, o que acontece que obriga você a pagar imposto? Tenta me explicar com suas palavras."*
+
+Se o aluno acerta, o professor avança. Se erra, o professor não corrige direto — dá uma pista, uma analogia, um exemplo do cotidiano.
+
+Isso não é estilo — é arquitetura. O sistema foi construído pra nunca entregar a resposta antes do aluno tentar.
+
+---
+
+## Semanas depois — A Plataforma Já Te Conhece
+
+Aqui acontece algo que nenhuma plataforma comum faz.
+
+O sistema foi marcando silenciosamente o que o aluno demonstrou que sabe. Não pelo que ele disse que sabe — pelo que ele mostrou nas respostas.
+
+Quando ele abre uma nova sessão, o professor já sabe:
+
+> *"Esse aluno domina lógica básica, mas trava em questões de sequência. Começa por aí."*
+
+O aluno não precisa repetir o que já aprendeu. O curso se ajusta sozinho.
+
+Se ele travar num tópico difícil, pode clicar em **"Tá difícil demais"** — e o sistema quebra aquele bloco em três menores, mais simples, antes de voltar ao original.
+
+---
+
+## O Que o Aluno Nunca Vê
+
+- Nenhuma lista de vídeos pra assistir passivamente
+- Nenhum PDF de 80 páginas jogado na tela
+- Nenhum quiz genérico de múltipla escolha no final
+
+---
+
+## Resumo Visual da Jornada
+
+```
+Chega sem saber o que quer
+        ↓
+Conversa com a IA → curso montado na hora
+        ↓
+Estuda por voz, desenho ou chat
+        ↓
+Professor nunca entrega — sempre provoca
+        ↓
+Plataforma aprende o que ele sabe
+        ↓
+Curso se ajusta sozinho com o tempo
+```
+
+---
+
+Quer que eu aprofunde algum momento específico dessa jornada — ou parte pra como isso seria construído?

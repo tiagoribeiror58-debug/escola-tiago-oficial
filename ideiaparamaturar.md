@@ -187,3 +187,140 @@ A complexidade: Implementar um Gráfico de Conhecimento real (com bancos de dado
 Quer que eu tente rascunhar como seria a estrutura de dados (uma nova tabela ou campo) para começarmos a "marcar" o que o aluno aprendeu? Isso daria um "tapa" de maturidade brutal no projeto.
 
 8:07 PM
+
+Viewed MateriaDetailModal.tsx:586-610
+
+Imagine que você está sentado em uma cafeteria com um amigo que entende muito sobre um assunto difícil. Para te explicar, ele pega um guardanapo de papel, tira uma caneta do bolso e começa a conversar com você. 
+
+Enquanto ele fala com aquela voz calma e próxima, ele vai rabiscando esquemas, desenhando balões de pensamento e conectando ideias com flechas bem na sua frente.
+
+Essa é a essência dessa ideia. Ela une duas forças poderosas para o aprendizado humano:
+
+### 1. O Ritmo do Desenho (Prender a Atenção)
+Quando você vê um desenho aparecendo linha por linha na tela, seus olhos seguem naturalmente a ponta da caneta. O cérebro humano adora movimento e mistério. Você não vê uma imagem pronta de uma vez; você acompanha a criação dela. Isso gera uma gostosa sensação de curiosidade: *"O que essa linha vai virar?"*. Esse suspense sutil impede que sua mente se distraia ou fique com sono.
+
+### 2. A Voz do Tutor (Trazer Conexão)
+A voz não parece uma leitura de um livro de regras. Ela é natural, tem pausas para respirar, muda de entonação quando fala algo importante e parece falar diretamente com você. Ela dá o contexto emocional e o ritmo para o que está sendo ilustrado.
+
+### 3. A Sincronia Perfeita (Dupla Gravação no Cérebro)
+A mágica acontece quando o som e o traço se encontram. No exato milésimo de segundo em que o tutor diz a palavra *"Conectados"*, a caneta desenha uma linha unindo dois corações ou duas engrenagens. 
+
+A psicologia explica que isso ativa a **Teoria da Dupla Codificação** (proposta pelo psicólogo Allan Paivio em 1971). Em termos simples: seu cérebro cria duas gavetas para a mesma informação — uma gaveta para o som que você ouviu e outra para a imagem que você viu sendo desenhada. Se no futuro você esquecer o som, a imagem no guardanapo mental te ajuda a lembrar de tudo.
+
+---
+
+### O que pode estar impreciso aqui e por quê?
+
+*   **Universalidade do Aprendizado:** Embora a teoria da dupla codificação de Allan Paivio (1971) seja cientificamente reconhecida e mostre que a associação visual-auditiva melhora a retenção na maioria das pessoas, o nível de eficácia exato varia de indivíduo para indivíduo (alguns alunos assimilam muito melhor apenas ouvindo, enquanto outros necessitam de escrita ativa própria e não apenas de observação passiva do desenho alheio).
+
+Vou montar isso como uma jornada — o aluno do primeiro acesso até meses depois.
+
+---
+
+# A Experiência do Aluno na Escola Tiago
+
+---
+
+## Dia 1 — Primeiro Acesso
+
+O aluno abre a plataforma. Não cai numa lista de matérias. Cai numa pergunta simples:
+
+> *"O que você quer aprender ou conquistar?"*
+
+Ele digita ou fala: *"Quero passar no concurso da Receita Federal."*
+
+A plataforma responde como um professor que acabou de sentar na mesa com ele. Faz duas ou três perguntas rápidas:
+
+- *"Você já estudou algo sobre isso antes?"*
+- *"Tem uma data de prova em mente?"*
+- *"Prefere estudar mais teoria ou exercícios?"*
+
+Enquanto ele responde, do lado direito da tela um mapa começa a se formar — blocos aparecendo um a um, como se alguém estivesse montando um quebra-cabeça na sua frente. Cada bloco é um módulo do curso dele.
+
+Ao final, o aluno vê algo assim:
+
+```
+Fase 1 — Base (3 semanas)
+Fase 2 — Raciocínio Lógico (2 semanas)  
+Fase 3 — Direito Tributário (4 semanas)
+Fase 4 — Simulados (2 semanas)
+```
+
+Ele pode arrastar, remover, pedir pra IA ajustar. Quando estiver satisfeito, clica num botão. O mapa "voa" para o painel dele e vira o curso dele.
+
+---
+
+## Dia 2 em diante — Estudando
+
+Ele abre a primeira aula. Não é um vídeo gravado. É uma conversa ao vivo com o professor IA.
+
+Três modos disponíveis:
+
+**Modo Leitura + Desenho**
+O professor explica o conceito enquanto um quadro branco ao lado vai sendo preenchido — texto aparecendo palavra por palavra, diagramas sendo desenhados em tempo real. Como aqueles vídeos do YouTube, mas gerado na hora, pra aquele conteúdo específico.
+
+**Modo Voz**
+O aluno fala, o professor responde falando. Como uma ligação. Pode interromper, pode perguntar no meio, pode pedir pra repetir mais devagar.
+
+**Modo Chat**
+Texto simples, pra quem prefere ler e escrever.
+
+---
+
+## Durante a Aula — Como o Professor Age
+
+O professor não entrega resposta pronta. Ele pergunta primeiro.
+
+> Aluno: *"Não entendi o que é fato gerador."*
+> 
+> Professor: *"Me diz uma coisa — quando você compra algo numa loja, o que acontece que obriga você a pagar imposto? Tenta me explicar com suas palavras."*
+
+Se o aluno acerta, o professor avança. Se erra, o professor não corrige direto — dá uma pista, uma analogia, um exemplo do cotidiano.
+
+Isso não é estilo — é arquitetura. O sistema foi construído pra nunca entregar a resposta antes do aluno tentar.
+
+---
+
+## Semanas depois — A Plataforma Já Te Conhece
+
+Aqui acontece algo que nenhuma plataforma comum faz.
+
+O sistema foi marcando silenciosamente o que o aluno demonstrou que sabe. Não pelo que ele disse que sabe — pelo que ele mostrou nas respostas.
+
+Quando ele abre uma nova sessão, o professor já sabe:
+
+> *"Esse aluno domina lógica básica, mas trava em questões de sequência. Começa por aí."*
+
+O aluno não precisa repetir o que já aprendeu. O curso se ajusta sozinho.
+
+Se ele travar num tópico difícil, pode clicar em **"Tá difícil demais"** — e o sistema quebra aquele bloco em três menores, mais simples, antes de voltar ao original.
+
+---
+
+## O Que o Aluno Nunca Vê
+
+- Nenhuma lista de vídeos pra assistir passivamente
+- Nenhum PDF de 80 páginas jogado na tela
+- Nenhum quiz genérico de múltipla escolha no final
+
+---
+
+## Resumo Visual da Jornada
+
+```
+Chega sem saber o que quer
+        ↓
+Conversa com a IA → curso montado na hora
+        ↓
+Estuda por voz, desenho ou chat
+        ↓
+Professor nunca entrega — sempre provoca
+        ↓
+Plataforma aprende o que ele sabe
+        ↓
+Curso se ajusta sozinho com o tempo
+```
+
+---
+
+Quer que eu aprofunde algum momento específico dessa jornada — ou parte pra como isso seria construído?

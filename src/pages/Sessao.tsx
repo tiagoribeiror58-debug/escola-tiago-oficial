@@ -36,7 +36,7 @@ export default function Sessao() {
   const { data: ultimaSessao, isLoading } = useUltimaSessao(slug || '');
   const { data: ementaConcluidaData } = useEmentaConcluida(slug || '');
   const ementaConcluida = ementaConcluidaData || [];
-  const { data: sessoesRecentes } = useRecentSessoes(slug || '', 6);
+  const { data: sessoesRecentes } = useRecentSessoes(slug || '', 3);
   const { data: resumedSessionData } = useSessionByKey(resumeKey);
   const { data: resumeMessages, isLoading: loadingResume } = useChatHistory(slug || '', resumeKey);
   // Histórico visual da última sessão — exibido no chat, mas NÃO enviado à IA

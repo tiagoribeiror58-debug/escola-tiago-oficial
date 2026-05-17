@@ -116,14 +116,23 @@ Não repita nenhum tópico básico já coberto.`;
       ? topicosProibidos.map(t => `  ✗ ${t}`).join('\n')
       : '  (nenhum ainda)';
 
-    const progressoVisual = ementa.length > 0
-      ? ementa.map(step => {
+    const progressoVisual = (() => {
+      if (ementa.length === 0) return '';
+      const currentIdx = ementa.indexOf(topicoObrigatorio!);
+      if (currentIdx === -1) return '';
+      const start = Math.max(0, currentIdx - 2);
+      const end = Math.min(ementa.length, currentIdx + 3);
+      const janela = ementa.slice(start, end);
+      const linhas = janela.map(step => {
         const feito = concluidos.some(d => d.toLowerCase().includes(step.toLowerCase()) || step.toLowerCase().includes(d.toLowerCase()));
         if (feito) return `[✅] ${step}`;
         if (step === topicoObrigatorio) return `[▶ ATUAL] ${step}`;
         return `[⬜] ${step}`;
-      }).join('\n')
-      : '';
+      });
+      if (start > 0) linhas.unshift(`... (${start} tópico(s) anteriores concluídos)`);
+      if (end < ementa.length) linhas.push(`... (${ementa.length - end} tópico(s) futuros restantes)`);
+      return linhas.join('\n');
+    })();
 
     bloqueio = `\n\n[TÓPICO DESTA SESSÃO]
 ▶ ENSINE EXCLUSIVAMENTE: "${topicoObrigatorio}"

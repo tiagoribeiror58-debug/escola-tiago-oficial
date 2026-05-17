@@ -47,7 +47,7 @@ serve(async (req) => {
           model,
           system: systemPrompt || "You are a helpful assistant.",
           messages: messages,
-          max_tokens: 4096,
+          max_tokens: 2048,
           stream: true,
         }),
       });
