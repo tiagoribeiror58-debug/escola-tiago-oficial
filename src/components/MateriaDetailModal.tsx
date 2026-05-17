@@ -167,7 +167,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md p-0 gap-0 overflow-hidden rounded-2xl max-h-[90vh] flex flex-col">
+      <DialogContent className="max-w-xl p-0 gap-0 overflow-hidden rounded-2xl max-h-[90vh] flex flex-col">
         <DialogTitle className="sr-only">{config.nome}</DialogTitle>
 
         {/* Única área de scroll unificada — sem seções com shrink-0 competindo */}
