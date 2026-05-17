@@ -555,6 +555,7 @@ function SessaoItem({
   hasChat,
   isExpanded,
   onToggle,
+  chatUrl,
   onOpenChat,
 }: {
   sessao: { id: number; topico: string; created_at: string | null; data: string; session_key?: string | null };
