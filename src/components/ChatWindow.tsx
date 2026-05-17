@@ -614,11 +614,11 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                     <button
                       onClick={() => setChipsEnabled(v => !v)}
                       title={chipsEnabled ? 'Desativar sugestões' : 'Ativar sugestões'}
-                      className="shrink-0 p-1.5 rounded-lg text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted transition-colors"
+                      className="shrink-0 p-2 rounded-full text-muted-foreground/40 hover:text-muted-foreground hover:bg-muted transition-all active:scale-95"
                     >
                       {chipsEnabled
-                        ? <Zap className="w-3.5 h-3.5" />
-                        : <ZapOff className="w-3.5 h-3.5" />
+                        ? <Zap className="w-4 h-4" />
+                        : <ZapOff className="w-4 h-4" />
                       }
                     </button>
                   )}
