@@ -497,6 +497,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                       : "text-white/40"
                   )} />
                 </Link>
+              )}
               </div>
             )}
           </div>
