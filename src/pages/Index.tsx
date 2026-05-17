@@ -11,6 +11,54 @@ import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
 import { Search, History } from 'lucide-react';
 import { HistoricoGlobalDrawer } from '@/components/HistoricoGlobalDrawer';
+import { useOrdemMaterias } from '@/hooks/useOrdemMaterias';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+  useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+function SortableItem({ id, estado, onClick, isPinned, onTogglePin }: any) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : 'auto',
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes}>
+      <MateriaCard
+        estado={estado}
+        onClick={onClick}
+        isPinned={isPinned}
+        onTogglePin={onTogglePin}
+        isDragging={isDragging}
+        dragListeners={listeners}
+      />
+    </div>
+  );
+}
 
 function getGreeting(): string {
   const h = new Date().getHours();
@@ -39,6 +87,7 @@ export default function Index() {
   const [isHistoricoOpen, setIsHistoricoOpen] = useState(false);
 
   const { fixadas, toggleFixada, isFixada } = useMateriasFixadas();
+  const { ordem, atualizarOrdem } = useOrdemMaterias();
   
   const [visibleLimit, setVisibleLimit] = useState(4);
 
@@ -46,13 +95,44 @@ export default function Index() {
     ? estados.filter(e => foco.includes(e.config.slug))
     : [];
 
-  // Ordenação: 1º Fixadas, 2º Mais acessadas (totalSessoes), 3º Recência
+  // Sensors for drag and drop
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5, // Requires a 5px drag before it activates, allows clicks to pass through
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // Ordenação: 1º Fixadas, 2º Ordem Customizada (se existir), 3º Mais acessadas, 4º Recência
   const displayedEstados = [...estadosFocados].sort((a, b) => {
-    const aFix = isFixada(a.config.slug);
-    const bFix = isFixada(b.config.slug);
+    const slugA = a.config.slug;
+    const slugB = b.config.slug;
+    
+    const aFix = isFixada(slugA);
+    const bFix = isFixada(slugB);
+    
+    // 1. Fixadas vêm primeiro
     if (aFix && !bFix) return -1;
     if (!aFix && bFix) return 1;
 
+    // Se ambas forem fixadas OU ambas não-fixadas, caem nas regras normais
+    
+    // 2. Se a pessoa tem ordem salva
+    const indexA = ordem.indexOf(slugA);
+    const indexB = ordem.indexOf(slugB);
+
+    if (indexA !== -1 && indexB !== -1) {
+      return indexA - indexB;
+    }
+    
+    if (indexA !== -1 && indexB === -1) return -1; // Com ordem salva ganha de sem ordem
+    if (indexA === -1 && indexB !== -1) return 1;
+
+    // 3. Empate técnico sem ordem manual (comportamento padrão)
     if (b.totalSessoes !== a.totalSessoes) {
       return b.totalSessoes - a.totalSessoes;
     }
@@ -63,6 +143,18 @@ export default function Index() {
   });
 
   const visibleEstados = displayedEstados.slice(0, visibleLimit);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (over && active.id !== over.id) {
+      const oldIndex = displayedEstados.findIndex(e => e.config.slug === active.id);
+      const newIndex = displayedEstados.findIndex(e => e.config.slug === over.id);
+      
+      const novaOrdemArray = arrayMove(displayedEstados, oldIndex, newIndex).map(e => e.config.slug);
+      atualizarOrdem(novaOrdemArray);
+    }
+  };
 
   const handleCardClick = (estado: MateriaEstado) => {
     if (estado.config.isCategory) {
@@ -243,20 +335,32 @@ export default function Index() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-            {visibleEstados.map(estado => (
-              <MateriaCard
-                key={estado.config.slug}
-                estado={estado}
-                onClick={() => handleCardClick(estado)}
-                isPinned={isFixada(estado.config.slug)}
-                onTogglePin={(e) => {
-                  e.stopPropagation();
-                  toggleFixada(estado.config.slug);
-                }}
-              />
-            ))}
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+              <SortableContext
+                items={visibleEstados.map(e => e.config.slug)}
+                strategy={rectSortingStrategy}
+              >
+                {visibleEstados.map(estado => (
+                  <SortableItem
+                    key={estado.config.slug}
+                    id={estado.config.slug}
+                    estado={estado}
+                    onClick={() => handleCardClick(estado)}
+                    isPinned={isFixada(estado.config.slug)}
+                    onTogglePin={(e: React.MouseEvent) => {
+                      e.stopPropagation();
+                      toggleFixada(estado.config.slug);
+                    }}
+                  />
+                ))}
+              </SortableContext>
+            </div>
+          </DndContext>
         )}
 
         {!isLoading && displayedEstados.length > 4 && (

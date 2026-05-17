@@ -1,7 +1,7 @@
 import { MateriaEstado } from '@/types';
 import { urgencia } from '@/lib/materias';
 import { cn } from '@/lib/utils';
-import { ChevronRight, Pin, PinOff } from 'lucide-react';
+import { ChevronRight, Pin, PinOff, GripVertical } from 'lucide-react';
 
 interface Props {
   estado: MateriaEstado;
@@ -9,9 +9,11 @@ interface Props {
   ordem?: number;
   isPinned?: boolean;
   onTogglePin?: (e: React.MouseEvent) => void;
+  isDragging?: boolean;
+  dragListeners?: Record<string, any>;
 }
 
-export default function MateriaCard({ estado, onClick, ordem, isPinned, onTogglePin }: Props) {
+export default function MateriaCard({ estado, onClick, ordem, isPinned, onTogglePin, isDragging, dragListeners }: Props) {
   const { config, ultimaSessao, diasParada } = estado;
   const urg = urgencia(diasParada);
 
@@ -58,7 +60,8 @@ export default function MateriaCard({ estado, onClick, ordem, isPinned, onToggle
         'transition-all duration-200 ease-out',
         'hover:shadow-md hover:border-foreground/10 hover:-translate-y-0.5',
         'text-left w-full',
-        urgenciaBorder[urg]
+        urgenciaBorder[urg],
+        isDragging && 'opacity-50 scale-95 shadow-xl border-primary ring-2 ring-primary ring-offset-2'
       )}
     >
       <div
@@ -70,6 +73,14 @@ export default function MateriaCard({ estado, onClick, ordem, isPinned, onToggle
       />
 
       <div className="flex items-center gap-3 w-full relative z-10 pointer-events-none">
+        {dragListeners && (
+          <div 
+            className="cursor-grab active:cursor-grabbing p-1 -ml-2 rounded text-muted-foreground/50 hover:text-foreground pointer-events-auto"
+            {...dragListeners}
+          >
+            <GripVertical className="w-4 h-4" />
+          </div>
+        )}
         <span className="text-2xl leading-none select-none">{config.emoji}</span>
         <div className="flex flex-col">
           {ordem !== undefined && (
