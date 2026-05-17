@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { format, isToday, isYesterday, isThisWeek, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -174,10 +174,10 @@ export function HistoricoGlobalDrawer({ open, onOpenChange }: Props) {
                               sessaoId={sessao.id} 
                               sessionKey={sessao.session_key}
                               materiaSlug={sessao.materia}
+                              chatUrl={`/sessao/${sessao.materia}?resume=${sessao.session_key}`}
                               onOpenChat={() => {
                                 playPopSound();
                                 onOpenChange(false);
-                                navigate(`/sessao/${sessao.materia}?resume=${sessao.session_key}`);
                               }}
                             />
                           )}
@@ -199,11 +199,13 @@ function SessaoExpandedView({
   sessaoId, 
   sessionKey, 
   materiaSlug, 
+  chatUrl,
   onOpenChat 
 }: { 
   sessaoId: number, 
   sessionKey: string | null | undefined, 
   materiaSlug: string, 
+  chatUrl: string,
   onOpenChat: () => void 
 }) {
   const { data: messages, isLoading } = useSessionMessages(sessaoId);
@@ -243,13 +245,14 @@ function SessaoExpandedView({
           })}
         </div>
       )}
-      {sessionKey && (
-        <button
+      {sessionKey && chatUrl && (
+        <Link
+          to={chatUrl}
           onClick={(e) => { e.stopPropagation(); onOpenChat(); }}
           className="w-full py-2.5 bg-foreground/5 hover:bg-foreground/10 text-foreground text-[12px] font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 border border-border/50"
         >
           Abrir Sessão Completa
-        </button>
+        </Link>
       )}
     </div>
   );

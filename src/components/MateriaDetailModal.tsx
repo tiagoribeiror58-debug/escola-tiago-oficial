@@ -3,7 +3,7 @@ import { MateriaEstado } from '@/types';
 import { urgencia, getMateriaBySlug } from '@/lib/materias';
 import { useSessoes, useEmentaConcluida, useToggleEmenta } from '@/hooks/useSessoes';
 import { useSessionMessages } from '@/hooks/useChatMessages';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map, History } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
@@ -145,9 +145,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
       return new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime();
     })[0];
 
-  const handleNewSession = () => {
-    playPopSound();
-    onOpenChange(false);
+  const ctaUrl = (() => {
     let url = `/sessao/${config.slug}`;
     if (selectedSub) {
       if (isSelectedSubCompleted && sessaoConcluidaDesteTopico?.session_key) {
@@ -159,7 +157,12 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
         }
       }
     }
-    navigate(url);
+    return url;
+  })();
+
+  const handleNewSessionClick = () => {
+    playPopSound();
+    onOpenChange(false);
   };
 
   return (
@@ -417,8 +420,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
           {(selectedSub || allDone) && (
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-md border-t border-border shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)] animate-in slide-in-from-bottom-8 duration-300 z-10 rounded-t-[2rem]">
               {allDone && !selectedSub ? (
-                <button
-                  onClick={handleNewSession}
+                <Link
+                  to={ctaUrl}
+                  onClick={handleNewSessionClick}
                   className={cn(
                     'flex items-center gap-4 w-full p-4 rounded-2xl border',
                     'bg-[hsl(var(--success)/0.1)] border-[hsl(var(--success)/0.3)] hover:bg-[hsl(var(--success)/0.15)]',
@@ -437,10 +441,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     </span>
                   </div>
                   <ChevronRight className="w-4 h-4 text-[hsl(var(--success))/0.7]" />
-                </button>
+                </Link>
               ) : (
-              <button
-                  onClick={handleNewSession}
+              <Link
+                  to={ctaUrl}
+                  onClick={handleNewSessionClick}
                   className={cn(
                     'flex items-center gap-4 w-full p-4 rounded-2xl border',
                     isSelectedSubPaused
@@ -505,7 +510,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                       ? "text-[hsl(var(--success))/0.7]"
                       : "text-white/40"
                   )} />
-                </button>
+                </Link>
               )}
             </div>
           )}
@@ -531,10 +536,10 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                               setExpandedSession(expandedSession === sessao.id ? null : sessao.id);
                             }
                           }}
+                          chatUrl={`/sessao/${config.slug}?resume=${sessao.session_key}`}
                           onOpenChat={() => {
                             playPopSound();
                             onOpenChange(false);
-                            navigate(`/sessao/${config.slug}?resume=${sessao.session_key}`);
                           }}
                         />
                       );
@@ -570,6 +575,7 @@ function SessaoItem({
   hasChat: boolean;
   isExpanded: boolean;
   onToggle: () => void;
+  chatUrl?: string;
   onOpenChat: () => void;
 }) {
   // BUG-03: só faz fetch quando o usuário expande (enabled = isExpanded)
@@ -627,13 +633,14 @@ function SessaoItem({
               })}
             </div>
           )}
-          {sessao.session_key && (
-            <button
+          {sessao.session_key && chatUrl && (
+            <Link
+              to={chatUrl}
               onClick={(e) => { e.stopPropagation(); onOpenChat(); }}
               className="mt-3 w-full py-2 bg-foreground/5 hover:bg-foreground/10 text-foreground text-[11px] font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
             >
               Abrir Tela Completa do Chat
-            </button>
+            </Link>
           )}
         </div>
       )}
