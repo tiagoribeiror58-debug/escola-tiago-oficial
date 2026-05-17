@@ -40,7 +40,7 @@ export default function Index() {
 
   const { fixadas, toggleFixada, isFixada } = useMateriasFixadas();
   
-  const [expandedMesa, setExpandedMesa] = useState(false);
+  const [visibleLimit, setVisibleLimit] = useState(4);
 
   const estadosFocados = foco.length > 0 
     ? estados.filter(e => foco.includes(e.config.slug))
@@ -62,8 +62,7 @@ export default function Index() {
     return dataB - dataA;
   });
 
-  const limit = 4;
-  const visibleEstados = expandedMesa ? displayedEstados : displayedEstados.slice(0, limit);
+  const visibleEstados = displayedEstados.slice(0, visibleLimit);
 
   const handleCardClick = (estado: MateriaEstado) => {
     if (estado.config.isCategory) {
@@ -260,12 +259,20 @@ export default function Index() {
           </div>
         )}
 
-        {!isLoading && displayedEstados.length > limit && (
+        {!isLoading && displayedEstados.length > 4 && (
           <button
-            onClick={() => setExpandedMesa(!expandedMesa)}
+            onClick={() => {
+              if (visibleLimit >= displayedEstados.length) {
+                setVisibleLimit(4);
+              } else {
+                setVisibleLimit(prev => prev + 4);
+              }
+            }}
             className="w-full mb-8 py-3 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
           >
-            {expandedMesa ? 'Ver menos' : `Ver todas as ${displayedEstados.length} matérias do foco`}
+            {visibleLimit >= displayedEstados.length 
+              ? 'Ver menos' 
+              : `Ver mais matérias (mostrar até ${Math.min(visibleLimit + 4, displayedEstados.length)} de ${displayedEstados.length})`}
           </button>
         )}
 
