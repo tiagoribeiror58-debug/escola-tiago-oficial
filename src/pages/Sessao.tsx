@@ -55,6 +55,7 @@ export default function Sessao() {
   const messagesRef = useRef<ChatMessage[]>([]);
   const startTimeRef = useRef(Date.now());
   const isSavingRef = useRef(false); // BUG-02: guard contra double-save
+  const draftSavedRef = useRef(false); // Rastreia se um rascunho automático já foi salvo
   const [saving, setSaving] = useState(false);
   const [topicComplete, setTopicComplete] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -65,6 +66,39 @@ export default function Sessao() {
     const id = setInterval(() => setElapsedSeconds(s => s + 1), 1000);
     return () => clearInterval(id);
   }, []);
+
+  // Auto-save de rascunho: se o usuário fechar a aba inesperadamente, a sessão não é perdida.
+  // Isso cria uma entrada em "sessoes" logo na primeira mensagem, para que a tela da matéria veja como "Pausada".
+  useEffect(() => {
+    if (messageCount > 0 && !resumeKey && !draftSavedRef.current && materiaConfig) {
+      draftSavedRef.current = true;
+      
+      const ementaFlat = materiaConfig.fases
+        ? materiaConfig.fases.flatMap(f => f.topicos)
+        : (materiaConfig.ementa || []);
+        
+      const topicoAtualParaExtrair = ultimaSessao?.proximo_topico || ultimaSessao?.topico || '';
+      const resultadoDeterministico = resolverTopicoAtual(ementaFlat, ementaConcluida);
+      const topicoDestaSessao = sub || (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair);
+
+      supabase.from('sessoes').insert({
+        session_key: sessionKey,
+        materia: slug,
+        topico: topicoDestaSessao || 'Sessão iniciada',
+        data: new Date().toISOString().split('T')[0],
+        erros: 0,
+        dificuldade: 'media',
+        nivel: ultimaSessao?.nivel || 1,
+        duracao_min: 1,
+        messages_json: [], // As mensagens reais ficam na tabela chat_messages enquando a sessão está ativa
+      }).then(({ error }) => {
+        if (error) {
+          console.error("Erro ao salvar rascunho automático da sessão:", error);
+          draftSavedRef.current = false; // tenta de novo se falhar
+        }
+      });
+    }
+  }, [messageCount, resumeKey, materiaConfig, ultimaSessao, slug, sessionKey, sub, ementaConcluida]);
 
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
@@ -166,15 +200,16 @@ export default function Sessao() {
         messages_json: messagesSnapshot,
       };
 
-      if (resumeKey) {
-        // Atualiza a sessão existente se for retomada
+      if (resumeKey || draftSavedRef.current) {
+        // Atualiza a sessão existente se for retomada OU se um rascunho automático já foi salvo
+        const keyToUpdate = resumeKey || sessionKey;
         const { error } = await supabase
           .from('sessoes')
           .update(sessionPayload)
-          .eq('session_key', resumeKey);
+          .eq('session_key', keyToUpdate);
         if (error) throw error;
       } else {
-        // Insere nova sessão
+        // Insere nova sessão (fallback caso o draft não tenha rodado)
         const { error } = await supabase.from('sessoes').insert({
           ...sessionPayload,
           session_key: sessionKey,
