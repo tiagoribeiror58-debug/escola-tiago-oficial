@@ -135,7 +135,10 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const isSelectedSubPaused = !!(selectedSub && sessaoDesteTopico);
 
   const isSelectedSubCompleted = !!(selectedSub && ementaConcluida.includes(selectedSub));
-  const sessaoConcluidaDesteTopico = sessoesMateria.find(s => s.topico === selectedSub && ementaConcluida.includes(s.topico));
+  // BUGFIX: Pega a sessão mais substancial (maior duração) para evitar carregar sessões de cliques acidentais
+  const sessaoConcluidaDesteTopico = sessoesMateria
+    .filter(s => s.topico === selectedSub)
+    .sort((a, b) => (b.duracao_min || 0) - (a.duracao_min || 0))[0];
 
   const handleNewSession = () => {
     playPopSound();
