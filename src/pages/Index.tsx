@@ -364,20 +364,25 @@ export default function Index() {
         )}
 
         {!isLoading && displayedEstados.length > 4 && (
-          <button
-            onClick={() => {
-              if (visibleLimit >= displayedEstados.length) {
-                setVisibleLimit(4);
-              } else {
-                setVisibleLimit(prev => prev + 4);
-              }
-            }}
-            className="w-full mb-8 py-3 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
-          >
-            {visibleLimit >= displayedEstados.length 
-              ? 'Ver menos' 
-              : `Ver mais matérias (mostrar até ${Math.min(visibleLimit + 4, displayedEstados.length)} de ${displayedEstados.length})`}
-          </button>
+          <div className="flex items-center gap-2 mb-8">
+            {visibleLimit > 4 && (
+              <button
+                onClick={() => setVisibleLimit(prev => Math.max(4, prev - 4))}
+                className="flex-1 py-3 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
+              >
+                Ver menos (esconder 4)
+              </button>
+            )}
+            
+            {visibleLimit < displayedEstados.length && (
+              <button
+                onClick={() => setVisibleLimit(prev => prev + 4)}
+                className="flex-1 py-3 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
+              >
+                Ver mais (mostrar até {Math.min(visibleLimit + 4, displayedEstados.length)} de {displayedEstados.length})
+              </button>
+            )}
+          </div>
         )}
 
         {!isLoading && (
