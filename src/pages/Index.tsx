@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useFolhasEstado, useSessoes, calcularOfensiva, useEmentaConcluida } from '@/hooks/useSessoes';
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
+import { useMateriasFixadas } from '@/hooks/useMateriasFixadas';
 import MateriaCard from '@/components/MateriaCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookOpen, Library, Flame, Play } from 'lucide-react';
@@ -37,26 +38,32 @@ export default function Index() {
   const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
   const [isHistoricoOpen, setIsHistoricoOpen] = useState(false);
 
+  const { fixadas, toggleFixada, isFixada } = useMateriasFixadas();
+  
+  const [expandedMesa, setExpandedMesa] = useState(false);
+
   const estadosFocados = foco.length > 0 
     ? estados.filter(e => foco.includes(e.config.slug))
     : [];
 
-  // Hero Card é a matéria de maior acesso dentre as focadas
-  const heroEstado = estadosFocados.length > 0 ? estadosFocados[0] : null;
+  // Ordenação: 1º Fixadas, 2º Mais acessadas (totalSessoes), 3º Recência
+  const displayedEstados = [...estadosFocados].sort((a, b) => {
+    const aFix = isFixada(a.config.slug);
+    const bFix = isFixada(b.config.slug);
+    if (aFix && !bFix) return -1;
+    if (!aFix && bFix) return 1;
 
-  // Lógica para o botão de 1-Click do Hero (só funciona para matérias folha, não categorias)
-  const heroEmentaConcluidaQuery = useEmentaConcluida(
-    heroEstado && !heroEstado.config.isCategory ? heroEstado.config.slug : ''
-  );
-  const heroConcluidos = heroEmentaConcluidaQuery.data || [];
-  let nextTopic = '';
-  
-  if (heroEstado && !heroEstado.config.isCategory) {
-    const fases = heroEstado.config.fases || (heroEstado.config.ementa ? [{ nome: '', topicos: heroEstado.config.ementa }] : []);
-    const flatEmenta = fases.flatMap(f => f.topicos);
-    const uncompleted = flatEmenta.find(t => !heroConcluidos.includes(t));
-    nextTopic = uncompleted || (flatEmenta.length > 0 ? flatEmenta[flatEmenta.length - 1] : 'Iniciar');
-  }
+    if (b.totalSessoes !== a.totalSessoes) {
+      return b.totalSessoes - a.totalSessoes;
+    }
+
+    const dataA = a.ultimaSessao ? new Date(a.ultimaSessao.data).getTime() : 0;
+    const dataB = b.ultimaSessao ? new Date(b.ultimaSessao.data).getTime() : 0;
+    return dataB - dataA;
+  });
+
+  const limit = 4;
+  const visibleEstados = expandedMesa ? displayedEstados : displayedEstados.slice(0, limit);
 
   const handleCardClick = (estado: MateriaEstado) => {
     if (estado.config.isCategory) {
@@ -83,8 +90,7 @@ export default function Index() {
     }
   }, [openMateriaParam, isLoading, estados, searchParams, setSearchParams]);
 
-  const outrosEstados = heroEstado ? estadosFocados.filter(e => e.config.slug !== heroEstado.config.slug) : estadosFocados;
-  const displayedEstados = outrosEstados; // Sempre mostrar todos os focados
+
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -238,15 +244,29 @@ export default function Index() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-            {displayedEstados.map(estado => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            {visibleEstados.map(estado => (
               <MateriaCard
                 key={estado.config.slug}
                 estado={estado}
                 onClick={() => handleCardClick(estado)}
+                isPinned={isFixada(estado.config.slug)}
+                onTogglePin={(e) => {
+                  e.stopPropagation();
+                  toggleFixada(estado.config.slug);
+                }}
               />
             ))}
           </div>
+        )}
+
+        {!isLoading && displayedEstados.length > limit && (
+          <button
+            onClick={() => setExpandedMesa(!expandedMesa)}
+            className="w-full mb-8 py-3 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
+          >
+            {expandedMesa ? 'Ver menos' : `Ver todas as ${displayedEstados.length} matérias do foco`}
+          </button>
         )}
 
         {!isLoading && (
@@ -259,37 +279,7 @@ export default function Index() {
           </button>
         )}
 
-        {heroEstado && !isLoading && (() => {
-          return (
-            <div className="mb-8 relative overflow-hidden rounded-[2rem] border border-border/50 bg-gradient-to-b from-card to-background p-6 sm:p-8 shadow-2xl transition-all hover:border-border/80">
-              <div className="absolute inset-0 bg-foreground/5 opacity-50 blur-3xl pointer-events-none" />
-              <div className="relative z-10 flex flex-col gap-6 sm:gap-8">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-3xl font-semibold tracking-tight text-foreground">
-                      {heroEstado.config.nome}
-                    </h2>
-                    <p className="text-muted-foreground mt-1 text-sm sm:text-base pr-8">
-                      Sua matéria de maior foco.
-                    </p>
-                  </div>
-                  <div className="w-14 h-14 rounded-full bg-foreground/5 flex items-center justify-center text-2xl shrink-0">
-                    {heroEstado.config.emoji}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-3">
-                  <button
-                    onClick={() => navigate(`/sessao/${heroEstado.config.slug}?sub=${encodeURIComponent(nextTopic)}`)}
-                    className="w-full sm:w-auto self-start px-8 py-3.5 rounded-xl font-medium transition-all text-sm shadow-xl flex items-center justify-center gap-2 bg-foreground text-background shadow-foreground/10 hover:opacity-90 active:scale-95"
-                  >
-                    <Play className="w-4 h-4 fill-current" />
-                    {`Continuar: ${nextTopic}`}
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })()}
+
         </>
         )}
       </div>

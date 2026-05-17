@@ -1,15 +1,17 @@
 import { MateriaEstado } from '@/types';
 import { urgencia } from '@/lib/materias';
 import { cn } from '@/lib/utils';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Pin, PinOff } from 'lucide-react';
 
 interface Props {
   estado: MateriaEstado;
   onClick: () => void;
   ordem?: number;
+  isPinned?: boolean;
+  onTogglePin?: (e: React.MouseEvent) => void;
 }
 
-export default function MateriaCard({ estado, onClick, ordem }: Props) {
+export default function MateriaCard({ estado, onClick, ordem, isPinned, onTogglePin }: Props) {
   const { config, ultimaSessao, diasParada } = estado;
   const urg = urgencia(diasParada);
 
@@ -77,9 +79,21 @@ export default function MateriaCard({ estado, onClick, ordem }: Props) {
           )}
           <span className="text-sm font-medium text-foreground">{config.nome}</span>
         </div>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-2 pointer-events-auto">
+          {onTogglePin && (
+            <button
+              onClick={onTogglePin}
+              className={cn(
+                "p-1.5 rounded-full transition-colors hover:bg-muted/80 text-muted-foreground",
+                isPinned && "text-primary bg-primary/10 hover:bg-primary/20"
+              )}
+              title={isPinned ? "Desafixar" : "Fixar no topo"}
+            >
+              <Pin className={cn("w-3.5 h-3.5", isPinned && "fill-primary")} />
+            </button>
+          )}
           <span className={cn(
-            'text-[11px] font-medium px-2 py-0.5 rounded-full',
+            'text-[11px] font-medium px-2 py-0.5 rounded-full pointer-events-none',
             urgenciaBg[urg]
           )}>
             {urgenciaLabel[urg]}
