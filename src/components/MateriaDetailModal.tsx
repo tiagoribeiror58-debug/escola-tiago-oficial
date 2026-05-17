@@ -382,43 +382,29 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     {sub.nome}
                   </button>
                 ))}
+            {/* Spacer para o sticky footer não cobrir o conteúdo do final do scroll */}
+          <div className="h-32 sm:h-36 shrink-0" />
+
+          {/* Sticky Footer Area */}
+          <div className="absolute bottom-0 left-0 right-0 bg-background/95 backdrop-blur-xl border-t border-border z-10 sm:rounded-b-3xl p-4 shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)] animate-in slide-in-from-bottom-8 duration-300">
+            {(!selectedSub && !allDone) ? (
+              <div className="flex flex-col items-center text-center">
+                 <p className="text-[13px] font-medium text-foreground mb-1">Selecione um tópico</p>
+                 <p className="text-[11px] text-muted-foreground mb-3 max-w-xs mx-auto">
+                   Clique em qualquer item do roadmap acima para começar a estudar.
+                 </p>
+                 {flatEmenta.length > 0 && (
+                  <button
+                    onClick={() => { playPopSound(); onOpenChange(false); navigate(`/ementa/${config.slug}`); }}
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 py-2 px-6 rounded-xl text-[12px] font-medium bg-muted/30 border border-border/50 hover:bg-muted text-foreground transition-all active:scale-95"
+                  >
+                    <Map className="w-3.5 h-3.5 opacity-60" />
+                    Ver jornada completa ({ementaConcluida.length}/{flatEmenta.length})
+                  </button>
+                 )}
               </div>
-            </div>
-          )}
-
-          {/* Divider */}
-          <div className="border-t border-border" />
-
-          {/* Empty State do CTA no fluxo normal */}
-          {!selectedSub && !allDone && (
-            <div className="px-4 py-3 mt-auto">
-              <div className="flex flex-col items-center justify-center p-4 py-5 text-center border rounded-2xl bg-muted/10 border-dashed border-border/60">
-                <BookOpen className="w-5 h-5 text-muted-foreground/40 mb-2" />
-                <p className="text-sm font-medium text-foreground/80">Selecione um tópico acima</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5 max-w-[85%] mx-auto">
-                  Clique em um dos tópicos do Roadmap para iniciar sua sessão de estudos ou retomar de onde parou.
-                </p>
-              </div>
-              
-              {/* Link para Jornada Completa */}
-              {flatEmenta.length > 0 && (
-                <button
-                  onClick={() => { playPopSound(); onOpenChange(false); navigate(`/ementa/${config.slug}`); }}
-                  className="mt-2 w-full flex items-center justify-center gap-2 py-2 rounded-xl text-[12px] text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors"
-                >
-                  <Map className="w-3.5 h-3.5" />
-                  Ver jornada completa ({ementaConcluida.length}/{flatEmenta.length} tópicos)
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Spacer para o sticky footer não cobrir o conteúdo do final do scroll */}
-          <div className="h-36 shrink-0" />
-
-          {/* Action — CTA Começar Sessão (Pop-up Modal Style) */}
-          {(selectedSub || allDone) && (
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur-md border-t border-border shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)] animate-in slide-in-from-bottom-8 duration-300 z-10 rounded-t-[2rem]">
+            ) : (
+              <div className="p-4 shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)] animate-in slide-in-from-bottom-8 duration-300">
               {allDone && !selectedSub ? (
                 <Link
                   to={ctaUrl}
@@ -511,9 +497,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                       : "text-white/40"
                   )} />
                 </Link>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
 
             </TabsContent>
 
@@ -612,8 +598,8 @@ function SessaoItem({
           ) : (
             <div className="space-y-3 max-h-[300px] overflow-y-auto pr-1">
               {(messages || []).map((msg, idx) => {
-                if (msg.role === 'system') return null;
-                const cleanContent = msg.content.replace(/<[^>]+>/g, '').trim();
+                if (msg.role === 'system' || !msg.content) return null;
+                const cleanContent = String(msg.content).replace(/<[^>]+>/g, '').trim();
                 if (!cleanContent) return null;
                 return (
                   <div key={idx} className={cn(
