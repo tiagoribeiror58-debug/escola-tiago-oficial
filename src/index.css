@@ -104,5 +104,6 @@
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior-y: none; /* Bloqueia o pull-to-refresh no mobile que causa perda de sessão */
   }
 }
