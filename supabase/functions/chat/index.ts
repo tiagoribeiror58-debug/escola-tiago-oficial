@@ -56,7 +56,7 @@ serve(async (req) => {
           },
           body: JSON.stringify({
             model: "claude-haiku-4-5-20251001",
-            system: "Você é um classificador de intenção de busca. O usuário fez uma pergunta que exija dados em tempo real, notícias atuais, clima, cotações recentes, atualidades geopolíticas ou fatos de hoje para ser respondida com precisão? Responda APENAS com a palavra 'SIM' ou 'NAO'. Não adicione pontuação.",
+            system: "Você é um classificador de intenção de busca. O usuário fez uma pergunta que exija dados em tempo real, eventos após 2023, anos específicos recentes ou futuros (2024, 2025, 2026+), notícias atuais, clima, cotações ou atualidades geopolíticas para ser respondida com precisão? Se houver dúvida ou menção a anos recentes, priorize 'SIM'. Responda APENAS com a palavra 'SIM' ou 'NAO'. Não adicione pontuação.",
             messages: [{ role: "user", content: lastUserMessage }],
             max_tokens: 5,
             temperature: 0.0, // Garantir zero alucinação
