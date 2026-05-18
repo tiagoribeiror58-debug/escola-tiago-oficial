@@ -26,3 +26,12 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Scripts de debug / diagnóstico local
+*.cjs
+*.timestamp-*.mjs
+
+# Dados exportados e logs de build
+*.json.bak
+build_error.txt
+build_output.txt
