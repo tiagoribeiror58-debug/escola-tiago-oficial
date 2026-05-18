@@ -64,12 +64,16 @@ export default function MateriaCard({ estado, onClick, ordem, isPinned, onToggle
         isDragging && 'opacity-50 scale-95 shadow-xl border-primary ring-2 ring-primary ring-offset-2'
       )}
     >
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={onClick}
-        onKeyDown={(e) => e.key === 'Enter' && onClick()}
+      <a
+        href={`/?materia=${config.slug}`}
+        onClick={(e) => {
+          // Previne o recarregamento na mesma guia (aciona o Modal instantaneamente via onClick pai)
+          // Mas permite que o botão direito/meio do mouse abra em nova guia normalmente
+          e.preventDefault();
+          onClick();
+        }}
         className="absolute inset-0 z-0 rounded-2xl cursor-pointer"
+        aria-label={`Abrir ${config.nome}`}
       />
 
       <div className="flex items-center gap-3 w-full relative z-10 pointer-events-none">

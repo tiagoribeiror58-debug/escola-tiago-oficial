@@ -50,12 +50,16 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const musicRef = useRef<HTMLAudioElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-
-
-  // Para o áudio TTS ao desmontar o componente
+  // Instancia um ÚNICO elemento de áudio na montagem para driblar o bloqueio de Autoplay do navegador
   useEffect(() => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+    }
     return () => {
-      audioRef.current?.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+      }
     };
   }, []);
 
@@ -107,13 +111,17 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       );
       if (!resp.ok) throw new Error('TTS request failed');
       const { audioContent } = await resp.json();
-      const audio = new Audio(`data:audio/mp3;base64,${audioContent}`);
-      audioRef.current = audio;
+      
+      if (!audioRef.current) audioRef.current = new Audio();
+      const audio = audioRef.current;
+      
+      audio.src = `data:audio/mp3;base64,${audioContent}`;
       audio.playbackRate = ttsRate;
       audio.onended = () => setIsSpeaking(false);
       audio.onerror = () => setIsSpeaking(false);
       setIsSpeaking(true);
-      audio.play();
+      
+      await audio.play();
     } catch (err) {
       console.error('TTS error:', err);
       setIsSpeaking(false);
@@ -133,6 +141,10 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       autoTtsEnabledRef.current = false; // Usuário pausou, desativa o auto-play
       return;
     }
+
+    // Tática Sênior: destravamos o elemento de áudio sincronicamente durante o clique do usuário!
+    if (!audioRef.current) audioRef.current = new Audio();
+    audioRef.current.play().catch(() => {});
 
     autoTtsEnabledRef.current = true; // Usuário deu play, ativa auto-play para as próximas mensagens
     await fetchAndPlayTTS(text);
