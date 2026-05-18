@@ -277,6 +277,11 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               delta = parsed.choices[0].delta.content;
             }
             
+            // NOVO: Renderiza a intenção de busca em tempo real injetando o texto no fluxo
+            if (parsed.type === 'search_intent') {
+              delta = `> 🔍 Buscando na web por: **"${parsed.query}"**...\n\n`;
+            }
+
             // Suporte para Anthropic Claude Stream & Thinking
             if (parsed.type === 'content_block_start') {
               if (parsed.content_block?.type === 'thinking' || parsed.content_block?.type === 'redacted_thinking') {
