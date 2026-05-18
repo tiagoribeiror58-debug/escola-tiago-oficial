@@ -49,7 +49,11 @@ export const produtoHub: MateriaConfig = {
         'Pricing Strategy: Modelos de Monetização (Freemium, Usage-Based)',
         'Growth Loops: Construindo Ciclos Virais Sustentáveis',
         'Competitive Analysis: Frameworks para Análise de Concorrentes',
-        'API as a Product: Vendendo para Desenvolvedores'
+        'API as a Product: Vendendo para Desenvolvedores',
+        // === 2026 ===
+        'AI-Native Products: Gerenciando Saídas Não-Determinísticas',
+        'Evaluation-Driven PM: Medindo Qualidade de Features de IA',
+        'Agentes como Produto: UX para Interações Autônomas'
       ]
     },
     {
@@ -136,7 +140,12 @@ Abordagem obrigatória:
         'Stablecoins: Mecanismos e Riscos de Despegging',
         'Oráculos (Chainlink): Conectando Blockchain ao Mundo Real',
         'Ethereum Roadmap: Danksharding e Proto-Danksharding',
-        'SocialFi e On-Chain Identity (Lens, Farcaster)'
+        'SocialFi e On-Chain Identity (Lens, Farcaster)',
+        // === 2026 ===
+        'AI Agents em DeFi: Agentes Autônomos Operando Protocolos',
+        'Restaking (EigenLayer): Reutilização de Segurança Econômica',
+        'Modular Blockchains: Celestia e a Separação de Consenso/Execução/DA',
+        'Intent-Based Protocols: Transações Declarativas sem Gas Manual'
       ]
     }
   ]

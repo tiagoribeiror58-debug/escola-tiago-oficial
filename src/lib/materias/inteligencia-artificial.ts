@@ -44,7 +44,13 @@ O aluno é um "Pedreiro de Prompt", quer resolver tarefas rapidamente, de forma 
         'Usando IA para Criação de Conteúdo (Blog, LinkedIn, X)',
         'IA para Gestão de Projetos e Documentação Técnica',
         'Workflows Compostos: Encadeando Múltiplas IAs',
-        'MCP (Model Context Protocol): Conectando IA a Ferramentas'
+        'MCP (Model Context Protocol): Conectando IA a Ferramentas',
+        // === 2026 ===
+        'Raciocínio Estendido (Extended Thinking / o1 / R1): Quando Usar',
+        'Vibe Coding com Agentes Autônomos (Devin, Codex CLI, Windsurf)',
+        'Claude Code e Terminal Agents: IA no Linha de Comando',
+        'AI Coding Assistants: Como Revisar e Validar Código Gerado por IA',
+        'Artifacts e Canvas: IAs que Geram Interfaces ao Vivo'
       ]
     },
     {
@@ -115,7 +121,12 @@ O aluno precisa de álgebra linear e cálculo básico. Explique gradientes de fo
         'GANs (Generative Adversarial Networks): Conceito e Aplicações',
         'Loss Functions: Cross-Entropy, MSE e Contrastive Loss',
         'Frameworks: PyTorch vs TensorFlow (Quando usar qual)',
-        'GPU Computing: CUDA, cuDNN e Aceleração de Treinamento'
+        'GPU Computing: CUDA, cuDNN e Aceleração de Treinamento',
+        // === 2026 ===
+        'Mixture of Experts (MoE): A Arquitetura Dominante dos Grandes Modelos',
+        'State Space Models (SSMs) e Mamba: Alternativas ao Transformer',
+        'Reward Modeling e RLHF: Alinhando Modelos com Preferências Humanas',
+        'Knowledge Distillation: Comprimindo Modelos Grandes em Pequenos'
       ]
     },
     {
@@ -164,7 +175,12 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
         'Multimodal RAG: Indexando Imagens, PDFs e Vídeo',
         'Evaluation-Driven Development: Evals como Testes Unitários de IA',
         'Arquiteturas de Chat: Histórico, Resumo e Janela Deslizante',
-        'Voice Agents: Pipelines de Voz para Agentes (STT + LLM + TTS)'
+        'Voice Agents: Pipelines de Voz para Agentes (STT + LLM + TTS)',
+        // === 2026 ===
+        'Computer Use Avançado: Agentes Controlando Browsers (Playwright + Claude)',
+        'Roteamento de Intenção Semântica: Classificadores Ultra-Rápidos para Decisão',
+        'A2A (Agent-to-Agent Protocol): Comunicação entre Agentes de Diferentes Provedores',
+        'Currículo Vivo: Sistemas que Geram Conhecimento Dinâmico via Busca em Tempo Real'
       ]
     },
     {
@@ -203,7 +219,11 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
         'LLMOps: CI/CD Específico para Pipelines de LLM',
         'Cost Management: Otimizando Gastos com GPU e Inferência',
         'Canary Deployments para Modelos de ML',
-        'Observabilidade de LLMs: LangSmith, Langfuse, Phoenix'
+        'Observabilidade de LLMs: LangSmith, Langfuse, Phoenix',
+        // === 2026 ===
+        'Inferência Especulativa (Speculative Decoding): Acelerando LLMs 2-4x',
+        'Mixture of Agents: Orquestrando Múltiplos LLMs em Cascata',
+        'Serverless GPU: Plataformas de Inferência Sob Demanda (Modal, Replicate, Together)'
       ]
     },
     {
@@ -219,7 +239,7 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
         'Como funcionam os Modelos de Difusão',
         'Engenharia de Imagem Avançada (Midjourney, Stable Diffusion)',
         'Controle e Consistência (ControlNet, IP-Adapter)',
-        'Geração de Vídeo e Interpolação (Runway, Sora, Pika)',
+        'Geração de Vídeo com IA (Veo 3, Kling AI, Wan2.1, Runway)',
         'Inpainting e Outpainting: Editando com IA',
         'LoRA para Estilos Consistentes',
         'Workflows no ComfyUI',

@@ -40,7 +40,13 @@ export const geopoliticaHub: MateriaConfig = {
         'O Domínio da ASML e a Estrangulação Tecnológica (Chokeholds de Patentes)',
         'Inteligência Artificial Soberana: A Nova Corrida Armamentista Digital',
         'Ciberespaço e as Vulnerabilidades de Infraestruturas Críticas',
-        'Corrida Espacial 2.0: Órbita Baixa da Terra (LEO) e Armas Anti-Satélite'
+        'Corrida Espacial 2.0: Órbita Baixa da Terra (LEO) e Armas Anti-Satélite',
+        // === 2026 ===
+        'Guerra de Chips: Sanções de Semicondutores EUA vs China e o Bloqueio ASML',
+        'BRICS+ e a Arquitetura de Pagamentos Alternativos ao Dólar',
+        'Guerras por Proxy em 2025-2026: Ucrânia, Taiwan e o Mar do Sul da China',
+        'Soberania Alimentar: Fertilizantes, Água e Segurança Agrícola Global',
+        'O Ártico como Novo Teatro Geopolítico: Rotas e Recursos sob o Gelo'
       ]
     },
     {

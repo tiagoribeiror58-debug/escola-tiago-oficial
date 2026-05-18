@@ -133,7 +133,12 @@ O aluno sai da teoria isolada (CS) e entra no mercado de trabalho (Engenharia). 
         'Trunk-Based Development vs GitFlow',
         'Contratos de API: OpenAPI/Swagger e Contract Testing',
         'Internacionalização (i18n) e Localização (l10n) de Software',
-        'Acessibilidade no Código (a11y): ARIA e Semântica HTML'
+        'Acessibilidade no Código (a11y): ARIA e Semântica HTML',
+        // === 2026 ===
+        'AI-Assisted Code Review: Usando LLMs para Análise de PRs',
+        'Rust para Engenheiros: Segurança de Memória sem Garbage Collector',
+        'WebAssembly (Wasm): Executando Código de Alta Performance no Browser',
+        'Edge Functions e Serverless em Produção (Vercel, Supabase, Cloudflare)'
       ]
     },
     {
@@ -180,7 +185,11 @@ O aluno atua como Arquiteto ou Staff Engineer. O foco não é codar a regra de n
         'Data Mesh: Dados como Produto por Domínio',
         'Arquitetura de Micro Frontends',
         'AIOps: Observabilidade e Self-Healing com IA',
-        'Arquiteturas AI-Native: Desenhando Sistemas para LLMs e Agentes'
+        'Arquiteturas AI-Native: Desenhando Sistemas para LLMs e Agentes',
+        // === 2026 ===
+        'Local-First Software: Apps Offline-First com Sync (CRDTs, ElectricSQL)',
+        'Platform Engineering: Internal Developer Platforms (IDPs)',
+        'eBPF: Observabilidade e Segurança no Kernel sem Overhead'
       ]
     }
   ]
