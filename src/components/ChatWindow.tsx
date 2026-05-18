@@ -223,7 +223,11 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
           // Cada sessão cobre 1 micro-tópico — o histórico não cresce o suficiente para ser problema.
           // Janela deslizante removida: a IA nunca perde contexto de nada que foi dito nesta sessão.
           messages: newMessagesForAI.map(({ role, content }) => ({ role, content })), 
-          systemPrompt 
+          systemPrompt,
+          // Currículo Vivo: passa o slug da matéria e a chave da sessão para que a Edge Function
+          // possa detectar tópicos emergentes e vinculá-los a esta matéria no banco de dados.
+          materiaSlug: materia?.slug,
+          sessionKey,
         }),
       });
 

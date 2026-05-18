@@ -12,6 +12,7 @@ import { playPopSound } from '@/lib/audioUtils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { supabase } from '@/integrations/supabase/client';
+import { useTopicosEmergentes } from '@/hooks/useTopicosEmergentes';
 
 
 interface Props {
@@ -40,6 +41,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const ementaConcluidaQuery = useEmentaConcluida(estado?.config?.slug || '');
   const ementaConcluida = ementaConcluidaQuery.data || [];
   const toggleEmenta = useToggleEmenta();
+  const { data: topicosEmergentes } = useTopicosEmergentes(estado?.config?.slug);
 
   const currentTopicRef = useRef<HTMLButtonElement>(null);
 
@@ -386,6 +388,51 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     {sub.nome}
                   </button>
                 ))}</div>
+            </div>
+          )}
+
+          {/* Tópicos Emergentes — gerados automaticamente pela IA durante as sessões */}
+          {topicosEmergentes && topicosEmergentes.length > 0 && (
+            <div className="px-6 pb-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+                  🌐 Descobertos pela IA
+                </p>
+                <span className="text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                  {topicosEmergentes.length} novo{topicosEmergentes.length > 1 ? 's' : ''}
+                </span>
+              </div>
+              <div className="space-y-2">
+                {topicosEmergentes.map((topico) => (
+                  <div
+                    key={topico.id}
+                    className="flex gap-3 p-3 rounded-xl bg-primary/5 border border-primary/15 group"
+                  >
+                    <span className="text-primary mt-0.5 shrink-0 text-xs">✦</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground leading-tight">
+                        {topico.titulo}
+                      </p>
+                      {topico.descricao && (
+                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">
+                          {topico.descricao}
+                        </p>
+                      )}
+                      {topico.fonte_url && (
+                        <a
+                          href={topico.fonte_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] text-primary/60 hover:text-primary mt-1 block truncate transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {topico.fonte_url.replace(/^https?:\/\//, '').split('/')[0]}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
