@@ -26,7 +26,7 @@ function formatTimer(seconds: number): string {
 
 export default function Sessao() {
   const { materia: slug } = useParams<{ materia: string }>();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const resumeKey = searchParams.get('resume');
   const sub = searchParams.get('sub');
@@ -51,6 +51,19 @@ export default function Sessao() {
     if (resumeKey) return resumeKey;
     return `${slug}-${Date.now()}`;
   }, [slug, resumeKey]);
+
+  // Preserva a sessão na URL: se o navegador suspender a aba ou a página for recarregada,
+  // a sessão não será perdida pois o resumeKey estará na URL.
+  useEffect(() => {
+    if (!resumeKey) {
+      setSearchParams(prev => {
+        prev.set('resume', sessionKey);
+        if (sub) prev.set('sub', sub);
+        if (modo) prev.set('modo', modo);
+        return prev;
+      }, { replace: true });
+    }
+  }, [resumeKey, sessionKey, setSearchParams, sub, modo]);
 
   const messagesRef = useRef<ChatMessage[]>([]);
   const startTimeRef = useRef(Date.now());
