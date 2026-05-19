@@ -136,8 +136,14 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
     .filter(s => s.materia === config.slug)
     .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime());
     
-  // Identifica se o tópico selecionado está pausado (tem sessão inacabada)
-  const sessaoDesteTopico = sessoesMateria.find(s => s.topico === selectedSub && !ementaConcluida.includes(s.topico));
+  // Identifica se o tópico selecionado está pausado.
+  // Regra original: tem sessão neste tópico e ele ainda não está na ementa_concluida.
+  const norm = (s?: string | null) => (s || '').toLowerCase().trim();
+  const sessaoDesteTopico = sessoesMateria.find(s =>
+    selectedSub != null &&
+    !ementaConcluida.includes(selectedSub) &&
+    (norm(s.topico).includes(norm(selectedSub)) || norm(selectedSub).includes(norm(s.topico)))
+  );
   const isSelectedSubPaused = !!(selectedSub && sessaoDesteTopico);
 
   const isSelectedSubCompleted = !!(selectedSub && ementaConcluida.includes(selectedSub));
@@ -276,10 +282,14 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                         {visibleEmenta.map((step, i) => {
                           const idx = startIdx + i;
                           const norm = (s: string) => s.toLowerCase().trim();
-                          const isCompleted = ementaConcluida.some(d => norm(d).includes(norm(step)) || norm(step).includes(norm(d)));
+                          const normLocal = (s?: string | null) => (s || '').toLowerCase().trim();
+                          const isCompleted = ementaConcluida.some(d => normLocal(d).includes(normLocal(step)) || normLocal(step).includes(normLocal(d)));
                           const isCurrent = currentIdx === idx;
-                          // Regra corrigida: é pausado se tiver sessão e não estiver concluído. Independe de ser o currentIdx.
-                          const isPaused = !isCompleted && sessoesMateria.some(s => s.topico === step);
+                          // Regra original: é pausado se tiver sessão e não estiver concluído.
+                          // Usa comparacão fuzzy para garantir o match.
+                          const isPaused = !isCompleted && sessoesMateria.some(s =>
+                            normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico))
+                          );
                           const isLast = idx === flatEmenta.length - 1;
 
                           return (
@@ -606,7 +616,7 @@ function SessaoItem({
   chatUrl,
   onOpenChat,
 }: {
-  sessao: { id: number; topico: string; created_at: string | null; data: string; session_key?: string | null };
+  sessao: { id: number; topico: string; created_at: string | null; data: string; session_key?: string | null; decisao_proxima?: string | null };
   hasChat: boolean;
   isExpanded: boolean;
   onToggle: () => void;
@@ -627,9 +637,15 @@ function SessaoItem({
       >
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-foreground truncate">{sessao.topico}</p>
-          <p className="text-[10px] text-muted-foreground mt-0.5 capitalize">
-            {format(new Date(sessao.created_at || sessao.data), "d 'de' MMM", { locale: ptBR })}
-          </p>
+          {sessao.decisao_proxima === 'Pausada' ? (
+            <p className="text-[10px] text-[hsl(var(--warning))] font-medium uppercase tracking-wider mt-0.5">
+              Sessão pausada
+            </p>
+          ) : (
+            <p className="text-[10px] text-muted-foreground mt-0.5 capitalize">
+              {format(new Date(sessao.created_at || sessao.data), "d 'de' MMM", { locale: ptBR })}
+            </p>
+          )}
         </div>
         {hasChat && (
           <div className="text-muted-foreground shrink-0 ml-2">

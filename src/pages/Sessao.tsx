@@ -213,16 +213,22 @@ export default function Sessao() {
         messages_json: messagesSnapshot,
       };
 
-      if (resumeKey || draftSavedRef.current) {
-        // Atualiza a sessão existente se for retomada OU se um rascunho automático já foi salvo
-        const keyToUpdate = resumeKey || sessionKey;
+      const keyToUpdate = resumeKey || sessionKey;
+      const { data: existingSession } = await supabase
+        .from('sessoes')
+        .select('id')
+        .eq('session_key', keyToUpdate)
+        .maybeSingle();
+
+      if (existingSession) {
+        // Atualiza a sessão existente
         const { error } = await supabase
           .from('sessoes')
           .update(sessionPayload)
           .eq('session_key', keyToUpdate);
         if (error) throw error;
       } else {
-        // Insere nova sessão (fallback caso o draft não tenha rodado)
+        // Insere nova sessão
         const { error } = await supabase.from('sessoes').insert({
           ...sessionPayload,
           session_key: sessionKey,
@@ -258,9 +264,81 @@ export default function Sessao() {
     }
   }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey, modo, navigate, resumedSessionData, ementaConcluida, materiaConfig, sub]);
 
+  // doPausar: salva snapshot parcial no banco com decisao_proxima='Pausada'
+  // DIFERENTE do doEncerrar: NÃO deleta as chat_messages, preservando o histórico para retomada.
+  const doPausar = useCallback(async () => {
+    if (isSavingRef.current) return;
+    isSavingRef.current = true;
+    setSaving(true);
+
+    try {
+      const hoje = new Date().toISOString().split('T')[0];
+      const duracaoMin = Math.round((Date.now() - startTimeRef.current) / 60000);
+
+      const ementaFlat = materiaConfig.fases
+        ? materiaConfig.fases.flatMap(f => f.topicos)
+        : (materiaConfig.ementa || []);
+
+      const resultadoDeterministico = resolverTopicoAtual(ementaFlat, ementaConcluida);
+      const topicoAtualParaExtrair = ultimaSessao?.proximo_topico || ultimaSessao?.topico || '';
+      const topicoDestaSessao = sub || (resumeKey && resumedSessionData
+        ? resumedSessionData.topico
+        : (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair));
+
+      const pausePayload = {
+        materia: slug!,
+        topico: topicoDestaSessao || 'Sessão pausada',
+        data: hoje,
+        erros: 0,
+        dificuldade: 'media',
+        nivel: ultimaSessao?.nivel || 1,
+        duracao_min: duracaoMin > 0 ? duracaoMin : 1,
+        messages_json: [], // mensagens reais ficam em chat_messages
+        decisao_proxima: 'Pausada',
+        observacoes: 'Sessão pausada pelo usuário',
+      };
+
+      const keyToUpdate = resumeKey || sessionKey;
+      const { data: existingSession } = await supabase
+        .from('sessoes')
+        .select('id')
+        .eq('session_key', keyToUpdate)
+        .maybeSingle();
+
+      if (existingSession) {
+        const { error } = await supabase
+          .from('sessoes')
+          .update(pausePayload)
+          .eq('session_key', keyToUpdate);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('sessoes').insert({
+          ...pausePayload,
+          session_key: sessionKey,
+        });
+        if (error) throw error;
+      }
+
+      // NÃO deleta chat_messages — elas ficam intactas para retomada
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['sessoes'] }),
+        queryClient.invalidateQueries({ queryKey: ['ultima-sessao', slug] }),
+      ]);
+
+      toast.success('Sessão pausada');
+      setSaving(false);
+      navigate(`/?materia=${slug}`);
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro ao pausar — tente novamente');
+      isSavingRef.current = false;
+      setSaving(false);
+    }
+  }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey, resumedSessionData, ementaConcluida, materiaConfig, sub, navigate]);
+
   const handlePausar = useCallback(() => {
-    doEncerrar(false);
-  }, [doEncerrar]);
+    doPausar();
+  }, [doPausar]);
 
   const handleEncerrar = useCallback(() => {
     // Regra 5: botão sempre acessível. Se sessão não concluiu, pede confirmação.
