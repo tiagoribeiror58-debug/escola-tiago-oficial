@@ -473,7 +473,7 @@ export default function Sessao() {
             sessionKey={sessionKey}
             initialMessages={resumeKey ? resumeMessages || undefined : undefined}
             historyMessages={!resumeKey && historyMessages && historyMessages.length > 0 ? historyMessages : undefined}
-            sub={sub}
+            sub={topicoDestaSessao}
             modo={modo}
             ementaConcluida={ementaConcluida}
             sessoesRecentes={sessoesRecentes || []}

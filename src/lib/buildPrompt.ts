@@ -33,11 +33,11 @@ export function buildSystemPrompt(
 
   // Se o aluno escolheu um sub-tópico explicitamente via UI, respeita
   if (sub) {
-    const flat = ementa;
-    const isEmentaItem = flat.includes(sub);
+    const norm = (s: string) => s.toLowerCase().trim();
+    const isEmentaItem = ementa.some(item => norm(item).includes(norm(sub)) || norm(sub).includes(norm(item)));
     topicoObrigatorio = isEmentaItem ? sub : null;
     if (isEmentaItem) {
-      topicosProibidos = concluidos.filter(c => c !== sub);
+      topicosProibidos = concluidos.filter(c => !(norm(c).includes(norm(sub)) || norm(sub).includes(norm(c))));
     }
   } else if (ementa.length > 0) {
     const resultado = resolverTopicoAtual(ementa, concluidos);
