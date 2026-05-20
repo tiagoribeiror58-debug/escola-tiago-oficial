@@ -266,7 +266,8 @@ export default function Sessao() {
         queryClient.invalidateQueries({ queryKey: ['sessoes'] }),
         queryClient.invalidateQueries({ queryKey: ['chat-sessions', slug] }),
         queryClient.invalidateQueries({ queryKey: ['ultima-sessao', slug] }),
-        queryClient.invalidateQueries({ queryKey: ['ementa-concluida', slug] })
+        queryClient.invalidateQueries({ queryKey: ['ementa-concluida', slug] }),
+        queryClient.invalidateQueries({ queryKey: ['chat-history'] })
       ]);
       toast.success('Sessão salva ✓');
       setSaving(false);
@@ -350,6 +351,7 @@ export default function Sessao() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['sessoes'] }),
         queryClient.invalidateQueries({ queryKey: ['ultima-sessao', slug] }),
+        queryClient.invalidateQueries({ queryKey: ['chat-history'] }),
       ]);
 
       toast.success('Sessão pausada');
