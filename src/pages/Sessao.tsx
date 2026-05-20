@@ -65,6 +65,22 @@ export default function Sessao() {
     }
   }, [resumeKey, sessionKey, setSearchParams, sub, modo]);
 
+  const ementaFlat = materiaConfig?.fases
+    ? materiaConfig.fases.flatMap(f => f.topicos)
+    : (materiaConfig?.ementa || []);
+    
+  const topicoAtualParaExtrair = ultimaSessao?.proximo_topico || ultimaSessao?.topico || '';
+  const resultadoDeterministico = resolverTopicoAtual(ementaFlat, ementaConcluida);
+  
+  const topicoDestaSessao = sub || (resumeKey && resumedSessionData ? resumedSessionData.topico : (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair));
+
+  const isAlreadyCompleted = useMemo(() => {
+    if (!topicoDestaSessao) return false;
+    return ementaConcluida.some(
+      d => d.toLowerCase().includes(topicoDestaSessao.toLowerCase()) || topicoDestaSessao.toLowerCase().includes(d.toLowerCase())
+    );
+  }, [topicoDestaSessao, ementaConcluida]);
+
   const messagesRef = useRef<ChatMessage[]>([]);
   const startTimeRef = useRef(Date.now());
   const isSavingRef = useRef(false); // BUG-02: guard contra double-save
@@ -92,12 +108,12 @@ export default function Sessao() {
         
       const topicoAtualParaExtrair = ultimaSessao?.proximo_topico || ultimaSessao?.topico || '';
       const resultadoDeterministico = resolverTopicoAtual(ementaFlat, ementaConcluida);
-      const topicoDestaSessao = sub || (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair);
+      const topicoDestaSessaoRascunho = sub || (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair);
 
       supabase.from('sessoes').insert({
         session_key: sessionKey,
         materia: slug,
-        topico: topicoDestaSessao || 'Sessão iniciada',
+        topico: topicoDestaSessaoRascunho || 'Sessão iniciada',
         data: new Date().toISOString().split('T')[0],
         erros: 0,
         dificuldade: 'media',
@@ -149,14 +165,14 @@ export default function Sessao() {
       const resultadoDeterministico = resolverTopicoAtual(ementaFlat, ementaConcluida);
       
       // FIX: Se estivermos retomando uma sessão (resumeKey), preserva o tópico original dela!
-      const topicoDestaSessao = sub || (resumeKey && resumedSessionData ? resumedSessionData.topico : (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair));
+      const topicoDestaSessaoSalvar = sub || (resumeKey && resumedSessionData ? resumedSessionData.topico : (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair));
 
       if (messages.length < 4) {
         // BUGFIX: sessão curta NÃO copia proximo_topico para topico.
         // Antes: topico = proximo_topico, proximo_topico = proximo_topico → loop!
         // Agora: preserva o estado anterior intacto — nada mudou de fato.
         sessionData = {
-          topico: topicoDestaSessao || 'Sessão curta',
+          topico: topicoDestaSessaoSalvar || 'Sessão curta',
           erros: 0,
           dificuldade: 'media',
           nivel: ultimaSessao?.nivel || 1,
@@ -170,11 +186,11 @@ export default function Sessao() {
           slug!,
           ultimaSessao?.nivel || 1,
           ementaFlat,
-          topicoDestaSessao
+          topicoDestaSessaoSalvar
         );
 
         // GARANTIA: O tópico salvo no banco é estritamente o da ementa (evita que a IA modifique a string)
-        sessionData.topico = topicoDestaSessao;
+        sessionData.topico = topicoDestaSessaoSalvar;
       }
 
       const validDificuldades = ['baixa', 'media', 'alta'];
@@ -281,13 +297,13 @@ export default function Sessao() {
 
       const resultadoDeterministico = resolverTopicoAtual(ementaFlat, ementaConcluida);
       const topicoAtualParaExtrair = ultimaSessao?.proximo_topico || ultimaSessao?.topico || '';
-      const topicoDestaSessao = sub || (resumeKey && resumedSessionData
+      const topicoDestaSessaoPausar = sub || (resumeKey && resumedSessionData
         ? resumedSessionData.topico
         : (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair));
 
       const pausePayload = {
         materia: slug!,
-        topico: topicoDestaSessao || 'Sessão pausada',
+        topico: topicoDestaSessaoPausar || 'Sessão pausada',
         data: hoje,
         erros: 0,
         dificuldade: 'media',
@@ -378,43 +394,42 @@ export default function Sessao() {
   return (
     <div className="h-screen flex flex-col relative">
 
-      <header className="flex items-center gap-3 px-4 py-3 border-b border-border">
+      <header className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 border-b border-border">
         <button
           onClick={() => {
-            if (!topicComplete && messageCount > 0) {
+            if (!topicComplete && !isAlreadyCompleted && messageCount > 0) {
               handlePausar();
             } else {
               navigate(`/?materia=${slug}`);
             }
           }}
-          className="p-1.5 -ml-1.5 rounded-lg hover:bg-muted transition-colors"
+          className="p-1.5 -ml-1.5 rounded-lg hover:bg-muted transition-colors shrink-0"
         >
           <ArrowLeft className="w-4 h-4" />
         </button>
 
         <div className="flex items-center gap-2 flex-1 min-w-0">
-          <span className="text-lg">{materiaConfig.emoji}</span>
+          <span className="text-base sm:text-lg shrink-0">{materiaConfig.emoji}</span>
           <span className="text-sm font-medium truncate">{materiaConfig.nome}</span>
         </div>
 
         {/* Timer — visível após primeira mensagem */}
         {messageCount > 0 && (
-          <span className="text-[11px] font-mono text-muted-foreground tabular-nums shrink-0">
+          <span className="text-[10px] sm:text-[11px] font-mono text-muted-foreground tabular-nums shrink-0">
             {formatTimer(elapsedSeconds)}
           </span>
         )}
 
-        {/* O botão "Continuar" foi removido pois a ação é implícita (basta digitar) */}
-
         {/* Botão Pausar — apenas se o tópico não foi concluído e tem mensagens para salvar */}
-        {!topicComplete && messageCount > 0 && (
+        {!topicComplete && !isAlreadyCompleted && messageCount > 0 && (
           <button
             onClick={handlePausar}
             disabled={saving}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 shrink-0 bg-[hsl(var(--warning)/0.15)] text-[hsl(var(--warning))] hover:bg-[hsl(var(--warning)/0.25)] border border-[hsl(var(--warning)/0.3)]"
+            title="Pausar Sessão"
+            className="flex items-center justify-center gap-1.5 w-8 h-8 sm:w-auto sm:h-auto sm:px-3 sm:py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 shrink-0 bg-[hsl(var(--warning)/0.15)] text-[hsl(var(--warning))] hover:bg-[hsl(var(--warning)/0.25)] border border-[hsl(var(--warning)/0.3)]"
           >
-            <Pause className="w-3 h-3 fill-current" />
-            Pausar
+            <Pause className="w-3.5 h-3.5 sm:w-3 sm:h-3 fill-current shrink-0" />
+            <span className="hidden sm:inline">Pausar</span>
           </button>
         )}
 
@@ -422,8 +437,9 @@ export default function Sessao() {
         <button
           onClick={handleEncerrar}
           disabled={saving}
+          title="Encerrar Sessão"
           className={cn(
-            'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 shrink-0',
+            'flex items-center justify-center gap-1.5 w-8 h-8 sm:w-auto sm:h-auto sm:px-3 sm:py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 shrink-0',
             'disabled:opacity-50',
             topicComplete
               ? 'bg-[hsl(var(--success))] text-white ring-2 ring-[hsl(var(--success)/0.4)] animate-pulse hover:brightness-110'
@@ -432,13 +448,13 @@ export default function Sessao() {
         >
           {saving ? (
             <>
-              <Loader2 className="w-3 h-3 animate-spin" />
-              Salvando...
+              <Loader2 className="w-3.5 h-3.5 sm:w-3 sm:h-3 animate-spin shrink-0" />
+              <span className="hidden sm:inline">Salvando...</span>
             </>
           ) : (
             <>
-              <Square className="w-3 h-3 fill-current" />
-              Encerrar
+              <Square className="w-3.5 h-3.5 sm:w-3 sm:h-3 fill-current shrink-0" />
+              <span className="hidden sm:inline">Encerrar</span>
             </>
           )}
         </button>

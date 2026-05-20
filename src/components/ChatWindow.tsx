@@ -63,6 +63,16 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     };
   }, []);
 
+  const [isNearBottom, setIsNearBottom] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const distanceToBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setIsNearBottom(distanceToBottom < 100);
+  }, []);
+
   // Initialize ambient music player
   useEffect(() => {
     const audio = new Audio('/ruido-branco.mp3');
@@ -162,9 +172,11 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   };
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isNearBottom) {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
     onMessagesChange?.(messages);
-  }, [messages, onMessagesChange]);
+  }, [messages, onMessagesChange, isNearBottom]);
 
   const autoResize = useCallback(() => {
     const el = inputRef.current;
@@ -279,7 +291,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
             
             // NOVO: Renderiza a intenção de busca em tempo real injetando o texto no fluxo
             if (parsed.type === 'search_intent') {
-              delta = `> 🔍 Buscando na web por: **"${parsed.query}"**...\n\n`;
+              delta = `> 🔍 Buscando na web por: \`${parsed.query?.replace(/`/g, '') || 'busca'}\`...\n\n`;
             }
 
             // Suporte para Anthropic Claude Stream & Thinking
@@ -306,16 +318,21 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               // Evitamos closures instáveis guardando o conteúdo atual
               const currentContent = assistantContent; 
               
+              // Smart scroll: scroll only if user is already at the bottom
+              const wasNearBottom = isNearBottom;
+              
               setMessages(prev => {
                 const last = prev[prev.length - 1];
                 if (last?.id === messageId) {
-                  // Se a última mensagem for a nossa mensagem da stream atual, atualiza o conteúdo
                   return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: currentContent } : m);
                 } else {
-                  // Se não for, cria a nova mensagem usando o messageId único
                   return [...prev, { id: messageId, role: 'assistant', content: currentContent }];
                 }
               });
+
+              if (wasNearBottom) {
+                setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 0);
+              }
             }
           } catch (streamErr) {
             // Re-lança erros conhecidos (overloaded, stream error)
@@ -383,7 +400,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       setIsLoading(false);
       inputRef.current?.focus();
     }
-  }, [input, isLoading, messages, systemPrompt, materia.slug, sessionKey, saveMutation]);
+  }, [input, isLoading, messages, systemPrompt, materia.slug, sessionKey, saveMutation, isNearBottom]);
 
   // Auto-start: dispara apenas em sessões NOVAS (não resume).
   // isContinuation é true quando há resumeKey — nesses casos o usuário escolhe quando começar.
@@ -406,7 +423,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto w-full">
+      <div className="flex-1 overflow-y-auto w-full" onScroll={handleScroll} ref={containerRef}>
         <div className="max-w-3xl mx-auto px-4 py-6 space-y-6 w-full">
 
         {/* Histórico da sessão anterior — display-only, não vai para IA */}

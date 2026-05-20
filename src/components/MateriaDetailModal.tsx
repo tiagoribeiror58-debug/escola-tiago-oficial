@@ -27,7 +27,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const navigate = useNavigate();
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
   const [expandedSession, setExpandedSession] = useState<number | null>(null);
-  const [isExpandedRoadmap, setIsExpandedRoadmap] = useState(false);
+  const [expandedCount, setExpandedCount] = useState(0);
 
   // Preview do tópico via IA — com cache em memória para não chamar a API 2x pelo mesmo tópico
   const [topicPreview, setTopicPreview] = useState<string | null>(null);
@@ -49,6 +49,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
     if (open) {
       setSelectedSub(null);
       setExpandedSession(null);
+      setExpandedCount(0);
 
       // Scroll suave para o tópico atual (no modal externo)
       setTimeout(() => {
@@ -266,13 +267,13 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 {/* Timeline vertical */}
                 <div className="relative">
                   {(() => {
-                    const startIdx = isExpandedRoadmap ? 0 : Math.max(0, currentIdx - 1);
-                    const endIdx = isExpandedRoadmap ? flatEmenta.length : Math.min(flatEmenta.length, currentIdx + 4);
+                    const startIdx = Math.max(0, currentIdx - 2);
+                    const endIdx = Math.min(flatEmenta.length, currentIdx + 4 + expandedCount);
                     const visibleEmenta = flatEmenta.slice(startIdx, endIdx);
                     
                     return (
                       <>
-                        {!isExpandedRoadmap && startIdx > 0 && (
+                        {startIdx > 0 && (
                           <div className="flex gap-3 mb-2 opacity-50">
                             <div className="flex flex-col items-center">
                               <div className="w-6 h-6 flex items-center justify-center shrink-0 text-muted-foreground">⋮</div>
@@ -354,17 +355,17 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                           );
                         })}
 
-                        {!isExpandedRoadmap && endIdx < flatEmenta.length && (
+                        {endIdx < flatEmenta.length && (
                           <div className="flex gap-3 opacity-50 mt-2">
                             <div className="flex flex-col items-center">
                               <div className="w-6 h-6 flex items-center justify-center shrink-0 text-muted-foreground">⋮</div>
                             </div>
                             <div className="flex-1 pb-4">
                               <button 
-                                onClick={() => setIsExpandedRoadmap(true)}
+                                onClick={() => setExpandedCount(prev => prev + 5)}
                                 className="text-xs font-medium text-primary hover:underline"
                               >
-                                Ver mais {flatEmenta.length - endIdx} tópicos
+                                Ver próximos {Math.min(5, flatEmenta.length - endIdx)} tópicos
                               </button>
                             </div>
                           </div>
