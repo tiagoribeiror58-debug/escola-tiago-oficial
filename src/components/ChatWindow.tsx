@@ -402,14 +402,13 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     }
   }, [input, isLoading, messages, systemPrompt, materia.slug, sessionKey, saveMutation, isNearBottom]);
 
-  // Auto-start: dispara apenas em sessões NOVAS (não resume).
-  // isContinuation é true quando há resumeKey — nesses casos o usuário escolhe quando começar.
+  // Auto-start: dispara quando a sessão está vazia (nova ou retomada sem mensagens).
   useEffect(() => {
-    if (isContinuation || autoStartFiredRef.current) return;
+    if (autoStartFiredRef.current || messages.length > 0) return;
     autoStartFiredRef.current = true;
     handleSend('Inicie a sessão.', true);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // intencional: dispara só no mount
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {

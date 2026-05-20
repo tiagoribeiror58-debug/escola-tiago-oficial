@@ -345,18 +345,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                   onClick={(e) => {
                                     e.preventDefault();
                                     playPopSound();
-                                    onOpenChange(false);
-                                    
-                                    // Descobre URL de destino baseado no estado da sessão daquele tópico
-                                    let url = `/sessao/${config.slug}?sub=${encodeURIComponent(step)}`;
-                                    if (isPaused) {
-                                      const sessaoPausada = sessoesMateria.find(s => s.decisao_proxima === 'Pausada' && (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico))));
-                                      if (sessaoPausada?.session_key) url = `/sessao/${config.slug}?resume=${sessaoPausada.session_key}`;
-                                    } else if (isCompleted) {
-                                      const sessaoConc = sessoesMateria.find(s => !!s.session_key && (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico))));
-                                      if (sessaoConc?.session_key) url = `/sessao/${config.slug}?resume=${sessaoConc.session_key}`;
-                                    }
-                                    navigate(url);
+                                    setSelectedSub(step);
                                   }}
                                   className={cn(
                                     "text-sm font-medium text-left leading-tight transition-colors hover:text-primary cursor-pointer w-full",
