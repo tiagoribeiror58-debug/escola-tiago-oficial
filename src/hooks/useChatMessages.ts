@@ -25,29 +25,34 @@ export function useChatHistory(materia: string, sessionKey: string | null) {
     queryKey: ['chat-history', materia, sessionKey],
     enabled: !!sessionKey,
     queryFn: async () => {
-      // 1. Primeiro verifica se a sessão tem um snapshot salvo em messages_json
-      //    (isso acontece quando a sessão foi pausada via doPausar, que salva o snapshot completo)
+      // 1. Puxar o snapshot (messages_json) se a sessão já foi pausada/encerrada antes
       const { data: sessaoData, error: sessaoError } = await supabase
         .from('sessoes')
         .select('messages_json')
         .eq('session_key', sessionKey!)
         .maybeSingle();
 
-      if (!sessaoError && sessaoData?.messages_json && Array.isArray(sessaoData.messages_json) && (sessaoData.messages_json as unknown[]).length > 0) {
-        // Snapshot completo encontrado — usa ele como fonte de verdade
-        return sessaoData.messages_json as unknown as ChatMessage[];
+      let snapshotMessages: ChatMessage[] = [];
+      if (!sessaoError && sessaoData?.messages_json && Array.isArray(sessaoData.messages_json)) {
+        snapshotMessages = sessaoData.messages_json as unknown as ChatMessage[];
       }
 
-      // 2. Fallback: sessão ainda ativa (nunca foi pausada), busca em chat_messages
-      const { data, error } = await supabase
+      // 2. Puxar as mensagens incrementais (chat_messages) que vieram DEPOIS do último pause
+      const { data: incrementalData, error: incrementalError } = await supabase
         .from('chat_messages')
         .select('*')
         .eq('session_key', sessionKey!)
         .order('created_at', { ascending: true });
 
-      if (error) throw error;
+      if (incrementalError) throw incrementalError;
 
-      return (data || []).map(m => ({ role: m.role as 'user' | 'assistant', content: m.content })) as ChatMessage[];
+      const incrementalMessages = (incrementalData || []).map(m => ({ 
+        role: m.role as 'user' | 'assistant', 
+        content: m.content 
+      })) as ChatMessage[];
+
+      // Combina as duas partes! O snapshot + as mensagens novas (ou apenas as novas se não teve pause)
+      return [...snapshotMessages, ...incrementalMessages];
     },
   });
 }

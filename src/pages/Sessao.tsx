@@ -337,7 +337,16 @@ export default function Sessao() {
         if (error) throw error;
       }
 
-      // NÃO deleta chat_messages — elas ficam intactas para retomada
+      // Deletar chat_messages após salvar o snapshot (assim chat_messages guarda só as novas da próxima retomada)
+      const { error: delError } = await supabase
+        .from('chat_messages')
+        .delete()
+        .eq('session_key', keyToUpdate);
+
+      if (delError) {
+        console.error('Falha ao deletar chat_messages ao pausar', delError);
+      }
+
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['sessoes'] }),
         queryClient.invalidateQueries({ queryKey: ['ultima-sessao', slug] }),
