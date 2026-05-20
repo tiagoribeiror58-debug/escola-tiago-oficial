@@ -11,34 +11,37 @@ const supabase = createClient(
   process.env.VITE_SUPABASE_PUBLISHABLE_KEY
 );
 
-async function check() {
-  console.log("Verificando sessoes apagadas/existentes para 'comportamento-masculino'...");
+async function checkAndRemove() {
+  console.log("Procurando mensagens com a alucinação...");
   
-  // Buscar sessoes
-  const { data: sessoes, error: errSessoes } = await supabase
-    .from('sessoes')
-    .select('id, topico, created_at, session_key, messages_json')
-    .eq('materia', 'comportamento-masculino-alita');
+  // Buscar mensagens
+  const { data: msgs, error: errMsgs } = await supabase
+    .from('chat_messages')
+    .select('id, session_key, content, created_at')
+    .like('content', '%preciso corrigir minha própria trajetória%');
     
-  if (errSessoes) {
-    console.error("Erro sessoes:", errSessoes);
+  if (errMsgs) {
+    console.error("Erro msgs:", errMsgs);
     return;
   }
   
-  console.log(`\nEncontradas ${sessoes.length} sessões na tabela 'sessoes':`);
-  console.log(sessoes.map(s => `${s.id} - ${s.topico} (Key: ${s.session_key}) [History: ${s.messages_json ? s.messages_json.length + ' msgs' : 'VAZIO'}]`).join('\n'));
+  console.log(`\nEncontradas ${msgs.length} mensagens alucinadas:`);
+  console.log(msgs);
 
-  // Buscar chat_messages para essas sessões (se houver)
-  for (const s of sessoes) {
-    if (s.session_key) {
-      const { count } = await supabase
-        .from('chat_messages')
-        .select('*', { count: 'exact', head: true })
-        .eq('session_key', s.session_key);
-        
-      console.log(`Sessão ${s.id} tem ${count || 0} mensagens não salvas na tabela 'chat_messages'`);
+  // Deletar as mensagens encontradas
+  for (const msg of msgs) {
+    console.log(`Deletando mensagem ${msg.id}...`);
+    const { error: delErr } = await supabase
+      .from('chat_messages')
+      .delete()
+      .eq('id', msg.id);
+      
+    if (delErr) {
+      console.error("Erro ao deletar:", delErr);
+    } else {
+      console.log("Deletado com sucesso!");
     }
   }
 }
 
-check().catch(console.error);
+checkAndRemove().catch(console.error);
