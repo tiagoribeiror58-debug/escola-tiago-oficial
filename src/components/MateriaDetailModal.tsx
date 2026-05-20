@@ -299,38 +299,67 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                               "flex gap-3 relative group transition-opacity",
                               !isCompleted && !isCurrent && !isPaused && "opacity-40"
                             )}>
-                              {/* Indicador Visual */}
-                              <div className="flex flex-col items-center">
-                                <button 
-                                  onClick={() => setSelectedSub(step)}
-                                  className={cn(
-                                    "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] font-bold transition-all duration-200 hover:scale-110 z-10",
-                                    isCompleted
-                                      ? "bg-[hsl(var(--success)/0.15)] border-[hsl(var(--success)/0.4)] text-[hsl(var(--success))]"
-                                      : isPaused
-                                      ? "bg-[hsl(var(--warning)/0.15)] border-[hsl(var(--warning)/0.5)] text-[hsl(var(--warning))] ring-2 ring-[hsl(var(--warning)/0.25)] ring-offset-1 ring-offset-background"
-                                      : isCurrent
-                                      ? "bg-primary/15 border-primary/50 text-primary ring-2 ring-primary/25 ring-offset-1 ring-offset-background"
-                                      : "bg-muted/20 border-border/40 text-muted-foreground/50"
+                                {/* Indicador Visual */}
+                                <div className="flex flex-col items-center">
+                                  <button 
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      playPopSound();
+                                      onOpenChange(false);
+                                      
+                                      let url = `/sessao/${config.slug}?sub=${encodeURIComponent(step)}`;
+                                      if (isPaused) {
+                                        const sessaoPausada = sessoesMateria.find(s => s.decisao_proxima === 'Pausada' && (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico))));
+                                        if (sessaoPausada?.session_key) url = `/sessao/${config.slug}?resume=${sessaoPausada.session_key}`;
+                                      } else if (isCompleted) {
+                                        const sessaoConc = sessoesMateria.find(s => !!s.session_key && (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico))));
+                                        if (sessaoConc?.session_key) url = `/sessao/${config.slug}?resume=${sessaoConc.session_key}`;
+                                      }
+                                      navigate(url);
+                                    }}
+                                    className={cn(
+                                      "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] font-bold transition-all duration-200 hover:scale-110 z-10",
+                                      isCompleted
+                                        ? "bg-[hsl(var(--success)/0.15)] border-[hsl(var(--success)/0.4)] text-[hsl(var(--success))]"
+                                        : isPaused
+                                        ? "bg-[hsl(var(--warning)/0.15)] border-[hsl(var(--warning)/0.5)] text-[hsl(var(--warning))] ring-2 ring-[hsl(var(--warning)/0.25)] ring-offset-1 ring-offset-background"
+                                        : isCurrent
+                                        ? "bg-primary/15 border-primary/50 text-primary ring-2 ring-primary/25 ring-offset-1 ring-offset-background"
+                                        : "bg-muted/20 border-border/40 text-muted-foreground/50"
+                                    )}
+                                  >
+                                    {isCompleted ? '✓' : isCurrent ? '●' : (idx + 1)}
+                                  </button>
+                                  {/* Linha conectora (não aparece no último item) */}
+                                  {!isLast && (
+                                    <div className={cn(
+                                      "w-px h-full min-h-[1.5rem] mt-1 -mb-1",
+                                      isCompleted ? "bg-[hsl(var(--success)/0.4)]" : "bg-border/50"
+                                    )} />
                                   )}
-                                >
-                                  {isCompleted ? '✓' : isCurrent ? '●' : (idx + 1)}
-                                </button>
-                                {/* Linha conectora (não aparece no último item) */}
-                                {!isLast && (
-                                  <div className={cn(
-                                    "w-px h-full min-h-[1.5rem] mt-1 -mb-1",
-                                    isCompleted ? "bg-[hsl(var(--success)/0.4)]" : "bg-border/50"
-                                  )} />
-                                )}
-                              </div>
+                                </div>
 
                               {/* Conteúdo */}
                               <div className="flex-1 pb-4">
                                 <button 
-                                  onClick={() => setSelectedSub(step)}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    playPopSound();
+                                    onOpenChange(false);
+                                    
+                                    // Descobre URL de destino baseado no estado da sessão daquele tópico
+                                    let url = `/sessao/${config.slug}?sub=${encodeURIComponent(step)}`;
+                                    if (isPaused) {
+                                      const sessaoPausada = sessoesMateria.find(s => s.decisao_proxima === 'Pausada' && (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico))));
+                                      if (sessaoPausada?.session_key) url = `/sessao/${config.slug}?resume=${sessaoPausada.session_key}`;
+                                    } else if (isCompleted) {
+                                      const sessaoConc = sessoesMateria.find(s => !!s.session_key && (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico))));
+                                      if (sessaoConc?.session_key) url = `/sessao/${config.slug}?resume=${sessaoConc.session_key}`;
+                                    }
+                                    navigate(url);
+                                  }}
                                   className={cn(
-                                    "text-sm font-medium text-left leading-tight transition-colors hover:text-primary cursor-pointer",
+                                    "text-sm font-medium text-left leading-tight transition-colors hover:text-primary cursor-pointer w-full",
                                     isCompleted ? "text-foreground" : isCurrent || isPaused ? "text-foreground" : "text-muted-foreground"
                                   )}
                                 >
