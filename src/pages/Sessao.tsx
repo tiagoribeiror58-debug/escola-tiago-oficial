@@ -301,6 +301,8 @@ export default function Sessao() {
         ? resumedSessionData.topico
         : (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair));
 
+      const messagesSnapshot = messagesRef.current.map(({ role, content }) => ({ role, content }));
+
       const pausePayload = {
         materia: slug!,
         topico: topicoDestaSessaoPausar || 'Sessão pausada',
@@ -309,7 +311,7 @@ export default function Sessao() {
         dificuldade: 'media',
         nivel: ultimaSessao?.nivel || 1,
         duracao_min: duracaoMin > 0 ? duracaoMin : 1,
-        messages_json: [], // mensagens reais ficam em chat_messages
+        messages_json: messagesSnapshot, // Fix: Salvando o snapshot real para o histórico não sumir
         decisao_proxima: 'Pausada',
         observacoes: 'Sessão pausada pelo usuário',
       };
