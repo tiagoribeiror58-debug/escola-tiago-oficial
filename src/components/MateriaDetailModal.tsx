@@ -286,10 +286,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                           const normLocal = (s?: string | null) => (s || '').toLowerCase().trim();
                           const isCompleted = ementaConcluida.some(d => normLocal(d).includes(normLocal(step)) || normLocal(step).includes(normLocal(d)));
                           const isCurrent = currentIdx === idx;
-                          // Regra original: é pausado se tiver sessão e não estiver concluído.
-                          // Usa comparacão fuzzy para garantir o match.
+                          // Regra correta: só marca como pausado se existir sessão com decisao_proxima='Pausada'
+                          // para este tópico. Evita falsos positivos com sessões já encerradas.
                           const isPaused = !isCompleted && sessoesMateria.some(s =>
-                            normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico))
+                            s.decisao_proxima === 'Pausada' &&
+                            (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico)))
                           );
                           const isLast = idx === flatEmenta.length - 1;
 

@@ -128,7 +128,7 @@ export function useUltimaSessao(materia: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('sessoes')
-        .select('*')
+        .select('id, materia, topico, data, erros, dificuldade, duracao_min, observacoes, proximo_topico, created_at, nivel, decisao_proxima, proxima_revisao, session_key')
         .eq('materia', materia)
         .order('created_at', { ascending: false })
         .limit(1);

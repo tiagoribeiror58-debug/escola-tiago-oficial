@@ -256,7 +256,7 @@ export default function Sessao() {
       const { error: delError } = await supabase
         .from('chat_messages')
         .delete()
-        .eq('session_key', sessionKey);
+        .eq('session_key', keyToUpdate);
 
       if (delError) {
         console.error('Falha ao deletar chat_messages da sessão', delError);

@@ -4,7 +4,7 @@ import { format, isToday, isYesterday, isThisWeek, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useSessoes } from '@/hooks/useSessoes';
-import { useSessionMessages } from '@/hooks/useChatMessages';
+import { useChatHistory } from '@/hooks/useChatMessages';
 import { getMateriaBySlug } from '@/lib/materias';
 import { Sessao } from '@/types';
 import { cn } from '@/lib/utils';
@@ -208,7 +208,9 @@ function SessaoExpandedView({
   chatUrl: string,
   onOpenChat: () => void 
 }) {
-  const { data: messages, isLoading } = useSessionMessages(sessaoId);
+  // Bug 1 Fix: useChatHistory prioriza messages_json (snapshot) e depois fallback para
+  // chat_messages, garantindo que sessões antigas (com messages_json vazio) ainda mostrem histórico.
+  const { data: messages, isLoading } = useChatHistory(materiaSlug, sessionKey ?? null);
 
   return (
     <div className="px-3.5 pb-3.5 pt-2 border-t border-border/50 bg-background/30">

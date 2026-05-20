@@ -36,7 +36,9 @@ export default function EmentaPage() {
   const total = flatEmenta.length;
   const concluidos = ementaConcluida.length;
   const progresso = total > 0 ? Math.round((concluidos / total) * 100) : 0;
-  const firstUncompletedIdx = flatEmenta.findIndex(t => !ementaConcluida.includes(t));
+  const norm = (s: string) => s.toLowerCase().trim();
+  const isConcluido = (topico: string) => ementaConcluida.some(c => norm(c).includes(norm(topico)) || norm(topico).includes(norm(c)));
+  const firstUncompletedIdx = flatEmenta.findIndex(t => !isConcluido(t));
   const currentIdx = firstUncompletedIdx === -1 ? total : firstUncompletedIdx;
 
   const handleStartSession = (topico: string) => {
@@ -123,7 +125,7 @@ export default function EmentaPage() {
             
             {fase.topicos.map((topico) => {
               const idx = flatEmenta.indexOf(topico);
-              const isCompleted = ementaConcluida.includes(topico);
+              const isCompleted = isConcluido(topico);
               const isCurrent = idx === currentIdx;
               const isSelected = expandedTopic === topico;
 
