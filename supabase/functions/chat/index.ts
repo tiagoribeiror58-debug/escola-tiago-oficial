@@ -220,11 +220,11 @@ serve(async (req) => {
                 continue; 
               }
               if (response.status === 429) {
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', error: { message: 'Rate limit exceeded' } })}\n\n`));
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', error: { message: 'Rate limit exceeded: ' + t } })}\n\n`));
                 success = true;
                 break;
               }
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', error: { message: 'AI request failed' } })}\n\n`));
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', error: { message: \`AI request failed (\${response.status}): \${t}\` } })}\n\n`));
               success = true;
               break;
             }
