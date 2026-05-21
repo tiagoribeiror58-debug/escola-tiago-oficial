@@ -9,10 +9,9 @@ const corsHeaders = {
 // Cadeia de fallback: tenta do mais moderno ao mais estável.
 // Se um estiver sobrecarregado (overloaded), tenta o próximo automaticamente.
 const MODELS = [
-  "claude-sonnet-4-6",         // Principal — melhor qualidade/velocidade
-  "claude-haiku-4-5-20251001", // Rápido — confirmado estável
-  "claude-sonnet-4-5-20250929",// Sonnet anterior — muito estável
-  "claude-sonnet-4-20250514",  // Emergência — modelo mais antigo e resiliente
+  { id: "gemini-3.5-flash", provider: "google" },       // Novo modelo principal: rápido e multimodal
+  { id: "claude-haiku-4-5-20251001", provider: "anthropic" }, // Fallback para Anthropic
+  { id: "claude-sonnet-4-5-20250929", provider: "anthropic" } // Fallback final
 ];
 
 serve(async (req) => {
@@ -31,9 +30,8 @@ serve(async (req) => {
     }
 
     const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!ANTHROPIC_API_KEY) {
-      throw new Error("ANTHROPIC_API_KEY is not configured");
-    }
+    // Fallback hardcoded temporário para testar a chave fornecida, mas o ideal é no painel do Supabase.
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY") || "AIzaSyAfwKfkIWkPTraE7jezBvuF7MUfOgPBqeQ";
 
     const TAVILY_API_KEY = Deno.env.get("TAVILY_API_KEY");
     let finalSystemPrompt = systemPrompt || "You are a helpful assistant.";
@@ -175,27 +173,52 @@ serve(async (req) => {
 
           // --- 3. STREAMING PRINCIPAL ---
           let success = false;
-          for (const model of MODELS) {
-            const response = await fetch("https://api.anthropic.com/v1/messages", {
+          for (const modelDef of MODELS) {
+            const isGoogle = modelDef.provider === "google";
+            
+            // Ignora o modelo se não houver chave para ele
+            if (isGoogle && !GEMINI_API_KEY) continue;
+            if (!isGoogle && !ANTHROPIC_API_KEY) continue;
+            
+            console.log(`[chat] Tentando modelo: ${modelDef.id} (Provider: ${modelDef.provider})`);
+
+            let url = "";
+            let headers: Record<string, string> = { "Content-Type": "application/json" };
+            let body: any = { stream: true };
+
+            if (isGoogle) {
+              // Usamos a API compatível com OpenAI do Google AI Studio para manter o padrão SSE do frontend!
+              url = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+              headers["Authorization"] = `Bearer ${GEMINI_API_KEY}`;
+              body.model = modelDef.id;
+              body.max_tokens = 2048;
+              body.messages = [
+                { role: "system", content: finalSystemPrompt },
+                ...messages
+              ];
+            } else {
+              url = "https://api.anthropic.com/v1/messages";
+              headers["x-api-key"] = ANTHROPIC_API_KEY!;
+              headers["anthropic-version"] = "2023-06-01";
+              body.model = modelDef.id;
+              body.system = finalSystemPrompt;
+              body.messages = messages;
+              body.max_tokens = 2048;
+            }
+
+            const response = await fetch(url, {
               method: "POST",
-              headers: {
-                "x-api-key": ANTHROPIC_API_KEY,
-                "anthropic-version": "2023-06-01",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                model,
-                system: finalSystemPrompt,
-                messages: messages,
-                max_tokens: 2048,
-                stream: true,
-              }),
+              headers,
+              body: JSON.stringify(body),
             });
 
             if (!response.ok) {
               const t = await response.text();
-              console.error(`[chat] Model ${model} error ${response.status}:`, t);
-              if (response.status === 529 || t.includes("overloaded")) continue;
+              console.error(`[chat] Model ${modelDef.id} error ${response.status}:`, t);
+              // Avança para o fallback se o modelo atual falhar (ex: sobrecarga, erro interno)
+              if (response.status === 529 || response.status >= 500 || t.includes("overloaded") || t.includes("quota")) {
+                continue; 
+              }
               if (response.status === 429) {
                 controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', error: { message: 'Rate limit exceeded' } })}\n\n`));
                 success = true;
@@ -206,7 +229,7 @@ serve(async (req) => {
               break;
             }
 
-            console.log(`[chat] Serving with model: ${model}`);
+            console.log(`[chat] Serving successful with model: ${modelDef.id}`);
             const reader = response.body.getReader();
             while (true) {
               const { done, value } = await reader.read();
@@ -214,7 +237,7 @@ serve(async (req) => {
               controller.enqueue(value);
             }
             success = true;
-            break; // se o stream completou, não tenta o próximo modelo
+            break; // se o stream completou com sucesso, quebra o loop e não tenta o fallback
           }
 
           if (!success) {
