@@ -13,6 +13,7 @@ import { comportamentoHub } from './materias/comportamento';
 import { biohackingHub } from './materias/biohacking';
 import { geopoliticaHub } from './materias/geopolitica';
 import { realidadeHub } from './materias/realidade';
+import { pragmatismoHub } from './materias/pragmatismo';
 
 export const MATERIAS: MateriaConfig[] = [
   performanceIntelecto,
@@ -29,6 +30,7 @@ export const MATERIAS: MateriaConfig[] = [
   biohackingHub,
   geopoliticaHub,
   realidadeHub,
+  pragmatismoHub,
 ];
 
 export function getMateriaBySlug(slug: string, list: MateriaConfig[] = MATERIAS): MateriaConfig | undefined {
