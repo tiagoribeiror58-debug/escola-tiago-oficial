@@ -215,18 +215,10 @@ serve(async (req) => {
             if (!response.ok) {
               const t = await response.text();
               console.error(`[chat] Model ${modelDef.id} error ${response.status}:`, t);
-              // Avança para o fallback se o modelo atual falhar (ex: sobrecarga, erro interno)
-              if (response.status === 529 || response.status >= 500 || t.includes("overloaded") || t.includes("quota")) {
-                continue; 
-              }
-              if (response.status === 429) {
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', error: { message: 'Rate limit exceeded: ' + t } })}\n\n`));
-                success = true;
-                break;
-              }
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', error: { message: \`AI request failed (\${response.status}): \${t}\` } })}\n\n`));
-              success = true;
-              break;
+              // Se falhou, tenta o próximo modelo (fallback) se ainda houver.
+              // O Google retorna 429 para rate limit, a Anthropic retorna 400 para sem créditos, etc.
+              console.warn(`[chat] Falha no modelo ${modelDef.id}. Tentando o próximo...`);
+              continue;
             }
 
             console.log(`[chat] Serving successful with model: ${modelDef.id}`);
@@ -241,7 +233,8 @@ serve(async (req) => {
           }
 
           if (!success) {
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', error: { message: 'Servidores sobrecarregados. Tente em instantes.' } })}\n\n`));
+            // Se chegou aqui, TODOS os modelos do fallback falharam.
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', error: { message: 'Todas as IAs falharam (limite excedido ou sem créditos). Tente novamente mais tarde.' } })}\n\n`));
           }
 
         } catch (e) {
