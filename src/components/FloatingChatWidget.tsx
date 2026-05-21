@@ -177,7 +177,6 @@ export function FloatingChatWidget() {
         };
       } else {
         // Dados construídos localmente — sem chamada de IA.
-        const { resolverTopicoAtual } = await import('@/lib/buildPrompt');
         const proximoCalculado = resolverTopicoAtual(
           ementaFlat,
           [...ementaConcluida, topico].filter(Boolean) as string[]
