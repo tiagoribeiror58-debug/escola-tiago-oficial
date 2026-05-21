@@ -386,9 +386,13 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     } catch (e) {
       console.error(e);
       const isOverloaded = e instanceof Error && e.message === 'OVERLOADED';
-      const errorMsg = isOverloaded
-        ? '⏳ Os servidores da IA estão sobrecarregados agora. Aguarde alguns segundos e tente novamente.'
-        : 'Desculpe, houve um erro. Tente novamente.';
+      let errorMsg = 'Desculpe, houve um erro. Tente novamente.';
+      
+      if (isOverloaded) {
+        errorMsg = '⏳ Os servidores da IA estão sobrecarregados agora. Aguarde alguns segundos e tente novamente.';
+      } else if (e instanceof Error && e.message && e.message !== 'Stream error' && e.message !== 'Unknown error') {
+        errorMsg = `Erro técnico: ${e.message}`;
+      }
       setMessages(prev => {
         const last = prev[prev.length - 1];
         if (last?.id === messageId) {
