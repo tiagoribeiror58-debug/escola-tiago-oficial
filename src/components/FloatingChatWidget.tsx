@@ -220,7 +220,7 @@ export function FloatingChatWidget() {
     return (
       <button
         onClick={restoreChat}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-foreground text-background rounded-full flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all z-50 animate-in zoom-in"
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 w-14 h-14 bg-foreground text-background rounded-full flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all z-50 animate-in zoom-in"
       >
         <MessageCircle className="w-6 h-6" />
         <span className="absolute -top-1 -right-1 flex h-3 w-3">
@@ -234,7 +234,7 @@ export function FloatingChatWidget() {
   if (!materiaConfig) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 w-[380px] md:w-[480px] h-[75vh] md:h-[80vh] max-h-[800px] bg-background border border-border/60 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 animate-in slide-in-from-bottom-5">
+    <div className="fixed bottom-4 right-4 w-[calc(100vw-2rem)] md:w-[480px] md:bottom-6 md:right-6 h-[80vh] max-h-[800px] bg-background border border-border/60 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 animate-in slide-in-from-bottom-5">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-muted/30 border-b border-border/50">
         <div className="flex items-center gap-2 min-w-0">

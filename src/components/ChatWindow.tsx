@@ -405,11 +405,14 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
 
   // Auto-start: dispara quando a sessão está vazia (nova ou retomada sem mensagens).
   useEffect(() => {
+    // Assistente global não tem start automático ("remova a resposta automatica")
+    if (materia?.slug === 'global-assistant') return; 
+
     if (autoStartFiredRef.current || messages.length > 0) return;
     autoStartFiredRef.current = true;
     handleSend('Inicie a sessão.', true);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [materia?.slug]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
