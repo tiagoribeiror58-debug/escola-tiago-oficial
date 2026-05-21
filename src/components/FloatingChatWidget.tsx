@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useFloatingChat } from '@/contexts/FloatingChatContext';
 import { getMateriaBySlug, MATERIAS } from '@/lib/materias';
 import { useUltimaSessao, useEmentaConcluida, useRecentSessoes, useGlobalAssistantSessoes } from '@/hooks/useSessoes';
@@ -17,6 +18,7 @@ import { resolverTopicoAtual } from '@/lib/buildPrompt';
 export function FloatingChatWidget() {
   const { state, closeChat, minimizeChat, restoreChat, setSessionKey } = useFloatingChat();
   const { isOpen, isMinimized, materiaSlug, topico, sessionKey } = state;
+  const location = useLocation();
   const queryClient = useQueryClient();
 
   const materiaConfig = materiaSlug ? getMateriaBySlug(materiaSlug) : {
@@ -269,6 +271,9 @@ export function FloatingChatWidget() {
       setTimeout(() => restoreChat(), 50);
     }
   }, [handleEncerrar, closeChat, restoreChat]);
+
+  // Se não estiver na tela inicial, esconde completamente o widget (botão e janela)
+  if (location.pathname !== '/') return null;
 
   if (!isOpen) return null;
 
