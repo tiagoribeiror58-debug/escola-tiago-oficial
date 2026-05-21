@@ -9,7 +9,6 @@ import Workspace from '@/components/Workspace';
 import { ArrowLeft, Square, Loader2, Pause } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatMessage } from '@/types';
-import { extractSession } from '@/lib/extractSession';
 import { supabase } from '@/integrations/supabase/client';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -181,16 +180,24 @@ export default function Sessao() {
           observacoes: 'Sessão curta',
         };
       } else {
-        sessionData = await extractSession(
-          messages,
-          slug!,
-          ultimaSessao?.nivel || 1,
+        // Dados da sessão construídos localmente — sem chamada de IA.
+        // Os tópicos são pré-planejados na ementa, então a progressão é determinística.
+        // Se no futuro o app precisar de estudo adaptativo (erros reais, dificuldade medida),
+        // esse é o ponto onde se conectaria uma análise mais sofisticada.
+        const proximoCalculado = resolverTopicoAtual(
           ementaFlat,
-          topicoDestaSessaoSalvar
+          [...ementaConcluida, topicoDestaSessaoSalvar].filter(Boolean) as string[]
         );
 
-        // GARANTIA: O tópico salvo no banco é estritamente o da ementa (evita que a IA modifique a string)
-        sessionData.topico = topicoDestaSessaoSalvar;
+        sessionData = {
+          topico: topicoDestaSessaoSalvar || 'Sessão de estudos',
+          erros: 0,
+          dificuldade: 'media',
+          nivel: ultimaSessao?.nivel || 1,
+          proximo_topico: proximoCalculado?.topico || '',
+          decisao_proxima: proximoCalculado ? `Avança para: ${proximoCalculado.topico}` : 'Ementa concluída',
+          observacoes: `Sessão de ${duracaoMin}min sobre "${topicoDestaSessaoSalvar}"`,
+        };
       }
 
       const validDificuldades = ['baixa', 'media', 'alta'];

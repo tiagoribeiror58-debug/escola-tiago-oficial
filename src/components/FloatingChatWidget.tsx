@@ -7,7 +7,6 @@ import { X, Minus, MessageCircle, Maximize2, Loader2, Square, Plus, History } fr
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { extractSession } from '@/lib/extractSession';
 import { supabase } from '@/integrations/supabase/client';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -177,14 +176,22 @@ export function FloatingChatWidget() {
           observacoes: 'Sessão curta no chat flutuante',
         };
       } else {
-        sessionData = await extractSession(
-          messages,
-          materiaSlug,
-          ultimaSessao?.nivel || 1,
+        // Dados construídos localmente — sem chamada de IA.
+        const { resolverTopicoAtual } = await import('@/lib/buildPrompt');
+        const proximoCalculado = resolverTopicoAtual(
           ementaFlat,
-          topico!
+          [...ementaConcluida, topico].filter(Boolean) as string[]
         );
-        sessionData.topico = topico!;
+
+        sessionData = {
+          topico: topico!,
+          erros: 0,
+          dificuldade: 'media',
+          nivel: ultimaSessao?.nivel || 1,
+          proximo_topico: proximoCalculado?.topico || '',
+          decisao_proxima: proximoCalculado ? `Avança para: ${proximoCalculado.topico}` : 'Ementa concluída',
+          observacoes: `Sessão de ${duracaoMin}min sobre "${topico}"`,
+        };
       }
 
       let dif = (sessionData.dificuldade || 'media').toLowerCase();

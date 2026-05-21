@@ -85,62 +85,75 @@ serve(async (req) => {
       nivel_atual || 1
     }`;
 
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${GEMINI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gemini-2.5-flash",
-        messages: [
-          {
-            role: "system",
-            content: systemMessage,
-          },
-          {
-            role: "user",
-            content: `Aja como o avaliador silêncioso e extraia os dados. Histórico da sessão:\n\n${chatHistory}`,
-          },
-        ],
-        max_tokens: 1024,
-      }),
-    });
-
-    if (!response.ok) {
-      const t = await response.text();
-      console.error("Gemini API error:", response.status, t);
-
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-
-      return new Response(JSON.stringify({ error: "AI extraction failed", details: t }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+    let content = "";
+    try {
+      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${GEMINI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "gemini-2.5-flash",
+          messages: [
+            {
+              role: "system",
+              content: systemMessage,
+            },
+            {
+              role: "user",
+              content: `Aja como o avaliador silêncioso e extraia os dados. Histórico da sessão:\n\n${chatHistory}`,
+            },
+          ],
+          max_tokens: 1024,
+        }),
       });
+
+      if (!response.ok) {
+        const t = await response.text();
+        console.error("Gemini API error:", response.status, t);
+        // Não lança erro — vai usar defaults abaixo
+      } else {
+        const data = await response.json();
+        content = data.choices?.[0]?.message?.content || "";
+      }
+    } catch (fetchErr) {
+      console.error("Gemini fetch failed:", fetchErr);
+      // Continua com content vazio → vai usar defaults
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "";
+    // Limpa markdown code fences que o Gemini às vezes adiciona (```json ... ```)
+    content = content.replace(/```json\s*/gi, "").replace(/```\s*/gi, "").trim();
+
+    // DEFAULTS seguros — se a IA falhar, a sessão AINDA É SALVA com dados razoáveis
+    const safeDefaults = {
+      topico: topico_atual || materia,
+      erros: 0,
+      dificuldade: "media",
+      nivel: nivel_atual || 1,
+      decisao_proxima: "A definir",
+      observacoes: "Extração automática indisponível — dados padrão aplicados.",
+    };
 
     let extracted;
     try {
-      extracted = JSON.parse(content);
-    } catch {
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        extracted = JSON.parse(jsonMatch[0]);
+      if (content && content.includes("{")) {
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          extracted = JSON.parse(jsonMatch[0]);
+        } else {
+          extracted = safeDefaults;
+        }
       } else {
-        throw new Error("Could not parse extraction response");
+        extracted = safeDefaults;
       }
+    } catch {
+      console.warn("[extract] JSON parse failed, using safe defaults. Raw content:", content.substring(0, 200));
+      extracted = safeDefaults;
     }
 
     // ✅ CÁLCULO DETERMINÍSTICO: o proximo_topico é calculado pelo código,
-    // não pelo LLM. O Haiku extrai apenas métricas de desempenho (erros, dificuldade, nivel).
+    // não pelo LLM. O Gemini extrai apenas métricas de desempenho (erros, dificuldade, nivel).
     // A progressão no roadmap é responsabilidade do sistema, não da IA.
     const proximoTopicoDeterministico = calcularProximoTopico(
       ementa || [],
@@ -160,12 +173,22 @@ serve(async (req) => {
     });
   } catch (e) {
     console.error("extract error:", e);
+    
+    // ÚLTIMO RECURSO: mesmo se tudo falhar, retorna um JSON válido para o frontend não quebrar
+    const emergencyDefaults = {
+      topico: "Sessão de estudos",
+      erros: 0,
+      dificuldade: "media",
+      nivel: 1,
+      proximo_topico: "",
+      decisao_proxima: "A definir",
+      observacoes: "Falha na extração — dados de emergência aplicados.",
+    };
+
     return new Response(
-      JSON.stringify({
-        error: e instanceof Error ? e.message : "Unknown error",
-      }),
+      JSON.stringify(emergencyDefaults),
       {
-        status: 500,
+        status: 200, // Retorna 200 mesmo em falha para que o frontend salve a sessão!
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
