@@ -30,8 +30,8 @@ serve(async (req) => {
     }
 
     const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
-    // Fallback hardcoded temporário para testar a chave fornecida, mas o ideal é no painel do Supabase.
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY") || "AIzaSyAfwKfkIWkPTraE7jezBvuF7MUfOgPBqeQ";
+    // IMPORTANTE: Nunca coloque chaves hardcoded no código!
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 
     const TAVILY_API_KEY = Deno.env.get("TAVILY_API_KEY");
     let finalSystemPrompt = systemPrompt || "You are a helpful assistant.";
