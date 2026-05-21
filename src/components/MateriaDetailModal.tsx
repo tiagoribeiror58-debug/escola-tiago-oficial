@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { supabase } from '@/integrations/supabase/client';
 import { useTopicosEmergentes } from '@/hooks/useTopicosEmergentes';
+import { useFloatingChat } from '@/contexts/FloatingChatContext';
 
 
 interface Props {
@@ -42,6 +43,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const ementaConcluida = ementaConcluidaQuery.data || [];
   const toggleEmenta = useToggleEmenta();
   const { data: topicosEmergentes } = useTopicosEmergentes(estado?.config?.slug);
+  const { openChat } = useFloatingChat();
 
   const currentTopicRef = useRef<HTMLButtonElement>(null);
 
@@ -574,6 +576,22 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                       : "text-white/40"
                   )} />
                 </Link>
+                {selectedSub && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (config && selectedSub) {
+                        playPopSound();
+                        onOpenChange(false);
+                        openChat(config.slug, selectedSub);
+                      }
+                    }}
+                    className="w-full mt-2 py-3 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-[13px] flex items-center justify-center gap-2 transition-all active:scale-[0.98] border border-primary/20"
+                  >
+                    Abrir Chat Flutuante
+                  </button>
+                )}
+              </div>
               )}
               </>
             )}

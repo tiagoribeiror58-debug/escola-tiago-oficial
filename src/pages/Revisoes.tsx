@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFolhasEstado, useSessoes, useTodasEmentasConcluidas } from '@/hooks/useSessoes';
 import { MateriaEstado } from '@/types';
-import { BookOpen, CalendarCheck, Clock, ChevronDown, ChevronUp, Zap } from 'lucide-react';
+import { BookOpen, CalendarCheck, Clock, ChevronDown, ChevronUp, Zap, ArrowLeft, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { playPopSound } from '@/lib/audioUtils';
+import { useFloatingChat } from '@/contexts/FloatingChatContext';
 
 // Curva de esquecimento (dias)
 const REVISION_INTERVALS = [1, 7, 14, 30, 60];
@@ -39,6 +40,7 @@ function RevisaoMateriaCard({
 }) {
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
+  const { openChat } = useFloatingChat();
 
   // Mapeia tópicos concluídos para seus status de revisão
   const topicosComStatus = topicosConcluidos.map(topico => {
@@ -102,13 +104,13 @@ function RevisaoMateriaCard({
               key={i}
               className={cn(
                 "flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-xl border transition-all",
-                t.isDue ? "bg-primary/5 border-primary/30" : "bg-card border-border/50"
+                t.isDue ? "bg-blue-500/10 border-blue-500/30" : "bg-card border-border/50"
               )}
             >
               <div className="flex-1 min-w-0 pr-4 mb-3 sm:mb-0">
                 <p className={cn(
-                  "text-sm font-medium leading-snug line-clamp-2",
-                  t.isDue ? "text-primary" : "text-foreground"
+                  "text-sm font-semibold leading-snug line-clamp-2",
+                  t.isDue ? "text-blue-500" : "text-foreground"
                 )}>
                   {t.topico}
                 </p>
@@ -119,22 +121,39 @@ function RevisaoMateriaCard({
                 </div>
               </div>
               
-              <button
-                onClick={(e) => { 
-                  e.stopPropagation(); 
-                  playPopSound();
-                  navigate(`/sessao/${estado.config.slug}?sub=${encodeURIComponent(t.topico)}&modo=revisao`);
-                }}
-                className={cn(
-                  "shrink-0 px-4 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all active:scale-95",
-                  t.isDue 
-                    ? "bg-primary text-primary-foreground shadow-md hover:bg-primary/90" 
-                    : "bg-muted text-foreground hover:bg-muted/80 border border-border"
-                )}
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                {t.isDue ? 'Revisar Agora' : 'Forçar Revisão'}
-              </button>
+              <div className="flex flex-col gap-2 shrink-0">
+                <button
+                  onClick={(e) => { 
+                    e.stopPropagation(); 
+                    playPopSound();
+                    openChat(estado.config.slug, t.topico);
+                  }}
+                  className={cn(
+                    "px-4 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all active:scale-95",
+                    t.isDue 
+                      ? "bg-blue-500 text-white shadow-md hover:bg-blue-600" 
+                      : "bg-foreground text-background hover:opacity-90 border border-border"
+                  )}
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  {t.isDue ? 'Revisar no Widget' : 'Estudar no Widget'}
+                </button>
+                <button
+                  onClick={(e) => { 
+                    e.stopPropagation(); 
+                    playPopSound();
+                    navigate(`/sessao/${estado.config.slug}?sub=${encodeURIComponent(t.topico)}&modo=revisao`);
+                  }}
+                  className={cn(
+                    "px-4 py-1.5 rounded-lg text-[10px] font-semibold flex items-center justify-center gap-2 transition-all active:scale-95",
+                    t.isDue 
+                      ? "text-blue-500 hover:bg-blue-500/10" 
+                      : "text-muted-foreground hover:bg-muted"
+                  )}
+                >
+                  Tela Cheia
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -151,17 +170,51 @@ export default function RevisoesPage() {
 
   const isLoading = loadingEstados || loadingEmentas || loadingSessoes;
 
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Filtra os estados para manter apenas os que possuem ao menos 1 tópico concluído
   const estadosComConcluidos = (estados || []).filter(estado => {
     return (todasEmentas || []).some(e => e.materia === estado.config.slug);
   });
+
+  const normalizeString = (str: string) =>
+    str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  const query = normalizeString(searchQuery);
+
+  const filteredData = estadosComConcluidos.map(estado => {
+    const topicosMateria = (todasEmentas || [])
+      .filter(e => e.materia === estado.config.slug)
+      .map(e => e.topico);
+    
+    const sessoesMateria = (sessoes || []).filter(s => s.materia === estado.config.slug);
+
+    const matchesSubject = normalizeString(estado.config.nome).includes(query);
+    const matchedTopics = topicosMateria.filter(t => normalizeString(t).includes(query));
+
+    if (!matchesSubject && matchedTopics.length === 0 && query.length > 0) {
+      return null;
+    }
+
+    return {
+      estado,
+      topicosConcluidos: query.length > 0 && !matchesSubject ? matchedTopics : topicosMateria,
+      sessoesMateria
+    };
+  }).filter(Boolean) as { estado: MateriaEstado, topicosConcluidos: string[], sessoesMateria: any[] }[];
 
   return (
     <div className="min-h-screen pb-24">
       {/* Header Fixo */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="max-w-3xl mx-auto px-4 py-4 flex items-center gap-4">
-          <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20 text-primary">
+          <button 
+            onClick={() => navigate('/')}
+            className="p-2 -ml-2 rounded-xl hover:bg-muted transition-colors shrink-0"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center border border-primary/20 text-primary shrink-0">
             <CalendarCheck className="w-5 h-5" />
           </div>
           <div>
@@ -183,6 +236,20 @@ export default function RevisoesPage() {
           </p>
         </div>
 
+        {/* Barra de Pesquisa */}
+        <div className="mb-8 relative">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-muted-foreground" />
+          </div>
+          <input
+            type="text"
+            placeholder="Pesquisar matéria ou tópico para revisar..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-4 py-4 bg-card border border-border/50 rounded-2xl text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all shadow-sm"
+          />
+        </div>
+
         {isLoading ? (
           <div className="text-center py-12 text-sm text-muted-foreground animate-pulse">
             Carregando sua matriz de repetição espaçada...
@@ -201,24 +268,22 @@ export default function RevisoesPage() {
               Voltar para a Mesa
             </button>
           </div>
+        ) : filteredData.length === 0 && searchQuery.length > 0 ? (
+          <div className="text-center py-20 border border-dashed rounded-3xl bg-muted/10">
+            <p className="text-sm text-muted-foreground">
+              Nenhuma revisão encontrada para "{searchQuery}".
+            </p>
+          </div>
         ) : (
           <div className="space-y-4">
-            {estadosComConcluidos.map(estado => {
-              const topicosMateria = (todasEmentas || [])
-                .filter(e => e.materia === estado.config.slug)
-                .map(e => e.topico);
-              
-              const sessoesMateria = (sessoes || []).filter(s => s.materia === estado.config.slug);
-
-              return (
-                <RevisaoMateriaCard
-                  key={estado.config.slug}
-                  estado={estado}
-                  topicosConcluidos={topicosMateria}
-                  sessoesMateria={sessoesMateria}
-                />
-              );
-            })}
+            {filteredData.map(({ estado, topicosConcluidos, sessoesMateria }) => (
+              <RevisaoMateriaCard
+                key={estado.config.slug}
+                estado={estado}
+                topicosConcluidos={topicosConcluidos}
+                sessoesMateria={sessoesMateria}
+              />
+            ))}
           </div>
         )}
       </div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
 import { useEmentaConcluida, useToggleEmenta, useExcluirHistoricoTopico } from '@/hooks/useSessoes';
+import { useFloatingChat } from '@/contexts/FloatingChatContext';
 import { playPopSound } from '@/lib/audioUtils';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, BookOpen, CheckCircle2, Circle, Zap, ChevronDown, Trash2 } from 'lucide-react';
@@ -16,6 +17,7 @@ export default function EmentaPage() {
   const ementaConcluida = ementaConcluidaQuery.data || [];
   const toggleEmenta = useToggleEmenta();
   const excluirHistorico = useExcluirHistoricoTopico();
+  const { openChat } = useFloatingChat();
 
   if (!config) {
     return (
@@ -221,9 +223,21 @@ export default function EmentaPage() {
                           className="flex-1 py-3 rounded-xl bg-foreground text-background font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all"
                         >
                           <BookOpen className="w-4 h-4" />
-                          Estudar este tópico
+                          Estudar Tela Cheia
                         </button>
                         
+                        <button
+                          onClick={(e) => { 
+                            e.stopPropagation(); 
+                            if (config) {
+                              openChat(config.slug, topico); 
+                            }
+                          }}
+                          className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all shadow-md"
+                        >
+                          Chat Flutuante
+                        </button>
+
                         <button
                           onClick={(e) => {
                             e.stopPropagation();

@@ -23,13 +23,14 @@ interface Props {
   modo?: string | null;
   ementaConcluida?: string[];        // tópicos já concluídos (fonte de verdade do progresso)
   sessoesRecentes?: Sessao[];        // histórico de performance para a IA calibrar
+  systemPromptOverride?: string;     // se passado, ignora o buildSystemPrompt e usa este
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
-export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, historyMessages, sub, modo, ementaConcluida, sessoesRecentes }: Props) {
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, historyMessages, sub, modo, ementaConcluida, sessoesRecentes, systemPromptOverride }: Props) {
   const isContinuation = initialMessages !== undefined;
-  const systemPrompt = buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo, ementaConcluida, sessoesRecentes);
+  const systemPrompt = systemPromptOverride ?? buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo, ementaConcluida, sessoesRecentes);
   const saveMutation = useSaveChatMessage();
 
   const [messages, setMessages] = useState<ChatMessage[]>(

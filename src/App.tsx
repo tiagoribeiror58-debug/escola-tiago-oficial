@@ -11,28 +11,33 @@ import Biblioteca from "./pages/Biblioteca.tsx";
 import EmentaPage from "./pages/EmentaPage.tsx";
 import Revisoes from "./pages/Revisoes.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import { FloatingChatProvider } from "./contexts/FloatingChatContext.tsx";
+import { FloatingChatWidget } from "./components/FloatingChatWidget.tsx";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/sessao/:materia" element={<Sessao />} />
-          <Route path="/historico/:materia" element={<Historico />} />
-          <Route path="/categoria/:slug" element={<Categoria />} />
-          <Route path="/categoria/:slug/:sub" element={<Categoria />} />
-          <Route path="/biblioteca" element={<Biblioteca />} />
-          <Route path="/revisoes" element={<Revisoes />} />
-          <Route path="/ementa/:slug" element={<EmentaPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <FloatingChatProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/sessao/:materia" element={<Sessao />} />
+            <Route path="/historico/:materia" element={<Historico />} />
+            <Route path="/categoria/:slug" element={<Categoria />} />
+            <Route path="/categoria/:slug/:sub" element={<Categoria />} />
+            <Route path="/biblioteca" element={<Biblioteca />} />
+            <Route path="/revisoes" element={<Revisoes />} />
+            <Route path="/ementa/:slug" element={<EmentaPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <FloatingChatWidget />
+        </BrowserRouter>
+      </TooltipProvider>
+    </FloatingChatProvider>
   </QueryClientProvider>
 );
 
