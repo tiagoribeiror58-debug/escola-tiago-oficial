@@ -18,7 +18,14 @@ export function FloatingChatWidget() {
   const { isOpen, isMinimized, materiaSlug, topico, sessionKey } = state;
   const queryClient = useQueryClient();
 
-  const materiaConfig = materiaSlug ? getMateriaBySlug(materiaSlug) : null;
+  const materiaConfig = materiaSlug ? getMateriaBySlug(materiaSlug) : {
+    id: 'global-assistant',
+    slug: 'global-assistant',
+    nome: 'Assistente Global',
+    emoji: '🤖',
+    cor: '#3b82f6',
+    ementa: [],
+  } as any;
   const { data: ultimaSessao, isLoading: loadingUltima } = useUltimaSessao(materiaSlug || '');
   const { data: ementaConcluidaData } = useEmentaConcluida(materiaSlug || '');
   const ementaConcluida = ementaConcluidaData || [];

@@ -20,11 +20,11 @@ const FloatingChatContext = createContext<FloatingChatContextType | undefined>(u
 
 export function FloatingChatProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<FloatingChatState>({
-    isOpen: false,
-    isMinimized: false,
+    isOpen: true,
+    isMinimized: true,
     materiaSlug: null,
     topico: null,
-    sessionKey: null,
+    sessionKey: `global-floating-${Date.now()}`,
   });
 
   const openChat = (materiaSlug: string, topico: string) => {
@@ -38,7 +38,13 @@ export function FloatingChatProvider({ children }: { children: ReactNode }) {
   };
 
   const closeChat = () => {
-    setState(prev => ({ ...prev, isOpen: false, isMinimized: false }));
+    setState({
+      isOpen: true,
+      isMinimized: true,
+      materiaSlug: null,
+      topico: null,
+      sessionKey: `global-floating-${Date.now()}`,
+    });
   };
 
   const minimizeChat = () => {
