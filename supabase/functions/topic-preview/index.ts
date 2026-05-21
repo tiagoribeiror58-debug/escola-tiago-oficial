@@ -43,7 +43,6 @@ Contexto da matéria: ${materiaName} - ${descricaoMateria || ''}`;
       },
       body: JSON.stringify({
         model: "gemini-2.5-flash",
-        max_tokens: 50,
         temperature: 0.5,
         messages: [
           { role: "system", content: systemPrompt },
