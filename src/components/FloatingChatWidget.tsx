@@ -1,9 +1,11 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useFloatingChat } from '@/contexts/FloatingChatContext';
-import { getMateriaBySlug } from '@/lib/materias';
-import { useUltimaSessao, useEmentaConcluida, useRecentSessoes } from '@/hooks/useSessoes';
+import { getMateriaBySlug, MATERIAS } from '@/lib/materias';
+import { useUltimaSessao, useEmentaConcluida, useRecentSessoes, useSessoes } from '@/hooks/useSessoes';
 import ChatWindow from '@/components/ChatWindow';
-import { X, Minus, MessageCircle, Maximize2, Loader2, Square } from 'lucide-react';
+import { X, Minus, MessageCircle, Maximize2, Loader2, Square, Plus, History } from 'lucide-react';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { extractSession } from '@/lib/extractSession';
 import { supabase } from '@/integrations/supabase/client';
@@ -35,7 +37,33 @@ export function FloatingChatWidget() {
   const startTimeRef = useRef(Date.now());
   const [saving, setSaving] = useState(false);
   const [topicComplete, setTopicComplete] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [resumeMessages, setResumeMessages] = useState<ChatMessage[]>([]);
+  const { data: todasSessoes } = useSessoes();
   const isSavingRef = useRef(false);
+
+  const globalPromptContext = useMemo(() => {
+    if (materiaSlug) return "";
+    let contextStr = "Matérias da escola e seus tópicos:\n";
+    MATERIAS.forEach(m => {
+      let topics: string[] = [];
+      if (m.fases) {
+        topics = m.fases.flatMap(f => f.topicos);
+      } else if (m.ementa) {
+        topics = m.ementa;
+      }
+      if (m.children) {
+        const childTopics = m.children.flatMap(c => 
+          c.fases ? c.fases.flatMap(f => f.topicos) : (c.ementa || [])
+        );
+        topics = [...topics, ...childTopics];
+      }
+      if (topics.length > 0) {
+        contextStr += `- ${m.nome}: ${topics.slice(0, 15).join(', ')}${topics.length > 15 ? '...' : ''}\n`;
+      }
+    });
+    return contextStr;
+  }, [materiaSlug]);
 
   // Redefine startTime when session opens
   useEffect(() => {
@@ -54,12 +82,14 @@ export function FloatingChatWidget() {
   }, []);
 
   const handleEncerrar = useCallback(async () => {
-    if (!materiaSlug || !topico || !sessionKey || !materiaConfig) return;
+    if (!sessionKey || !materiaConfig) return;
     if (messagesRef.current.length === 0) {
       closeChat();
       return;
     }
-    if (!topicComplete) {
+    const isGlobal = !materiaSlug;
+
+    if (!isGlobal && !topicComplete) {
       const ok = window.confirm('A sessão ainda não foi concluída pela IA. Encerrar e marcar como concluída mesmo assim?');
       if (!ok) return;
     }
@@ -79,9 +109,19 @@ export function FloatingChatWidget() {
 
       let sessionData;
 
-      if (messages.length < 4) {
+      if (isGlobal) {
         sessionData = {
-          topico: topico,
+          topico: 'Chat Livre',
+          erros: 0,
+          dificuldade: 'media',
+          nivel: 1,
+          proximo_topico: '',
+          decisao_proxima: 'A definir',
+          observacoes: 'Assistente Global',
+        };
+      } else if (messages.length < 4) {
+        sessionData = {
+          topico: topico!,
           erros: 0,
           dificuldade: 'media',
           nivel: ultimaSessao?.nivel || 1,
@@ -95,9 +135,9 @@ export function FloatingChatWidget() {
           materiaSlug,
           ultimaSessao?.nivel || 1,
           ementaFlat,
-          topico
+          topico!
         );
-        sessionData.topico = topico;
+        sessionData.topico = topico!;
       }
 
       let dif = (sessionData.dificuldade || 'media').toLowerCase();
@@ -106,17 +146,19 @@ export function FloatingChatWidget() {
       const messagesSnapshot = messages.map(({ role, content }) => ({ role, content }));
 
       // Marca na ementa_concluida se terminou
-      const jaConcluido = ementaConcluida.some(d => d.toLowerCase().includes(topico.toLowerCase()) || topico.toLowerCase().includes(d.toLowerCase()));
-      if (!jaConcluido) {
-        await supabase.from('ementa_concluida').insert({
-          materia: materiaSlug,
-          topico: topico
-        });
+      if (!isGlobal && topico) {
+        const jaConcluido = ementaConcluida.some(d => d.toLowerCase().includes(topico.toLowerCase()) || topico.toLowerCase().includes(d.toLowerCase()));
+        if (!jaConcluido) {
+          await supabase.from('ementa_concluida').insert({
+            materia: materiaSlug,
+            topico: topico
+          });
+        }
       }
 
       const sessionPayload = {
-        materia: materiaSlug,
-        topico: topico,
+        materia: materiaSlug || 'global-assistant',
+        topico: topico || 'Chat Livre',
         data: hoje,
         erros: sessionData.erros,
         dificuldade: dif,
@@ -152,6 +194,16 @@ export function FloatingChatWidget() {
   }, [materiaSlug, topico, sessionKey, materiaConfig, ultimaSessao, topicComplete, ementaConcluida, queryClient, closeChat]);
 
 
+  const handleNovaConversa = useCallback(() => {
+    if (messagesRef.current.length > 0) {
+      if (!window.confirm('Apagar a conversa atual e iniciar uma nova?')) return;
+    }
+    setShowHistory(false);
+    setResumeMessages([]);
+    closeChat(); // Reset and generate new session key
+    setTimeout(() => restoreChat(), 50); // pop it back up
+  }, [closeChat, restoreChat]);
+
   if (!isOpen) return null;
 
   if (isMinimized) {
@@ -172,7 +224,7 @@ export function FloatingChatWidget() {
   if (!materiaConfig) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 w-[380px] h-[600px] max-h-[80vh] bg-background border border-border/60 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 animate-in slide-in-from-bottom-5">
+    <div className="fixed bottom-6 right-6 w-[380px] md:w-[480px] h-[75vh] md:h-[80vh] max-h-[800px] bg-background border border-border/60 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 animate-in slide-in-from-bottom-5">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-muted/30 border-b border-border/50">
         <div className="flex items-center gap-2 min-w-0">
@@ -184,6 +236,27 @@ export function FloatingChatWidget() {
         </div>
         
         <div className="flex items-center gap-1">
+          {!materiaSlug && (
+            <>
+              <button
+                onClick={() => setShowHistory(!showHistory)}
+                title="Histórico"
+                className={cn(
+                  "p-1.5 mr-1 rounded-lg transition-colors flex items-center justify-center",
+                  showHistory ? "bg-primary/20 text-primary" : "text-muted-foreground hover:bg-muted"
+                )}
+              >
+                <History className="w-4 h-4" />
+              </button>
+              <button
+                onClick={handleNovaConversa}
+                title="Nova Conversa"
+                className="p-1.5 mr-1 rounded-lg text-primary hover:bg-primary/10 transition-colors flex items-center justify-center"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            </>
+          )}
           <button
             onClick={handleEncerrar}
             disabled={saving}
@@ -210,14 +283,48 @@ export function FloatingChatWidget() {
         </div>
       </div>
 
-      {/* Chat Area */}
+      {/* Chat Area / History */}
       <div className="flex-1 overflow-hidden relative bg-card">
-        {loadingUltima ? (
+        {showHistory ? (
+          <div className="absolute inset-0 overflow-y-auto p-4 flex flex-col gap-2">
+            <h3 className="text-sm font-semibold mb-2">Histórico Global</h3>
+            {(todasSessoes || [])
+              .filter(s => s.materia === 'global-assistant')
+              .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime())
+              .map(sessao => (
+                <div key={sessao.id} className="p-3 rounded-xl bg-muted/50 border border-border/50 hover:border-primary/30 transition-colors cursor-pointer group" onClick={() => {
+                  if (sessao.session_key) {
+                    if (messagesRef.current.length > 0) {
+                      if (!window.confirm('Substituir a conversa atual por esta do histórico?')) return;
+                    }
+                    setShowHistory(false);
+                    setResumeMessages((sessao.messages_json as ChatMessage[]) || []);
+                    // O Context não permite injetar sessionKey, então vamos forçar no estado local
+                    state.sessionKey = sessao.session_key;
+                    restoreChat();
+                  }
+                }}>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-xs font-semibold">{sessao.topico}</span>
+                    <span className="text-[10px] text-muted-foreground">{format(new Date(sessao.created_at || sessao.data), "d 'de' MMM", { locale: ptBR })}</span>
+                  </div>
+                  <span className="text-[10px] text-muted-foreground/80 font-medium group-hover:text-primary transition-colors">
+                    {sessao.duracao_min} min • Clique para retomar
+                  </span>
+                </div>
+              ))}
+            {!(todasSessoes || []).some(s => s.materia === 'global-assistant') && (
+              <p className="text-xs text-muted-foreground text-center mt-8">Nenhuma conversa salva ainda.</p>
+            )}
+          </div>
+        ) : loadingUltima ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
           </div>
         ) : (
           <ChatWindow
+            key={sessionKey!}
+            initialMessages={resumeMessages.length > 0 ? resumeMessages : undefined}
             materia={materiaConfig}
             ultimaSessao={ultimaSessao || null}
             onMessagesChange={handleMessagesChange}
@@ -226,7 +333,11 @@ export function FloatingChatWidget() {
             sub={topico}
             ementaConcluida={ementaConcluida}
             sessoesRecentes={sessoesRecentes || []}
-            systemPromptOverride={`Responda livremente qualquer coisa que o Tiago perguntar. Seja direto, sem rodeios. Sarcasmo é liberado. O Tiago tem +18 anos.`}
+            systemPromptOverride={
+              materiaSlug 
+              ? undefined 
+              : `Você é a IA Assistente Global da Escola Tiago Oficial. Seu aluno se chama Tiago. Ele tem acesso a um currículo com diversas matérias. Se ele perguntar algo que se relacione com as matérias dele, faça a ponte indicando qual tópico ou matéria aborda o assunto e sugira que ele estude esse tópico.\nResponda livremente, seja direto, sem rodeios. Sarcasmo é liberado. O Tiago tem +18 anos.\n\nContexto:\n${globalPromptContext}`
+            }
           />
         )}
       </div>
