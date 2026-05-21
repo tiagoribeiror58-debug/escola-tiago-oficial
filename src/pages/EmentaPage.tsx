@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
-import { useEmentaConcluida, useToggleEmenta } from '@/hooks/useSessoes';
+import { useEmentaConcluida, useToggleEmenta, useExcluirHistoricoTopico } from '@/hooks/useSessoes';
 import { playPopSound } from '@/lib/audioUtils';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, BookOpen, CheckCircle2, Circle, Zap, ChevronDown } from 'lucide-react';
+import { ArrowLeft, BookOpen, CheckCircle2, Circle, Zap, ChevronDown, Trash2 } from 'lucide-react';
 
 export default function EmentaPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -15,6 +15,7 @@ export default function EmentaPage() {
   const ementaConcluidaQuery = useEmentaConcluida(slug || '');
   const ementaConcluida = ementaConcluidaQuery.data || [];
   const toggleEmenta = useToggleEmenta();
+  const excluirHistorico = useExcluirHistoricoTopico();
 
   if (!config) {
     return (
@@ -214,13 +215,30 @@ export default function EmentaPage() {
                         </div>
                       )}
 
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleStartSession(topico); }}
-                        className="w-full py-3 rounded-xl bg-foreground text-background font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all"
-                      >
-                        <BookOpen className="w-4 h-4" />
-                        Estudar este tópico
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleStartSession(topico); }}
+                          className="flex-1 py-3 rounded-xl bg-foreground text-background font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all"
+                        >
+                          <BookOpen className="w-4 h-4" />
+                          Estudar este tópico
+                        </button>
+                        
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (window.confirm('Tem certeza que deseja apagar todo o histórico de sessões deste tópico para recomeçar do zero?')) {
+                              if (config) {
+                                excluirHistorico.mutate({ materia: config.slug, topico });
+                              }
+                            }
+                          }}
+                          className="px-4 py-3 rounded-xl border border-red-500/30 text-red-500 bg-red-500/10 hover:bg-red-500/20 active:scale-[0.98] transition-all flex items-center justify-center shrink-0"
+                          title="Excluir histórico deste tópico"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>

@@ -213,3 +213,34 @@ export function useToggleEmenta() {
     }
   });
 }
+
+export function useExcluirHistoricoTopico() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ materia, topico }: { materia: string, topico: string }) => {
+      // 1. Apaga histórico de sessões daquele tópico
+      const { error: errorSessoes } = await supabase
+        .from('sessoes')
+        .delete()
+        .eq('materia', materia)
+        .eq('topico', topico);
+      if (errorSessoes) throw errorSessoes;
+
+      // 2. Apaga o status de concluído, se houver
+      const { error: errorEmenta } = await supabase
+        .from('ementa_concluida')
+        .delete()
+        .eq('materia', materia)
+        .eq('topico', topico);
+      if (errorEmenta) throw errorEmenta;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['sessoes'] });
+      queryClient.invalidateQueries({ queryKey: ['ementa-concluida', variables.materia] });
+      queryClient.invalidateQueries({ queryKey: ['recent-sessoes', variables.materia] });
+      queryClient.invalidateQueries({ queryKey: ['ultima-sessao', variables.materia] });
+    }
+  });
+}
+
