@@ -73,9 +73,49 @@ export function FloatingChatWidget() {
     }
   }, [isOpen, isMinimized, sessionKey]);
 
+  const saveTimeoutRef = useRef<NodeJS.Timeout>();
+  const isAutoSavingRef = useRef(false);
+  const pendingSaveRef = useRef(false);
+
+  const performAutoSave = useCallback(async () => {
+    if (isAutoSavingRef.current) {
+      pendingSaveRef.current = true;
+      return;
+    }
+    isAutoSavingRef.current = true;
+    pendingSaveRef.current = false;
+    
+    try {
+      if (!sessionKey || messagesRef.current.length === 0) return;
+      const sessionPayload = {
+        materia: materiaSlug || 'global-assistant',
+        topico: topico || 'Chat Livre',
+        data: new Date().toISOString().split('T')[0],
+        duracao_min: Math.max(1, Math.round((Date.now() - startTimeRef.current) / 60000)),
+        messages_json: messagesRef.current.map(({ role, content }) => ({ role, content })),
+        session_key: sessionKey,
+      };
+
+      await supabase.from('sessoes').delete().eq('session_key', sessionKey);
+      await supabase.from('sessoes').insert(sessionPayload);
+    } catch (err) {
+      console.error('Auto-save error', err);
+    } finally {
+      isAutoSavingRef.current = false;
+      if (pendingSaveRef.current) {
+        performAutoSave();
+      }
+    }
+  }, [sessionKey, materiaSlug, topico]);
+
   const handleMessagesChange = useCallback((messages: ChatMessage[]) => {
     messagesRef.current = messages;
-  }, []);
+    
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(() => {
+      performAutoSave();
+    }, 2000);
+  }, [performAutoSave]);
 
   const handleTopicComplete = useCallback(() => {
     setTopicComplete(true);
