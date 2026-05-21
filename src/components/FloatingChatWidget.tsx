@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useFloatingChat } from '@/contexts/FloatingChatContext';
 import { getMateriaBySlug, MATERIAS } from '@/lib/materias';
-import { useUltimaSessao, useEmentaConcluida, useRecentSessoes, useSessoes } from '@/hooks/useSessoes';
+import { useUltimaSessao, useEmentaConcluida, useRecentSessoes, useGlobalAssistantSessoes } from '@/hooks/useSessoes';
 import ChatWindow from '@/components/ChatWindow';
 import { X, Minus, MessageCircle, Maximize2, Loader2, Square, Plus, History } from 'lucide-react';
 import { format } from 'date-fns';
@@ -39,7 +39,7 @@ export function FloatingChatWidget() {
   const [topicComplete, setTopicComplete] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [resumeMessages, setResumeMessages] = useState<ChatMessage[]>([]);
-  const { data: todasSessoes } = useSessoes();
+  const { data: globalSessoes } = useGlobalAssistantSessoes();
   const isSavingRef = useRef(false);
 
   const globalPromptContext = useMemo(() => {
@@ -96,8 +96,15 @@ export function FloatingChatWidget() {
         session_key: sessionKey,
       };
 
-      await supabase.from('sessoes').delete().eq('session_key', sessionKey);
-      await supabase.from('sessoes').insert(sessionPayload);
+      const deleteResult = await supabase.from('sessoes').delete().eq('session_key', sessionKey);
+      if (deleteResult.error) console.warn('Auto-save delete error:', deleteResult.error.message);
+      const insertResult = await supabase.from('sessoes').insert(sessionPayload);
+      if (insertResult.error) {
+        console.error('Auto-save insert error:', insertResult.error.message);
+      } else {
+        // Invalida o cache para que o painel de histórico veja a sessão nova
+        queryClient.invalidateQueries({ queryKey: ['sessoes-global-assistant'] });
+      }
     } catch (err) {
       console.error('Auto-save error', err);
     } finally {
@@ -106,7 +113,7 @@ export function FloatingChatWidget() {
         performAutoSave();
       }
     }
-  }, [sessionKey, materiaSlug, topico]);
+  }, [sessionKey, materiaSlug, topico, queryClient]);
 
   const handleMessagesChange = useCallback((messages: ChatMessage[]) => {
     messagesRef.current = messages;
@@ -211,11 +218,14 @@ export function FloatingChatWidget() {
         session_key: sessionKey,
       };
 
+      // Remove auto-save parcial antes de inserir a versão final completa
+      await supabase.from('sessoes').delete().eq('session_key', sessionKey);
       await supabase.from('sessoes').insert(sessionPayload);
       await supabase.from('chat_messages').delete().eq('session_key', sessionKey);
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['sessoes'] }),
+        queryClient.invalidateQueries({ queryKey: ['sessoes-global-assistant'] }),
         queryClient.invalidateQueries({ queryKey: ['chat-sessions', materiaSlug] }),
         queryClient.invalidateQueries({ queryKey: ['ultima-sessao', materiaSlug] }),
         queryClient.invalidateQueries({ queryKey: ['ementa-concluida', materiaSlug] }),
@@ -340,9 +350,7 @@ export function FloatingChatWidget() {
         {showHistory ? (
           <div className="absolute inset-0 overflow-y-auto p-5 flex flex-col gap-2">
             <h3 className="text-sm font-semibold mb-2 ml-1">Histórico Global</h3>
-            {(todasSessoes || [])
-              .filter(s => s.materia === 'global-assistant')
-              .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime())
+            {(globalSessoes || [])
               .map(sessao => (
                 <div key={sessao.id} className="p-3 rounded-xl bg-muted/50 border border-border/50 hover:border-primary/30 transition-colors cursor-pointer group" onClick={() => {
                   if (sessao.session_key) {
@@ -365,7 +373,7 @@ export function FloatingChatWidget() {
                   </span>
                 </div>
               ))}
-            {!(todasSessoes || []).some(s => s.materia === 'global-assistant') && (
+            {(globalSessoes || []).length === 0 && (
               <p className="text-xs text-muted-foreground text-center mt-8">Nenhuma conversa salva ainda.</p>
             )}
           </div>

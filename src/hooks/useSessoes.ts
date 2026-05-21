@@ -258,3 +258,19 @@ export function useExcluirHistoricoTopico() {
   });
 }
 
+export function useGlobalAssistantSessoes() {
+  return useQuery({
+    queryKey: ['sessoes-global-assistant'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('sessoes')
+        .select('id, materia, topico, data, duracao_min, created_at, session_key, messages_json')
+        .eq('materia', 'global-assistant')
+        .order('created_at', { ascending: false })
+        .limit(30);
+
+      if (error) throw error;
+      return (data || []) as Sessao[];
+    },
+  });
+}
