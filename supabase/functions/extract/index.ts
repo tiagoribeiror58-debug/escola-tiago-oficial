@@ -69,9 +69,9 @@ serve(async (req) => {
       );
     }
 
-    const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!ANTHROPIC_API_KEY) {
-      throw new Error("ANTHROPIC_API_KEY is not configured");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    if (!GEMINI_API_KEY) {
+      throw new Error("GEMINI_API_KEY is not configured");
     }
 
     const chatHistory = messages
@@ -85,17 +85,19 @@ serve(async (req) => {
       nivel_atual || 1
     }`;
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
       headers: {
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
+        "Authorization": `Bearer ${GEMINI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        system: systemMessage,
+        model: "gemini-2.5-flash",
         messages: [
+          {
+            role: "system",
+            content: systemMessage,
+          },
           {
             role: "user",
             content: `Aja como o avaliador silêncioso e extraia os dados. Histórico da sessão:\n\n${chatHistory}`,
@@ -107,7 +109,7 @@ serve(async (req) => {
 
     if (!response.ok) {
       const t = await response.text();
-      console.error("Anthropic API error:", response.status, t);
+      console.error("Gemini API error:", response.status, t);
 
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded" }), {
@@ -123,7 +125,7 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const content = data.content?.[0]?.text || "";
+    const content = data.choices?.[0]?.message?.content || "";
 
     let extracted;
     try {

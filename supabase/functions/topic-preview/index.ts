@@ -22,9 +22,9 @@ serve(async (req: Request) => {
       });
     }
 
-    const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
-    if (!anthropicKey) {
-      throw new Error("Missing ANTHROPIC_API_KEY");
+    const geminiKey = Deno.env.get("GEMINI_API_KEY");
+    if (!geminiKey) {
+      throw new Error("Missing GEMINI_API_KEY");
     }
 
     const systemPrompt = `Você é um curador educacional de alta performance. 
@@ -35,30 +35,31 @@ Contexto da matéria: ${materiaName} - ${descricaoMateria || ''}`;
 
     const userMessage = `Tópico a ser estudado: "${topicName}"\nRetorne apenas a frase descritiva curta.`;
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": anthropicKey,
-        "anthropic-version": "2023-06-01",
+        "Authorization": `Bearer ${geminiKey}`,
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
+        model: "gemini-2.5-flash",
         max_tokens: 50,
         temperature: 0.5,
-        system: systemPrompt,
-        messages: [{ role: "user", content: userMessage }],
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userMessage }
+        ],
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Anthropic error:", errorText);
-      throw new Error("Failed to fetch from Anthropic");
+      console.error("Gemini error:", errorText);
+      throw new Error("Failed to fetch from Gemini");
     }
 
     const data = await response.json();
-    const previewText = data.content?.[0]?.text?.trim() || "Iniciar sessão de estudos para este tópico.";
+    const previewText = data.choices?.[0]?.message?.content?.trim() || "Iniciar sessão de estudos para este tópico.";
 
     return new Response(JSON.stringify({ preview: previewText }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

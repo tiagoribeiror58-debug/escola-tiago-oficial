@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { MateriaEstado } from '@/types';
 import { urgencia, getMateriaBySlug } from '@/lib/materias';
-import { useSessoes, useEmentaConcluida, useToggleEmenta } from '@/hooks/useSessoes';
+import { useSessoes, useEmentaConcluida, useToggleEmenta, useExcluirHistoricoTopico } from '@/hooks/useSessoes';
 import { useSessionMessages } from '@/hooks/useChatMessages';
 import { useNavigate, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map as MapIcon, History } from 'lucide-react';
+import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map as MapIcon, History, Trash2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { playPopSound } from '@/lib/audioUtils';
@@ -42,6 +42,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const ementaConcluidaQuery = useEmentaConcluida(estado?.config?.slug || '');
   const ementaConcluida = ementaConcluidaQuery.data || [];
   const toggleEmenta = useToggleEmenta();
+  const excluirTopico = useExcluirHistoricoTopico();
   const { data: topicosEmergentes } = useTopicosEmergentes(estado?.config?.slug);
   const { openChat } = useFloatingChat();
 
@@ -578,19 +579,36 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   )} />
                 </Link>
                 {selectedSub && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (config && selectedSub) {
-                        playPopSound();
-                        onOpenChange(false);
-                        openChat(config.slug, selectedSub);
-                      }
-                    }}
-                    className="w-full mt-2 py-3 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-[13px] flex items-center justify-center gap-2 transition-all active:scale-[0.98] border border-primary/20"
-                  >
-                    Abrir Chat Flutuante
-                  </button>
+                  <div className="flex gap-2 mt-2 w-full">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (config && selectedSub) {
+                          playPopSound();
+                          onOpenChange(false);
+                          openChat(config.slug, selectedSub);
+                        }
+                      }}
+                      className="flex-1 py-3 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-[13px] flex items-center justify-center gap-2 transition-all active:scale-[0.98] border border-primary/20"
+                    >
+                      Abrir Chat Flutuante
+                    </button>
+                    {(isSelectedSubCompleted || isSelectedSubPaused) && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm(`Tem certeza que deseja apagar todo o histórico de sessões do tópico '${selectedSub}'?`)) {
+                            excluirTopico.mutate({ materia: config.slug, topico: selectedSub });
+                            playPopSound();
+                          }
+                        }}
+                        className="px-4 py-3 rounded-xl bg-destructive/10 hover:bg-destructive/20 text-destructive font-semibold text-[13px] flex items-center justify-center gap-2 transition-all active:scale-[0.98] border border-destructive/20"
+                        title="Apagar histórico deste tópico"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
                 )}
                 </>
               )}
