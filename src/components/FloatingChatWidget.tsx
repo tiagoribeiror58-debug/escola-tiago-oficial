@@ -194,15 +194,25 @@ export function FloatingChatWidget() {
   }, [materiaSlug, topico, sessionKey, materiaConfig, ultimaSessao, topicComplete, ementaConcluida, queryClient, closeChat]);
 
 
-  const handleNovaConversa = useCallback(() => {
+  const handleNovaConversa = useCallback(async () => {
     if (messagesRef.current.length > 0) {
-      if (!window.confirm('Apagar a conversa atual e iniciar uma nova?')) return;
+      toast.info('Salvando conversa atual...');
+      // Salva silenciosamente a sessão global chamando a função de encerrar, 
+      // que já faz todo o processo de salvar no BD e chamar closeChat()
+      await handleEncerrar();
+      // Em seguida, abrimos o chat novinho em folha
+      setTimeout(() => {
+        setShowHistory(false);
+        setResumeMessages([]);
+        restoreChat();
+      }, 100);
+    } else {
+      setShowHistory(false);
+      setResumeMessages([]);
+      closeChat(); 
+      setTimeout(() => restoreChat(), 50);
     }
-    setShowHistory(false);
-    setResumeMessages([]);
-    closeChat(); // Reset and generate new session key
-    setTimeout(() => restoreChat(), 50); // pop it back up
-  }, [closeChat, restoreChat]);
+  }, [handleEncerrar, closeChat, restoreChat]);
 
   if (!isOpen) return null;
 
@@ -257,17 +267,19 @@ export function FloatingChatWidget() {
               </button>
             </>
           )}
-          <button
-            onClick={handleEncerrar}
-            disabled={saving}
-            title="Encerrar Sessão"
-            className={cn(
-              "p-1.5 rounded-lg transition-colors flex items-center justify-center",
-              topicComplete ? "text-success hover:bg-success/10" : "text-muted-foreground hover:bg-muted"
-            )}
-          >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Square className="w-4 h-4" />}
-          </button>
+          {materiaSlug && (
+            <button
+              onClick={handleEncerrar}
+              disabled={saving}
+              title="Encerrar Sessão"
+              className={cn(
+                "p-1.5 mr-1 rounded-lg transition-colors flex items-center justify-center",
+                topicComplete ? "text-success hover:bg-success/10" : "text-muted-foreground hover:bg-muted"
+              )}
+            >
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Square className="w-4 h-4" />}
+            </button>
+          )}
           <button
             onClick={minimizeChat}
             className="p-1.5 rounded-lg text-muted-foreground hover:bg-muted transition-colors"
@@ -286,8 +298,8 @@ export function FloatingChatWidget() {
       {/* Chat Area / History */}
       <div className="flex-1 overflow-hidden relative bg-card">
         {showHistory ? (
-          <div className="absolute inset-0 overflow-y-auto p-4 flex flex-col gap-2">
-            <h3 className="text-sm font-semibold mb-2">Histórico Global</h3>
+          <div className="absolute inset-0 overflow-y-auto p-5 flex flex-col gap-2">
+            <h3 className="text-sm font-semibold mb-2 ml-1">Histórico Global</h3>
             {(todasSessoes || [])
               .filter(s => s.materia === 'global-assistant')
               .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime())
