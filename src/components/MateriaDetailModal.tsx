@@ -515,7 +515,8 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   <ChevronRight className="w-4 h-4 text-[hsl(var(--success))/0.7]" />
                 </Link>
               ) : (
-              <Link
+                <>
+                <Link
                   to={ctaUrl}
                   onClick={handleNewSessionClick}
                   className={cn(
@@ -591,7 +592,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     Abrir Chat Flutuante
                   </button>
                 )}
-              </div>
+                </>
               )}
               </>
             )}
