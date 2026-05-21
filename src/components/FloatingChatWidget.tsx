@@ -16,7 +16,7 @@ import { ChatMessage } from '@/types';
 import { resolverTopicoAtual } from '@/lib/buildPrompt';
 
 export function FloatingChatWidget() {
-  const { state, closeChat, minimizeChat, restoreChat } = useFloatingChat();
+  const { state, closeChat, minimizeChat, restoreChat, setSessionKey } = useFloatingChat();
   const { isOpen, isMinimized, materiaSlug, topico, sessionKey } = state;
   const queryClient = useQueryClient();
 
@@ -299,8 +299,8 @@ export function FloatingChatWidget() {
                     }
                     setShowHistory(false);
                     setResumeMessages((sessao.messages_json as ChatMessage[]) || []);
-                    // O Context não permite injetar sessionKey, então vamos forçar no estado local
-                    state.sessionKey = sessao.session_key;
+                    // Usa a função correta do Context para atualizar o sessionKey no state do React
+                    setSessionKey(sessao.session_key);
                     restoreChat();
                   }
                 }}>

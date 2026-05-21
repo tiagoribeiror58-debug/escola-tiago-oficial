@@ -14,6 +14,7 @@ type FloatingChatContextType = {
   closeChat: () => void;
   minimizeChat: () => void;
   restoreChat: () => void;
+  setSessionKey: (key: string) => void;
 };
 
 const FloatingChatContext = createContext<FloatingChatContextType | undefined>(undefined);
@@ -55,8 +56,13 @@ export function FloatingChatProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, isMinimized: false }));
   };
 
+  // Permite ao widget atualizar o sessionKey ao retomar uma sessão do histórico
+  const setSessionKey = (key: string) => {
+    setState(prev => ({ ...prev, sessionKey: key }));
+  };
+
   return (
-    <FloatingChatContext.Provider value={{ state, openChat, closeChat, minimizeChat, restoreChat }}>
+    <FloatingChatContext.Provider value={{ state, openChat, closeChat, minimizeChat, restoreChat, setSessionKey }}>
       {children}
     </FloatingChatContext.Provider>
   );
