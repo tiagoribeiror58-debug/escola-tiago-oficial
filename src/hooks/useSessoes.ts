@@ -189,6 +189,20 @@ export function useEmentaConcluida(materia: string) {
   });
 }
 
+export function useTodasEmentasConcluidas() {
+  return useQuery({
+    queryKey: ['todas-ementas-concluidas'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('ementa_concluida')
+        .select('materia, topico');
+
+      if (error) throw error;
+      return data as { materia: string, topico: string }[];
+    },
+  });
+}
+
 export function useToggleEmenta() {
   const queryClient = useQueryClient();
 

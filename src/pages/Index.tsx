@@ -9,7 +9,7 @@ import { MateriaEstado } from '@/types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
-import { Search, History } from 'lucide-react';
+import { Search, History, CalendarCheck } from 'lucide-react';
 import { HistoricoGlobalDrawer } from '@/components/HistoricoGlobalDrawer';
 import { useOrdemMaterias } from '@/hooks/useOrdemMaterias';
 import {
@@ -225,6 +225,15 @@ export default function Index() {
           </div>
           
           <div className="flex items-center gap-2">
+            {/* Botão de Revisões */}
+            <button
+              onClick={() => navigate('/revisoes')}
+              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 text-xs font-medium transition-all shadow-sm"
+            >
+              <CalendarCheck className="w-3.5 h-3.5" />
+              Revisões
+            </button>
+
             {/* Botão do Histórico */}
             <button
               onClick={() => setIsHistoricoOpen(true)}

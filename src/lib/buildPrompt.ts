@@ -161,6 +161,23 @@ DIRETRIZ: Sempre que enriquecer a explicação, use tópicos concluídos acima p
       `\n\nEstamos retomando a sessão anterior. Continue de onde parou, sem introduções.`;
   }
 
+  // Se estiver no MODO REVISÃO
+  if (modo === 'revisao') {
+    return base + contexto + bloqueio + historicoBloco +
+      `\n\n[MODO DE REVISÃO (ACTIVE RECALL) ATIVADO]
+Esta é uma sessão de REVISÃO ESPAÇADA. O aluno já estudou este tópico no passado e o concluiu.
+Sua missão agora NÃO é explicar o tópico do zero. Sua missão é testar a retenção dele.
+
+DIRETRIZES DE REVISÃO:
+1. Comece a sessão imediatamente fazendo UMA pergunta direta, instigante e desafiadora sobre o tópico: "${topicoObrigatorio}".
+2. NÃO explique a matéria antes de perguntar. Teste-o primeiro.
+3. Aguarde a resposta dele.
+4. Quando ele responder, avalie a resposta, corrija eventuais erros de forma direta, elogie se estiver certo, e só então aprofunde ou encerre o tópico.
+5. Lembre-se: no modo revisão, o Active Recall vem ANTES da explicação.
+
+A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece fazendo a pergunta do teste.`;
+  }
+
   const inicio = ultimaSessao
     ? `\n\nA primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação do tópico diretamente.`
     : `\n\nPrimeira sessão de ${materia.nome}. Vá direto ao conteúdo do tópico acima.\n\nA primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece a explicação diretamente.`;

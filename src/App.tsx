@@ -9,6 +9,7 @@ import Historico from "./pages/Historico.tsx";
 import Categoria from "./pages/Categoria.tsx";
 import Biblioteca from "./pages/Biblioteca.tsx";
 import EmentaPage from "./pages/EmentaPage.tsx";
+import Revisoes from "./pages/Revisoes.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/categoria/:slug" element={<Categoria />} />
           <Route path="/categoria/:slug/:sub" element={<Categoria />} />
           <Route path="/biblioteca" element={<Biblioteca />} />
+          <Route path="/revisoes" element={<Revisoes />} />
           <Route path="/ementa/:slug" element={<EmentaPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
