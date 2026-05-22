@@ -5,7 +5,7 @@ import { useSessoes, useEmentaConcluida, useToggleEmenta, useExcluirHistoricoTop
 import { useSessionMessages } from '@/hooks/useChatMessages';
 import { useNavigate, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map as MapIcon, History, Trash2 } from 'lucide-react';
+import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map as MapIcon, History, Trash2, Eye, EyeOff } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { playPopSound } from '@/lib/audioUtils';
@@ -29,6 +29,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
   const [expandedSession, setExpandedSession] = useState<number | null>(null);
   const [expandedCount, setExpandedCount] = useState(0);
+  const [unhiddenTopics, setUnhiddenTopics] = useState<Set<string>>(new Set());
 
   // Preview do tópico via IA — com cache em memória para não chamar a API 2x pelo mesmo tópico
   const [topicPreview, setTopicPreview] = useState<string | null>(null);
@@ -296,6 +297,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                             (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico)))
                           );
                           const isLast = idx === flatEmenta.length - 1;
+                          const isVisible = isCurrent || unhiddenTopics.has(step);
 
                           return (
                             <div key={idx} className={cn(
@@ -307,6 +309,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                   <button 
                                     onClick={(e) => {
                                       e.preventDefault();
+                                      if (!isVisible) return;
                                       playPopSound();
                                       onOpenChange(false);
                                       
@@ -321,7 +324,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                       navigate(url);
                                     }}
                                     className={cn(
-                                      "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] font-bold transition-all duration-200 hover:scale-110 z-10",
+                                      "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] font-bold transition-all duration-200 z-10",
+                                      isVisible && "hover:scale-110",
+                                      !isVisible && "opacity-40 grayscale cursor-default",
                                       isCompleted
                                         ? "bg-[hsl(var(--success)/0.15)] border-[hsl(var(--success)/0.4)] text-[hsl(var(--success))]"
                                         : isPaused
@@ -336,41 +341,74 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                   {/* Linha conectora (não aparece no último item) */}
                                   {!isLast && (
                                     <div className={cn(
-                                      "w-px h-full min-h-[1.5rem] mt-1 -mb-1",
+                                      "w-px h-full min-h-[1.5rem] mt-1 -mb-1 transition-opacity",
+                                      !isVisible && "opacity-40",
                                       isCompleted ? "bg-[hsl(var(--success)/0.4)]" : "bg-border/50"
                                     )} />
                                   )}
                                 </div>
 
                               {/* Conteúdo */}
-                              <div className="flex-1 pb-4">
-                                <button 
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    playPopSound();
-                                    setSelectedSub(step);
-                                  }}
-                                  className={cn(
-                                    "text-sm font-medium text-left leading-tight transition-colors hover:text-primary cursor-pointer w-full",
-                                    isCompleted ? "text-foreground" : isCurrent || isPaused ? "text-foreground" : "text-muted-foreground"
+                              <div className="flex-1 pb-4 flex gap-2 items-start">
+                                <div className="flex-1 min-w-0 transition-all duration-500">
+                                  <button 
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      if (!isVisible) return;
+                                      playPopSound();
+                                      setSelectedSub(step);
+                                    }}
+                                    className={cn(
+                                      "text-sm font-medium text-left leading-tight transition-all duration-300 w-full",
+                                      isVisible ? "hover:text-primary cursor-pointer" : "cursor-default",
+                                      !isVisible && "blur-sm select-none opacity-50",
+                                      isCompleted ? "text-foreground" : isCurrent || isPaused ? "text-foreground" : "text-muted-foreground"
+                                    )}
+                                  >
+                                    {step}
+                                  </button>
+                                  {isPaused && (
+                                    <p className={cn("text-[10px] text-[hsl(var(--warning))] font-medium uppercase mt-1 tracking-wider transition-all duration-300", !isVisible && "blur-[2px] opacity-50")}>
+                                      Sessão pausada
+                                    </p>
                                   )}
-                                >
-                                  {step}
-                                </button>
-                                {isPaused && (
-                                  <p className="text-[10px] text-[hsl(var(--warning))] font-medium uppercase mt-1 tracking-wider">
-                                    Sessão pausada
-                                  </p>
-                                )}
-                                {isCurrent && !isPaused && (
-                                  <p className="text-[10px] text-primary font-medium uppercase mt-1 tracking-wider">
-                                    Próximo tópico
-                                  </p>
-                                )}
-                                {isCompleted && (
-                                  <p className="text-[10px] text-[hsl(var(--success))] font-medium uppercase mt-1 tracking-wider">
-                                    Concluído
-                                  </p>
+                                  {isCurrent && !isPaused && (
+                                    <p className="text-[10px] text-primary font-medium uppercase mt-1 tracking-wider">
+                                      Próximo tópico
+                                    </p>
+                                  )}
+                                  {isCompleted && (
+                                    <p className={cn("text-[10px] text-[hsl(var(--success))] font-medium uppercase mt-1 tracking-wider transition-all duration-300", !isVisible && "blur-[2px] opacity-50")}>
+                                      Concluído
+                                    </p>
+                                  )}
+                                </div>
+
+                                {/* Eye Toggle */}
+                                {!isCurrent && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setUnhiddenTopics(prev => {
+                                        const newSet = new Set(prev);
+                                        if (newSet.has(step)) {
+                                          newSet.delete(step);
+                                          if (selectedSub === step) setSelectedSub(null);
+                                        } else {
+                                          newSet.add(step);
+                                        }
+                                        return newSet;
+                                      });
+                                      playPopSound();
+                                    }}
+                                    className={cn(
+                                      "p-1.5 rounded-full transition-all shrink-0 mt-[-2px]",
+                                      isVisible ? "text-primary hover:bg-primary/10" : "text-muted-foreground hover:bg-muted/50 opacity-30 hover:opacity-100"
+                                    )}
+                                    title={isVisible ? "Ocultar tópico" : "Ver tópico"}
+                                  >
+                                    {isVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                  </button>
                                 )}
                               </div>
                             </div>

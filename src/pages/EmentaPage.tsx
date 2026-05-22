@@ -5,12 +5,13 @@ import { useEmentaConcluida, useToggleEmenta, useExcluirHistoricoTopico } from '
 import { useFloatingChat } from '@/contexts/FloatingChatContext';
 import { playPopSound } from '@/lib/audioUtils';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, BookOpen, CheckCircle2, Circle, Zap, ChevronDown, Trash2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, CheckCircle2, Circle, Zap, ChevronDown, Trash2, Eye, EyeOff } from 'lucide-react';
 
 export default function EmentaPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [expandedTopic, setExpandedTopic] = useState<string | null>(null);
+  const [unhiddenTopics, setUnhiddenTopics] = useState<Set<string>>(new Set());
 
   const config = slug ? getMateriaBySlug(slug) : null;
   const ementaConcluidaQuery = useEmentaConcluida(slug || '');
@@ -131,13 +132,19 @@ export default function EmentaPage() {
               const isCompleted = isConcluido(topico);
               const isCurrent = idx === currentIdx;
               const isSelected = expandedTopic === topico;
+              const isVisible = isCurrent || unhiddenTopics.has(topico);
 
               return (
                 <div
                   key={idx}
-                  onClick={() => { playPopSound(); setExpandedTopic(isSelected ? null : topico); }}
+                  onClick={() => { 
+                    if (!isVisible) return;
+                    playPopSound(); 
+                    setExpandedTopic(isSelected ? null : topico); 
+                  }}
                   className={cn(
-                    'w-full flex flex-col p-4 rounded-2xl border text-left transition-all cursor-pointer hover:bg-muted/20 active:scale-[0.98]',
+                    'w-full flex flex-col p-4 rounded-2xl border text-left transition-all',
+                    isVisible ? 'cursor-pointer hover:bg-muted/20 active:scale-[0.98]' : 'cursor-default opacity-80',
                     isSelected 
                       ? 'bg-primary/10 border-primary/40 ring-1 ring-primary/20' 
                       : isCurrent
@@ -151,9 +158,13 @@ export default function EmentaPage() {
                   <div className="w-full flex items-center gap-4">
                     {/* Ícone / Toggle */}
                     <div
-                      onClick={(e) => handleToggle(e, topico, isCompleted)}
+                      onClick={(e) => {
+                        if (isVisible) handleToggle(e, topico, isCompleted);
+                      }}
                       className={cn(
-                        'shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all hover:scale-110',
+                        'shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all',
+                        !isVisible && 'opacity-40 grayscale',
+                        isVisible && 'hover:scale-110 cursor-pointer',
                         isSelected
                           ? 'bg-primary border-primary text-primary-foreground shadow-sm'
                           : isCurrent
@@ -172,27 +183,58 @@ export default function EmentaPage() {
                     </div>
 
                     {/* Conteúdo */}
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 transition-all duration-500">
                       <p className={cn(
-                        'text-sm font-medium leading-snug transition-colors',
+                        'text-sm font-medium leading-snug transition-all duration-300',
+                        !isVisible && 'blur-sm select-none opacity-50',
                         isCompleted && !isSelected ? 'text-[hsl(var(--success))] opacity-80' : 'text-foreground'
                       )}>
                         {topico}
                       </p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5">Tópico {idx + 1} de {total}</p>
+                      <p className={cn(
+                        "text-[11px] text-muted-foreground mt-0.5 transition-all duration-300",
+                        !isVisible && 'blur-[2px] select-none opacity-40'
+                      )}>
+                        Tópico {idx + 1} de {total}
+                      </p>
                     </div>
 
-                    {/* Badges */}
-                    <div className="flex items-center gap-3 shrink-0">
+                    {/* Badges & Eye Toggle */}
+                    <div className="flex items-center gap-2 shrink-0">
                       {isCurrent && !isSelected && (
                         <span className="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-0.5 rounded-full animate-pulse">
                           Atual
                         </span>
                       )}
-                      {isCompleted && !isSelected && (
+                      {isCompleted && !isSelected && isVisible && (
                         <span className="text-[10px] font-medium text-[hsl(var(--success))] opacity-70">
                           ✓
                         </span>
+                      )}
+                      {!isCurrent && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setUnhiddenTopics(prev => {
+                              const newSet = new Set(prev);
+                              if (newSet.has(topico)) {
+                                newSet.delete(topico);
+                                if (expandedTopic === topico) setExpandedTopic(null);
+                              } else {
+                                newSet.add(topico);
+                              }
+                              return newSet;
+                            });
+                            playPopSound();
+                          }}
+                          className={cn(
+                            "p-2 rounded-full transition-all flex items-center justify-center",
+                            isVisible ? "text-primary hover:bg-primary/10" : "text-muted-foreground hover:bg-muted/50 opacity-50 hover:opacity-100"
+                          )}
+                          title={isVisible ? "Ocultar tópico" : "Ver tópico"}
+                        >
+                          {isVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
                       )}
                     </div>
                   </div>
