@@ -47,21 +47,22 @@ serve(async (req) => {
           const contextStr = recentMessages.map((m: any) => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n");
           const lastUserMessage = [...messages].reverse().find((m: any) => m.role === 'user')?.content;
 
-          if (lastUserMessage && TAVILY_API_KEY && ANTHROPIC_API_KEY) {
+          if (lastUserMessage && TAVILY_API_KEY && GEMINI_API_KEY) {
             try {
-              console.log(`[chat] Verificando intenção de busca...`);
+              console.log(`[chat] Verificando intenção de busca com Gemini...`);
               
-              const intentResponse = await fetch("https://api.anthropic.com/v1/messages", {
+              const intentResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
                 method: "POST",
                 headers: {
-                  "x-api-key": ANTHROPIC_API_KEY,
-                  "anthropic-version": "2023-06-01",
+                  "Authorization": `Bearer ${GEMINI_API_KEY}`,
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  model: "claude-haiku-4-5-20251001",
-                  system: "Você é um especialista em formular queries de busca. Leia o histórico da conversa. A última mensagem do usuário requer internet em tempo real (notícias, cotações, referências atuais, validação de fontes, anos 2024/2025/2026+)?\nSe NÃO precisar de busca (conhecimento estático), retorne APENAS a palavra: NAO\nSe PRECISAR, formule a melhor query de busca para o Google (curta e direta) que resolva a dúvida. Retorne APENAS a query. Não explique nada.",
-                  messages: [{ role: "user", content: `Histórico recente:\n${contextStr}` }],
+                  model: "gemini-3.5-flash",
+                  messages: [
+                    { role: "system", content: "Você é um especialista em formular queries de busca. Leia o histórico da conversa. A última mensagem do usuário requer internet em tempo real (notícias, cotações, referências atuais, validação de fontes, anos 2024/2025/2026+)?\nSe NÃO precisar de busca (conhecimento estático), retorne APENAS a palavra: NAO\nSe PRECISAR, formule a melhor query de busca para o Google (curta e direta) que resolva a dúvida. Retorne APENAS a query. Não explique nada." },
+                    { role: "user", content: `Histórico recente:\n${contextStr}` }
+                  ],
                   max_tokens: 30,
                   temperature: 0.0,
                 }),
@@ -69,8 +70,8 @@ serve(async (req) => {
 
               if (intentResponse.ok) {
                 const intentData = await intentResponse.json();
-                const decision = intentData.content?.[0]?.text?.trim();
-                console.log(`[chat] Decisão/Query de Busca (Haiku): ${decision}`);
+                const decision = intentData.choices?.[0]?.message?.content?.trim();
+                console.log(`[chat] Decisão/Query de Busca (Gemini): ${decision}`);
 
                 // --- 2. BUSCA NA TAVILY ---
                 if (decision && decision.toUpperCase() !== 'NAO' && decision.toUpperCase() !== 'NÃO') {
@@ -103,20 +104,21 @@ serve(async (req) => {
                       console.log(`[chat] Contexto dinâmico injetado com sucesso!`);
 
                       // Detectar tópico emergente (fire-and-forget)
-                      if (materiaSlug && ANTHROPIC_API_KEY) {
+                      if (materiaSlug && GEMINI_API_KEY) {
                         (async () => {
                           try {
-                            const topicDetectResp = await fetch("https://api.anthropic.com/v1/messages", {
+                            const topicDetectResp = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
                               method: "POST",
                               headers: {
-                                "x-api-key": ANTHROPIC_API_KEY,
-                                "anthropic-version": "2023-06-01",
+                                "Authorization": `Bearer ${GEMINI_API_KEY}`,
                                 "Content-Type": "application/json",
                               },
                               body: JSON.stringify({
-                                model: "claude-haiku-4-5-20251001",
-                                system: `Você é um curador de currículo educacional. Analise o conteúdo de busca fornecido e determine se ele contém UM tópico de estudo concreto e específico que seria valioso para um aluno que estuda '${materiaSlug}'. Se sim, retorne um JSON com exatamente este formato: {\"titulo\": \"Título conciso do tópico\", \"descricao\": \"Uma frase explicando o que o aluno aprenderá\", \"fonte_url\": \"URL mais relevante\"}. Se NÃO houver tópico novo relevante, retorne apenas: null`,
-                                messages: [{ role: "user", content: `Conteúdo da busca:\n${snippets.substring(0, 2000)}` }],
+                                model: "gemini-3.5-flash",
+                                messages: [
+                                  { role: "system", content: `Você é um curador de currículo educacional. Analise o conteúdo de busca fornecido e determine se ele contém UM tópico de estudo concreto e específico que seria valioso para um aluno que estuda '${materiaSlug}'. Se sim, retorne um JSON com exatamente este formato: {\"titulo\": \"Título conciso do tópico\", \"descricao\": \"Uma frase explicando o que o aluno aprenderá\", \"fonte_url\": \"URL mais relevante\"}. Se NÃO houver tópico novo relevante, retorne apenas: null` },
+                                  { role: "user", content: `Conteúdo da busca:\n${snippets.substring(0, 2000)}` }
+                                ],
                                 max_tokens: 200,
                                 temperature: 0.1,
                               }),
@@ -124,7 +126,7 @@ serve(async (req) => {
 
                             if (topicDetectResp.ok) {
                               const topicData = await topicDetectResp.json();
-                              const rawText = topicData.content?.[0]?.text?.trim() || '';
+                              const rawText = topicData.choices?.[0]?.message?.content?.trim() || '';
                               if (rawText && rawText !== 'null' && rawText.includes('{')) {
                                 const jsonMatch = rawText.match(/\{[\s\S]*\}/);
                                 if (jsonMatch) {
