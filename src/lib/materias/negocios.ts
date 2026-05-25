@@ -124,37 +124,7 @@ Abordagem obrigatória:
             'Forensic Accounting: Detectando Fraudes Contábeis'
           ]
         },
-        {
-          slug: 'marketing-estrategico',
-          nome: 'Marketing & Growth',
-          emoji: '🎯',
-          parent: 'business-growth',
-          whyStart: 'Sem clientes, não existe negócio. Com a ideia validada, o próximo passo é gerar demanda. Marketing é matemática e comportamento humano.',
-          descricao: 'Geração de demanda, funis de conversão e aquisição escalável.',
-          contexto: `Foco: engenharia de aquisição e psicologia de consumo. Ensine a estrutura do funil antes de táticas isoladas.`,
-          ementa: [
-            'A Anatomia de um Funil de Vendas',
-            'Tráfego Pago vs Orgânico (Custo e Escala)',
-            'SEO e Mecanismos de Busca',
-            'Canais de Aquisição (Go-To-Market)',
-            'Growth Hacking e Loops Virais',
-            'Branding: Posicionamento, Identidade e Percepção',
-            'Content Marketing e a Estratégia de Conteúdo',
-            'Email Marketing e Nutrição de Leads',
-            'Copywriting para Conversão: Headlines, CTAs e Landing Pages',
-            'Psicologia do Consumidor: Gatilhos Mentais de Compra',
-            'Marketing de Influência e Co-marketing',
-            'Métricas de Marketing: MQL, SQL, CPL e ROAS',
-            'A/B Testing e Otimização de Conversão (CRO)',
-            'Product-Led Growth (PLG): O Produto como Canal',
-            'Expansão Internacional: Go-To-Market em Novos Mercados',
-            'Marketing com IA: Personalização em Escala (1:1)',
-            'Community-Led Growth: Construindo Comunidades que Vendem',
-            'Dark Social: O Tráfego Invisível de Mensagens Privadas',
-            'Attribution Modeling: De Onde Vem o Cliente de Verdade?',
-            'Creator Economy: Parcerias com Criadores de Conteúdo'
-          ]
-        },
+
         {
           slug: 'vendas-b2b',
           nome: 'Vendas & Negociação Comercial',

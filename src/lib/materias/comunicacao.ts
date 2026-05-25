@@ -134,36 +134,34 @@ Abordagem obrigatória:
       children: [
         {
           slug: 'redacao',
-          nome: 'Copywriting & Escrita',
+          nome: 'Escrita Clara & Business Writing',
           emoji: '✎',
           parent: 'idiomas-escrita',
-          whyStart: 'A escrita como ferramenta de persuasão. Domine a estrutura do texto eficaz na sua própria língua primeiro.',
-          descricao: 'Escrita persuasiva e clareza de pensamento traduzida em texto.',
-          contexto: `Foco: mecanismos de persuasão e clareza na escrita — estrutura, argumento, coesão.
+          whyStart: 'A escrita como ferramenta de raciocínio. A comunicação profissional clara evita ruídos, poupa horas de reunião e projeta autoridade.',
+          descricao: 'A arte de organizar o pensamento e transmiti-lo de forma limpa e estruturada.',
+          contexto: `Foco: mecanismos de clareza na escrita corporativa e pessoal — estrutura lógica, coesão e síntese.
 
 Abordagem obrigatória:
-- Explique o mecanismo retórico ou lógico por trás de cada técnica antes de qualquer exercício.
-- Nunca escreva o texto pelo aluno. Critique com base no mecanismo.`,
+- Diferencie "escrever bonito" de "escrever com clareza". A estética literária não deve ofuscar o argumento.
+- Explique o princípio da carga cognitiva: o leitor não deve se esforçar para entender.
+- Ensine técnicas reais de edição: como cortar a "gordura" sem perder o sentido.`,
           ementa: [
-            'A Regra do 1: Uma Ideia por Texto',
-            'Anatomia de um Headline Magnético',
-            'Fórmulas de Copy: AIDA e PAS',
-            'Arquitetura da Argumentação Lógica',
-            'Revisão Extrema (Cortar a Gordura)',
-            'Escrita para Web: Escaneabilidade e Hierarquia',
-            'O Lide Jornalístico e a Pirâmide Invertida',
-            'Voz e Tom: Desenvolvendo seu Estilo Próprio',
-            'Email Marketing: Assunto, Corpo e CTA',
-            'Escrita Longa vs Curta: Quando usar cada uma',
-            'O Paradoxo da Especificidade: Detalhes que Persuadem',
-            'Storytelling em Texto: Arco Narrativo e Tensão',
-            'SEO Writing: Escrever para Humanos e Buscadores',
-            'Ghostwriting e Adaptação de Voz',
-            'Edição Implacável: Revisando como um Profissional',
-            'Escrita com IA: Co-Criação sem Perder a Voz Autoral',
-            'Newsletters: Construindo Audiência por E-mail',
-            'Escrita para LinkedIn: Personal Branding Textual',
-            'Microcopy: Escrevendo para Interfaces e Chatbots'
+            'A Escrita como Reflexo do Pensamento',
+            'Business Writing: Escrevendo para o Mundo Corporativo',
+            'Como Estruturar E-mails que São Lidos e Respondidos',
+            'Arquitetura da Informação em Textos Longos (Relatórios e Propostas)',
+            'O Princípio da Síntese: Escrevendo Menos para Dizer Mais',
+            'BLUF (Bottom Line Up Front): Entregando a Conclusão Primeiro',
+            'Revisão Extrema: Como Cortar 30% do Texto Sem Perder Sentido',
+            'Escrita Assíncrona: Regras para Trabalho Remoto',
+            'Voz e Tom Profissional: Autoridade Sem Arrogância',
+            'O Uso Estratégico de Tópicos e Escaneabilidade',
+            'Vocabulário Preciso: Evitando Ambiguidade e Jargões Vazios',
+            'Como Documentar Processos e Decisões de Forma Eficaz',
+            'Escrevendo "One-Pagers" para Tomada de Decisão (Modelo Amazon)',
+            'Como Fornecer Feedback Difícil por Escrito',
+            'O Mito do "Bloqueio Criativo" e Como Escrever Todo Dia',
+            'Utilizando IAs como Editores (Sem Perder a Autenticidade)',
           ]
         },
         {
