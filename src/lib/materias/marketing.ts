@@ -16,7 +16,6 @@ export const marketingHub: MateriaConfig = {
       slug: 'marketing-conceitual',
       nome: 'Marketing Conceitual',
       emoji: '🧠',
-      isCategory: true,
       parent: 'marketing-hub',
       whyStart:
         'Antes de qualquer ferramenta ou tática, você precisa entender o mecanismo: por que as pessoas compram. Quem pula essa etapa aprende a apertar botões sem saber o que está fazendo — e quando a campanha falha, não sabe por quê.',
@@ -56,7 +55,6 @@ Abordagem obrigatória:
       slug: 'marketing-tecnico',
       nome: 'Marketing Técnico',
       emoji: '⚙️',
-      isCategory: true,
       parent: 'marketing-hub',
       whyStart:
         'Marketing sem dados é achismo. Aqui você aprende a operar as ferramentas que transformam intuição em decisão baseada em evidência: rastreamento, anúncios, automação e a leitura correta dos números.',
@@ -99,7 +97,6 @@ Abordagem obrigatória:
       slug: 'marketing-conteudo',
       nome: 'Conteúdo & Influência',
       emoji: '✍️',
-      isCategory: true,
       parent: 'marketing-hub',
       whyStart:
         'Anúncios param quando o dinheiro acaba. Conteúdo e comunidade são ativos que se acumulam. Esta disciplina ensina como construir mídia própria, parceria com criadores e a linguagem que converte — escrita e falada.',
@@ -140,7 +137,6 @@ Abordagem obrigatória:
       slug: 'marketing-growth',
       nome: 'Growth & Performance',
       emoji: '🚀',
-      isCategory: true,
       parent: 'marketing-hub',
       whyStart:
         'Growth não é um cargo — é uma mentalidade de experimentação sistemática. Aqui você aprende a montar o motor de crescimento: a North Star Metric, os loops virais, o funil de ativação e os experimentos que transformam achismo em escala.',
@@ -182,7 +178,6 @@ Abordagem obrigatória:
       slug: 'marketing-ia',
       nome: 'AI Marketing & Automação Avançada',
       emoji: '🤖',
-      isCategory: true,
       parent: 'marketing-hub',
       whyStart:
         'O marketing em 2026 não é sobre quem escreve mais rápido usando ChatGPT, mas sobre quem orquestra agentes autônomos, otimiza para motores de resposta (AEO) e usa dados primários para prever o comportamento do usuário.',
