@@ -22,13 +22,13 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
+  rectSortingStrategy,
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useOrdemHubs } from '@/hooks/useOrdemMaterias';
 
-function SortableHubItem({ id, children, isExpanded, toggleCat }: any) {
+function SortableHubItem({ id, children, isExpanded }: any) {
   const {
     attributes,
     listeners,
@@ -45,8 +45,12 @@ function SortableHubItem({ id, children, isExpanded, toggleCat }: any) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} className={cn("mb-6 bg-card border border-border/50 rounded-2xl p-4 transition-all hover:border-border/80", isDragging && "opacity-60 ring-2 ring-primary scale-[1.01]")}>
-      <div {...attributes} {...listeners} className="cursor-move">
+    <div ref={setNodeRef} style={style} className={cn(
+      "bg-card border border-border/50 rounded-2xl p-4 transition-all hover:border-border/80", 
+      isDragging && "opacity-60 ring-2 ring-primary scale-[1.01]",
+      isExpanded ? "col-span-full h-auto" : "h-full flex flex-col"
+    )}>
+      <div {...attributes} {...listeners} className={cn("cursor-move", !isExpanded && "flex-1 flex flex-col")}>
         {children}
       </div>
     </div>
@@ -124,7 +128,7 @@ export default function Biblioteca() {
 
   return (
     <div className="min-h-screen pb-12">
-      <div className="max-w-3xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         
         <button
           onClick={() => navigate('/')}
@@ -188,10 +192,11 @@ export default function Biblioteca() {
           >
             <SortableContext
               items={sortedAndFilteredHubs.map(cat => cat.slug)}
-              strategy={verticalListSortingStrategy}
+              strategy={rectSortingStrategy}
             >
-              {sortedAndFilteredHubs.map(cat => {
-                const leafSlugs = getAllLeafSlugs(cat);
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-start">
+                {sortedAndFilteredHubs.map(cat => {
+                  const leafSlugs = getAllLeafSlugs(cat);
                 const catEstados = leafSlugs
                   .map(slug => estados.find(e => e.config.slug === slug))
                   .filter(Boolean) as typeof estados;
@@ -316,6 +321,7 @@ export default function Biblioteca() {
                   </SortableHubItem>
                 );
               })}
+              </div>
             </SortableContext>
           </DndContext>
         )}
