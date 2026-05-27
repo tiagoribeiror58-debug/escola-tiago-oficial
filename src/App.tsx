@@ -8,7 +8,6 @@ import Sessao from "./pages/Sessao.tsx";
 import Historico from "./pages/Historico.tsx";
 import Categoria from "./pages/Categoria.tsx";
 import Biblioteca from "./pages/Biblioteca.tsx";
-import EmentaPage from "./pages/EmentaPage.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { FloatingChatProvider } from "./contexts/FloatingChatContext.tsx";
 import { FloatingChatWidget } from "./components/FloatingChatWidget.tsx";
@@ -29,7 +28,6 @@ const App = () => (
             <Route path="/categoria/:slug" element={<Categoria />} />
             <Route path="/categoria/:slug/:sub" element={<Categoria />} />
             <Route path="/biblioteca" element={<Biblioteca />} />
-            <Route path="/ementa/:slug" element={<EmentaPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <FloatingChatWidget />

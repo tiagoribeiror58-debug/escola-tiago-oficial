@@ -553,15 +553,6 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                  <p className="text-[11px] text-muted-foreground mb-3 max-w-xs mx-auto">
                    Clique em qualquer item do roadmap acima para começar a estudar.
                  </p>
-                 {flatEmenta.length > 0 && (
-                  <button
-                    onClick={() => { playPopSound(); onOpenChange(false); navigate(`/ementa/${config.slug}`); }}
-                    className="w-full sm:w-auto flex items-center justify-center gap-2 py-2 px-6 rounded-xl text-[12px] font-medium bg-muted/30 border border-border/50 hover:bg-muted text-foreground transition-all active:scale-95"
-                  >
-                    <MapIcon className="w-3.5 h-3.5 opacity-60" />
-                    Ver jornada completa ({ementaConcluida.length}/{flatEmenta.length})
-                  </button>
-                 )}
               </div>
             ) : (
               <>

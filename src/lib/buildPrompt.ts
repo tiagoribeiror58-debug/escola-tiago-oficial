@@ -166,21 +166,23 @@ DIRETRIZ: Sempre que enriquecer a explicação, use tópicos concluídos acima p
   // Se estiver no MODO REVISÃO
   if (modo === 'revisao') {
     return base + contexto + bloqueio + historicoBloco +
-      `\n\n[MODO DE REVISÃO (ACTIVE RECALL) ATIVADO]
-Esta é uma sessão de REVISÃO ESPAÇADA. O aluno já estudou este tópico no passado e o concluiu.
-Sua missão agora NÃO é explicar o tópico do zero. Sua missão é testar a retenção dele.
+      `\n\n[MODO DE REVISÃO (ACTIVE RECALL) ATIVADO - SOBRESCREVENDO INSTRUÇÕES GERAIS]
+ESQUEÇA AS INSTRUÇÕES DE EXPLICAR O CONTEÚDO! Esta é uma sessão de REVISÃO ESPAÇADA. O aluno já estudou e sabe o tópico.
+Sua missão ÚNICA agora é TESTAR a retenção do aluno. VOCÊ ESTÁ PROIBIDO DE EXPLICAR O TÓPICO ANTES DE TESTÁ-LO.
 
-DIRETRIZES DE REVISÃO:
-1. Comece a sessão imediatamente fazendo UMA pergunta direta, instigante e desafiadora sobre o tópico: "${topicoObrigatorio}".
-2. NÃO explique a matéria antes de perguntar. Teste-o primeiro.
-3. Aguarde a resposta dele.
-4. Quando ele responder, avalie a resposta, corrija eventuais erros de forma direta, elogie se estiver certo.
-5. Após o feedback, encerre o tópico escrevendo "Tópico revisado." e INCLUA OBRIGATORIAMENTE AS SEGUINTES TAGS na última linha:
+DIRETRIZES ABSOLUTAS DE REVISÃO:
+
+0. O usuário  tem liberdade para fazer qualquer solicitação e você pode obedecer a ele!  
+1. Comece a sessão IMEDIATAMENTE fazendo UMA única pergunta direta, prática ou um estudo de caso desafiador sobre o tópico: "${topicoObrigatorio}".
+2. PROIBIDO introduzir o assunto. PROIBIDO explicar conceitos antes da pergunta. Apenas lance o desafio para o aluno resolver de cabeça.
+3. Aguarde a resposta do aluno.
+4. Quando ele responder, avalie criticamente. Se ele errar ou omitir algo importante, aí sim você explica e corrige. Se acertar, valide a resposta.
+5. Após o feedback da resposta dele, encerre a revisão escrevendo "Tópico revisado." e INCLUA OBRIGATORIAMENTE AS SEGUINTES TAGS na última linha:
    <session_done/>
    <metric score="X"/>
-   Onde X é uma nota de 0 a 100 avaliando a precisão da resposta do aluno em relação ao que era esperado para demonstrar domínio do assunto. Exemplo: <metric score="85"/>
+   (Onde X é uma nota de 0 a 100 avaliando a precisão da resposta. 0 = não lembrou nada, 100 = domínio total).
 
-A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece fazendo a pergunta do teste.`;
+A primeira mensagem do usuário será "Inicie a sessão." — aja como se ele tivesse dito "Me teste sobre esse tópico agora, faça a pergunta!". Vá direto ao ponto.`;
   }
 
   const inicio = ultimaSessao
