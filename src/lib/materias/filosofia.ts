@@ -1,0 +1,111 @@
+import { MateriaConfig } from '@/types';
+
+export const filosofiaHub: MateriaConfig = {
+  slug: 'filosofia-hub',
+  nome: 'Filosofia & Epistemologia Aplicada',
+  emoji: '🦉',
+  isCategory: true,
+  descricao: 'Como você sabe o que sabe? Ferramentas para pensar com rigor, detectar falácias e não ser enganado por argumentos bonitos.',
+  children: [
+    {
+      slug: 'epistemologia-aplicada',
+      nome: 'Epistemologia & Teoria do Conhecimento',
+      emoji: '🔍',
+      isCategory: false,
+      parent: 'filosofia-hub',
+      whyStart: 'Antes de aprender qualquer coisa, você precisa saber como o conhecimento funciona. Senão você só acumula crenças disfarçadas de fatos.',
+      descricao: 'Como distinguir conhecimento real de opinião, crença e ilusão.',
+      contexto: `Foco: epistemologia prática — como avaliar se algo é verdade antes de agir com base nisso.
+
+Abordagem obrigatória:
+- Sempre ancore em exemplos do dia a dia, não em abstrações filosóficas puras.
+- Conecte cada conceito a uma decisão real que alguém tomaria melhor sabendo isso.
+- Sem jargão acadêmico desnecessário. Filosofia é ferramenta, não decoração.`,
+      ementa: [
+        'O que é Conhecimento? (Crença Verdadeira Justificada e o Problema de Gettier)',
+        'Empirismo vs Racionalismo: De Onde Vem o Que Você Sabe?',
+        'O Problema da Indução de Hume: Por Que o Passado Não Garante o Futuro',
+        'Falseabilidade de Karl Popper: O Que Faz Uma Ideia Ser Científica',
+        'Paradigmas e Revoluções Científicas (Thomas Kuhn)',
+        'Viés de Confirmação Epistêmico: Você Só Vê o Que Já Acredita',
+        'O Problema da Demarcação: Ciência vs Pseudociência',
+        'Navalha de Ockham: A Explicação Mais Simples é Provavelmente a Certa',
+        'Bayesianismo: Atualizar Crenças com Nova Evidência',
+        'A Diferença entre Correlação e Causalidade (na Prática)',
+        'Ceticismo Pirrônico: Suspender o Julgamento Quando a Evidência é Fraca',
+        'Argumento de Autoridade: Quando Confiar e Quando Desconfiar',
+        'O Efeito Dunning-Kruger e a Cegueira do Especialista',
+        'Metacognição Epistêmica: Saber o Que Você Não Sabe',
+        'Epistemologia do Testemunho: Quando Acreditar nos Outros',
+        'O Problema do Conhecimento Tácito (Michael Polanyi)',
+        'Heurísticas de Julgamento (Kahneman): Atalhos Que Enganam',
+        'O Mapa Não é o Território (Korzybski e a Semântica Geral)'
+      ]
+    },
+    {
+      slug: 'logica-argumentacao',
+      nome: 'Lógica & Detecção de Falácias',
+      emoji: '⚖️',
+      isCategory: false,
+      parent: 'filosofia-hub',
+      whyStart: 'Se você não sabe identificar um argumento ruim, vai ser manipulado por qualquer pessoa que fale com confiança.',
+      descricao: 'Lógica formal e informal para blindar seu pensamento contra enganos.',
+      contexto: `Foco: lógica como arma de defesa intelectual. O aluno precisa sair conseguindo desmontar argumentos ruins em tempo real.
+
+Abordagem obrigatória:
+- Todo conceito precisa de um exemplo de argumento real (política, mídia, vendas) onde a falácia aparece.
+- Não ensine lógica como matemática abstrata. Ensine como detecção de bullshit.`,
+      ementa: [
+        'Anatomia de um Argumento: Premissas, Conclusão e Validade',
+        'Dedução vs Indução vs Abdução: Três Formas de Raciocinar',
+        'Falácia do Espantalho: Atacar Uma Versão Distorcida do Argumento',
+        'Falácia Ad Hominem: Atacar a Pessoa em Vez da Ideia',
+        'Apelo à Emoção: Quando o Sentimento Substitui a Evidência',
+        'Falso Dilema: Criar Duas Opções Quando Existem Mais',
+        'Ladeira Escorregadia (Slippery Slope): Prever Catástrofe Sem Justificativa',
+        'Falácia do Custo Irrecuperável: Insistir Porque Já Investiu',
+        'Apelo à Natureza: "Se é Natural, é Bom" (Não é)',
+        'Falácia da Composição e da Divisão: Parte ≠ Todo',
+        'Cherry Picking: Selecionar Só os Dados Que Confirmam',
+        'Petição de Princípio (Raciocínio Circular): Concluir o Que Pressupôs',
+        'Tu Quoque: "Você Também Faz" Não É Defesa',
+        'Falácia do Jogador (Gambler\'s Fallacy): Probabilidades Não Têm Memória',
+        'Argumento da Incredulidade Pessoal: "Não Consigo Imaginar, Logo é Falso"',
+        'Modus Ponens, Modus Tollens e Silogismos Básicos',
+        'Tabelas-Verdade: O Esqueleto da Lógica Proposicional',
+        'Lógica Modal Básica: Necessidade vs Possibilidade'
+      ]
+    },
+    {
+      slug: 'etica-dilemas',
+      nome: 'Ética & Tomada de Decisão Moral',
+      emoji: '🧭',
+      isCategory: false,
+      parent: 'filosofia-hub',
+      whyStart: 'Toda decisão importante é uma decisão ética disfarçada. Se você não tem framework, vai decidir por impulso e se arrepender.',
+      descricao: 'Frameworks éticos práticos para decisões difíceis no mundo real.',
+      contexto: `Foco: ética aplicada a decisões reais — negócios, tecnologia, relacionamentos.
+
+Abordagem obrigatória:
+- Cada framework ético deve ser apresentado com um dilema real onde ele seria aplicado.
+- Nunca diga qual é a resposta "certa". Mostre os trade-offs de cada framework.`,
+      ementa: [
+        'Utilitarismo de Bentham: O Maior Bem Para o Maior Número',
+        'O Problema do Bonde (Trolley Problem) e Suas Variações',
+        'Ética Deontológica de Kant: Regras Absolutas vs Consequências',
+        'O Imperativo Categórico: "E Se Todo Mundo Fizesse Isso?"',
+        'Ética das Virtudes de Aristóteles: Ser Bom vs Fazer o Bem',
+        'Contratualismo (Rawls): O Véu da Ignorância na Hora de Decidir',
+        'Ética de Nietzsche: Moral dos Senhores vs Moral dos Escravos',
+        'Dilemas Éticos em IA: Viés Algorítmico e Responsabilidade',
+        'Ética nos Negócios: Lucro vs Responsabilidade Social (Friedman vs Stakeholder)',
+        'O Paradoxo da Tolerância (Karl Popper): Quando Tolerar a Intolerância?',
+        'Ética da Informação: Privacidade, Vigilância e Direito ao Esquecimento',
+        'Falácia Naturalista na Moral: "Sempre Foi Assim" Não Justifica Nada',
+        'Consequências de Segunda e Terceira Ordem: Efeitos Não Intencionais',
+        'O Problema do Free Rider e a Tragédia dos Comuns',
+        'Ética Estoica Aplicada: O Que Está Sob Seu Controle?'
+      ]
+    }
+  ]
+};

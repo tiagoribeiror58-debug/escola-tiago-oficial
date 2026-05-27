@@ -16,6 +16,9 @@ import { realidadeHub } from './materias/realidade';
 import { pragmatismoHub } from './materias/pragmatismo';
 import { marketingHub } from './materias/marketing';
 import { neurocienciaProfissional } from './materias/neurociencia-profissional';
+import { filosofiaHub } from './materias/filosofia';
+import { escritaHub } from './materias/escrita';
+import { liderancaHub } from './materias/lideranca';
 
 export const MATERIAS: MateriaConfig[] = [
   performanceIntelecto,
@@ -35,6 +38,9 @@ export const MATERIAS: MateriaConfig[] = [
   pragmatismoHub,
   marketingHub,
   neurocienciaProfissional,
+  filosofiaHub,
+  escritaHub,
+  liderancaHub,
 ];
 
 export function getMateriaBySlug(slug: string, list: MateriaConfig[] = MATERIAS): MateriaConfig | undefined {
