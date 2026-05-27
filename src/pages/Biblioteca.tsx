@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useFolhasEstado } from '@/hooks/useSessoes';
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowLeft, Pin, PinOff, ChevronRight, ChevronDown } from 'lucide-react';
+import { Search, ArrowLeft, Pin, PinOff, ChevronRight, ChevronDown } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -61,8 +61,9 @@ export default function Biblioteca() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
   
+  const [searchQuery, setSearchQuery] = useState('');
+  
   // Estado para controlar quais categorias estão abertas (sanfona).
-  // Por padrão, deixamos todas fechadas para não poluir a tela.
   const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set());
 
   const toggleCat = (slug: string) => {
@@ -97,6 +98,30 @@ export default function Biblioteca() {
     setModalOpen(true);
   };
 
+  const normalizedQuery = searchQuery.toLowerCase().trim();
+
+  const sortedAndFilteredHubs = [...MATERIAS]
+    .sort((a, b) => {
+      const indexA = ordemHubs.indexOf(a.slug);
+      const indexB = ordemHubs.indexOf(b.slug);
+      if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+      if (indexA !== -1) return -1;
+      if (indexB !== -1) return 1;
+      return 0;
+    })
+    .filter(cat => {
+      if (!normalizedQuery) return true;
+      if (cat.nome.toLowerCase().includes(normalizedQuery)) return true;
+      if (cat.descricao?.toLowerCase().includes(normalizedQuery)) return true;
+      if (cat.children) {
+        return cat.children.some(child => 
+          child.nome.toLowerCase().includes(normalizedQuery) || 
+          (child.descricao && child.descricao.toLowerCase().includes(normalizedQuery))
+        );
+      }
+      return false;
+    });
+
   return (
     <div className="min-h-screen pb-12">
       <div className="max-w-3xl mx-auto px-4 py-8">
@@ -111,9 +136,20 @@ export default function Biblioteca() {
 
         <div className="mb-10">
           <h1 className="text-3xl font-semibold tracking-tight text-foreground">Biblioteca</h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-muted-foreground mt-2 mb-6">
             Escolha no que você quer focar. As matérias fixadas aparecerão na sua tela inicial para evitar distrações.
           </p>
+          
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input 
+              type="text" 
+              placeholder="Pesquisar hubs ou matérias..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-card border border-border/50 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+            />
+          </div>
         </div>
 
         {isLoading ? (
@@ -129,6 +165,8 @@ export default function Biblioteca() {
             onDragEnd={(event) => {
               const { active, over } = event;
               if (over && active.id !== over.id) {
+                // Na reordenação, usamos apenas os itens filtrados ou mexemos no array global?
+                // Mexemos no array global para não bugar.
                 const sortedHubs = [...MATERIAS].sort((a, b) => {
                   const indexA = ordemHubs.indexOf(a.slug);
                   const indexB = ordemHubs.indexOf(b.slug);
@@ -149,17 +187,10 @@ export default function Biblioteca() {
             }}
           >
             <SortableContext
-              items={MATERIAS.map(cat => cat.slug)}
+              items={sortedAndFilteredHubs.map(cat => cat.slug)}
               strategy={verticalListSortingStrategy}
             >
-              {[...MATERIAS].sort((a, b) => {
-                  const indexA = ordemHubs.indexOf(a.slug);
-                  const indexB = ordemHubs.indexOf(b.slug);
-                  if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-                  if (indexA !== -1) return -1;
-                  if (indexB !== -1) return 1;
-                  return 0;
-                }).map(cat => {
+              {sortedAndFilteredHubs.map(cat => {
                 const leafSlugs = getAllLeafSlugs(cat);
                 const catEstados = leafSlugs
                   .map(slug => estados.find(e => e.config.slug === slug))
@@ -167,15 +198,14 @@ export default function Biblioteca() {
                 
                 if (catEstados.length === 0) return null;
 
-                const isExpanded = expandedCats.has(cat.slug);
+                // Se houver pesquisa, auto-expande os resultados para melhor UX
+                const isExpanded = expandedCats.has(cat.slug) || normalizedQuery.length > 0;
 
                 return (
                   <SortableHubItem key={cat.slug} id={cat.slug}>
                     {/* Hub header — clicável, expande/recolhe as matérias */}
                     <div
                       onClick={(e) => {
-                        // Prevent drag from triggering click if it was a drag gesture
-                        // But DndKit handles this mostly.
                         toggleCat(cat.slug);
                       }}
                       className="group flex items-start gap-3 cursor-pointer select-none"
@@ -210,7 +240,16 @@ export default function Biblioteca() {
                     
                     {isExpanded && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-5 border-t border-border/50 cursor-default" onPointerDown={e => e.stopPropagation()}>
-                        {catEstados.map((estado, index) => {
+                        {catEstados
+                          .filter(estado => {
+                            if (!normalizedQuery) return true;
+                            // Se a pesquisa bateu com o HUB pai, mostra todas as filhas
+                            if (cat.nome.toLowerCase().includes(normalizedQuery) || cat.descricao?.toLowerCase().includes(normalizedQuery)) return true;
+                            // Senão, filtra as filhas individualmente
+                            return estado.config.nome.toLowerCase().includes(normalizedQuery) || 
+                                   (estado.config.descricao && estado.config.descricao.toLowerCase().includes(normalizedQuery));
+                          })
+                          .map((estado, index) => {
                           const pinned = isFocado(estado.config.slug);
                           return (
                             <div key={estado.config.slug}>
@@ -232,7 +271,8 @@ export default function Biblioteca() {
                                         <span className="text-2xl">{estado.config.emoji}</span>
                                         <div className="flex flex-col">
                                           <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">
-                                            Etapa {index + 1}
+                                            {/* Não mostrar "Etapa X" se estiver filtrando, pois a ordem muda */}
+                                            {normalizedQuery ? 'MATÉRIA' : `Etapa ${index + 1}`}
                                           </span>
                                           <h3 className="font-semibold text-foreground tracking-tight leading-tight">
                                             {estado.config.nome}
