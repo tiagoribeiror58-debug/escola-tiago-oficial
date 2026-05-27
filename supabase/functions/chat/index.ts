@@ -36,6 +36,22 @@ serve(async (req) => {
     const TAVILY_API_KEY = Deno.env.get("TAVILY_API_KEY");
     let finalSystemPrompt = systemPrompt || "You are a helpful assistant.";
 
+    // --- 0. INSTRUÇÕES VISUAIS (MERMAID & UNSPLASH) ---
+    finalSystemPrompt += `
+
+[INSTRUÇÃO VISUAL CRÍTICA]:
+Você tem a capacidade de gerar RECURSOS VISUAIS para o aluno usando duas ferramentas didáticas: Diagramas e Fotos Reais.
+1. DIAGRAMAS LÓGICOS (Mermaid): Se você precisar explicar um processo, ciclo, organograma, ou mapa mental, crie um bloco de código Markdown com a linguagem \`mermaid\`. 
+Exemplo:
+\`\`\`mermaid
+graph TD;
+    A-->B;
+\`\`\`
+2. FOTOS REAIS (Unsplash): Se você estiver explicando sobre um local histórico, animal, evento, ou qualquer conceito que se beneficie muito de uma fotografia real, adicione ao FINAL da sua resposta a exata tag a seguir: [FOTO: termo_de_busca_em_ingles]
+Exemplo: [FOTO: ancient rome colosseum]
+OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. Não é obrigatório usar em todas as mensagens.
+`;
+
     // Cria um stream customizado para emitir eventos antes da IA principal
     const stream = new ReadableStream({
       async start(controller) {

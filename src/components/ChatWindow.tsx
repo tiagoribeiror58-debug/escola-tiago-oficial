@@ -10,6 +10,8 @@ import confetti from 'canvas-confetti';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
+import MermaidRenderer from './MermaidRenderer';
+import UnsplashChip from './UnsplashChip';
 
 interface Props {
   materia: MateriaConfig;
@@ -100,6 +102,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       .replace(/>\s*/g, '')
       .replace(/^[-*+]\s+/gm, '')
       .replace(/<[^>]+>/g, '')
+      .replace(/\[FOTO:.*?\]/gi, '')
       .replace(/\n{2,}/g, '. ')
       .replace(/\n/g, ' ')
       .trim();
@@ -516,7 +519,12 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               const thinkingContent = hasThinking ? thinkingMatch[1].trim() : '';
               
               // Main content is everything after the thinking block (if closed), or empty if still thinking
-              const mainContent = contentWithoutChips.replace(/<details><summary>Raciocínio da IA<\/summary>[\s\S]*?(?:<\/details>|$)/i, '').trim();
+              const mainContentRaw = contentWithoutChips.replace(/<details><summary>Raciocínio da IA<\/summary>[\s\S]*?(?:<\/details>|$)/i, '').trim();
+              
+              // Extract Unsplash Photo tag
+              const photoMatch = mainContentRaw.match(/\[FOTO:\s*(.*?)\]/i);
+              const photoTerm = photoMatch ? photoMatch[1].trim() : null;
+              const mainContent = mainContentRaw.replace(/\[FOTO:\s*.*?\]/i, '').trim();
 
               return (
                 <div className="space-y-3">
@@ -576,6 +584,9 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                           ),
                           code({ node, inline, className, children, ...props }: any) {
                             const match = /language-(\w+)/.exec(className || '');
+                            if (!inline && match && match[1] === 'mermaid') {
+                              return <MermaidRenderer code={String(children).replace(/\n$/, '')} />;
+                            }
                             return !inline && match ? (
                               <SyntaxHighlighter
                                 {...props}
@@ -596,6 +607,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                       >
                         {mainContent}
                       </ReactMarkdown>
+                      {photoTerm && <UnsplashChip searchTerm={photoTerm} />}
                     </div>
                   )}
                 </div>
