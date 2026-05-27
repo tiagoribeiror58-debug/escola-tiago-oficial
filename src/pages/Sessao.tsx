@@ -374,7 +374,7 @@ export default function Sessao() {
 
       toast.success('Sessão pausada');
       setSaving(false);
-      navigate(`/`);
+      navigate(`/?materia=${slug}`);
     } catch (err) {
       console.error(err);
       toast.error('Erro ao pausar — tente novamente');
@@ -431,7 +431,7 @@ export default function Sessao() {
             if (!topicComplete && !isAlreadyCompleted && messageCount > 0) {
               handlePausar();
             } else {
-              navigate(`/`);
+              navigate(`/?materia=${slug}`);
             }
           }}
           className="p-1.5 -ml-1.5 rounded-lg hover:bg-muted transition-colors shrink-0"

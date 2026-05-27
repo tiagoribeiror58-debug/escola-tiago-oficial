@@ -88,6 +88,21 @@ export default function Index() {
   
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
+
+  useEffect(() => {
+    const paramSlug = searchParams.get('materia');
+    if (paramSlug && estados.length > 0) {
+      const mat = estados.find(e => e.config.slug === paramSlug);
+      if (mat) {
+        setSelectedEstado(mat);
+        setModalOpen(true);
+        setSearchParams(prev => {
+          prev.delete('materia');
+          return prev;
+        }, { replace: true });
+      }
+    }
+  }, [searchParams, estados, setSearchParams]);
   const [isHistoricoOpen, setIsHistoricoOpen] = useState(false);
 
   const { fixadas, toggleFixada, isFixada } = useMateriasFixadas();
