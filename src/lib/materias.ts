@@ -19,6 +19,7 @@ import { neurocienciaProfissional } from './materias/neurociencia-profissional';
 import { filosofiaHub } from './materias/filosofia';
 import { escritaHub } from './materias/escrita';
 import { liderancaHub } from './materias/lideranca';
+import { habilitacaoHub } from './materias/habilitacao';
 
 export const MATERIAS: MateriaConfig[] = [
   performanceIntelecto,
@@ -41,6 +42,7 @@ export const MATERIAS: MateriaConfig[] = [
   filosofiaHub,
   escritaHub,
   liderancaHub,
+  habilitacaoHub,
 ];
 
 export function getMateriaBySlug(slug: string, list: MateriaConfig[] = MATERIAS): MateriaConfig | undefined {
