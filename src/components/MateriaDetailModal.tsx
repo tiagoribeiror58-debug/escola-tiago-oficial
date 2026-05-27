@@ -543,7 +543,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
           )}
 
           {/* Spacer para o sticky footer não cobrir o conteúdo do final do scroll */}
-          <div className="h-32 sm:h-36 shrink-0" />
+          <div className="h-56 sm:h-64 shrink-0" />
 
           {/* Sticky Footer Area */}
           <div className="absolute bottom-0 left-0 right-0 bg-background/95 backdrop-blur-xl border-t border-border z-10 sm:rounded-b-3xl p-4 shadow-[0_-15px_40px_-15px_rgba(0,0,0,0.3)]">
@@ -651,9 +651,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                       : "text-white/40"
                   )} />
                 </Link>
-                {selectedSub && (
+                {selectedSub && (isSelectedSubCompleted || isSelectedSubPaused) && (
                   <div className="flex gap-2 mt-2 w-full">
-                    {isSelectedSubCompleted ? (
+                    {isSelectedSubCompleted && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -667,36 +667,20 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                       >
                         Revisar (Active Recall)
                       </button>
-                    ) : (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (config && selectedSub) {
-                            playPopSound();
-                            onOpenChange(false);
-                            openChat(config.slug, selectedSub);
-                          }
-                        }}
-                        className="flex-1 py-3 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-[13px] flex items-center justify-center gap-2 transition-all active:scale-[0.98] border border-primary/20"
-                      >
-                        Abrir Chat Flutuante
-                      </button>
                     )}
-                    {(isSelectedSubCompleted || isSelectedSubPaused) && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (window.confirm(`Tem certeza que deseja apagar todo o histórico de sessões do tópico '${selectedSub}'?`)) {
-                            excluirTopico.mutate({ materia: config.slug, topico: selectedSub });
-                            playPopSound();
-                          }
-                        }}
-                        className="px-4 py-3 rounded-xl bg-destructive/10 hover:bg-destructive/20 text-destructive font-semibold text-[13px] flex items-center justify-center gap-2 transition-all active:scale-[0.98] border border-destructive/20"
-                        title="Apagar histórico deste tópico"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
-                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm(`Tem certeza que deseja apagar todo o histórico de sessões do tópico '${selectedSub}'?`)) {
+                          excluirTopico.mutate({ materia: config.slug, topico: selectedSub });
+                          playPopSound();
+                        }
+                      }}
+                      className="px-4 py-3 rounded-xl bg-destructive/10 hover:bg-destructive/20 text-destructive font-semibold text-[13px] flex items-center justify-center gap-2 transition-all active:scale-[0.98] border border-destructive/20"
+                      title="Apagar histórico deste tópico"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
                   </div>
                 )}
                 </>
