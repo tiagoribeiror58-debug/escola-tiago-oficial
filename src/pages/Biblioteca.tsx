@@ -22,13 +22,13 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  rectSortingStrategy,
+  verticalListSortingStrategy,
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useOrdemHubs } from '@/hooks/useOrdemMaterias';
 
-function SortableHubItem({ id, children, isExpanded }: any) {
+function SortableHubItem({ id, children, isExpanded, toggleCat }: any) {
   const {
     attributes,
     listeners,
@@ -45,12 +45,8 @@ function SortableHubItem({ id, children, isExpanded }: any) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} className={cn(
-      "bg-card border border-border/50 rounded-2xl p-4 transition-all hover:border-border/80", 
-      isDragging && "opacity-60 ring-2 ring-primary scale-[1.01]",
-      isExpanded ? "col-span-full h-auto" : "h-full flex flex-col"
-    )}>
-      <div {...attributes} {...listeners} className={cn("cursor-move", !isExpanded && "flex-1 flex flex-col")}>
+    <div ref={setNodeRef} style={style} className={cn("mb-6 bg-card border border-border/50 rounded-2xl p-4 transition-all hover:border-border/80", isDragging && "opacity-60 ring-2 ring-primary scale-[1.01]")}>
+      <div {...attributes} {...listeners} className="cursor-move">
         {children}
       </div>
     </div>
@@ -66,6 +62,7 @@ export default function Biblioteca() {
   const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
   
   const [searchQuery, setSearchQuery] = useState('');
+  const [visibleLimit, setVisibleLimit] = useState(4);
   
   // Estado para controlar quais categorias estão abertas (sanfona).
   const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set());
@@ -126,9 +123,11 @@ export default function Biblioteca() {
       return false;
     });
 
+  const visibleHubs = normalizedQuery ? sortedAndFilteredHubs : sortedAndFilteredHubs.slice(0, visibleLimit);
+
   return (
     <div className="min-h-screen pb-12">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-3xl mx-auto px-4 py-8">
         
         <button
           onClick={() => navigate('/')}
@@ -150,7 +149,12 @@ export default function Biblioteca() {
               type="text" 
               placeholder="Pesquisar hubs ou matérias..." 
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (!e.target.value && visibleLimit < 4) {
+                  setVisibleLimit(4);
+                }
+              }}
               className="w-full bg-card border border-border/50 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
             />
           </div>
@@ -163,6 +167,7 @@ export default function Biblioteca() {
             ))}
           </div>
         ) : (
+          <>
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -191,12 +196,11 @@ export default function Biblioteca() {
             }}
           >
             <SortableContext
-              items={sortedAndFilteredHubs.map(cat => cat.slug)}
-              strategy={rectSortingStrategy}
+              items={visibleHubs.map(cat => cat.slug)}
+              strategy={verticalListSortingStrategy}
             >
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-start">
-                {sortedAndFilteredHubs.map(cat => {
-                  const leafSlugs = getAllLeafSlugs(cat);
+              {visibleHubs.map(cat => {
+                const leafSlugs = getAllLeafSlugs(cat);
                 const catEstados = leafSlugs
                   .map(slug => estados.find(e => e.config.slug === slug))
                   .filter(Boolean) as typeof estados;
@@ -321,9 +325,31 @@ export default function Biblioteca() {
                   </SortableHubItem>
                 );
               })}
-              </div>
             </SortableContext>
           </DndContext>
+
+          {!normalizedQuery && sortedAndFilteredHubs.length > 4 && (
+            <div className="flex items-center gap-2 mb-8">
+              {visibleLimit > 4 && (
+                <button
+                  onClick={() => setVisibleLimit(prev => Math.max(4, prev - 4))}
+                  className="flex-1 py-3 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
+                >
+                  Ver menos (esconder 4)
+                </button>
+              )}
+              
+              {visibleLimit < sortedAndFilteredHubs.length && (
+                <button
+                  onClick={() => setVisibleLimit(prev => prev + 4)}
+                  className="flex-1 py-3 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
+                >
+                  Ver mais (mostrar até {Math.min(visibleLimit + 4, sortedAndFilteredHubs.length)} de {sortedAndFilteredHubs.length})
+                </button>
+              )}
+            </div>
+          )}
+          </>
         )}
       </div>
 
