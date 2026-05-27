@@ -208,40 +208,6 @@ Abordagem obrigatória:
           ]
         },
         {
-          slug: 'biohacking',
-          nome: 'Biohacking',
-          emoji: '🧪',
-          parent: 'corpo-biologia',
-          whyStart: 'Agora que você entende o cérebro, você implementa os protocolos com inteligência. Cada protocolo tem um mecanismo.',
-          descricao: 'Protocolos baseados em ciência para otimizar sono, energia, foco e longevidade.',
-          contexto: `Foco: otimização de performance humana — sono, nutrição, suplementação, exercício, estresse.
-
-Abordagem obrigatória:
-- Explique o mecanismo fisiológico antes de qualquer protocolo.
-- Seja transparente sobre nível de evidência: separe o que tem ensaio clínico do que é anedotal.`,
-          ementa: [
-            'Ritmo Circadiano e Luz Solar Matinal',
-            'Arquitetura do Sono (REM e Deep Sleep)',
-            'Termogênese e Cold Exposure',
-            'Janela Alimentar e Otimização Metabólica',
-            'Neurotransmissores e Nutrição (Dopamina Base)',
-            'Protocolos de Luz: Manhã, Tarde e Noite',
-            'Sauna e Heat Shock Proteins',
-            'Suplementos com Evidência: Creatina, Magnésio, Vitamina D',
-            'HRV (Heart Rate Variability) como Marcador de Recuperação',
-            'Zonas de Treino Aeróbico para Longevidade',
-            'Modulação de Cortisol ao Longo do Dia',
-            'Jejum Prolongado: Benefícios e Riscos Estruturais',
-            'Técnicas de Respiração (Wim Hof, Box Breathing)',
-            'Monitoring Wearables: O Que Vale Medir',
-            'Longevidade: O Protocolo de Bryan Johnson',
-            'Terapia de Luz Vermelha (Fotobiomodulação)',
-            'Grounding (Earthing): Evidências e Limitações',
-            'CGM (Continuous Glucose Monitor): Monitorando Glicose em Tempo Real',
-            'Peptídeos e Hormesis: Fronteiras da Otimização'
-          ]
-        },
-        {
           slug: 'nutricao-otimizada',
           nome: 'Nutrição Otimizada',
           emoji: '🥑',

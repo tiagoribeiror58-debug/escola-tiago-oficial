@@ -57,7 +57,27 @@ export const biohackingHub: MateriaConfig = {
             'Exercícios Isométricos de Super-compensação',
             'Engenharia da Longevidade: Protocolos de Reversão Biológica',
             'Nutrição Baseada em Biomarcadores em Tempo Real',
-            'Biohacking de Terceira Geração: Senolíticos e Reprogramação Celular'
+            'Biohacking de Terceira Geração: Senolíticos e Reprogramação Celular',
+            // Tópicos fundidos da antiga matéria "Biohacking"
+            'Ritmo Circadiano e Luz Solar Matinal',
+            'Arquitetura do Sono (REM e Deep Sleep)',
+            'Termogênese e Cold Exposure',
+            'Janela Alimentar e Otimização Metabólica',
+            'Neurotransmissores e Nutrição (Dopamina Base)',
+            'Protocolos de Luz: Manhã, Tarde e Noite',
+            'Sauna e Heat Shock Proteins',
+            'Suplementos com Evidência: Creatina, Magnésio, Vitamina D',
+            'HRV (Heart Rate Variability) como Marcador de Recuperação',
+            'Zonas de Treino Aeróbico para Longevidade',
+            'Modulação de Cortisol ao Longo do Dia',
+            'Jejum Prolongado: Benefícios e Riscos Estruturais',
+            'Técnicas de Respiração (Wim Hof, Box Breathing)',
+            'Monitoring Wearables: O Que Vale Medir',
+            'Longevidade: O Protocolo de Bryan Johnson',
+            'Terapia de Luz Vermelha (Fotobiomodulação)',
+            'Grounding (Earthing): Evidências e Limitações',
+            'CGM (Continuous Glucose Monitor): Monitorando Glicose em Tempo Real',
+            'Peptídeos e Hormesis: Fronteiras da Otimização'
           ]
     },
     {
