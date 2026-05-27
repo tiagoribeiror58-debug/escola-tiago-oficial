@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { getMateriaBySlug } from '@/lib/materias';
-import { useUltimaSessao, useEmentaConcluida, useRecentSessoes, useSessionByKey } from '@/hooks/useSessoes';
+import { useUltimaSessao, useEmentaConcluida, useRecentSessoes, useSessionByKey, useSaveMetricaRevisao } from '@/hooks/useSessoes';
 import { useChatHistory, useSessionMessages } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 import Workspace from '@/components/Workspace';
@@ -44,6 +44,7 @@ export default function Sessao() {
   );
 
   const modo = searchParams.get('modo');
+  const saveMetricaRevisao = useSaveMetricaRevisao();
 
 
   const sessionKey = useMemo(() => {
@@ -114,10 +115,10 @@ export default function Sessao() {
         materia: slug,
         topico: topicoDestaSessaoRascunho || 'Sessão iniciada',
         data: new Date().toISOString().split('T')[0],
-        erros: 0,
         dificuldade: 'media',
         nivel: ultimaSessao?.nivel || 1,
         duracao_min: 1,
+        decisao_proxima: 'Pausada',
         messages_json: [], // As mensagens reais ficam na tabela chat_messages enquando a sessão está ativa
       }).then(({ error }) => {
         if (error) {
@@ -139,7 +140,7 @@ export default function Sessao() {
     return () => window.removeEventListener('beforeunload', handler);
   }, []);
 
-  const doEncerrar = useCallback(async (forceComplete: boolean = false) => {
+  const doEncerrar = useCallback(async (forceComplete: boolean = false, isPause: boolean = false) => {
     // BUG-02: impede duplo encerramento (ex: usuário clica 2x após erro)
     if (isSavingRef.current) return;
     isSavingRef.current = true;
@@ -166,7 +167,17 @@ export default function Sessao() {
       // FIX: Se estivermos retomando uma sessão (resumeKey), preserva o tópico original dela!
       const topicoDestaSessaoSalvar = sub || (resumeKey && resumedSessionData ? resumedSessionData.topico : (resultadoDeterministico ? resultadoDeterministico.topico : topicoAtualParaExtrair));
 
-      if (messages.length < 4) {
+      if (isPause) {
+        sessionData = {
+          topico: topicoDestaSessaoSalvar || 'Sessão de estudos',
+          erros: 0,
+          dificuldade: 'media',
+          nivel: ultimaSessao?.nivel || 1,
+          proximo_topico: ultimaSessao?.proximo_topico || '',
+          decisao_proxima: 'Pausada',
+          observacoes: `Sessão pausada aos ${duracaoMin}min sobre "${topicoDestaSessaoSalvar}"`,
+        };
+      } else if (messages.length < 4) {
         // BUGFIX: sessão curta NÃO copia proximo_topico para topico.
         // Antes: topico = proximo_topico, proximo_topico = proximo_topico → loop!
         // Agora: preserva o estado anterior intacto — nada mudou de fato.
@@ -363,7 +374,7 @@ export default function Sessao() {
 
       toast.success('Sessão pausada');
       setSaving(false);
-      navigate(`/?materia=${slug}`);
+      navigate(`/materia/${slug}`);
     } catch (err) {
       console.error(err);
       toast.error('Erro ao pausar — tente novamente');
@@ -420,7 +431,7 @@ export default function Sessao() {
             if (!topicComplete && !isAlreadyCompleted && messageCount > 0) {
               handlePausar();
             } else {
-              navigate(`/?materia=${slug}`);
+              navigate(`/materia/${slug}`);
             }
           }}
           className="p-1.5 -ml-1.5 rounded-lg hover:bg-muted transition-colors shrink-0"
@@ -495,6 +506,11 @@ export default function Sessao() {
             modo={modo}
             ementaConcluida={ementaConcluida}
             sessoesRecentes={sessoesRecentes || []}
+            onMetricScore={(score) => {
+              if (slug && topicoDestaSessao) {
+                saveMetricaRevisao.mutate({ materia_slug: slug, topico: topicoDestaSessao, score });
+              }
+            }}
           />
         </Workspace>
       </div>

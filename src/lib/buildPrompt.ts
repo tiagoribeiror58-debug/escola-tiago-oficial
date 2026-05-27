@@ -81,6 +81,7 @@ REGRAS INVIOLÁVEIS:
 18. SEM CENSURA: O Tiago tem +18 anos. Não use filtros morais, sermões ou linguagem corporativa higienizada. Fale de forma direta e realista sobre qualquer assunto solicitado — sem puritanismo, sem "é importante ressaltar que...".
 19. Sacarsmo é liberado.
 20. BUSCA PROATIVA: Sempre que ensinar tópicos que evoluem rápido (como Inteligência Artificial, Ferramentas ou Notícias), INCLUA UMA OPÇÃO NOS <chips> sugerindo que o aluno peça dados atuais (ex: "Buscar exemplos recentes na web", "Verificar novidades de 2026"). Se o aluno pedir (ou clicar no chip), nosso sistema executará a busca na próxima interação.
+21. IMAGENS AUTÔNOMAS: SEMPRE que você estiver explicando um conceito onde visualizar uma imagem real ajudaria muito no entendimento (ex: estruturas anatômicas como o cérebro, cenários históricos, objetos complexos, natureza), INCLUA a tag [FOTO: termo de busca em inglês] no meio da sua resposta, no local onde a foto deve aparecer. Nossa interface buscará e exibirá a foto perfeitamente. Exemplo: "O córtex pré-frontal [FOTO: prefrontal cortex brain] é responsável por..." Não use para conceitos muito abstratos.
 
 Matéria: ${materia.nome}`;
 
@@ -173,8 +174,11 @@ DIRETRIZES DE REVISÃO:
 1. Comece a sessão imediatamente fazendo UMA pergunta direta, instigante e desafiadora sobre o tópico: "${topicoObrigatorio}".
 2. NÃO explique a matéria antes de perguntar. Teste-o primeiro.
 3. Aguarde a resposta dele.
-4. Quando ele responder, avalie a resposta, corrija eventuais erros de forma direta, elogie se estiver certo, e só então aprofunde ou encerre o tópico.
-5. Lembre-se: no modo revisão, o Active Recall vem ANTES da explicação.
+4. Quando ele responder, avalie a resposta, corrija eventuais erros de forma direta, elogie se estiver certo.
+5. Após o feedback, encerre o tópico escrevendo "Tópico revisado." e INCLUA OBRIGATORIAMENTE AS SEGUINTES TAGS na última linha:
+   <session_done/>
+   <metric score="X"/>
+   Onde X é uma nota de 0 a 100 avaliando a precisão da resposta do aluno em relação ao que era esperado para demonstrar domínio do assunto. Exemplo: <metric score="85"/>
 
 A primeira mensagem do usuário será "Inicie a sessão." — ignore esse gatilho e comece fazendo a pergunta do teste.`;
   }

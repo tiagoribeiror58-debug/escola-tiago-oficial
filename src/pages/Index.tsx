@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useFolhasEstado, useSessoes, calcularOfensiva, useEmentaConcluida } from '@/hooks/useSessoes';
+import { useFolhasEstado, useSessoes, calcularOfensiva, useEmentaConcluida, useMetricasRevisao } from '@/hooks/useSessoes';
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import { useMateriasFixadas } from '@/hooks/useMateriasFixadas';
 import MateriaCard from '@/components/MateriaCard';
@@ -9,7 +9,7 @@ import { MateriaEstado } from '@/types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
-import { Search, History, CalendarCheck } from 'lucide-react';
+import { Search, History, CalendarCheck, BrainCircuit } from 'lucide-react';
 import { HistoricoGlobalDrawer } from '@/components/HistoricoGlobalDrawer';
 import { useOrdemMaterias } from '@/hooks/useOrdemMaterias';
 import {
@@ -71,6 +71,10 @@ export default function Index() {
   const { estados, isLoading } = useFolhasEstado();
   const { foco } = useMateriasFoco();
   const { data: sessoes } = useSessoes();
+  const { data: metricasRevisao } = useMetricasRevisao();
+  const averageRetention = metricasRevisao && metricasRevisao.length > 0
+    ? Math.round(metricasRevisao.reduce((acc, m) => acc + m.score, 0) / metricasRevisao.length)
+    : 0;
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -225,15 +229,6 @@ export default function Index() {
           </div>
           
           <div className="flex items-center gap-2">
-            {/* Botão de Revisões */}
-            <button
-              onClick={() => navigate('/revisoes')}
-              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-primary/10 border-primary/20 text-primary hover:bg-primary/20 text-xs font-medium transition-all shadow-sm"
-            >
-              <CalendarCheck className="w-3.5 h-3.5" />
-              Revisões
-            </button>
-
             {/* Botão do Histórico */}
             <button
               onClick={() => setIsHistoricoOpen(true)}
@@ -253,6 +248,14 @@ export default function Index() {
               <Flame className={cn("w-3.5 h-3.5", ofensiva > 0 && "animate-pulse")} />
               {ofensiva} {ofensiva === 1 ? 'dia' : 'dias'}
             </div>
+
+            {/* Retenção de Memória */}
+            {metricasRevisao && metricasRevisao.length > 0 && (
+              <div className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-blue-500/10 border-blue-500/20 text-blue-500 text-xs font-medium transition-all shadow-sm" title={`${metricasRevisao.length} revisões feitas`}>
+                <BrainCircuit className="w-3.5 h-3.5" />
+                Retenção: {averageRetention}%
+              </div>
+            )}
 
           </div>
         </div>

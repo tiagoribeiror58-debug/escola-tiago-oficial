@@ -120,6 +120,18 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const currentIdx = firstUncompletedIdx === -1 ? flatEmenta.length : firstUncompletedIdx;
   const allDone = flatEmenta.length > 0 && ementaConcluida.length >= flatEmenta.length;
 
+  const allHiddenTopics = flatEmenta.filter((t, i) => i !== currentIdx);
+  const areAllRevealed = unhiddenTopics.size > 0 && allHiddenTopics.every(t => unhiddenTopics.has(t));
+
+  const toggleRevealAll = () => {
+    playPopSound();
+    if (areAllRevealed) {
+      setUnhiddenTopics(new Set());
+    } else {
+      setUnhiddenTopics(new Set(allHiddenTopics));
+    }
+  };
+
   const handleToggleTopico = (e: React.MouseEvent, topico: string, isCompleted: boolean) => {
     e.stopPropagation();
     if (config) {
@@ -263,16 +275,27 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
                     Roadmap
                   </p>
-                  <span className="text-[10px] font-medium bg-foreground/10 text-foreground px-2 py-0.5 rounded-full">
-                    {allDone ? 'Base concluída' : `${ementaConcluida.length} de ${flatEmenta.length}`}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    {flatEmenta.length > 0 && allHiddenTopics.length > 0 && (
+                      <button
+                        onClick={toggleRevealAll}
+                        className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded bg-muted/20 hover:bg-muted/50 border border-border/50"
+                      >
+                        {areAllRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        {areAllRevealed ? "Ocultar" : "Revelar"}
+                      </button>
+                    )}
+                    <span className="text-[10px] font-medium bg-foreground/10 text-foreground px-2 py-0.5 rounded-full">
+                      {allDone ? 'Base concluída' : `${ementaConcluida.length} de ${flatEmenta.length}`}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Timeline vertical */}
                 <div className="relative">
                   {(() => {
-                    const startIdx = Math.max(0, currentIdx - 2);
-                    const endIdx = Math.min(flatEmenta.length, currentIdx + 4 + expandedCount);
+                    const startIdx = areAllRevealed ? 0 : Math.max(0, currentIdx - 2);
+                    const endIdx = areAllRevealed ? flatEmenta.length : Math.min(flatEmenta.length, currentIdx + 4 + expandedCount);
                     const visibleEmenta = flatEmenta.slice(startIdx, endIdx);
                     
                     return (
@@ -297,13 +320,24 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                             (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico)))
                           );
                           const isLast = idx === flatEmenta.length - 1;
-                          const isVisible = isCurrent || unhiddenTopics.has(step);
+                          const isVisible = areAllRevealed || isCurrent || unhiddenTopics.has(step);
+
+                          const currentPhase = config.fases?.find(f => f.topicos.includes(step));
+                          const prevTopic = idx > 0 ? flatEmenta[idx - 1] : null;
+                          const prevPhase = prevTopic ? config.fases?.find(f => f.topicos.includes(prevTopic)) : null;
+                          const showPhaseHeader = currentPhase && currentPhase !== prevPhase;
 
                           return (
-                            <div key={idx} className={cn(
-                              "flex gap-3 relative group transition-opacity",
-                              !isCompleted && !isCurrent && !isPaused && "opacity-40"
-                            )}>
+                            <div key={idx} className="flex flex-col w-full">
+                              {showPhaseHeader && currentPhase.nome && (
+                                <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-2 mb-3 mt-4">
+                                  {currentPhase.nome}
+                                </h3>
+                              )}
+                              <div className={cn(
+                                "flex gap-3 relative group transition-opacity",
+                                !isCompleted && !isCurrent && !isPaused && "opacity-40"
+                              )}>
                                 {/* Indicador Visual */}
                                 <div className="flex flex-col items-center">
                                   <button 
@@ -410,6 +444,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                     {isVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                   </button>
                                 )}
+                              </div>
                               </div>
                             </div>
                           );
@@ -618,19 +653,35 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 </Link>
                 {selectedSub && (
                   <div className="flex gap-2 mt-2 w-full">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (config && selectedSub) {
-                          playPopSound();
-                          onOpenChange(false);
-                          openChat(config.slug, selectedSub);
-                        }
-                      }}
-                      className="flex-1 py-3 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-[13px] flex items-center justify-center gap-2 transition-all active:scale-[0.98] border border-primary/20"
-                    >
-                      Abrir Chat Flutuante
-                    </button>
+                    {isSelectedSubCompleted ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (config && selectedSub) {
+                            playPopSound();
+                            onOpenChange(false);
+                            navigate(`/sessao/${config.slug}?sub=${encodeURIComponent(selectedSub)}&modo=revisao`);
+                          }
+                        }}
+                        className="flex-1 py-3 rounded-xl bg-blue-500/10 text-blue-500 border border-blue-500/30 hover:bg-blue-500/20 font-semibold text-[13px] flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                      >
+                        Revisar (Active Recall)
+                      </button>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (config && selectedSub) {
+                            playPopSound();
+                            onOpenChange(false);
+                            openChat(config.slug, selectedSub);
+                          }
+                        }}
+                        className="flex-1 py-3 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-semibold text-[13px] flex items-center justify-center gap-2 transition-all active:scale-[0.98] border border-primary/20"
+                      >
+                        Abrir Chat Flutuante
+                      </button>
+                    )}
                     {(isSelectedSubCompleted || isSelectedSubPaused) && (
                       <button
                         onClick={(e) => {

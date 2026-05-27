@@ -50,6 +50,18 @@ export default function EmentaPage() {
     navigate(`/sessao/${slug}?sub=${encodeURIComponent(topico)}`);
   };
 
+  const allHiddenTopics = flatEmenta.filter((t, i) => !isConcluido(t) && i !== currentIdx);
+  const areAllRevealed = allHiddenTopics.length > 0 && allHiddenTopics.every(t => unhiddenTopics.has(t));
+
+  const toggleRevealAll = () => {
+    playPopSound();
+    if (areAllRevealed) {
+      setUnhiddenTopics(new Set());
+    } else {
+      setUnhiddenTopics(new Set(allHiddenTopics));
+    }
+  };
+
   const handleToggle = (e: React.MouseEvent, topico: string, isCompleted: boolean) => {
     e.stopPropagation();
     if (config) {
@@ -111,6 +123,19 @@ export default function EmentaPage() {
         </div>
       </div>
 
+      {/* Ações Rápidas */}
+      {total > 0 && (
+        <div className="max-w-2xl mx-auto px-4 mt-4 flex justify-end">
+          <button
+            onClick={toggleRevealAll}
+            className="flex items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-lg bg-muted/20 hover:bg-muted/50 border border-border/50"
+          >
+            {areAllRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+            {areAllRevealed ? "Ocultar trilha futura" : "Revelar trilha futura"}
+          </button>
+        </div>
+      )}
+
       {/* Conteúdo */}
       <div className="max-w-2xl mx-auto px-4 py-6 pb-24">
         {flatEmenta.length === 0 && (
@@ -132,7 +157,9 @@ export default function EmentaPage() {
               const isCompleted = isConcluido(topico);
               const isCurrent = idx === currentIdx;
               const isSelected = expandedTopic === topico;
-              const isVisible = isCurrent || unhiddenTopics.has(topico);
+              // Tópicos concluídos ficam sempre visíveis, tópico atual sempre visível.
+              // Tópicos futuros só ficam visíveis se estiverem no unhiddenTopics.
+              const isVisible = isCompleted || isCurrent || unhiddenTopics.has(topico);
 
               return (
                 <div
@@ -259,42 +286,102 @@ export default function EmentaPage() {
                         </div>
                       )}
 
-                      <div className="flex gap-2">
-                        <button
-                          onClick={(e) => { e.stopPropagation(); handleStartSession(topico); }}
-                          className="flex-1 py-3 rounded-xl bg-foreground text-background font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all"
-                        >
-                          <BookOpen className="w-4 h-4" />
-                          Estudar Tela Cheia
-                        </button>
-                        
-                        <button
-                          onClick={(e) => { 
-                            e.stopPropagation(); 
-                            if (config) {
-                              openChat(config.slug, topico); 
-                            }
-                          }}
-                          className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all shadow-md"
-                        >
-                          Chat Flutuante
-                        </button>
-
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (window.confirm('Tem certeza que deseja apagar todo o histórico de sessões deste tópico para recomeçar do zero?')) {
+                      {isCompleted ? (
+                        <div className="flex flex-col gap-2 w-full">
+                          <div className="flex gap-2">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); navigate(`/sessao/${slug}?sub=${encodeURIComponent(topico)}&modo=revisao`); }}
+                              className="flex-1 py-3 rounded-xl bg-blue-500 text-white font-semibold text-sm flex items-center justify-center gap-2 hover:bg-blue-600 active:scale-[0.98] transition-all shadow-md"
+                            >
+                              <BookOpen className="w-4 h-4" />
+                              Revisar (Active Recall)
+                            </button>
+                            <button
+                              onClick={(e) => { 
+                                e.stopPropagation(); 
+                                if (config) {
+                                  openChat(config.slug, topico, 'revisao'); 
+                                }
+                              }}
+                              className="px-4 py-3 rounded-xl bg-blue-500/10 text-blue-500 border border-blue-500/30 hover:bg-blue-500/20 active:scale-[0.98] transition-all flex items-center justify-center shrink-0"
+                              title="Revisar no Widget"
+                            >
+                              <Zap className="w-4 h-4" />
+                            </button>
+                          </div>
+                          
+                          <div className="flex gap-2 mt-2 pt-2 border-t border-border/50">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleStartSession(topico); }}
+                              className="flex-1 py-2 rounded-lg bg-muted text-foreground font-medium text-xs flex items-center justify-center gap-2 hover:bg-muted/80 active:scale-[0.98] transition-all"
+                            >
+                              Estudar de novo
+                            </button>
+                            <button
+                              onClick={(e) => { 
+                                e.stopPropagation(); 
+                                if (config) {
+                                  openChat(config.slug, topico); 
+                                }
+                              }}
+                              className="flex-1 py-2 rounded-lg bg-muted text-foreground font-medium text-xs flex items-center justify-center gap-2 hover:bg-muted/80 active:scale-[0.98] transition-all"
+                            >
+                              Chat Livre
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (window.confirm('Tem certeza que deseja apagar todo o histórico de sessões deste tópico para recomeçar do zero?')) {
+                                  if (config) {
+                                    excluirHistorico.mutate({ materia: config.slug, topico });
+                                  }
+                                }
+                              }}
+                              className="px-3 py-2 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500/20 active:scale-[0.98] transition-all flex items-center justify-center shrink-0"
+                              title="Excluir histórico deste tópico"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2 w-full">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleStartSession(topico); }}
+                            className="flex-1 py-3 rounded-xl bg-foreground text-background font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all"
+                          >
+                            <BookOpen className="w-4 h-4" />
+                            Estudar Tela Cheia
+                          </button>
+                          
+                          <button
+                            onClick={(e) => { 
+                              e.stopPropagation(); 
                               if (config) {
-                                excluirHistorico.mutate({ materia: config.slug, topico });
+                                openChat(config.slug, topico); 
                               }
-                            }
-                          }}
-                          className="px-4 py-3 rounded-xl border border-red-500/30 text-red-500 bg-red-500/10 hover:bg-red-500/20 active:scale-[0.98] transition-all flex items-center justify-center shrink-0"
-                          title="Excluir histórico deste tópico"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
+                            }}
+                            className="flex-1 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all shadow-md"
+                          >
+                            Chat Flutuante
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (window.confirm('Tem certeza que deseja apagar todo o histórico de sessões deste tópico para recomeçar do zero?')) {
+                                if (config) {
+                                  excluirHistorico.mutate({ materia: config.slug, topico });
+                                }
+                              }
+                            }}
+                            className="px-4 py-3 rounded-xl border border-red-500/30 text-red-500 bg-red-500/10 hover:bg-red-500/20 active:scale-[0.98] transition-all flex items-center justify-center shrink-0"
+                            title="Excluir histórico deste tópico"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

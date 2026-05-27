@@ -6,11 +6,12 @@ type FloatingChatState = {
   materiaSlug: string | null;
   topico: string | null;
   sessionKey: string | null;
+  modo: 'estudo' | 'revisao';
 };
 
 type FloatingChatContextType = {
   state: FloatingChatState;
-  openChat: (materiaSlug: string, topico: string) => void;
+  openChat: (materiaSlug: string, topico: string, modo?: 'estudo' | 'revisao') => void;
   closeChat: () => void;
   minimizeChat: () => void;
   restoreChat: () => void;
@@ -26,15 +27,17 @@ export function FloatingChatProvider({ children }: { children: ReactNode }) {
     materiaSlug: null,
     topico: null,
     sessionKey: `global-floating-${Date.now()}`,
+    modo: 'estudo',
   });
 
-  const openChat = (materiaSlug: string, topico: string) => {
+  const openChat = (materiaSlug: string, topico: string, modo: 'estudo' | 'revisao' = 'estudo') => {
     setState({
       isOpen: true,
       isMinimized: false,
       materiaSlug,
       topico,
       sessionKey: `${materiaSlug}-${Date.now()}-floating`,
+      modo,
     });
   };
 
@@ -45,6 +48,7 @@ export function FloatingChatProvider({ children }: { children: ReactNode }) {
       materiaSlug: null,
       topico: null,
       sessionKey: `global-floating-${Date.now()}`,
+      modo: 'estudo',
     });
   };
 

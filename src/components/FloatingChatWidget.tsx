@@ -17,7 +17,7 @@ import { resolverTopicoAtual } from '@/lib/buildPrompt';
 
 export function FloatingChatWidget() {
   const { state, closeChat, minimizeChat, restoreChat, setSessionKey } = useFloatingChat();
-  const { isOpen, isMinimized, materiaSlug, topico, sessionKey } = state;
+  const { isOpen, isMinimized, materiaSlug, topico, sessionKey, modo } = state;
   const location = useLocation();
   const queryClient = useQueryClient();
 
@@ -402,6 +402,7 @@ export function FloatingChatWidget() {
             onTopicComplete={handleTopicComplete}
             sessionKey={sessionKey!}
             sub={topico}
+            modo={modo}
             ementaConcluida={ementaConcluida}
             sessoesRecentes={sessoesRecentes || []}
             systemPromptOverride={

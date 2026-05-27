@@ -274,3 +274,44 @@ export function useGlobalAssistantSessoes() {
     },
   });
 }
+
+export function useMetricasRevisao() {
+  return useQuery({
+    queryKey: ['metricas-revisao'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('revisoes_metricas')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data;
+    },
+  });
+}
+
+export function useSaveMetricaRevisao() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ materia_slug, topico, score }: { materia_slug: string, topico: string, score: number }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Usuário não autenticado");
+
+      const { error } = await supabase
+        .from('revisoes_metricas')
+        .insert({
+          user_id: user.id,
+          materia_slug,
+          topico,
+          score
+        });
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['metricas-revisao'] });
+    }
+  });
+}
+

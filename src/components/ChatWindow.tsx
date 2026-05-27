@@ -18,6 +18,7 @@ interface Props {
   ultimaSessao: Sessao | null;
   onMessagesChange?: (messages: ChatMessage[]) => void;
   onTopicComplete?: () => void;
+  onMetricScore?: (score: number) => void;
   sessionKey: string;
   initialMessages?: ChatMessage[];   // retomada real (resume)
   historyMessages?: ChatMessage[];   // histórico anterior (display-only, contexto visual)
@@ -30,7 +31,52 @@ interface Props {
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
-export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, sessionKey, initialMessages, historyMessages, sub, modo, ementaConcluida, sessoesRecentes, systemPromptOverride }: Props) {
+const markdownComponents = {
+  // Tabelas — renderizadas como card com bordas e hover
+  table: ({ children }: any) => (
+    <div className="overflow-x-auto my-3 rounded-xl border border-border/50 bg-muted/20">
+      <table className="w-full text-xs border-collapse">{children}</table>
+    </div>
+  ),
+  thead: ({ children }: any) => (
+    <thead className="bg-muted/50 border-b border-border/50">{children}</thead>
+  ),
+  tbody: ({ children }: any) => (
+    <tbody>{children}</tbody>
+  ),
+  tr: ({ children }: any) => (
+    <tr className="border-b border-border/30 last:border-0 hover:bg-muted/30 transition-colors">{children}</tr>
+  ),
+  th: ({ children }: any) => (
+    <th className="px-3 py-2.5 text-left text-[11px] font-semibold text-foreground/80 tracking-wide uppercase">{children}</th>
+  ),
+  td: ({ children }: any) => (
+    <td className="px-3 py-2 text-foreground/70 leading-relaxed">{children}</td>
+  ),
+  code({ node, inline, className, children, ...props }: any) {
+    const match = /language-(\w+)/.exec(className || '');
+    if (!inline && match && match[1] === 'mermaid') {
+      return <MermaidRenderer code={String(children).replace(/\n$/, '')} />;
+    }
+    return !inline && match ? (
+      <SyntaxHighlighter
+        {...props}
+        style={vscDarkPlus}
+        language={match[1]}
+        PreTag="div"
+        className="rounded-md my-2 text-xs"
+      >
+        {String(children).replace(/\n$/, '')}
+      </SyntaxHighlighter>
+    ) : (
+      <code {...props} className={cn("bg-muted px-1.5 py-0.5 rounded text-xs font-mono", className)}>
+        {children}
+      </code>
+    );
+  }
+};
+
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, onMetricScore, sessionKey, initialMessages, historyMessages, sub, modo, ementaConcluida, sessoesRecentes, systemPromptOverride }: Props) {
   const isContinuation = initialMessages !== undefined;
   const systemPrompt = systemPromptOverride ?? buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo, ementaConcluida, sessoesRecentes);
   const saveMutation = useSaveChatMessage();
@@ -355,6 +401,16 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       // Detect session_done signal — strips tag and notifies parent
       if (assistantContent.includes('<session_done/>')) {
         assistantContent = assistantContent.replace(/<session_done\/>/gi, '').trimEnd();
+        
+        const metricMatch = assistantContent.match(/<metric\s+score="(\d+)"\s*\/>/i);
+        if (metricMatch) {
+          const score = parseInt(metricMatch[1], 10);
+          if (!isNaN(score)) {
+            onMetricScore?.(score);
+          }
+          assistantContent = assistantContent.replace(/<metric\s+score="\d+"\s*\/>/gi, '').trimEnd();
+        }
+
         setMessages(prev => prev.map((m, i) =>
           i === prev.length - 1 ? { ...m, content: assistantContent } : m
         ));
@@ -560,50 +616,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                       </button>
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
-                        components={{
-                          // Tabelas — renderizadas como card com bordas e hover
-                          table: ({ children }) => (
-                            <div className="overflow-x-auto my-3 rounded-xl border border-border/50 bg-muted/20">
-                              <table className="w-full text-xs border-collapse">{children}</table>
-                            </div>
-                          ),
-                          thead: ({ children }) => (
-                            <thead className="bg-muted/50 border-b border-border/50">{children}</thead>
-                          ),
-                          tbody: ({ children }) => (
-                            <tbody>{children}</tbody>
-                          ),
-                          tr: ({ children }) => (
-                            <tr className="border-b border-border/30 last:border-0 hover:bg-muted/30 transition-colors">{children}</tr>
-                          ),
-                          th: ({ children }) => (
-                            <th className="px-3 py-2.5 text-left text-[11px] font-semibold text-foreground/80 tracking-wide uppercase">{children}</th>
-                          ),
-                          td: ({ children }) => (
-                            <td className="px-3 py-2 text-foreground/70 leading-relaxed">{children}</td>
-                          ),
-                          code({ node, inline, className, children, ...props }: any) {
-                            const match = /language-(\w+)/.exec(className || '');
-                            if (!inline && match && match[1] === 'mermaid') {
-                              return <MermaidRenderer code={String(children).replace(/\n$/, '')} />;
-                            }
-                            return !inline && match ? (
-                              <SyntaxHighlighter
-                                {...props}
-                                style={vscDarkPlus}
-                                language={match[1]}
-                                PreTag="div"
-                                className="rounded-md my-2 text-xs"
-                              >
-                                {String(children).replace(/\n$/, '')}
-                              </SyntaxHighlighter>
-                            ) : (
-                              <code {...props} className={cn("bg-muted px-1.5 py-0.5 rounded text-xs font-mono", className)}>
-                                {children}
-                              </code>
-                            );
-                          }
-                        }}
+                        components={markdownComponents}
                       >
                         {mainContent}
                       </ReactMarkdown>

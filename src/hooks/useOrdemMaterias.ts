@@ -27,3 +27,31 @@ export function useOrdemMaterias() {
 
   return { ordem, atualizarOrdem };
 }
+
+const STORAGE_KEY_HUBS = '@escola-tiago:ordem-hubs';
+
+export function useOrdemHubs() {
+  const [ordemHubs, setOrdemHubs] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY_HUBS);
+      if (stored) return JSON.parse(stored);
+      return [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_HUBS, JSON.stringify(ordemHubs));
+    } catch (e) {
+      console.error('Falha ao salvar a ordem dos hubs', e);
+    }
+  }, [ordemHubs]);
+
+  const atualizarOrdemHubs = (novaOrdem: string[]) => {
+    setOrdemHubs(novaOrdem);
+  };
+
+  return { ordemHubs, atualizarOrdemHubs };
+}
