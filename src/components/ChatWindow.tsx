@@ -12,6 +12,8 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import remarkGfm from 'remark-gfm';
 import MermaidRenderer from './MermaidRenderer';
 import UnsplashChip from './UnsplashChip';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface Props {
   materia: MateriaConfig;
@@ -364,6 +366,33 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
 
             if (delta) {
               assistantContent += delta;
+              
+              // NOVO: Detectar e extrair [CRIAR_TOPICO: Titulo | Descricao]
+              const topicRegex = /\[CRIAR_TOPICO:\s*([^|]+?)\s*\|\s*([^\]]+?)\]/i;
+              const topicMatch = assistantContent.match(topicRegex);
+              if (topicMatch) {
+                 const titulo = topicMatch[1].trim();
+                 const descricao = topicMatch[2].trim();
+                 // Remove a tag do texto para sempre para não piscar na tela
+                 assistantContent = assistantContent.replace(topicMatch[0], '');
+                 
+                 // Dispara a inserção no banco silenciosamente
+                 if (materia?.slug) {
+                   supabase.from('topicos_emergentes').insert({
+                     materia_slug: materia.slug,
+                     titulo,
+                     descricao,
+                     session_key: sessionKey
+                   }).then(({ error }) => {
+                     if (!error) {
+                       toast.success(`Tópico "${titulo}" criado no Roadmap!`);
+                       playPopSound();
+                     } else {
+                       console.error('Erro ao criar tópico emergente:', error);
+                     }
+                   });
+                 }
+              }
               
               // Evitamos closures instáveis guardando o conteúdo atual
               const currentContent = assistantContent; 

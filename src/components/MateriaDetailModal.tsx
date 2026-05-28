@@ -449,6 +449,49 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                 )}
                               </div>
                               </div>
+
+                              {isVisible && emergentTopicsForStep.length > 0 && emergentTopicsForStep.map((et, etIdx) => (
+                                <div key={et.id} className="flex gap-3 relative group transition-opacity mb-4">
+                                  {/* Indicador Visual Tópico Emergente */}
+                                  <div className="flex flex-col items-center">
+                                    <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 border border-primary/30 bg-primary/10 text-primary text-[10px] font-bold z-10 shadow-sm">
+                                      ✦
+                                    </div>
+                                    {/* Linha conectora caso não seja o último do último */}
+                                    {!(isLast && etIdx === emergentTopicsForStep.length - 1) && (
+                                      <div className="w-px h-full min-h-[1.5rem] mt-1 -mb-1 bg-border/50" />
+                                    )}
+                                  </div>
+                                  
+                                  {/* Conteúdo Tópico Emergente */}
+                                  <div 
+                                    className="flex-1 flex gap-2 items-start bg-primary/5 border border-primary/15 rounded-xl p-3 cursor-pointer hover:bg-primary/10 transition-colors shadow-sm"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      playPopSound();
+                                      onOpenChange(false);
+                                      if (et.session_key) {
+                                        navigate(`/sessao/${config.slug}?resume=${et.session_key}`);
+                                      }
+                                    }}
+                                  >
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-sm font-medium text-foreground leading-tight">
+                                        {et.titulo}
+                                      </p>
+                                      {et.descricao && (
+                                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">
+                                          {et.descricao}
+                                        </p>
+                                      )}
+                                      <p className="text-[10px] text-primary font-medium uppercase mt-2 tracking-wider">
+                                        Gerado pela IA (Pré-requisito)
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+
                             </div>
                           );
                         })}
@@ -501,49 +544,70 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
           )}
 
           {/* Tópicos Emergentes — gerados automaticamente pela IA durante as sessões */}
-          {topicosEmergentes && topicosEmergentes.length > 0 && (
-            <div className="px-6 pb-4">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
-                  🌐 Descobertos pela IA
-                </p>
-                <span className="text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-                  {topicosEmergentes.length} novo{topicosEmergentes.length > 1 ? 's' : ''}
-                </span>
-              </div>
-              <div className="space-y-2">
-                {topicosEmergentes.map((topico) => (
-                  <div
-                    key={topico.id}
-                    className="flex gap-3 p-3 rounded-xl bg-primary/5 border border-primary/15 group"
-                  >
-                    <span className="text-primary mt-0.5 shrink-0 text-xs">✦</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground leading-tight">
-                        {topico.titulo}
-                      </p>
-                      {topico.descricao && (
-                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">
-                          {topico.descricao}
+          {(() => {
+            const unmatchedEmergentTopics = topicosEmergentes?.filter(te => {
+              const isMatched = sessoesMateria.some(s => s.session_key === te.session_key && flatEmenta.some(step => {
+                const n1 = (s.topico || '').toLowerCase().trim();
+                const n2 = (step || '').toLowerCase().trim();
+                return n1.includes(n2) || n2.includes(n1);
+              }));
+              return !isMatched;
+            });
+            
+            if (!unmatchedEmergentTopics || unmatchedEmergentTopics.length === 0) return null;
+            
+            return (
+              <div className="px-6 pb-4">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
+                    🌐 Descobertos pela IA (Outros)
+                  </p>
+                  <span className="text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                    {unmatchedEmergentTopics.length} novo{unmatchedEmergentTopics.length > 1 ? 's' : ''}
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  {unmatchedEmergentTopics.map((topico) => (
+                    <div
+                      key={topico.id}
+                      className="flex gap-3 p-3 rounded-xl bg-primary/5 border border-primary/15 group cursor-pointer hover:bg-primary/10 transition-colors"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        playPopSound();
+                        onOpenChange(false);
+                        if (topico.session_key) {
+                          navigate(`/sessao/${config.slug}?resume=${topico.session_key}`);
+                        }
+                      }}
+                    >
+                      <span className="text-primary mt-0.5 shrink-0 text-xs">✦</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground leading-tight">
+                          {topico.titulo}
                         </p>
-                      )}
-                      {topico.fonte_url && (
-                        <a
-                          href={topico.fonte_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[10px] text-primary/60 hover:text-primary mt-1 block truncate transition-colors"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {topico.fonte_url.replace(/^https?:\/\//, '').split('/')[0]}
-                        </a>
-                      )}
+                        {topico.descricao && (
+                          <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">
+                            {topico.descricao}
+                          </p>
+                        )}
+                        {topico.fonte_url && (
+                          <a
+                            href={topico.fonte_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[10px] text-primary/60 hover:text-primary mt-1 block truncate transition-colors z-10 relative"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {topico.fonte_url.replace(/^https?:\/\//, '').split('/')[0]}
+                          </a>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Spacer para o sticky footer não cobrir o conteúdo do final do scroll */}
           <div className="h-56 sm:h-64 shrink-0" />
