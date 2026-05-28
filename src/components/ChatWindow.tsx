@@ -274,6 +274,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
 
     let assistantContent = '';
     const messageId = Math.random().toString(36).substring(7);
+    let topicAlreadyCreated = false; // Guard: evita criar o mesmo tópico 2x durante o streaming
 
     try {
       const resp = await fetch(CHAT_URL, {
@@ -370,7 +371,8 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               // NOVO: Detectar e extrair [CRIAR_TOPICO: Titulo | Descricao]
               const topicRegex = /\[CRIAR_TOPICO:\s*([^|]+?)\s*\|\s*([^\]]+?)\]/i;
               const topicMatch = assistantContent.match(topicRegex);
-              if (topicMatch) {
+              if (topicMatch && !topicAlreadyCreated) {
+                 topicAlreadyCreated = true; // Impede duplicação durante o streaming
                  const titulo = topicMatch[1].trim();
                  const descricao = topicMatch[2].trim();
                  // Remove a tag do texto para sempre para não piscar na tela
@@ -392,6 +394,9 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                      }
                    });
                  }
+              } else if (topicMatch && topicAlreadyCreated) {
+                 // Mesmo com guard, remove a tag que pode aparecer de novo no acumulador
+                 assistantContent = assistantContent.replace(topicMatch[0], '');
               }
               
               // Evitamos closures instáveis guardando o conteúdo atual
