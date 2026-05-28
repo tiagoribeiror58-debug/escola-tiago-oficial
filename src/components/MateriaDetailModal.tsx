@@ -322,6 +322,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                           const isLast = idx === flatEmenta.length - 1;
                           const isVisible = areAllRevealed || isCurrent || unhiddenTopics.has(step);
 
+                          const stepSessions = sessoesMateria.filter(s => normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico)));
+                          const emergentTopicsForStep = (topicosEmergentes || []).filter(te => stepSessions.some(s => s.session_key === te.session_key));
+
                           const currentPhase = config.fases?.find(f => f.topicos.includes(step));
                           const prevTopic = idx > 0 ? flatEmenta[idx - 1] : null;
                           const prevPhase = prevTopic ? config.fases?.find(f => f.topicos.includes(prevTopic)) : null;
@@ -372,8 +375,8 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                   >
                                     {isCompleted ? '✓' : isCurrent ? '●' : (idx + 1)}
                                   </button>
-                                  {/* Linha conectora (não aparece no último item) */}
-                                  {!isLast && (
+                                  {/* Linha conectora (não aparece no último item, a menos que tenha subtópicos emergentes) */}
+                                  {(!isLast || emergentTopicsForStep.length > 0) && (
                                     <div className={cn(
                                       "w-px h-full min-h-[1.5rem] mt-1 -mb-1 transition-opacity",
                                       !isVisible && "opacity-40",
