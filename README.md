@@ -1,4 +1,4 @@
-# Escola Tiago — Plataforma de Estudos com IA
+# Ybernator — Plataforma de Estudos com IA
 
 Sistema de ensino personalizado com professor de IA, sessões controladas por tópico único, hierarquia de matérias e histórico persistente de conversas.
 

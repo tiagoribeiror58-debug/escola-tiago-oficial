@@ -101,7 +101,7 @@ E se no meio do caminho o usuário sentir que a rota está difícil demais?
 
 2. IA Educacional: Ferramentas de Dados vs. API Normal
 
-Uma questão central para a evolução da Escola Tiago é como a IA deve "aprender" para ensinar de forma atualizada.
+Uma questão central para a evolução da Ybernator é como a IA deve "aprender" para ensinar de forma atualizada.
 
 Análise Comparativa
 
@@ -124,7 +124,7 @@ Recomendação: Implementar uma camada de RAG (Retrieval-Augmented Generation) q
 Ao analisar o código e a estrutura do projeto, identifiquei pontos que julgo cruciais para o próximo nível da plataforma:
 
 1.
-Educação Multimodal: Em 2026, o texto não é suficiente. A estrutura da Escola Tiago já prevê widgets (ex: CodeLab, LegalViewer). Recomendo a criação de um "Lab de Simulação", onde o aluno possa testar conceitos de física ou finanças em um ambiente interativo dentro do chat.
+Educação Multimodal: Em 2026, o texto não é suficiente. A estrutura da Ybernator já prevê widgets (ex: CodeLab, LegalViewer). Recomendo a criação de um "Lab de Simulação", onde o aluno possa testar conceitos de física ou finanças em um ambiente interativo dentro do chat.
 
 2.
 Micro-Certificações Dinâmicas: Em vez de certificados estáticos, o sistema poderia gerar "Badges de Competência" baseados no progresso real detectado pela ementa invisível, validados em tempo real pela IA.
@@ -138,7 +138,7 @@ Soberania de Dados do Aluno: Garantir que o progresso do aluno seja exportável 
 
 
 
-Este parecer serve como base estratégica para as próximas etapas de desenvolvimento, garantindo que a Escola Tiago não seja apenas uma plataforma de ensino, mas um ecossistema de inteligência atualizado e pertinente ao seu tempo.
+Este parecer serve como base estratégica para as próximas etapas de desenvolvimento, garantindo que a Ybernator não seja apenas uma plataforma de ensino, mas um ecossistema de inteligência atualizado e pertinente ao seu tempo.
 
 O Gráfico de Conhecimento (Knowledge Graph) é o que transforma o seu sistema de um "Chat que responde" em um "Cérebro que entende".
 
@@ -217,7 +217,7 @@ Vou montar isso como uma jornada — o aluno do primeiro acesso até meses depoi
 
 ---
 
-# A Experiência do Aluno na Escola Tiago
+# A Experiência do Aluno na Ybernator
 
 ---
 

@@ -1,6 +1,6 @@
-# 🧠 Regras de Negócio e Arquitetura — Escola Tiago
+# 🧠 Regras de Negócio e Arquitetura — Ybernator
 
-Este documento centraliza todas as regras de negócio, fluxos de experiência do usuário (UX) e princípios de inteligência artificial que regem o aplicativo **Escola Tiago**.
+Este documento centraliza todas as regras de negócio, fluxos de experiência do usuário (UX) e princípios de inteligência artificial que regem o aplicativo **Ybernator**.
 
 ---
 

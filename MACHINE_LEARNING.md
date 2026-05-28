@@ -1,4 +1,4 @@
-# Estratégia de Machine Learning — Escola Tiago
+# Estratégia de Machine Learning — Ybernator
 
 Este documento detalha as decisões técnicas, a arquitetura e o roadmap para a implementação de Machine Learning (ML) no projeto.
 
@@ -11,7 +11,7 @@ Atualmente, o sistema utiliza **Heurísticas** (regras manuais inteligentes em T
 
 ## 2. Otimização para TDAH (O Diferencial)
 
-O objetivo principal do ML na Escola Tiago não é apenas ensinar o conteúdo, mas gerenciar o **estímulo dopaminérgico** do aluno através do conceito **INCUP** (Interesse, Novidade, Desafio, Urgência e Paixão).
+O objetivo principal do ML na Ybernator não é apenas ensinar o conteúdo, mas gerenciar o **estímulo dopaminérgico** do aluno através do conceito **INCUP** (Interesse, Novidade, Desafio, Urgência e Paixão).
 
 - **Interrupção Estratégica:** O modelo deve aprender o "ponto de fadiga" do aluno e interromper o fluxo teórico com desafios antes que o foco se perca.
 - **Detecção de Autopiloto:** Identificar padrões de resposta que indicam falta de absorção e forçar uma quebra de padrão (Pattern Interrupt).

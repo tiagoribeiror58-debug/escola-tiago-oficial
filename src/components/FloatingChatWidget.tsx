@@ -408,7 +408,7 @@ export function FloatingChatWidget() {
             systemPromptOverride={
               materiaSlug 
               ? undefined 
-              : `Você é a IA Assistente Global da Escola Tiago Oficial. Seu aluno se chama Tiago. Ele tem acesso a um currículo com diversas matérias. Se ele perguntar algo que se relacione com as matérias dele, faça a ponte indicando qual tópico ou matéria aborda o assunto e sugira que ele estude esse tópico.\nResponda livremente, seja direto, sem rodeios. Sarcasmo é liberado. O Tiago tem +18 anos.\n\nContexto:\n${globalPromptContext}`
+              : `Você é a IA Assistente Global da Ybernator Oficial. Seu aluno se chama Tiago. Ele tem acesso a um currículo com diversas matérias. Se ele perguntar algo que se relacione com as matérias dele, faça a ponte indicando qual tópico ou matéria aborda o assunto e sugira que ele estude esse tópico.\nResponda livremente, seja direto, sem rodeios. Sarcasmo é liberado. O Tiago tem +18 anos.\n\nContexto:\n${globalPromptContext}`
             }
           />
         )}
