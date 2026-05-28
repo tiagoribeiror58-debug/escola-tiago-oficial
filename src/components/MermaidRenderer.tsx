@@ -10,6 +10,7 @@ mermaid.initialize({
   theme: 'dark',
   securityLevel: 'loose',
   fontFamily: 'inherit',
+  suppressErrorRendering: true,
 });
 
 interface Props {
@@ -96,11 +97,28 @@ export default function MermaidRenderer({ code }: Props) {
             {code}
           </div>
         ) : svgContent ? (
-          <div 
-            ref={containerRef} 
-            className="mermaid-container w-full max-w-full flex justify-center"
-            dangerouslySetInnerHTML={{ __html: svgContent }} 
-          />
+          <>
+            <style>{`
+              .mermaid-container foreignObject {
+                overflow: visible !important;
+              }
+              .mermaid-container .nodeLabel, 
+              .mermaid-container .edgeLabel {
+                white-space: normal !important;
+                line-height: 1.2 !important;
+                overflow: visible !important;
+              }
+              .mermaid-container svg {
+                max-width: 100% !important;
+                height: auto !important;
+              }
+            `}</style>
+            <div 
+              ref={containerRef} 
+              className="mermaid-container w-full max-w-full flex justify-center overflow-x-auto"
+              dangerouslySetInnerHTML={{ __html: svgContent }} 
+            />
+          </>
         ) : null}
       </div>
     </div>
