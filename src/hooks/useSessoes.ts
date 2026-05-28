@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Sessao, MateriaEstado } from '@/types';
+import { Sessao, MateriaEstado, MateriaConfig } from '@/types';
 import { MATERIAS, calcularDiasParada, getAllLeafSlugs } from '@/lib/materias';
 
 export function useSessoes() {
