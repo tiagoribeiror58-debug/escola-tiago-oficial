@@ -323,4 +323,71 @@ Curso se ajusta sozinho com o tempo
 
 ---
 
-Quer que eu aprofunde algum momento específico dessa jornada — ou parte pra como isso seria construído?
+## BACKLOG DE IMPLEMENTAÇÃO: Player de Roteiro Dinâmico (Animações Interativas)
+
+Este item do backlog descreve a especificação técnica para implementar animações no estilo "motion graphics" (estilo vídeos explicativos do YouTube) no chat de estudos, de forma barata, rápida e interativa.
+
+### 📋 Especificação Técnica
+
+#### 1. O Protocolo de Transmissão (Edge Function / Gemini)
+A Edge Function `/chat` (Gemini API) será instruída (via `systemPrompt`) a emitir uma tag especial `<animation>` contendo a especificação JSON da animação quando um conceito requerer explicação visual.
+
+Exemplo de formato de saída da IA:
+```xml
+Aqui está como a divisão de uma célula funciona na prática:
+<animation>
+{
+  "tema": "divisao-celular",
+  "estilo": "dark-glassmorphism",
+  "passos": [
+    {
+      "tempo": 0,
+      "audio_texto": "Esta é a célula mãe em repouso.",
+      "animacao": { "tipo": "criar", "objeto": "celula_mae", "forma": "circulo", "posicao": "centro", "cor": "emerald" }
+    },
+    {
+      "tempo": 5,
+      "audio_texto": "O núcleo começa a se duplicar e os polos se separam.",
+      "animacao": { "tipo": "dividir_nucleo", "objeto": "celula_mae", "duracao": 3000 }
+    },
+    {
+      "tempo": 10,
+      "audio_texto": "Finalmente, a membrana se rompe, gerando duas células filhas idênticas.",
+      "animacao": { "tipo": "separar_total", "duracao": 2000 }
+    }
+  ]
+}
+</animation>
+<chips>Entendi|Ficou alguma dúvida?|Quero ver de novo</chips>
+```
+
+#### 2. O Frontend (`VisualExplainerPlayer.tsx`)
+Criar um novo componente no frontend para ler e interpretar o JSON acima.
+* **Tecnologia:** React + Framer Motion (para transições físicas fluidas a 60fps) + Lucide Icons + Tailwind.
+* **Componente de Sandbox:** Utilizar `react-runner` encapsulado em um `iframe` seguro com o atributo `sandbox="allow-scripts"` para renderizar o player de forma isolada, protegendo a sessão do usuário.
+* **Sincronização de Áudio:** O player consome a Web Speech API local (gratuita) ou a API da ElevenLabs para sintetizar e sincronizar a voz do tutor com os passos da animação.
+
+---
+
+### 🛠️ Tarefas do Backlog (Prontas para o Sprint)
+
+#### [TASK-01] Especificação do Prompt do Professor (`src/lib/buildPrompt.ts`)
+*   **Descrição:** Atualizar o `systemPrompt` para ensinar a IA a formatar e injetar a tag `<animation>` apenas quando explicar processos mecânicos, fluxos ou códigos.
+*   **Critério de Aceitação:** A IA não deve inventar tags inválidas ou quebrar o JSON sob risco de erro de renderização.
+
+#### [TASK-02] Criação do Componente Player de Animação (`src/components/VisualExplainerPlayer.tsx`)
+*   **Descrição:** Criar a UI do player (com controles de play, pause, progresso e volume). Deve seguir o design system (glassmorphism escuro, gradientes suaves, tipografia Outfit/Inter).
+*   **Critério de Aceitação:** O player deve ler o JSON da tag `<animation>` e renderizar os elementos gráficos com transições suaves (Framer Motion).
+
+#### [TASK-03] Integração no Chat (`src/components/FloatingChatWidget.tsx` / `Sessao.tsx`)
+*   **Descrição:** Configurar a renderização condicional do chat. Quando uma mensagem contiver `<animation>`, o player deve ser renderizado ao lado ou substituindo o histórico no momento da explicação.
+*   **Critério de Aceitação:** Transição suave entre o modo texto e o modo visual do player.
+
+#### [TASK-04] Canal de Voz Sincronizado (Web Speech & ElevenLabs)
+*   **Descrição:** Implementar o player de áudio integrado que narra o campo `audio_texto` de cada passo no tempo (`tempo`) exato da animação.
+*   **Critério de Aceitação:** O áudio e a movimentação das imagens devem estar em perfeita harmonia (dupla codificação).
+
+---
+
+**O que pode estar impreciso aqui e por quê:**
+*   **Gargalo de Token:** Adicionar especificações de JSON complexas ao output do Gemini consome mais tokens de saída, o que aumenta a latência de geração do chat. É preciso monitorar se o tempo de resposta inicial da Edge Function `/chat` não aumentará muito.
