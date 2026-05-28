@@ -1,5 +1,6 @@
 import { MateriaConfig } from '@/types';
 import { performanceIntelecto } from './materias/performance';
+import { founderSolo } from './materias/founder-solo';
 import { tecnologiaNegocios } from './materias/negocios';
 import { comunicacaoInfluencia } from './materias/comunicacao';
 import { fundamentosAcademicos } from './materias/fundamentos';
@@ -22,6 +23,7 @@ import { liderancaHub } from './materias/lideranca';
 import { habilitacaoHub } from './materias/habilitacao';
 
 export const MATERIAS: MateriaConfig[] = [
+  founderSolo,
   performanceIntelecto,
   tecnologiaNegocios,
   comunicacaoInfluencia,
