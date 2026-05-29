@@ -9,9 +9,10 @@ import { MateriaEstado } from '@/types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
-import { Search, History, CalendarCheck, BrainCircuit } from 'lucide-react';
+import { Search, History, CalendarCheck, BrainCircuit, Sparkles } from 'lucide-react';
 import { HistoricoGlobalDrawer } from '@/components/HistoricoGlobalDrawer';
 import { useOrdemMaterias } from '@/hooks/useOrdemMaterias';
+import { DailyTopicCard } from '@/components/DailyTopicCard';
 import {
   DndContext,
   closestCenter,
@@ -244,6 +245,15 @@ export default function Index() {
           </div>
           
           <div className="flex items-center gap-2">
+            {/* Botão de Quiz */}
+            <button
+              onClick={() => navigate('/quiz')}
+              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-[hsl(var(--primary)/0.1)] border-[hsl(var(--primary)/0.3)] text-primary hover:bg-[hsl(var(--primary)/0.2)] text-xs font-medium transition-all shadow-sm"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              Quiz
+            </button>
+
             {/* Botão do Histórico */}
             <button
               onClick={() => setIsHistoricoOpen(true)}
@@ -288,6 +298,12 @@ export default function Index() {
             className="w-full pl-12 pr-4 py-4 bg-card border border-border/50 rounded-2xl text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all shadow-sm"
           />
         </div>
+
+        {!isLoading && searchQuery.trim().length === 0 && (
+          <div className="mb-8">
+            <DailyTopicCard />
+          </div>
+        )}
 
         {searchQuery.trim().length > 0 ? (
           <div className="space-y-6">
@@ -345,6 +361,7 @@ export default function Index() {
           </div>
         ) : (
           <>
+
         {/* Separador de Outras Disciplinas (se necessário, agora pode ser o título principal do grid) */}
         {!isLoading && displayedEstados.length > 0 && (
           <div className="mb-6">

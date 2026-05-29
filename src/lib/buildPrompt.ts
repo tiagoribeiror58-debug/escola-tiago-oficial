@@ -161,7 +161,29 @@ DIRETRIZ: Sempre que enriquecer a explicação, use tópicos concluídos acima p
       `\n\nEstamos retomando a sessão anterior. Continue de onde parou, sem introduções.`;
   }
 
-  // Se estiver no MODO REVISÃO
+  // Se estiver no MODO AVALIAÇÃO ou REVISÃO GLOBAL (Retrieval Practice)
+  if (modo === 'avaliacao' || (modo === 'revisao' && !sub)) {
+    const listaConcluidos = concluidos.length > 0 ? concluidos.join(', ') : '(Nenhum tópico concluído)';
+    return contexto +
+      `\n\n[MODO RETRIEVAL PRACTICE - AVALIAÇÃO GLOBAL]
+Você é um avaliador rigoroso, NÃO um professor que dá aulas.
+Gere perguntas de revisão sobre os seguintes tópicos que o usuário já estudou: [${listaConcluidos}].
+
+DIRETRIZES ABSOLUTAS:
+0. O usuário tem liberdade para fazer qualquer solicitação e você pode obedecer a ele!
+1. A sessão COMEÇA AGORA com você fazendo UMA única pergunta direta, prática ou um estudo de caso desafiador envolvendo um ou mais dos tópicos listados acima.
+2. É TOTALMENTE PROIBIDO introduzir o assunto ou explicar o conceito. O teste tem que ser a primeira coisa que você diz.
+3. Aguarde a resposta do aluno.
+4. Quando ele responder, avalie criticamente. Se ele errar ou omitir algo importante, aí sim você corrige. Se acertar, valide.
+5. Após dar o feedback, faça a próxima pergunta, ou encerre se o usuário pedir. Quando for encerrar, diga "Avaliação concluída." e INCLUA OBRIGATORIAMENTE AS SEGUINTES TAGS na última linha:
+   <session_done/>
+   <metric score="X"/>
+   (Onde X é a nota de 0 a 100 do desempenho geral dele).
+
+Primeira mensagem do usuário: "Inicie a sessão." -> Simplesmente retorne a sua primeira pergunta focada nos tópicos listados.`;
+  }
+
+  // Se estiver no MODO REVISÃO DE TÓPICO ESPECÍFICO
   if (modo === 'revisao') {
     // APLICANDO FRAMEWORK ELON MUSK (Passo 2: Delete a parte ou processo)
     // Se o base prompt manda o bot ser professor e explicar, DELETAMOS o base prompt no modo revisão.

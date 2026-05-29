@@ -8,7 +8,10 @@ import Sessao from "./pages/Sessao.tsx";
 import Historico from "./pages/Historico.tsx";
 import Categoria from "./pages/Categoria.tsx";
 import Biblioteca from "./pages/Biblioteca.tsx";
+import Quiz from "./pages/Quiz.tsx";
+import Auth from "./pages/Auth.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { FloatingChatProvider } from "./contexts/FloatingChatContext.tsx";
 import { FloatingChatWidget } from "./components/FloatingChatWidget.tsx";
 
@@ -22,12 +25,17 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/sessao/:materia" element={<Sessao />} />
-            <Route path="/historico/:materia" element={<Historico />} />
-            <Route path="/categoria/:slug" element={<Categoria />} />
-            <Route path="/categoria/:slug/:sub" element={<Categoria />} />
-            <Route path="/biblioteca" element={<Biblioteca />} />
+            <Route path="/auth" element={<Auth />} />
+            
+            {/* Protected Routes */}
+            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/sessao/:materia" element={<ProtectedRoute><Sessao /></ProtectedRoute>} />
+            <Route path="/historico/:materia" element={<ProtectedRoute><Historico /></ProtectedRoute>} />
+            <Route path="/categoria/:slug" element={<ProtectedRoute><Categoria /></ProtectedRoute>} />
+            <Route path="/categoria/:slug/:sub" element={<ProtectedRoute><Categoria /></ProtectedRoute>} />
+            <Route path="/biblioteca" element={<ProtectedRoute><Biblioteca /></ProtectedRoute>} />
+            <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
           <FloatingChatWidget />

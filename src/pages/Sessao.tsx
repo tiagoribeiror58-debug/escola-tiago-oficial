@@ -6,7 +6,7 @@ import { useChatHistory, useSessionMessages } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 import Workspace from '@/components/Workspace';
 
-import { ArrowLeft, Square, Loader2, Pause } from 'lucide-react';
+import { ArrowLeft, Square, Loader2, Pause, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatMessage } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
@@ -418,6 +418,28 @@ export default function Sessao() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-5 h-5 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // BLOQUEIO: Se for Retrieval Practice (avaliação ou revisão global) e não houver tópicos concluídos
+  const isRetrievalPractice = modo === 'avaliacao' || (modo === 'revisao' && !sub);
+  if (isRetrievalPractice && ementaConcluida.length === 0) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-background">
+        <div className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
+          <BookOpen className="w-8 h-8 text-muted-foreground" />
+        </div>
+        <h2 className="text-lg font-semibold text-foreground">Sessão Bloqueada</h2>
+        <p className="text-sm text-muted-foreground mt-2 max-w-sm">
+          Você precisa concluir ao menos 1 tópico desta matéria para gerar perguntas de revisão/avaliação.
+        </p>
+        <button
+          onClick={() => navigate(`/?materia=${slug}`)}
+          className="mt-6 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl font-medium transition-transform active:scale-95"
+        >
+          Voltar ao Roadmap
+        </button>
       </div>
     );
   }
