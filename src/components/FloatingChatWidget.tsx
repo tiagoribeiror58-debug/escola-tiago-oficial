@@ -4,6 +4,7 @@ import { useFloatingChat } from '@/contexts/FloatingChatContext';
 import { getMateriaBySlug, MATERIAS } from '@/lib/materias';
 import { useUltimaSessao, useEmentaConcluida, useRecentSessoes, useGlobalAssistantSessoes } from '@/hooks/useSessoes';
 import ChatWindow from '@/components/ChatWindow';
+import ReflectionModal from '@/components/ReflectionModal';
 import { X, Minus, MessageCircle, Maximize2, Loader2, Square, Plus, History } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -39,6 +40,7 @@ export function FloatingChatWidget() {
   const [saving, setSaving] = useState(false);
   const [topicComplete, setTopicComplete] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [showReflectionModal, setShowReflectionModal] = useState(false);
   const [resumeMessages, setResumeMessages] = useState<ChatMessage[]>([]);
   const { data: globalSessoes } = useGlobalAssistantSessoes();
   const isSavingRef = useRef(false);
@@ -142,6 +144,12 @@ export function FloatingChatWidget() {
       if (!ok) return;
     }
 
+    if (isSavingRef.current) return;
+    setShowReflectionModal(true);
+  }, [materiaSlug, materiaConfig, topicComplete]);
+
+  const confirmEncerrar = useCallback(async () => {
+    setShowReflectionModal(false);
     if (isSavingRef.current) return;
     isSavingRef.current = true;
     setSaving(true);
@@ -251,13 +259,11 @@ export function FloatingChatWidget() {
     }
   }, [materiaSlug, topico, sessionKey, materiaConfig, ultimaSessao, topicComplete, ementaConcluida, queryClient, closeChat]);
 
-
   const handleNovaConversa = useCallback(async () => {
     if (messagesRef.current.length > 0) {
       toast.info('Salvando conversa atual...');
-      // Salva silenciosamente a sessão global chamando a função de encerrar, 
-      // que já faz todo o processo de salvar no BD e chamar closeChat()
-      await handleEncerrar();
+      // Salva silenciosamente a sessão global chamando a função de encerrar
+      await confirmEncerrar();
       // Em seguida, abrimos o chat novinho em folha
       setTimeout(() => {
         setShowHistory(false);
@@ -270,7 +276,7 @@ export function FloatingChatWidget() {
       closeChat(); 
       setTimeout(() => restoreChat(), 50);
     }
-  }, [handleEncerrar, closeChat, restoreChat]);
+  }, [confirmEncerrar, closeChat, restoreChat]);
 
   // Se não estiver na tela inicial, esconde completamente o widget (botão e janela)
   if (location.pathname !== '/') return null;
@@ -334,8 +340,7 @@ export function FloatingChatWidget() {
               disabled={saving}
               title="Encerrar Sessão"
               className={cn(
-                "p-1.5 mr-1 rounded-lg transition-colors flex items-center justify-center",
-                topicComplete ? "text-success hover:bg-success/10" : "text-muted-foreground hover:bg-muted"
+                "p-1.5 mr-1 rounded-lg transition-colors flex items-center justify-center text-muted-foreground hover:bg-muted"
               )}
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Square className="w-4 h-4" />}
@@ -405,6 +410,7 @@ export function FloatingChatWidget() {
             modo={modo}
             ementaConcluida={ementaConcluida}
             sessoesRecentes={sessoesRecentes || []}
+            onRequestEncerrar={handleEncerrar}
             systemPromptOverride={
               materiaSlug?.startsWith('founder-')
               ? `Você é o "Mentor de Negócios" de Tiago, founder solo da Ybernator. Seu papel não é ser um professor fofinho, mas um conselheiro direto, pragmático e duro. Sem bajulação. Sem rodeios. Foque em alavancagem máxima, sobrevivência financeira e velocidade de iteração. O nível dele é iniciante/intermediário, então explique conceitos de negócio e técnicos com clareza (use analogias se precisar), mas mantendo a postura de mentor sênior. Aja como Naval Ravikant misturado com um CFO pragmático.\n\nREGRA CRÍTICA DE PRÉ-REQUISITO E TÓPICOS EMERGENTES: Se o Tiago pedir explicitamente para criar um tópico ou módulo extra sobre algo, ou se você perceber uma lacuna estrutural de conhecimento crítica, você DEVE gerar esta exata tag: [CRIAR_TOPICO: Titulo Curto do Topico | Breve descricao].\nAlém disso, se durante a conversa houver um assunto complexo que mereça aprofundamento futuro, você deve sugerir a criação através das sugestões (chips) no final da resposta. Exemplo: adicione "<chips>Crie um tópico sobre [Assunto] para eu aprofundar</chips>". Se ele clicar na sugestão, na próxima resposta você gera a tag [CRIAR_TOPICO:...].`
@@ -415,6 +421,15 @@ export function FloatingChatWidget() {
           />
         )}
       </div>
+
+      {showReflectionModal && (
+        <ReflectionModal
+          materiaSlug={materiaSlug || 'global-assistant'}
+          topico={topico || 'Chat Livre'}
+          onComplete={confirmEncerrar}
+          onCancel={() => setShowReflectionModal(false)}
+        />
+      )}
     </div>
   );
 }

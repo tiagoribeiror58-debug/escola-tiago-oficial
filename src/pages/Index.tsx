@@ -245,6 +245,14 @@ export default function Index() {
           </div>
           
           <div className="flex items-center gap-2">
+            {/* Botão de Notas */}
+            <button
+              onClick={() => navigate('/notas')}
+              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
+            >
+              Notas
+            </button>
+
             {/* Botão de Quiz */}
             <button
               onClick={() => navigate('/quiz')}

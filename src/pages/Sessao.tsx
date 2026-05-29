@@ -5,6 +5,7 @@ import { useUltimaSessao, useEmentaConcluida, useRecentSessoes, useSessionByKey,
 import { useChatHistory, useSessionMessages } from '@/hooks/useChatMessages';
 import ChatWindow from '@/components/ChatWindow';
 import Workspace from '@/components/Workspace';
+import ReflectionModal from '@/components/ReflectionModal';
 
 import { ArrowLeft, Square, Loader2, Pause, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -87,6 +88,7 @@ export default function Sessao() {
   const draftSavedRef = useRef(false); // Rastreia se um rascunho automático já foi salvo
   const [saving, setSaving] = useState(false);
   const [topicComplete, setTopicComplete] = useState(false);
+  const [showReflectionModal, setShowReflectionModal] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [messageCount, setMessageCount] = useState(0);
 
@@ -393,8 +395,14 @@ export default function Sessao() {
       const ok = window.confirm('A sessão ainda não foi concluída pela IA. Encerrar e marcar como concluída mesmo assim?');
       if (!ok) return;
     }
+    // Em vez de encerrar direto, mostra o modal de reflexão (Feynman Technique)
+    setShowReflectionModal(true);
+  }, [topicComplete]);
+
+  const confirmEncerrar = useCallback(() => {
+    setShowReflectionModal(false);
     doEncerrar(true);
-  }, [doEncerrar, topicComplete]);
+  }, [doEncerrar]);
 
   const handleMessagesChange = useCallback((messages: ChatMessage[]) => {
     messagesRef.current = messages;
@@ -494,9 +502,7 @@ export default function Sessao() {
           className={cn(
             'flex items-center justify-center gap-1.5 w-8 h-8 sm:w-auto sm:h-auto sm:px-3 sm:py-1.5 rounded-lg text-sm font-medium transition-all active:scale-95 shrink-0',
             'disabled:opacity-50',
-            topicComplete
-              ? 'bg-[hsl(var(--success))] text-white ring-2 ring-[hsl(var(--success)/0.4)] animate-pulse hover:brightness-110'
-              : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-border'
+            'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground border border-border'
           )}
         >
           {saving ? (
@@ -528,6 +534,7 @@ export default function Sessao() {
             modo={modo}
             ementaConcluida={ementaConcluida}
             sessoesRecentes={sessoesRecentes || []}
+            onRequestEncerrar={handleEncerrar}
             onMetricScore={(score) => {
               if (slug && topicoDestaSessao) {
                 saveMetricaRevisao.mutate({ materia_slug: slug, topico: topicoDestaSessao, score });
@@ -536,6 +543,15 @@ export default function Sessao() {
           />
         </Workspace>
       </div>
+
+      {showReflectionModal && (
+        <ReflectionModal
+          materiaSlug={slug!}
+          topico={topicoDestaSessao || 'Revisão'}
+          onComplete={confirmEncerrar}
+          onCancel={() => setShowReflectionModal(false)}
+        />
+      )}
     </div>
   );
 }

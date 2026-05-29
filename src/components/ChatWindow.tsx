@@ -4,7 +4,7 @@ import { buildSystemPrompt } from '@/lib/buildPrompt';
 import { useSaveChatMessage } from '@/hooks/useChatMessages';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '@/lib/utils';
-import { ArrowUp, Loader2, Zap, ZapOff, History, Volume2, VolumeX, Music2 } from 'lucide-react';
+import { ArrowUp, Loader2, Zap, ZapOff, History, Volume2, VolumeX, Music2, X, Square } from 'lucide-react';
 import { playPopSound, playThinkingDoneSound, playSuccessSound } from '@/lib/audioUtils';
 import confetti from 'canvas-confetti';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -14,6 +14,8 @@ import MermaidRenderer from './MermaidRenderer';
 import UnsplashChip from './UnsplashChip';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import FloatingSelectionMenu from './FloatingSelectionMenu';
+import ReflectionModal from './ReflectionModal';
 
 interface Props {
   materia: MateriaConfig;
@@ -29,6 +31,7 @@ interface Props {
   ementaConcluida?: string[];        // tópicos já concluídos (fonte de verdade do progresso)
   sessoesRecentes?: Sessao[];        // histórico de performance para a IA calibrar
   systemPromptOverride?: string;     // se passado, ignora o buildSystemPrompt e usa este
+  onRequestEncerrar?: () => void;
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
@@ -78,7 +81,7 @@ const markdownComponents = {
   }
 };
 
-export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, onMetricScore, sessionKey, initialMessages, historyMessages, sub, modo, ementaConcluida, sessoesRecentes, systemPromptOverride }: Props) {
+export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, onTopicComplete, onMetricScore, sessionKey, initialMessages, historyMessages, sub, modo, ementaConcluida, sessoesRecentes, systemPromptOverride, onRequestEncerrar }: Props) {
   const isContinuation = initialMessages !== undefined;
   const systemPrompt = systemPromptOverride ?? buildSystemPrompt(materia, ultimaSessao, isContinuation, sub, modo, ementaConcluida, sessoesRecentes);
   const saveMutation = useSaveChatMessage();
@@ -90,12 +93,18 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const [isLoading, setIsLoading] = useState(false);
   const [chipsEnabled, setChipsEnabled] = useState(true);
   const [historyExpanded, setHistoryExpanded] = useState(false);
+  const [showEndButton, setShowEndButton] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const autoStartFiredRef = useRef(false); // guard contra double auto-start (StrictMode)
   const autoTtsEnabledRef = useRef(false); // rastreia se o usuário ativou o áudio para manter auto-play
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isTtsLoading, setIsTtsLoading] = useState(false);
+
+  // Text selection state
+  const [selectionRect, setSelectionRect] = useState<{ top: number, left: number } | null>(null);
+  const [selectedText, setSelectedText] = useState('');
+  const [showModalSelection, setShowModalSelection] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [ttsRate, setTtsRate] = useState(1.0);
   const musicRef = useRef<HTMLAudioElement | null>(null);
@@ -229,6 +238,60 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     }
     onMessagesChange?.(messages);
   }, [messages, onMessagesChange, isNearBottom]);
+
+  // Handle text selection
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      const selection = window.getSelection();
+      if (!selection || selection.isCollapsed || !selection.toString().trim()) {
+        setSelectionRect(null);
+        setSelectedText('');
+        return;
+      }
+      
+      const text = selection.toString().trim();
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      
+      // Position the menu slightly above the center of the selection
+      setSelectionRect({
+        top: rect.top,
+        left: rect.left + rect.width / 2
+      });
+      setSelectedText(text);
+    };
+
+
+
+    const handleMouseUp = () => {
+      setTimeout(handleSelectionChange, 10);
+    };
+
+    document.addEventListener('selectionchange', handleSelectionChange);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('touchend', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('selectionchange', handleSelectionChange);
+      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchend', handleMouseUp);
+    };
+  }, []);
+
+  const handleSelectionAction = (action: 'copy' | 'highlight' | 'save') => {
+    if (action === 'save') {
+      setShowModalSelection(true);
+    } else if (action === 'copy') {
+      // handled inside FloatingSelectionMenu via clipboard API
+      window.getSelection()?.removeAllRanges();
+      setSelectionRect(null);
+    } else if (action === 'highlight') {
+      // Temporário: apenas manter o visual ou feedback
+      toast.success('Trecho destacado na sessão atual!');
+      window.getSelection()?.removeAllRanges();
+      setSelectionRect(null);
+    }
+  };
 
   const autoResize = useCallback(() => {
     const el = inputRef.current;
@@ -456,6 +519,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
           disableForReducedMotion: true
         });
         playSuccessSound();
+        setShowEndButton(true);
         onTopicComplete?.();
       }
 
@@ -672,9 +736,62 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
           </div>
         )}
 
+        {showEndButton && (
+          <div className="flex flex-col items-center justify-center my-6 animate-in fade-in zoom-in duration-300">
+            <div className="relative group">
+              <button
+                onClick={() => {
+                  playPopSound();
+                  setShowEndButton(false);
+                }}
+                className="absolute -top-3 -right-3 w-6 h-6 bg-muted text-muted-foreground hover:bg-red-500 hover:text-white rounded-full flex items-center justify-center transition-colors shadow-sm z-10 opacity-0 group-hover:opacity-100"
+                title="Fechar"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => {
+                  playPopSound();
+                  onRequestEncerrar?.();
+                }}
+                className="px-8 py-3 bg-[hsl(var(--success))] text-white font-semibold rounded-xl shadow-lg shadow-[hsl(var(--success)/0.25)] ring-2 ring-[hsl(var(--success)/0.4)] animate-pulse hover:brightness-110 active:scale-95 transition-all flex items-center gap-2"
+              >
+                <Square className="w-4 h-4 fill-current" />
+                Encerrar Sessão
+              </button>
+            </div>
+          </div>
+        )}
+
         <div ref={bottomRef} />
         </div>
       </div>
+
+      {/* Floating Selection Menu */}
+      {selectionRect && selectedText && !showModalSelection && (
+        <FloatingSelectionMenu
+          position={selectionRect}
+          selectedText={selectedText}
+          onAction={handleSelectionAction}
+        />
+      )}
+
+      {/* Reflection Modal from Selection */}
+      {showModalSelection && (
+        <ReflectionModal
+          materiaSlug={materia.slug}
+          topico={ultimaSessao?.topico || 'Trecho Selecionado'}
+          initialValue={`Trecho destacado:\n"${selectedText}"\n\nMinhas observações:\n`}
+          onComplete={() => {
+            setShowModalSelection(false);
+            window.getSelection()?.removeAllRanges();
+            setSelectionRect(null);
+          }}
+          onCancel={() => {
+            setShowModalSelection(false);
+          }}
+        />
+      )}
 
       <div className="border-t border-border p-3">
         <div className="flex items-end gap-2 max-w-3xl mx-auto flex-col w-full">
