@@ -111,9 +111,56 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
 
   // Achata fases[].topicos em um array plano para matérias que usam estrutura de fases
   // Se a matéria tem ementa direta, usa ela. Se tem fases, achata os tópicos de todas as fases.
-  const flatEmenta: string[] = config?.ementa && config.ementa.length > 0
+  const baseEmenta: string[] = config?.ementa && config.ementa.length > 0
     ? config.ementa
     : (config?.fases || []).flatMap(f => f.topicos || []);
+
+  // Injetar os tópicos emergentes (gerados por IA/chat) diretamente no meio da ementa oficial!
+  const flatEmenta: string[] = [];
+  
+  // Primeiro, vamos mapear as sessões para facilitar a busca
+  const sessoesMateria = (todasSessoes || [])
+    .filter(s => s.materia === config?.slug)
+    .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime());
+
+  const norm = (s?: string | null) => (s || '').toLowerCase().trim();
+
+  baseEmenta.forEach(step => {
+    flatEmenta.push(step); // Adiciona o tópico normal
+    
+    // Busca tópicos emergentes que "nasceram" de uma sessão relacionada a este step
+    if (topicosEmergentes && topicosEmergentes.length > 0) {
+      const stepSessions = sessoesMateria.filter(s => 
+        norm(s.topico).includes(norm(step)) || norm(step).includes(norm(s.topico))
+      );
+      const stepSessionKeys = new Set(stepSessions.map(s => s.session_key).filter(Boolean));
+      
+      const emergentesDesteStep = topicosEmergentes.filter(te => 
+        te.session_key && stepSessionKeys.has(te.session_key)
+      );
+      
+      // Adiciona eles logo após o tópico principal
+      emergentesDesteStep.forEach(et => {
+        const tituloFormatado = `✦ ${et.titulo}`;
+        if (!flatEmenta.includes(tituloFormatado)) {
+          flatEmenta.push(tituloFormatado);
+        }
+      });
+    }
+  });
+
+  // Adiciona tópicos emergentes "órfãos" (sem sessão pai identificada) no final da matéria
+  if (topicosEmergentes && topicosEmergentes.length > 0) {
+    const allSessionKeys = new Set(sessoesMateria.map(s => s.session_key).filter(Boolean));
+    const orfaos = topicosEmergentes.filter(te => !te.session_key || !allSessionKeys.has(te.session_key));
+    
+    orfaos.forEach(et => {
+      const tituloFormatado = `✦ ${et.titulo}`;
+      if (!flatEmenta.includes(tituloFormatado)) {
+        flatEmenta.push(tituloFormatado);
+      }
+    });
+  }
 
   let proximoTopicoReal = ultimaSessao?.proximo_topico || '';
   if (flatEmenta.length > 0 && ultimaSessao) {
@@ -155,10 +202,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
     urgente: 'text-[hsl(var(--danger))]',
   };
 
-  // Busca sessões desta matéria ordenadas desc
-  const sessoesMateria = (todasSessoes || [])
-    .filter(s => s.materia === config.slug)
-    .sort((a, b) => new Date(b.created_at || b.data).getTime() - new Date(a.created_at || a.data).getTime());
+  // As sessões já foram ordenadas acima para o flatEmenta
     
   // Identifica se o tópico selecionado está pausado.
   // Regra original: tem sessão neste tópico e ele ainda não está na ementa_concluida.
@@ -329,9 +373,6 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                           const isLast = idx === flatEmenta.length - 1;
                           const isVisible = areAllRevealed || isCurrent || unhiddenTopics.has(step);
 
-                          const stepSessions = sessoesMateria.filter(s => normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico)));
-                          const emergentTopicsForStep = (topicosEmergentes || []).filter(te => stepSessions.some(s => s.session_key === te.session_key));
-
                           const currentPhase = config.fases?.find(f => f.topicos.includes(step));
                           const prevTopic = idx > 0 ? flatEmenta[idx - 1] : null;
                           const prevPhase = prevTopic ? config.fases?.find(f => f.topicos.includes(prevTopic)) : null;
@@ -382,8 +423,8 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                   >
                                     {isCompleted ? '✓' : isCurrent ? '●' : (idx + 1)}
                                   </button>
-                                  {/* Linha conectora (não aparece no último item, a menos que tenha subtópicos emergentes) */}
-                                  {(!isLast || emergentTopicsForStep.length > 0) && (
+                                  {/* Linha conectora (não aparece no último item) */}
+                                  {!isLast && (
                                     <div className={cn(
                                       "w-px h-full min-h-[1.5rem] mt-1 -mb-1 transition-opacity",
                                       !isVisible && "opacity-40",
@@ -457,47 +498,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                               </div>
                               </div>
 
-                              {isVisible && emergentTopicsForStep.length > 0 && emergentTopicsForStep.map((et, etIdx) => (
-                                <div key={et.id} className="flex gap-3 relative group transition-opacity mb-4">
-                                  {/* Indicador Visual Tópico Emergente */}
-                                  <div className="flex flex-col items-center">
-                                    <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 border border-primary/30 bg-primary/10 text-primary text-[10px] font-bold z-10 shadow-sm">
-                                      ✦
-                                    </div>
-                                    {/* Linha conectora caso não seja o último do último */}
-                                    {!(isLast && etIdx === emergentTopicsForStep.length - 1) && (
-                                      <div className="w-px h-full min-h-[1.5rem] mt-1 -mb-1 bg-border/50" />
-                                    )}
-                                  </div>
-                                  
-                                  {/* Conteúdo Tópico Emergente */}
-                                  <div 
-                                    className="flex-1 flex gap-2 items-start bg-primary/5 border border-primary/15 rounded-xl p-3 cursor-pointer hover:bg-primary/10 transition-colors shadow-sm"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      playPopSound();
-                                      onOpenChange(false);
-                                      if (et.session_key) {
-                                        navigate(`/sessao/${config.slug}?resume=${et.session_key}`);
-                                      }
-                                    }}
-                                  >
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-sm font-medium text-foreground leading-tight">
-                                        {et.titulo}
-                                      </p>
-                                      {et.descricao && (
-                                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">
-                                          {et.descricao}
-                                        </p>
-                                      )}
-                                      <p className="text-[10px] text-primary font-medium uppercase mt-2 tracking-wider">
-                                        Gerado pela IA (Pré-requisito)
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
+                              {/* Fim do bloco principal do tópico */}
 
                             </div>
                           );
@@ -550,81 +551,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             </div>
           )}
 
-          {/* Tópicos Emergentes — criados pelo aluno ou IA durante as sessões */}
-          {(() => {
-            // Mostra todos os tópicos emergentes que NÃO estão exibidos inline no timeline.
-            // Um tópico está "inline" se sua session_key bate com uma sessão de algum step da ementa.
-            const inlineSessionKeys = new Set(
-              sessoesMateria
-                .filter(s => flatEmenta.some(step => {
-                  const n1 = (s.topico || '').toLowerCase().trim();
-                  const n2 = (step || '').toLowerCase().trim();
-                  return n1.includes(n2) || n2.includes(n1);
-                }))
-                .map(s => s.session_key)
-                .filter(Boolean)
-            );
-            const unmatchedEmergentTopics = topicosEmergentes?.filter(te =>
-              !te.session_key || !inlineSessionKeys.has(te.session_key)
-            );
-            
-            if (!unmatchedEmergentTopics || unmatchedEmergentTopics.length === 0) return null;
-            
-            return (
-              <div className="px-6 pb-4">
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
-                    ✦ Tópicos Emergentes
-                  </p>
-                  <span className="text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-                    {unmatchedEmergentTopics.length} novo{unmatchedEmergentTopics.length > 1 ? 's' : ''}
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  {unmatchedEmergentTopics.map((topico) => (
-                    <div
-                      key={topico.id}
-                      className="flex gap-3 p-3 rounded-xl bg-primary/5 border border-primary/15 group cursor-pointer hover:bg-primary/10 transition-colors"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        playPopSound();
-                        onOpenChange(false);
-                        if (topico.session_key) {
-                          navigate(`/sessao/${config.slug}?resume=${topico.session_key}`);
-                        } else {
-                          // Sem sessão vinculada: inicia nova sessão com o tópico como sub-tópico
-                          navigate(`/sessao/${config.slug}?sub=${encodeURIComponent(topico.titulo)}`);
-                        }
-                      }}
-                    >
-                      <span className="text-primary mt-0.5 shrink-0 text-xs">✦</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground leading-tight">
-                          {topico.titulo}
-                        </p>
-                        {topico.descricao && topico.descricao !== topico.titulo && (
-                          <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">
-                            {topico.descricao}
-                          </p>
-                        )}
-                        {topico.fonte_url && (
-                          <a
-                            href={topico.fonte_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[10px] text-primary/60 hover:text-primary mt-1 block truncate transition-colors z-10 relative"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {topico.fonte_url.replace(/^https?:\/\//, '').split('/')[0]}
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })()}
+          {/* O bloco de Tópicos Emergentes órfãos foi removido pois agora eles são injetados diretamente na ementa */}
 
 
 
