@@ -616,64 +616,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             );
           })()}
 
-          {/* Material de Apoio (Vídeos e Leitura) */}
-          {selectedSub && topicSupplement && (!isPreviewLoading) && (
-            <div className="px-6 pb-4 animate-in fade-in slide-in-from-bottom-2 duration-500">
-              <div className="flex items-center gap-2 mb-3">
-                <BookOpen className="w-4 h-4 text-primary" />
-                <h4 className="text-[13px] font-semibold text-foreground">Material de Apoio</h4>
-              </div>
-              
-              <div className="flex flex-col gap-3">
-                {/* Youtube Videos or Fallback */}
-                {topicSupplement.youtube_videos && topicSupplement.youtube_videos.length > 0 ? (
-                  topicSupplement.youtube_videos.map((vid, idx) => (
-                    <a key={idx} href={vid.url} target="_blank" rel="noopener noreferrer" className="flex gap-3 p-2 rounded-xl bg-muted/30 border border-border/50 hover:bg-muted/50 transition-colors group">
-                      <div className="w-24 h-16 rounded-lg overflow-hidden shrink-0 bg-muted relative">
-                        <img src={vid.thumbnail} alt={vid.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
-                          <div className="w-6 h-6 rounded-full bg-red-600 flex items-center justify-center text-white">
-                            <svg className="w-3 h-3 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex-1 min-w-0 py-1">
-                        <p className="text-xs font-medium text-foreground line-clamp-2 leading-tight group-hover:text-primary transition-colors">{vid.title}</p>
-                        <p className="text-[10px] text-muted-foreground mt-1">YouTube</p>
-                      </div>
-                    </a>
-                  ))
-                ) : (
-                  topicSupplement.youtube_queries && topicSupplement.youtube_queries.length > 0 && (
-                    <a href={`https://www.youtube.com/results?search_query=${encodeURIComponent(topicSupplement.youtube_queries[0])}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition-colors group">
-                      <div className="w-8 h-8 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center shrink-0">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium text-red-500 group-hover:text-red-400 transition-colors">Buscar aula no YouTube</p>
-                        <p className="text-[10px] text-red-500/70 truncate">{topicSupplement.youtube_queries[0]}</p>
-                      </div>
-                    </a>
-                  )
-                )}
 
-                {/* Reading Links */}
-                {topicSupplement.reading_links && topicSupplement.reading_links.length > 0 && (
-                  <div className="flex flex-col gap-2 mt-1">
-                    {topicSupplement.reading_links.map((link, idx) => (
-                      <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/20 border border-border/50 hover:bg-muted/40 transition-colors group">
-                        <div className="p-1.5 rounded-lg bg-background border shadow-sm text-muted-foreground group-hover:text-primary transition-colors">
-                          <BookOpen className="w-3.5 h-3.5" />
-                        </div>
-                        <p className="text-xs font-medium text-muted-foreground group-hover:text-foreground line-clamp-1 flex-1 transition-colors">{link.title}</p>
-                        <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-primary transition-colors shrink-0" />
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* Spacer para o sticky footer não cobrir o conteúdo do final do scroll */}
           <div className="h-56 sm:h-72 shrink-0" />
@@ -714,6 +657,60 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 </Link>
               ) : (
                 <>
+                {/* Material de Apoio (Vídeos e Leitura) no Sticky Footer */}
+                {selectedSub && topicSupplement && (!isPreviewLoading) && (
+                  <div className="pb-3 mb-3 border-b border-border/50 animate-in fade-in slide-in-from-bottom-2 duration-500 max-h-[30vh] overflow-y-auto pr-1 custom-scrollbar">
+                    <div className="flex flex-col gap-2">
+                      {/* Youtube Videos or Fallback */}
+                      {topicSupplement.youtube_videos && topicSupplement.youtube_videos.length > 0 ? (
+                        topicSupplement.youtube_videos.map((vid, idx) => (
+                          <a key={idx} href={vid.url} target="_blank" rel="noopener noreferrer" className="flex gap-3 p-2 rounded-xl bg-muted/30 border border-border/50 hover:bg-muted/50 transition-colors group">
+                            <div className="w-20 h-14 rounded-lg overflow-hidden shrink-0 bg-muted relative">
+                              <img src={vid.thumbnail} alt={vid.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
+                                <div className="w-5 h-5 rounded-full bg-red-600 flex items-center justify-center text-white">
+                                  <svg className="w-2.5 h-2.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex-1 min-w-0 py-0.5">
+                              <p className="text-[11px] font-medium text-foreground line-clamp-2 leading-tight group-hover:text-primary transition-colors">{vid.title}</p>
+                              <p className="text-[9px] text-muted-foreground mt-0.5">YouTube</p>
+                            </div>
+                          </a>
+                        ))
+                      ) : (
+                        topicSupplement.youtube_queries && topicSupplement.youtube_queries.length > 0 && (
+                          <a href={`https://www.youtube.com/results?search_query=${encodeURIComponent(topicSupplement.youtube_queries[0])}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition-colors group">
+                            <div className="w-7 h-7 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center shrink-0">
+                              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[11px] font-medium text-red-500 group-hover:text-red-400 transition-colors">Buscar aula no YouTube</p>
+                              <p className="text-[9px] text-red-500/70 truncate">{topicSupplement.youtube_queries[0]}</p>
+                            </div>
+                          </a>
+                        )
+                      )}
+
+                      {/* Reading Links */}
+                      {topicSupplement.reading_links && topicSupplement.reading_links.length > 0 && (
+                        <div className="flex flex-col gap-1.5 mt-0.5">
+                          {topicSupplement.reading_links.map((link, idx) => (
+                            <a key={idx} href={link.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2 rounded-xl bg-muted/20 border border-border/50 hover:bg-muted/40 transition-colors group">
+                              <div className="p-1.5 rounded-lg bg-background border shadow-sm text-muted-foreground group-hover:text-primary transition-colors">
+                                <BookOpen className="w-3 h-3" />
+                              </div>
+                              <p className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground line-clamp-1 flex-1 transition-colors">{link.title}</p>
+                              <ArrowRight className="w-3 h-3 text-muted-foreground/40 group-hover:text-primary transition-colors shrink-0" />
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 <Link
                   to={ctaUrl}
                   onClick={handleNewSessionClick}
