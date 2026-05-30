@@ -9,6 +9,7 @@ import { MateriaEstado } from '@/types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
+import { PlanejarMateriaModal } from '@/components/PlanejarMateriaModal';
 import { Search, History, CalendarCheck, BrainCircuit, Sparkles } from 'lucide-react';
 import { HistoricoGlobalDrawer } from '@/components/HistoricoGlobalDrawer';
 import { useOrdemMaterias } from '@/hooks/useOrdemMaterias';
@@ -70,7 +71,7 @@ function getGreeting(): string {
 
 export default function Index() {
   const { estados, isLoading } = useFolhasEstado();
-  const { foco } = useMateriasFoco();
+  const { foco, toggleFoco } = useMateriasFoco();
   const { data: sessoes } = useSessoes();
   const { data: metricasRevisao } = useMetricasRevisao();
   const averageRetention = metricasRevisao && metricasRevisao.length > 0
@@ -88,7 +89,18 @@ export default function Index() {
   const ofensiva = sessoes ? calcularOfensiva(sessoes) : 0;
   
   const [modalOpen, setModalOpen] = useState(false);
+  const [isIAModalOpen, setIsIAModalOpen] = useState(false);
   const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
+
+  const handleIASuccess = (slug: string) => {
+    if (!foco.includes(slug)) {
+      toggleFoco(slug);
+    }
+    setSearchParams(prev => {
+      prev.set('materia', slug);
+      return prev;
+    }, { replace: true });
+  };
 
   useEffect(() => {
     const paramSlug = searchParams.get('materia');
@@ -260,6 +272,15 @@ export default function Index() {
             >
               <Sparkles className="w-3.5 h-3.5" />
               Quiz
+            </button>
+
+            {/* Botão de Planejar com IA */}
+            <button
+              onClick={() => setIsIAModalOpen(true)}
+              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-emerald-500/10 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/20 text-xs font-medium transition-all shadow-sm"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              IA
             </button>
 
             {/* Botão do Histórico */}
@@ -461,6 +482,12 @@ export default function Index() {
       <HistoricoGlobalDrawer
         open={isHistoricoOpen}
         onOpenChange={setIsHistoricoOpen}
+      />
+
+      <PlanejarMateriaModal
+        open={isIAModalOpen}
+        onOpenChange={setIsIAModalOpen}
+        onSuccess={handleIASuccess}
       />
     </div>
   );

@@ -2,6 +2,31 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Sessao, MateriaEstado, MateriaConfig } from '@/types';
 import { MATERIAS, calcularDiasParada, getAllLeafSlugs } from '@/lib/materias';
+import { useMateriasGeradas } from '@/hooks/useMateriasGeradas';
+
+// Helper para evitar duplicação no código ao mesclar estáticas e dinâmicas
+function mesclarMaterias(materiasGeradas: any[] | undefined): MateriaConfig[] {
+  const dinamicas: MateriaConfig[] = (materiasGeradas || []).map(mg => ({
+    slug: mg.slug,
+    nome: mg.nome,
+    emoji: mg.emoji || '📚',
+    descricao: mg.descricao || '',
+    ementa: mg.ementa || [],
+    isCategory: false,
+  }));
+
+  const slugsEstaticos = new Set();
+  const extrairSlugs = (lista: MateriaConfig[]) => {
+    lista.forEach(m => {
+      slugsEstaticos.add(m.slug);
+      if (m.children) extrairSlugs(m.children);
+    });
+  };
+  extrairSlugs(MATERIAS);
+
+  const dinamicasFiltradas = dinamicas.filter(md => !slugsEstaticos.has(md.slug));
+  return [...MATERIAS, ...dinamicasFiltradas];
+}
 
 export function useSessoes() {
   return useQuery({
@@ -91,20 +116,30 @@ export function buildMateriaEstado(config: MateriaConfig, sessoes: Sessao[]): Ma
 }
 
 export function useMateriasEstado() {
-  const { data: sessoes, isLoading, error } = useSessoes();
+  const { data: sessoes, isLoading: isLoadingSessoes, error: errorSessoes } = useSessoes();
+  const { data: materiasGeradas, isLoading: isLoadingGeradas } = useMateriasGeradas();
 
-  const estados: MateriaEstado[] = MATERIAS.map(config => buildMateriaEstado(config, sessoes || []));
+  const TODAS_MATERIAS = mesclarMaterias(materiasGeradas);
+
+  const estados: MateriaEstado[] = TODAS_MATERIAS.map(config => buildMateriaEstado(config, sessoes || []));
 
   // Ordenação: matérias mais acessadas (maior total de sessões) primeiro
   estados.sort((a, b) => {
     return b.totalSessoes - a.totalSessoes;
   });
 
-  return { estados, isLoading, error };
+  return { 
+    estados, 
+    isLoading: isLoadingSessoes || isLoadingGeradas, 
+    error: errorSessoes 
+  };
 }
 
 export function useFolhasEstado() {
-  const { data: sessoes, isLoading, error } = useSessoes();
+  const { data: sessoes, isLoading: isLoadingSessoes, error: errorSessoes } = useSessoes();
+  const { data: materiasGeradas, isLoading: isLoadingGeradas } = useMateriasGeradas();
+
+  const TODAS_MATERIAS = mesclarMaterias(materiasGeradas);
 
   const todasFolhas: MateriaConfig[] = [];
   const extrairFolhas = (lista: MateriaConfig[]) => {
@@ -113,13 +148,17 @@ export function useFolhasEstado() {
       else todasFolhas.push(m);
     });
   };
-  extrairFolhas(MATERIAS);
+  extrairFolhas(TODAS_MATERIAS);
 
   const estados: MateriaEstado[] = todasFolhas.map(config => buildMateriaEstado(config, sessoes || []));
 
   estados.sort((a, b) => b.totalSessoes - a.totalSessoes);
 
-  return { estados, isLoading, error };
+  return { 
+    estados, 
+    isLoading: isLoadingSessoes || isLoadingGeradas, 
+    error: errorSessoes 
+  };
 }
 
 export function useUltimaSessao(materia: string) {
