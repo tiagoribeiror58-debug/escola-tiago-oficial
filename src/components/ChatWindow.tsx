@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { ChatMessage, MateriaConfig, Sessao } from '@/types';
 import { buildSystemPrompt } from '@/lib/buildPrompt';
 import { useSaveChatMessage } from '@/hooks/useChatMessages';
@@ -281,19 +282,23 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const handleSelectionAction = async (action: 'copy' | 'highlight' | 'save') => {
     if (action === 'save') {
       const topico = ultimaSessao?.topico || 'Trecho Selecionado';
-      const reflection = `Trecho destacado:\n"${selectedText}"`;
       
-      const promise = supabase.functions.invoke('review_note', {
-        body: { materia_slug: materia.slug, topico, reflection },
-      }).then(({ data, error }) => {
-        if (error) throw new Error(error.message);
-        if (data?.error) throw new Error(data.error);
-        return data;
-      });
-      
+      const promise = supabase
+        .from('study_notes')
+        .insert({
+          materia_slug: materia.slug,
+          topico: topico,
+          user_reflection: selectedText,
+          ai_complement: ''
+        })
+        .then(({ error }) => {
+          if (error) throw new Error(error.message);
+          queryClient.invalidateQueries({ queryKey: ['study_notes'] });
+        });
+        
       toast.promise(promise, {
         loading: 'Salvando nota no caderno...',
-        success: 'Nota salva e revisada com sucesso! 🎉',
+        success: 'Nota salva com sucesso! 🎉',
         error: 'Falha ao salvar a anotação.',
       });
 

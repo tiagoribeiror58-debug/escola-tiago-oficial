@@ -25,7 +25,23 @@ serve(async (req) => {
     const geminiKey = Deno.env.get('GEMINI_API_KEY');
     if (!geminiKey) throw new Error('GEMINI_API_KEY não configurada');
 
-    const prompt = `Você é um tutor revisando uma anotação de um aluno sobre o tópico "${topico}" da matéria "${materia_slug}".
+    const isHighlight = reflection.startsWith('Trecho destacado:');
+    
+    let prompt = '';
+    
+    if (isHighlight) {
+      prompt = `O aluno destacou um trecho importante do material de estudo sobre o tópico "${topico}" da matéria "${materia_slug}".
+Trecho destacado:
+"""
+${reflection.replace('Trecho destacado:\n', '')}
+"""
+
+Sua tarefa:
+O aluno salvou esse trecho porque o achou fundamental. Forneça um complemento valioso a este trecho. Não avalie, nem elogie o aluno, pois ele não é o autor do texto.
+Apenas expanda o conceito com 1 a 2 parágrafos no máximo, adicionando algo útil que reforce o aprendizado (pode ser uma analogia, um fato histórico, um exemplo prático ou o conceito chave subjacente).
+Retorne APENAS o seu complemento diretamente.`;
+    } else {
+      prompt = `Você é um tutor revisando uma reflexão escrita por um aluno sobre o tópico "${topico}" da matéria "${materia_slug}".
 Anotação do aluno:
 """
 ${reflection}
@@ -34,6 +50,7 @@ ${reflection}
 Sua tarefa:
 Revise a anotação do aluno. Corrija se houver algum erro conceitual grave. Em seguida, expanda ou complemente a anotação com 1 a 2 parágrafos no máximo, adicionando algo valioso que reforce o aprendizado (pode ser uma analogia, um fato interessante, ou o conceito chave que falta).
 Mantenha o tom encorajador e direto. Retorne APENAS a sua revisão/complemento.`;
+    }
 
     const aiResponse = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
       method: 'POST',
