@@ -104,7 +104,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   // Text selection state
   const [selectionRect, setSelectionRect] = useState<{ top: number, left: number } | null>(null);
   const [selectedText, setSelectedText] = useState('');
-  const [showModalSelection, setShowModalSelection] = useState(false);
+
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [ttsRate, setTtsRate] = useState(1.0);
   const musicRef = useRef<HTMLAudioElement | null>(null);
@@ -278,9 +278,27 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     };
   }, []);
 
-  const handleSelectionAction = (action: 'copy' | 'highlight' | 'save') => {
+  const handleSelectionAction = async (action: 'copy' | 'highlight' | 'save') => {
     if (action === 'save') {
-      setShowModalSelection(true);
+      const topico = ultimaSessao?.topico || 'Trecho Selecionado';
+      const reflection = `Trecho destacado:\n"${selectedText}"`;
+      
+      const promise = supabase.functions.invoke('review_note', {
+        body: { materia_slug: materia.slug, topico, reflection },
+      }).then(({ data, error }) => {
+        if (error) throw new Error(error.message);
+        if (data?.error) throw new Error(data.error);
+        return data;
+      });
+      
+      toast.promise(promise, {
+        loading: 'Salvando nota no caderno...',
+        success: 'Nota salva e revisada com sucesso! 🎉',
+        error: 'Falha ao salvar a anotação.',
+      });
+
+      window.getSelection()?.removeAllRanges();
+      setSelectionRect(null);
     } else if (action === 'copy') {
       // handled inside FloatingSelectionMenu via clipboard API
       window.getSelection()?.removeAllRanges();
@@ -776,22 +794,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
         />
       )}
 
-      {/* Reflection Modal from Selection */}
-      {showModalSelection && (
-        <ReflectionModal
-          materiaSlug={materia.slug}
-          topico={ultimaSessao?.topico || 'Trecho Selecionado'}
-          initialValue={`Trecho destacado:\n"${selectedText}"\n\nMinhas observações:\n`}
-          onComplete={() => {
-            setShowModalSelection(false);
-            window.getSelection()?.removeAllRanges();
-            setSelectionRect(null);
-          }}
-          onCancel={() => {
-            setShowModalSelection(false);
-          }}
-        />
-      )}
+
 
       <div className="border-t border-border p-3">
         <div className="flex items-end gap-2 max-w-3xl mx-auto flex-col w-full">

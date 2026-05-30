@@ -32,34 +32,12 @@ export default function FloatingSelectionMenu({ position, selectedText, onAction
       <div className="flex items-center gap-1 bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 px-2 py-1.5 rounded-lg shadow-xl border border-border/10">
         
         <button
-          onClick={handleCopy}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-md transition-colors text-sm font-medium"
-          title="Copiar"
-        >
-          <Copy className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Copiar</span>
-        </button>
-        
-        <div className="w-px h-4 bg-zinc-700 dark:bg-zinc-300 mx-0.5" />
-
-        <button
-          onClick={() => onAction('highlight')}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-md transition-colors text-sm font-medium"
-          title="Destacar (Visualmente)"
-        >
-          <Highlighter className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Destacar</span>
-        </button>
-
-        <div className="w-px h-4 bg-zinc-700 dark:bg-zinc-300 mx-0.5" />
-
-        <button
           onClick={() => onAction('save')}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-md transition-colors text-sm font-medium text-emerald-400 dark:text-emerald-600"
+          className="flex items-center gap-1.5 px-3 py-1.5 hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-md transition-colors text-sm font-medium text-emerald-400 dark:text-emerald-600"
           title="Salvar como Nota"
         >
-          <BookOpen className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Salvar Nota</span>
+          <BookOpen className="w-4 h-4" />
+          <span className="inline">Salvar Nota</span>
         </button>
 
       </div>

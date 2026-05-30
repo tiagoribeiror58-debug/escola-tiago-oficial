@@ -22,8 +22,8 @@ serve(async (req) => {
       );
     }
 
-    const openAiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openAiKey) throw new Error('OPENAI_API_KEY não configurada');
+    const geminiKey = Deno.env.get('GEMINI_API_KEY');
+    if (!geminiKey) throw new Error('GEMINI_API_KEY não configurada');
 
     const prompt = `Você é um tutor revisando uma anotação de um aluno sobre o tópico "${topico}" da matéria "${materia_slug}".
 Anotação do aluno:
@@ -35,29 +35,30 @@ Sua tarefa:
 Revise a anotação do aluno. Corrija se houver algum erro conceitual grave. Em seguida, expanda ou complemente a anotação com 1 a 2 parágrafos no máximo, adicionando algo valioso que reforce o aprendizado (pode ser uma analogia, um fato interessante, ou o conceito chave que falta).
 Mantenha o tom encorajador e direto. Retorne APENAS a sua revisão/complemento.`;
 
-    const openAiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    const aiResponse = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAiKey}`,
+        'Authorization': `Bearer ${geminiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gemini-3.5-flash',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
       }),
     });
 
-    const openAiData = await openAiResponse.json();
-    if (openAiData.error) throw new Error(openAiData.error.message);
+    const aiData = await aiResponse.json();
+    if (aiData.error) throw new Error(aiData.error.message);
 
-    const ai_complement = openAiData.choices[0].message.content.trim();
+    const ai_complement = aiData.choices[0].message.content.trim();
 
     // Salvar no Supabase
+    const authHeader = req.headers.get('Authorization');
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
+      authHeader ? { global: { headers: { Authorization: authHeader } } } : undefined
     );
 
     const { data: insertedData, error: dbError } = await supabaseClient
