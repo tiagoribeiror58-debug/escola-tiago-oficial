@@ -786,7 +786,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       </div>
 
       {/* Floating Selection Menu */}
-      {selectionRect && selectedText && !showModalSelection && (
+      {selectionRect && selectedText && (
         <FloatingSelectionMenu
           position={selectionRect}
           selectedText={selectedText}
