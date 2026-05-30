@@ -1,7 +1,8 @@
-﻿# Ybernator 2026 — Guia de Construção do Backend (BuildShip)
+# Ybernator 2026 — Guia de Construção do Backend (Dify)
 
 > **Para quem é este guia:** Para Tiago. Sem jargão técnico desnecessário.
 > **Princípio:** Não vamos quebrar nada. Vamos apenas construir a nova "cozinha" e redirecionar a porta de entrada.
+> **Por que mudamos:** O BuildShip apresentou instabilidade. O Dify é superior para IA porque o Streaming (texto palavra por palavra) é nativo, sem configuração extra.
 
 ---
 
@@ -14,7 +15,9 @@ Pensa assim: hoje o seu app tem uma **cozinha improvisada** — código manual e
 
 Não está errado. Mas é frágil: qualquer mudança exige abrir código, testar, fazer deploy. Demora.
 
-**O que vamos fazer:** Construir a mesma "cozinha" no BuildShip — de forma visual, drag-and-drop — e simplesmente mudar **um endereço** no seu código React para o app passar a usar essa nova cozinha. O código visual (UI) não muda quase nada.
+**O que vamos fazer:** Construir a mesma "cozinha" no Dify — de forma visual, drag-and-drop — e simplesmente mudar **um endereço** no seu código React para o app passar a usar essa nova cozinha. O código visual (UI) não muda quase nada.
+
+**Analogia Feynman:** Se ferramentas como Xano ou Fastgen te dão tijolos para você construir um fogão do zero, o Dify te entrega um forno industrial já montado e calibrado para IA, e só te dá o controle da temperatura (a API) para colocar no seu app.
 
 ---
 
@@ -22,12 +25,8 @@ Não está errado. Mas é frágil: qualquer mudança exige abrir código, testar
 
 | Issue | O que é | Onde vive |
 |---|---|---|
-| TIA-81 BYOK | Usuário traz sua própria chave de IA | BuildShip (100%) |
-| TIA-77 Trilha por IA | IA monta o roadmap a partir de um objetivo | BuildShip (gera) + UI (exibe) |
-| TIA-83 BUG Chip | Clicar no chip de tópico não gera conteúdo | Frontend só (Sessao.tsx) |
-
-> TIA-83 é URGENTE e não depende do BuildShip. Pode ser resolvido primeiro separadamente.
-
+| TIA-81 BYOK | Usuário traz sua própria chave de IA | Dify (100%) |
+| TIA-77 Trilha por IA | IA monta o roadmap a partir de um objetivo | Dify (gera) + UI (exibe) |
 ---
 
 ## Arquitetura Final
@@ -35,91 +34,119 @@ Não está errado. Mas é frágil: qualquer mudança exige abrir código, testar
 ```
 [Seu App React]
     |
-    |-- CHAT URL ---------> [BuildShip: Workflow "chat"]
+    |-- CHAT URL ----------> [Dify: Workflow "chat"]
     |                            | -> Chama Gemini ou Claude
     |                            | -> Busca Tavily se precisar
-    |                            | -> Retorna streaming SSE
+    |                            | -> Retorna streaming SSE (nativo)
     |
-    |-- TTS URL ----------> [BuildShip: Workflow "tts"]
+    |-- TTS URL -----------> [Dify: Workflow "tts"]
     |                            | -> Google Cloud TTS Neural
     |                            | -> Retorna audio MP3 base64
     |
-    `-- EXTRACT URL ------> [BuildShip: Workflow "extract"]
-                                 | -> Le PDF/anexo via MCP
+    `-- EXTRACT URL -------> [Dify: Workflow "extract"]
+                                 | -> Le PDF/anexo
                                  | -> Extrai topicos com IA
                                  | -> Salva no Supabase
 ```
 
-O Supabase continua sendo usado APENAS como banco de dados. O BuildShip assume a "cozinha".
+O Supabase continua sendo usado APENAS como banco de dados. O Dify assume a "cozinha".
 
 ---
 
-## PARTE 1 — Construindo o Backend no BuildShip
+## PARTE 1 — Construindo o Backend no Dify
 
 ### Passo 0: Criar conta e entender a tela
 
-1. Acesse buildship.com e crie uma conta gratuita
-2. Clique em "New Project" e nomeie: Ybernator Backend
-3. Voce vera um canvas vazio — aqui voce "desenha" o que o backend faz
+1. Acesse **cloud.dify.ai** e crie uma conta gratuita (login com Google funciona)
+2. Clique em **"Create App"** -> escolha **"Workflow"** (não "Chatbot" — queremos uma API, não uma interface pronta)
+3. Nomeie: `Ybernator Backend`
+4. Voce vera um canvas vazio com um nó de **Start** — aqui voce "desenha" o que o backend faz
 
-**Analogia Feynman:** Pensa no BuildShip como um fluxograma vivo. Cada "bolinha" e um passo que o computador executa. Voce liga as bolinhas com flechas e isso vira uma API real na internet.
+**Importante:** O Dify tem dois modos. Use sempre **Workflow** para criar APIs que o seu React vai consumir. O modo "Chatbot" é para você usar no navegador, não para integrar com seu código.
 
 ---
 
-### Passo 1: Workflow "chat" (O mais importante)
+### Passo 1: Configurar as chaves secretas (vale para todos os workflows)
 
-#### 1.1 — Criar o Workflow
-1. Clique em "New Workflow" -> nome: chat
-2. No trigger, escolha "REST API Call" — cria uma URL publica que seu React vai chamar
-3. Ative a opcao "Streaming" — faz o texto aparecer palavra por palavra no chat
+Va em **Settings** (canto superior direito do seu workspace) -> **API Keys** ou **Model Providers** e adicione:
 
-#### 1.2 — Configurar variaveis secretas
-Va em Settings -> Environment Variables e adicione:
-- GEMINI_API_KEY: sua chave do Google AI Studio
-- ANTHROPIC_API_KEY: sua chave da Anthropic (Claude)
-- TAVILY_API_KEY: sua chave da Tavily
-- SUPABASE_URL: a URL do seu Supabase
-- SUPABASE_SERVICE_KEY: chave Service Role (Supabase > Settings > API)
+- **Gemini:** Google -> cole sua chave do Google AI Studio
+- **Anthropic:** Anthropic -> cole sua chave do Claude
 
-NUNCA coloque essas chaves diretamente no codigo. Se vazar, alguem usa sua cota e voce paga.
+Para as demais chaves (Tavily, Supabase, Google TTS), voce vai adicioná-las como variáveis de ambiente dentro de cada Workflow em **"Environment Variables"** no painel lateral.
 
-#### 1.3 — Montar os nos (blocos) do workflow
+NUNCA coloque essas chaves diretamente no codigo do frontend. Se vazar, alguem usa sua cota e voce paga.
 
-**Bloco 1: Script (Formatar a requisicao)**
-- Tipo: Script (JavaScript)
-- Codigo:
+---
 
+### Passo 2: Workflow "chat" (O mais importante)
+
+#### 2.1 — Criar o Workflow
+
+1. Clique em **"Create App"** -> **Workflow** -> nome: `chat`
+2. Na tela de seleção de nó inicial, escolha **"Entrada do Usuário (nó inicial original)"**. O Dify vai criar os nós de Início e Fim.
+3. No nó **Start** (Início), defina as variáveis de entrada que o seu React vai enviar:
+   - `messages` (Array)
+   - `systemPrompt` (String)
+   - `materiaSlug` (String)
+   - `sessionKey` (String)
+   - `userApiKey` (String — para o BYOK, TIA-81)
+
+#### 2.2 — Montar os nós (blocos) do workflow
+
+**Nó 1: Code (Formatar a requisição)**
+- Clique em **"+"** -> **Code**
+- **Variáveis de Entrada:** crie `messages`, `userApiKey`, `systemPrompt` e vincule-as com as saídas do nó Iniciar.
+- **Linguagem:** JavaScript
+- **Código:** Apague tudo e cole este código abaixo (agora ele faz o trabalho sujo de montar o JSON para não dar bug na próxima tela!):
 ```javascript
-const { messages, systemPrompt, materiaSlug, sessionKey, userApiKey } = request.body;
-// BYOK: usa chave do usuario se ele trouxer, caso contrario usa a do sistema
-const geminiKey = userApiKey || process.env.GEMINI_API_KEY;
-return { messages, systemPrompt, materiaSlug, sessionKey, geminiKey };
-```
+function main({messages, userApiKey, systemPrompt}) {
+    const geminiKey = userApiKey || ""; 
+    
+    let ultimaMensagem = "";
+    if (messages && messages.length > 0) {
+        ultimaMensagem = messages[messages.length - 1].content;
+    }
 
-**Bloco 2: HTTP Request (Verificar se precisa buscar na internet)**
-- URL: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
-- Method: POST
-- Header Authorization: Bearer {{geminiKey}}
-- Body:
-```json
-{
-  "model": "gemini-2.0-flash",
-  "messages": [
-    {"role": "system", "content": "Responda APENAS NAO se a ultima mensagem nao precisar de dados em tempo real. Se precisar, retorne somente a query de busca, sem explicacao."},
-    {"role": "user", "content": "{{messages[-1].content}}"}
-  ],
-  "max_tokens": 30,
-  "temperature": 0
+    // Para evitar os bugs visuais do Dify, montamos o JSON inteiro direto no código:
+    const corpoRequisicao = {
+        model: "gemini-3.5-flash",
+        messages: [
+            {role: "system", content: "Responda APENAS NAO se a ultima mensagem nao precisar de dados em tempo real. Se precisar, retorne somente a query de busca, sem explicacao."},
+            {role: "user", content: ultimaMensagem}
+        ],
+        max_tokens: 30,
+        temperature: 0
+    };
+
+    return { 
+        geminiKey: geminiKey, 
+        corpoRequisicaoTexto: JSON.stringify(corpoRequisicao)
+    };
 }
 ```
+- **Variáveis de Saída (Outputs):** Abaixo do código, crie apenas `geminiKey` (String) e `corpoRequisicaoTexto` (String). *(Você pode apagar as antigas!)*
 
-**Bloco 3: Condition (Bifurcacao: buscar ou nao buscar)**
-- Condicao: response != NAO
-- Se VERDADEIRO: vai para Bloco 4 (Tavily)
-- Se FALSO: pula para Bloco 5 (IA direto)
+**Nó 2: HTTP Request (Verificar se precisa buscar na internet)**
+- Clique em **"+"** -> **HTTP Request**
+- URL: `https://generativelanguage.googleapis.com/v1beta/openai/chat/completions`
+- Method: POST
+- Headers (Cabeçalhos):
+  - Chave: `Authorization`
+  - Valor: Escreva `Bearer ` (com espaço) e insira a variável `geminiKey` ao lado.
+- Body (Corpo):
+  - Em vez de JSON, marque a opção **raw** (texto bruto).
+  - Na caixa de texto que aparecer, **não digite nada**. Apenas clique no botão para inserir variável (`/` ou `{x}`) e coloque a variável **`corpoRequisicaoTexto`**. Fim! Sem dor de cabeça com aspas ou enter.
+```
 
-**Bloco 4: HTTP Request (Busca Tavily)**
-- URL: https://api.tavily.com/search
+**Nó 3: IF (Bifurcação: buscar ou não buscar)**
+- Clique em **"+"** -> **IF/ELSE**
+- Condição: `response != "NAO"`
+- Ramo TRUE: vai para o Nó 4 (Tavily)
+- Ramo FALSE: pula para o Nó 5 (IA direta)
+
+**Nó 4: HTTP Request (Busca Tavily)**
+- URL: `https://api.tavily.com/search`
 - Method: POST
 - Body:
 ```json
@@ -130,68 +157,66 @@ return { messages, systemPrompt, materiaSlug, sessionKey, geminiKey };
 }
 ```
 
-**Bloco 5: HTTP Request (Chama a IA com Streaming)**
-- URL: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
+**Nó 5: LLM (Chama a IA com Streaming — o coração do Dify)**
+- Clique em **"+"** -> **LLM**
+- Model: selecione `gemini-2.0-flash` (ou `claude-3-5-sonnet`)
+- Ative **"Stream"** no painel do nó (é um toggle, nativo do Dify)
+- System Prompt: `{{systemPromptFinal}}`
+- O Dify automaticamente injeta o histórico de mensagens se você conectar a variável `messages`
+
+**Nó 6: End (Devolve para o React)**
+- Conecte a saída do Nó 5 no nó **End**
+- Output variable: o conteúdo gerado pelo LLM
+- O Dify gera a resposta em SSE automaticamente quando Streaming está ativado
+
+#### 2.3 — Publicar e obter a URL
+
+1. Clique em **"Publish"** (canto superior direito)
+2. Va em **"API Access"** no painel lateral
+3. O Dify gera uma URL no formato:
+   ```
+   https://api.dify.ai/v1/workflows/run
+   ```
+   E um **API Key** específico do seu app (diferente da sua chave de conta)
+4. Guarde essa URL e a API Key para a Parte 2
+
+> **Detalhe importante:** No Dify, a URL de execução de Workflow é sempre a mesma (`/v1/workflows/run`). O que diferencia qual workflow você está chamando é o **API Key** do app. Cada app (chat, tts, extract) tem seu próprio API Key.
+
+---
+
+### Passo 3: Workflow "tts" (Voz Neural)
+
+1. **"Create App"** -> **Workflow** -> nome: `tts`
+2. No nó **Start**, defina: `text` (String), `speed` (Number)
+
+**Nó 1: HTTP Request (Google Cloud TTS)**
+- URL: `https://texttospeech.googleapis.com/v1/text:synthesize?key={{GOOGLE_TTS_KEY}}`
 - Method: POST
-- ATIVE: Stream Response = true
 - Body:
 ```json
 {
-  "model": "gemini-2.0-flash",
-  "stream": true,
-  "max_tokens": 2048,
-  "messages": [
-    {"role": "system", "content": "{{systemPromptFinal}}"}
-  ]
-}
-```
-
-**Bloco 6: Stream Response (Devolve para o React)**
-- Tipo: Stream Response
-- Conecta na saida do Bloco 5
-- Isso retorna o texto em SSE (efeito de "digitacao" no chat)
-
-#### 1.4 — Deploy e URL
-Clique em Deploy. O BuildShip gera uma URL tipo:
-https://abc123.buildship.run/chat
-Guarde essa URL para a Parte 2.
-
----
-
-### Passo 2: Workflow "tts" (Voz Neural)
-
-1. New Workflow -> nome: tts
-2. Trigger: REST API Call (sem streaming)
-
-**Bloco 1: HTTP Request (Google Cloud TTS)**
-- URL: https://texttospeech.googleapis.com/v1/text:synthesize
-- Adicione GOOGLE_TTS_KEY nas Environment Variables
-- Body:
-```json
-{
-  "input": {"text": "{{request.body.text}}"},
+  "input": {"text": "{{text}}"},
   "voice": {"languageCode": "pt-BR", "name": "pt-BR-Neural2-B"},
-  "audioConfig": {"audioEncoding": "MP3", "speakingRate": "{{request.body.speed}}"}
+  "audioConfig": {"audioEncoding": "MP3", "speakingRate": "{{speed}}"}
 }
 ```
 
-**Bloco 2: Return**
-- Retorna: { "audioContent": "{{response.audioContent}}" }
+**Nó 2: End**
+- Output: `{ "audioContent": "{{response.audioContent}}" }`
 
 ---
 
-### Passo 3: Workflow "extract" (Leitura de PDF via MCP)
+### Passo 4: Workflow "extract" (Leitura de PDF)
 
-1. New Workflow -> nome: extract
-2. Trigger: REST API Call
+1. **"Create App"** -> **Workflow** -> nome: `extract`
+2. No nó **Start**, defina: `fileUrl` (String)
 
-**Bloco 1: MCP / File Reader**
-- Busque "MCP" ou "File Reader" no catalogo de nos
-- Conecta ao arquivo/URL enviado pelo frontend
-- Extrai o texto bruto do documento
+**Nó 1: HTTP Request (Baixa o conteúdo do arquivo)**
+- Faz uma requisição GET na `fileUrl` para obter o texto do documento
+- Alternativamente: o Dify possui um nó nativo de **"Document Extractor"** — procure por ele no catálogo de nós, ele lê PDFs sem precisar de código extra
 
-**Bloco 2: HTTP Request (IA analisa e gera topicos)**
-- Chama Gemini com o texto extraido
+**Nó 2: LLM (IA analisa e gera tópicos)**
+- Model: `gemini-2.0-flash`
 - System Prompt:
 ```
 Voce e um curador pedagogico. Analise o conteudo e gere uma lista de topicos de estudo em JSON.
@@ -199,83 +224,117 @@ Formato: {"topicos": ["Topico 1", "Topico 2"], "descricao": "Resumo do material"
 Retorne SOMENTE o JSON.
 ```
 
-**Bloco 3: Supabase Insert Row**
-- Selecione o no oficial do Supabase
-- Tabela: topicos_emergentes
-- Insere os topicos gerados pela IA
+**Nó 3: HTTP Request (Salva no Supabase)**
+- URL: `{{SUPABASE_URL}}/rest/v1/topicos_emergentes`
+- Method: POST
+- Headers:
+  - `apikey: {{SUPABASE_SERVICE_KEY}}`
+  - `Authorization: Bearer {{SUPABASE_SERVICE_KEY}}`
+  - `Content-Type: application/json`
+- Body: o JSON gerado pelo LLM
 
 ---
 
-## PARTE 2 — Ajustes Minimos no Frontend (React)
+## PARTE 2 — Ajustes Mínimos no Frontend (React)
 
-Esta parte e MINIMA. Voce nao esta reescrevendo nada. Esta apenas trocando o endereco de destino — como mudar o numero da pizzaria sem reformar a cozinha.
+Esta parte e MINIMA. Voce nao esta reescrevendo nada. Esta apenas trocando o endereco de destino.
 
-### Passo 1: Adicionar variaveis no .env.local
+### Passo 1: Adicionar variáveis no .env.local
 
-Abra ou crie o arquivo .env.local na raiz do projeto:
+Abra ou crie o arquivo `.env.local` na raiz do projeto:
 
 ```
 VITE_SUPABASE_URL=https://SEU_PROJETO.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=sua_chave_anon
 
-VITE_BUILDSHIP_CHAT_URL=https://SEU_PROJETO.buildship.run/chat
-VITE_BUILDSHIP_TTS_URL=https://SEU_PROJETO.buildship.run/tts
-VITE_BUILDSHIP_EXTRACT_URL=https://SEU_PROJETO.buildship.run/extract
-VITE_BUILDSHIP_SECRET=um_token_secreto_qualquer
+# Dify — URL base (a mesma para todos os workflows)
+VITE_DIFY_BASE_URL=https://api.dify.ai/v1/workflows/run
+
+# Dify — API Key de cada app (cada workflow tem a sua)
+VITE_DIFY_CHAT_KEY=app-xxxxxxxxxxxxxxxxxxxx
+VITE_DIFY_TTS_KEY=app-yyyyyyyyyyyyyyyyyy
+VITE_DIFY_EXTRACT_KEY=app-zzzzzzzzzzzzzzzzzz
 ```
 
-### Passo 2: 1 linha no ChatWindow.tsx (linha 38)
+> Onde encontrar as API Keys: dentro de cada app no Dify -> **API Access** -> **API Key**
 
-ANTES:
+### Passo 2: Como chamar o Dify no ChatWindow.tsx
+
+O Dify usa um formato de body ligeiramente diferente do BuildShip. O campo das variáveis vai dentro de `"inputs"`:
+
+**ANTES (Supabase Edge Function):**
 ```typescript
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+
+fetch(CHAT_URL, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ messages, systemPrompt, materiaSlug, sessionKey })
+})
 ```
 
-DEPOIS:
+**DEPOIS (Dify):**
 ```typescript
-const CHAT_URL = import.meta.env.VITE_BUILDSHIP_CHAT_URL;
+const DIFY_URL = import.meta.env.VITE_DIFY_BASE_URL;
+const DIFY_CHAT_KEY = import.meta.env.VITE_DIFY_CHAT_KEY;
+
+fetch(DIFY_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${DIFY_CHAT_KEY}`,
+  },
+  body: JSON.stringify({
+    inputs: {                          // <- diferença do Dify: variáveis dentro de "inputs"
+      messages,
+      systemPrompt,
+      materiaSlug,
+      sessionKey,
+      userApiKey: localStorage.getItem('user_api_key') || '',
+    },
+    response_mode: 'streaming',        // <- ativa SSE nativo
+    user: sessionKey,                  // <- identificador do usuário para logs do Dify
+  })
+})
 ```
 
-### Passo 3: URL do TTS no ChatWindow.tsx (linha 164)
+### Passo 3: URL do TTS (ChatWindow.tsx)
 
-ANTES:
 ```typescript
-`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tts`
+fetch(import.meta.env.VITE_DIFY_BASE_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${import.meta.env.VITE_DIFY_TTS_KEY}`,
+  },
+  body: JSON.stringify({
+    inputs: { text, speed },
+    response_mode: 'blocking',
+    user: sessionKey,
+  })
+})
 ```
 
-DEPOIS:
+### Passo 4: URL do Extract (extractSession.ts)
+
 ```typescript
-import.meta.env.VITE_BUILDSHIP_TTS_URL
-```
-
-### Passo 4: URL do Extract em extractSession.ts (linha 13)
-
-ANTES:
-```typescript
-const EXTRACT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/extract`;
-```
-
-DEPOIS:
-```typescript
-const EXTRACT_URL = import.meta.env.VITE_BUILDSHIP_EXTRACT_URL;
-```
-
-### Passo 5: BYOK no ChatWindow.tsx (TIA-81)
-
-No body da requisicao ao BuildShip, adicionar:
-```typescript
-body: JSON.stringify({
-  messages: newMessagesForAI.map(({ role, content }) => ({ role, content })),
-  systemPrompt,
-  materiaSlug: materia?.slug,
-  sessionKey,
-  userApiKey: localStorage.getItem('user_api_key') || null,
-}),
+fetch(import.meta.env.VITE_DIFY_BASE_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${import.meta.env.VITE_DIFY_EXTRACT_KEY}`,
+  },
+  body: JSON.stringify({
+    inputs: { fileUrl },
+    response_mode: 'blocking',
+    user: 'system',
+  })
+})
 ```
 
 ---
 
-## PARTE 3 — Ajustes de UI Pendentes (Nao dependem do BuildShip)
+## PARTE 3 — Ajustes de UI Pendentes (Não dependem do Dify)
 
 | Issue | Arquivo | O que fazer |
 |---|---|---|
@@ -286,47 +345,46 @@ body: JSON.stringify({
 
 ---
 
-## PARTE 4 — Checklist de Producao
+## PARTE 4 — Checklist de Produção
 
-### BuildShip
-- [ ] 3 workflows com status Deployed (nao so Saved)
-- [ ] Testou /chat com Postman — retornou streaming
-- [ ] Testou /tts — retornou audio MP3 base64
-- [ ] Variaveis de ambiente configuradas no BuildShip
-- [ ] Rate Limiting ativado nas configuracoes do Workflow
-- [ ] Logs ativados para monitorar erros
+### Dify
+- [ ] 3 apps criados com status Published (não só Draft)
+- [ ] Testou o workflow "chat" com `response_mode: "streaming"` — retornou SSE
+- [ ] Testou o workflow "tts" com `response_mode: "blocking"` — retornou audioContent
+- [ ] Variáveis de ambiente configuradas dentro de cada app no Dify
+- [ ] Coletou o API Key de cada app e colocou no .env.local
 
 ### Supabase
 - [ ] Row Level Security (RLS) ativo em todas as tabelas
-- [ ] SUPABASE_SERVICE_KEY usada SOMENTE no BuildShip (nunca no frontend)
+- [ ] SUPABASE_SERVICE_KEY usada SOMENTE dentro dos workflows do Dify (nunca no frontend)
 - [ ] Frontend usa SOMENTE a anon key (VITE_SUPABASE_PUBLISHABLE_KEY)
 
 ### Frontend
 - [ ] .env.local NAO commitado no Git (verificar .gitignore)
-- [ ] Variaveis VITE_BUILDSHIP_* configuradas no Vercel/Netlify
+- [ ] Variáveis VITE_DIFY_* configuradas no Vercel/Netlify
 - [ ] Testou fluxo completo: mensagem -> streaming -> confete -> encerramento -> banco
 
-### Seguranca
-- [ ] BuildShip recebe header x-api-key no frontend:
-      "x-api-key": import.meta.env.VITE_BUILDSHIP_SECRET
-- [ ] Chave BYOK nunca aparece nos logs do BuildShip
-- [ ] CORS configurado no BuildShip: Access-Control-Allow-Origin: *
+### Segurança
+- [ ] As API Keys do Dify ficam nas env vars do servidor de deploy (Vercel), nunca expostas
+- [ ] Chave BYOK do usuário nunca aparece nos logs do Dify
+- [ ] CORS: o Dify libera por padrão para origens externas — verifique nas configs do app se necessário
 
 ### O que pode dar errado
 
-| Problema | Causa | Solucao |
+| Problema | Causa | Solução |
 |---|---|---|
-| Chat sem resposta | URL errada no .env | Verifique VITE_BUILDSHIP_CHAT_URL |
-| Texto aparece todo de uma vez | Streaming nao ativo | Ative "Stream Response" no BuildShip |
-| CORS error no browser | BuildShip nao liberou CORS | Adicione Access-Control-Allow-Origin: * no Workflow |
-| TTS sem audio | Chave Google Cloud TTS invalida | Verifique no Google Cloud Console |
+| Chat sem resposta | API Key errada no header Authorization | Verifique VITE_DIFY_CHAT_KEY |
+| Texto aparece todo de uma vez | `response_mode` não está como `"streaming"` | Mude para `response_mode: "streaming"` |
+| Erro 401 Unauthorized | API Key do Dify inválida ou do app errado | Pegue a key correta em API Access do app |
+| TTS sem audio | Chave Google Cloud TTS inválida | Verifique no Google Cloud Console |
+| Extract não salva | SUPABASE_SERVICE_KEY errada no Dify | Verifique em Environment Variables do workflow |
 
 ---
 
 ## Resumo Final
 
-1. **BuildShip:** Voce constroi 3 workflows visuais (chat, tts, extract) e faz deploy. Cada um vira uma URL publica.
-2. **Frontend:** Voce troca 3 linhas de codigo (as URLs) para apontar ao BuildShip em vez do Supabase.
-3. **Producao:** Valida o checklist acima, configura os segredos no servico de deploy, e vai ao ar.
+1. **Dify:** Voce constroi 3 apps (Workflows) visuais — chat, tts, extract — e publica. Cada um gera um API Key único.
+2. **Frontend:** Voce troca as URLs e os headers para apontar ao Dify, usando o formato `{ inputs: {...}, response_mode: "streaming" }`.
+3. **Producao:** Valida o checklist acima, configura as API Keys do Dify nas env vars do Vercel, e vai ao ar.
 
-Status: Aguardando inicio da execucao.
+Status: Aguardando início da execução.
