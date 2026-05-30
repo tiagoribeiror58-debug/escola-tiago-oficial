@@ -550,16 +550,23 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
             </div>
           )}
 
-          {/* Tópicos Emergentes — gerados automaticamente pela IA durante as sessões */}
+          {/* Tópicos Emergentes — criados pelo aluno ou IA durante as sessões */}
           {(() => {
-            const unmatchedEmergentTopics = topicosEmergentes?.filter(te => {
-              const isMatched = sessoesMateria.some(s => s.session_key === te.session_key && flatEmenta.some(step => {
-                const n1 = (s.topico || '').toLowerCase().trim();
-                const n2 = (step || '').toLowerCase().trim();
-                return n1.includes(n2) || n2.includes(n1);
-              }));
-              return !isMatched;
-            });
+            // Mostra todos os tópicos emergentes que NÃO estão exibidos inline no timeline.
+            // Um tópico está "inline" se sua session_key bate com uma sessão de algum step da ementa.
+            const inlineSessionKeys = new Set(
+              sessoesMateria
+                .filter(s => flatEmenta.some(step => {
+                  const n1 = (s.topico || '').toLowerCase().trim();
+                  const n2 = (step || '').toLowerCase().trim();
+                  return n1.includes(n2) || n2.includes(n1);
+                }))
+                .map(s => s.session_key)
+                .filter(Boolean)
+            );
+            const unmatchedEmergentTopics = topicosEmergentes?.filter(te =>
+              !te.session_key || !inlineSessionKeys.has(te.session_key)
+            );
             
             if (!unmatchedEmergentTopics || unmatchedEmergentTopics.length === 0) return null;
             
@@ -567,7 +574,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
               <div className="px-6 pb-4">
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest">
-                    🌐 Descobertos pela IA (Outros)
+                    ✦ Tópicos Emergentes
                   </p>
                   <span className="text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                     {unmatchedEmergentTopics.length} novo{unmatchedEmergentTopics.length > 1 ? 's' : ''}
@@ -584,6 +591,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                         onOpenChange(false);
                         if (topico.session_key) {
                           navigate(`/sessao/${config.slug}?resume=${topico.session_key}`);
+                        } else {
+                          // Sem sessão vinculada: inicia nova sessão com o tópico como sub-tópico
+                          navigate(`/sessao/${config.slug}?sub=${encodeURIComponent(topico.titulo)}`);
                         }
                       }}
                     >
@@ -592,7 +602,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                         <p className="text-sm font-medium text-foreground leading-tight">
                           {topico.titulo}
                         </p>
-                        {topico.descricao && (
+                        {topico.descricao && topico.descricao !== topico.titulo && (
                           <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2">
                             {topico.descricao}
                           </p>

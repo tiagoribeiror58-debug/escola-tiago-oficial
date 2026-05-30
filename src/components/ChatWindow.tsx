@@ -101,6 +101,8 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
   const autoTtsEnabledRef = useRef(false); // rastreia se o usuário ativou o áudio para manter auto-play
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isTtsLoading, setIsTtsLoading] = useState(false);
+  const [loadingChip, setLoadingChip] = useState<string | null>(null);
+
 
   // Text selection state
   const [selectionRect, setSelectionRect] = useState<{ top: number, left: number } | null>(null);
@@ -454,13 +456,14 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
             if (delta) {
               assistantContent += delta;
               
-              // NOVO: Detectar e extrair [CRIAR_TOPICO: Titulo | Descricao]
-              const topicRegex = /\[CRIAR_TOPICO:\s*([^|]+?)\s*\|\s*([^\]]+?)\]/i;
+              // Detectar e extrair [CRIAR_TOPICO: Titulo | Descricao] ou [CRIAR_TÓPICO: Titulo]
+              // Aceita com/sem acento, com/sem descrição separada por pipe
+              const topicRegex = /\[CRIAR_T[OÓ]PICO:\s*([^\]|]+?)(?:\s*\|\s*([^\]]+?))?\]/i;
               const topicMatch = assistantContent.match(topicRegex);
               if (topicMatch && !topicAlreadyCreated) {
                  topicAlreadyCreated = true; // Impede duplicação durante o streaming
                  const titulo = topicMatch[1].trim();
-                 const descricao = topicMatch[2].trim();
+                 const descricao = (topicMatch[2] || titulo).trim();
                  // Remove a tag do texto para sempre para não piscar na tela
                  assistantContent = assistantContent.replace(topicMatch[0], '');
                  
@@ -475,6 +478,8 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                      if (!error) {
                        toast.success(`Tópico "${titulo}" criado no Roadmap!`);
                        playPopSound();
+                       // Invalida o cache para que o MateriaDetailModal exiba o tópico imediatamente
+                       queryClient.invalidateQueries({ queryKey: ['topicos-emergentes', materia.slug] });
                      } else {
                        console.error('Erro ao criar tópico emergente:', error);
                      }
@@ -558,6 +563,32 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
         role: 'assistant',
         content: contentToSave,
       });
+
+      // Fallback: se o usuário pediu para criar tópico (via chip) mas a IA não gerou a tag,
+      // extrai o título diretamente da mensagem do usuário e cria o tópico.
+      if (!topicAlreadyCreated && materia?.slug) {
+        const criarMatch = text.match(/cri(?:e|ar)\s+(?:um\s+)?t[oó]pico\s+(?:sobre\s+)?(.+?)(?:\s+para\s+(?:eu\s+)?aprofundar)?$/i);
+        if (criarMatch) {
+          const tituloFallback = criarMatch[1].trim().replace(/^["']|["']$/g, '');
+          if (tituloFallback.length > 2) {
+            topicAlreadyCreated = true;
+            supabase.from('topicos_emergentes').insert({
+              materia_slug: materia.slug,
+              titulo: tituloFallback,
+              descricao: tituloFallback,
+              session_key: sessionKey
+            }).then(({ error }) => {
+              if (!error) {
+                toast.success(`Tópico "${tituloFallback}" criado no Roadmap!`);
+                playPopSound();
+                queryClient.invalidateQueries({ queryKey: ['topicos-emergentes', materia.slug] });
+              } else {
+                console.error('Erro ao criar tópico emergente (fallback):', error);
+              }
+            });
+          }
+        }
+      }
 
       // Dispara o TTS automático caso o usuário tenha ativado o áudio
       if (autoTtsEnabledRef.current && contentToSave) {
@@ -816,21 +847,50 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
             if (!showChipsRow && !hasTTS) return null;
             return (
               <div className="flex items-center gap-2 mb-2 w-full flex-wrap">
-                {/* Chips visíveis apenas se enabled e se há chips */}
                 {showChipsRow && chipsEnabled && dynamicChips.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 flex-1 min-w-0">
-                    {dynamicChips.map((action, idx) => (
+                    {dynamicChips.map((action, idx) => {
+                      const isTopicChip = action.match(/cri(?:e|ar)\s+(?:um\s+)?t[oó]pico\s+(?:sobre\s+)?(.+?)(?:\s+para\s+(?:eu\s+)?aprofundar)?$/i);
+                      const isLoadingChip = loadingChip === action;
+
+                      return (
                       <button
                         key={idx}
+                        disabled={isLoadingChip}
                         onClick={() => {
                           playPopSound();
-                          handleSend(action);
+
+                          if (isTopicChip && materia?.slug) {
+                            setLoadingChip(action);
+                            const titulo = isTopicChip[1].trim().replace(/^["']|["']$/g, '');
+                            
+                            const promise = supabase.from('topicos_emergentes').insert({
+                              materia_slug: materia.slug,
+                              titulo: titulo,
+                              descricao: titulo,
+                              session_key: sessionKey
+                            }).then(({ error }) => {
+                              if (error) throw error;
+                              queryClient.invalidateQueries({ queryKey: ['topicos-emergentes', materia.slug] });
+                            }).finally(() => {
+                              setLoadingChip(null);
+                            });
+
+                            toast.promise(promise, {
+                              loading: 'Criando tópico no roadmap...',
+                              success: `Tópico "${titulo}" criado com sucesso! 🎉`,
+                              error: 'Falha ao criar o tópico.'
+                            });
+                          } else {
+                            handleSend(action);
+                          }
                         }}
-                        className="text-[11px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-foreground hover:text-background transition-colors active:scale-95 whitespace-nowrap"
+                        className="text-[11px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-foreground hover:text-background transition-colors active:scale-95 whitespace-nowrap disabled:opacity-50 disabled:pointer-events-none flex items-center gap-1.5"
                       >
+                        {isLoadingChip && <Loader2 className="w-3 h-3 animate-spin" />}
                         {action}
                       </button>
-                    ))}
+                    )})}
                   </div>
                 )}
                 {/* Spacer quando chips estão desabilitados */}
