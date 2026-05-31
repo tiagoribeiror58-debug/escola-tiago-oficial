@@ -41,32 +41,42 @@ function extractAllTopics(materias: MateriaConfig[]): DailyTopic[] {
   return all;
 }
 
-export function useDailyTopic() {
+export function useDailyTopic(filterMateriaSlug?: string) {
   const { data: completed, isLoading } = useAllCompletedTopics();
   const [dailyTopic, setDailyTopic] = useState<DailyTopic | null>(null);
+  const [refreshCount, setRefreshCount] = useState(0);
+  const [availableMaterias, setAvailableMaterias] = useState<{slug: string, nome: string}[]>([]);
+
+  const refresh = () => setRefreshCount(c => c + 1);
 
   useEffect(() => {
-    // Only run when data is loaded
     if (isLoading || !completed) return;
 
-    // Build flat list of all topics in the curriculum
-    const allTopics = extractAllTopics(MATERIAS);
-
-    // Create a Set of completed topics for fast O(1) lookup
+    let allTopics = extractAllTopics(MATERIAS);
     const completedSet = new Set(completed.map(c => `${c.materia_slug}::${c.topico}`));
-
-    // Filter uncompleted
     const uncompleted = allTopics.filter(t => !completedSet.has(`${t.materiaSlug}::${t.topico}`));
 
-    if (uncompleted.length > 0) {
-      // Pick random uncompleted topic (executed once on mount due to completed dependency)
-      const randomIdx = Math.floor(Math.random() * uncompleted.length);
-      setDailyTopic(uncompleted[randomIdx]);
-    } else {
-      setDailyTopic(null); // Everything is completed!
+    // Extrair matérias únicas que possuem tópicos não concluídos
+    const uniqueMateriasMap = new Map<string, string>();
+    uncompleted.forEach(t => {
+      if (!uniqueMateriasMap.has(t.materiaSlug)) {
+        uniqueMateriasMap.set(t.materiaSlug, t.materiaNome);
+      }
+    });
+    setAvailableMaterias(Array.from(uniqueMateriasMap.entries()).map(([slug, nome]) => ({ slug, nome })));
+
+    let filteredUncompleted = uncompleted;
+    if (filterMateriaSlug && filterMateriaSlug !== 'all') {
+      filteredUncompleted = uncompleted.filter(t => t.materiaSlug === filterMateriaSlug);
     }
 
-  }, [completed, isLoading]);
+    if (filteredUncompleted.length > 0) {
+      const randomIdx = Math.floor(Math.random() * filteredUncompleted.length);
+      setDailyTopic(filteredUncompleted[randomIdx]);
+    } else {
+      setDailyTopic(null);
+    }
+  }, [completed, isLoading, filterMateriaSlug, refreshCount]);
 
-  return { dailyTopic, isLoading };
+  return { dailyTopic, isLoading, refresh, availableMaterias };
 }

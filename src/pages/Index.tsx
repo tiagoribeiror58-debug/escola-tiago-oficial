@@ -255,115 +255,126 @@ export default function Index() {
       }).filter(Boolean) as { estado: MateriaEstado, matchedTopics: string[] }[]
     : [];
 
+  const renderBadges = () => (
+    <>
+      {/* Botão de Notas */}
+      <button
+        onClick={() => navigate('/notas')}
+        className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
+      >
+        Notas
+      </button>
+
+      {/* Botão de Quiz */}
+      <button
+        onClick={() => navigate('/quiz')}
+        className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-[hsl(var(--primary)/0.1)] border-[hsl(var(--primary)/0.3)] text-primary hover:bg-[hsl(var(--primary)/0.2)] text-xs font-medium transition-all shadow-sm"
+      >
+        <Sparkles className="w-3.5 h-3.5" />
+        Quiz
+      </button>
+
+      {/* Botão Sugestão do Dia */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <button
+            className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            Sugestão
+          </button>
+        </DialogTrigger>
+        <DialogContent className="max-w-md p-6 rounded-3xl bg-background border border-border">
+          <DialogHeader className="mb-2">
+            <DialogTitle className="text-xl font-semibold">O que estudar?</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <DailyTopicCard />
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Botão de Planejar com IA */}
+      <button
+        onClick={() => setIsIAModalOpen(true)}
+        className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-emerald-500/10 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/20 text-xs font-medium transition-all shadow-sm"
+      >
+        <Sparkles className="w-3.5 h-3.5" />
+        IA
+      </button>
+
+      {/* Botão do Histórico */}
+      <button
+        onClick={() => setIsHistoricoOpen(true)}
+        className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
+      >
+        <History className="w-3.5 h-3.5" />
+        Histórico
+      </button>
+
+      {/* Configurações */}
+      <Dialog>
+        <DialogTrigger asChild>
+          <button
+            className="flex items-center justify-center shrink-0 w-8 h-8 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground transition-all shadow-sm"
+            title="Configurações"
+          >
+            <Settings className="w-4 h-4" />
+          </button>
+        </DialogTrigger>
+        <DialogContent className="max-w-md p-6 rounded-3xl bg-background border border-border">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-xl font-semibold flex items-center gap-2">
+              <Settings className="w-5 h-5 text-muted-foreground" />
+              Configurações
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border border-border/50">
+              <div className="space-y-1 pr-4">
+                <h4 className="text-sm font-medium text-foreground">Desativar Neblina na Ementa</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Permite ver a ementa inteira revelada e usar o botão "Olhinho" para mostrar e esconder os tópicos futuros.
+                </p>
+              </div>
+              <Switch
+                checked={disableFogOfWar}
+                onCheckedChange={toggleFogOfWar}
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Retenção de Memória */}
+      {metricasRevisao && metricasRevisao.length > 0 && (
+        <div className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-blue-500/10 border-blue-500/20 text-blue-500 text-xs font-medium transition-all shadow-sm" title={`${metricasRevisao.length} revisões feitas`}>
+          <BrainCircuit className="w-3.5 h-3.5" />
+          Retenção: {averageRetention}%
+        </div>
+      )}
+    </>
+  );
+
   return (
     <div className="min-h-screen">
       <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
         {/* Header com Saudação e Ofensiva */}
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="mb-6 sm:mb-8 flex items-center justify-between gap-4">
           <div>
             <h1 className="text-xl font-semibold tracking-tight">{getGreeting()}</h1>
             <p className="text-sm text-muted-foreground mt-0.5 capitalize">{hoje}</p>
           </div>
           
-          <div className="flex items-center gap-2">
-            {/* Botão de Notas */}
-            <button
-              onClick={() => navigate('/notas')}
-              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
-            >
-              Notas
-            </button>
-
-            {/* Botão de Quiz */}
-            <button
-              onClick={() => navigate('/quiz')}
-              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-[hsl(var(--primary)/0.1)] border-[hsl(var(--primary)/0.3)] text-primary hover:bg-[hsl(var(--primary)/0.2)] text-xs font-medium transition-all shadow-sm"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              Quiz
-            </button>
-
-            {/* Botão Sugestão do Dia */}
-            <Dialog>
-              <DialogTrigger asChild>
-                <button
-                  className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
-                >
-                  <BookOpen className="w-3.5 h-3.5" />
-                  Sugestão
-                </button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md p-6 rounded-3xl bg-background border border-border">
-                <DialogHeader className="mb-2">
-                  <DialogTitle className="text-xl font-semibold">O que estudar?</DialogTitle>
-                </DialogHeader>
-                <div className="mt-4">
-                  <DailyTopicCard />
-                </div>
-              </DialogContent>
-            </Dialog>
-
-            {/* Botão de Planejar com IA */}
-            <button
-              onClick={() => setIsIAModalOpen(true)}
-              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-emerald-500/10 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/20 text-xs font-medium transition-all shadow-sm"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              IA
-            </button>
-
-            {/* Botão do Histórico */}
-            <button
-              onClick={() => setIsHistoricoOpen(true)}
-              className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
-            >
-              <History className="w-3.5 h-3.5" />
-              Histórico
-            </button>
-
-            {/* Configurações */}
-            <Dialog>
-              <DialogTrigger asChild>
-                <button
-                  className="flex items-center justify-center shrink-0 w-8 h-8 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground transition-all shadow-sm"
-                  title="Configurações"
-                >
-                  <Settings className="w-4 h-4" />
-                </button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md p-6 rounded-3xl bg-background border border-border">
-                <DialogHeader className="mb-4">
-                  <DialogTitle className="text-xl font-semibold flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-muted-foreground" />
-                    Configurações
-                  </DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border border-border/50">
-                    <div className="space-y-1 pr-4">
-                      <h4 className="text-sm font-medium text-foreground">Desativar Neblina na Ementa</h4>
-                      <p className="text-xs text-muted-foreground leading-relaxed">
-                        Permite ver a ementa inteira revelada e usar o botão "Olhinho" para mostrar e esconder os tópicos futuros.
-                      </p>
-                    </div>
-                    <Switch
-                      checked={disableFogOfWar}
-                      onCheckedChange={toggleFogOfWar}
-                    />
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-
-            {/* Retenção de Memória */}
-            {metricasRevisao && metricasRevisao.length > 0 && (
-              <div className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-blue-500/10 border-blue-500/20 text-blue-500 text-xs font-medium transition-all shadow-sm" title={`${metricasRevisao.length} revisões feitas`}>
-                <BrainCircuit className="w-3.5 h-3.5" />
-                Retenção: {averageRetention}%
-              </div>
-            )}
+          <div className="hidden sm:flex items-center gap-2">
+            {renderBadges()}
 
           </div>
+        </div>
+
+        {/* Badges Mobile - Ocupando uma linha inteira rolável abaixo da saudação */}
+        <div className="sm:hidden flex items-center gap-2 overflow-x-auto pb-4 mb-4 -mx-4 px-4 scrollbar-none">
+          {renderBadges()}
         </div>
 
         {/* Barra de Pesquisa */}

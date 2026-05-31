@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, ArrowRight, BookOpen } from 'lucide-react';
+import { Sparkles, ArrowRight, RefreshCw } from 'lucide-react';
 import { useDailyTopic } from '@/hooks/useDailyTopic';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export function DailyTopicCard() {
-  const { dailyTopic, isLoading } = useDailyTopic();
+  const [selectedMateria, setSelectedMateria] = useState<string>('all');
+  const { dailyTopic, isLoading, refresh, availableMaterias } = useDailyTopic(selectedMateria);
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -36,9 +38,32 @@ export function DailyTopicCard() {
   }
 
   return (
-    <div className="w-full bg-card/30 hover:bg-card/60 border border-border/40 rounded-3xl p-6 relative overflow-hidden transition-all duration-300 group cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-6"
-      onClick={() => navigate(`/sessao/${dailyTopic.materiaSlug}?sub=${encodeURIComponent(dailyTopic.topico)}`)}
-    >
+    <div className="flex flex-col gap-1 w-full">
+      {availableMaterias && availableMaterias.length > 0 && (
+        <div className="flex items-center gap-2 mb-2 w-full">
+          <select 
+            value={selectedMateria}
+            onChange={(e) => setSelectedMateria(e.target.value)}
+            className="flex-1 bg-muted/30 border border-border/50 text-sm rounded-xl px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition-colors"
+          >
+            <option value="all">Todas as matérias</option>
+            {availableMaterias.map(m => (
+              <option key={m.slug} value={m.slug}>{m.nome}</option>
+            ))}
+          </select>
+          <button 
+            onClick={refresh}
+            className="p-2 rounded-xl border border-border/50 bg-muted/30 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors shrink-0"
+            title="Sortear outro tópico"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      <div className="w-full bg-card/30 hover:bg-card/60 border border-border/40 rounded-3xl p-6 relative overflow-hidden transition-all duration-300 group cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-6"
+        onClick={() => navigate(`/sessao/${dailyTopic.materiaSlug}?sub=${encodeURIComponent(dailyTopic.topico)}`)}
+      >
       <div className="space-y-2 flex-1">
         <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-primary/70" />
@@ -58,6 +83,7 @@ export function DailyTopicCard() {
 
       <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-foreground/5 text-muted-foreground group-hover:bg-foreground group-hover:text-background transition-all duration-300">
         <ArrowRight className="w-5 h-5 -translate-x-0.5 group-hover:translate-x-0 transition-transform duration-300" />
+      </div>
       </div>
     </div>
   );
