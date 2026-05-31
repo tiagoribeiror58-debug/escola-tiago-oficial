@@ -89,15 +89,7 @@ export default function ReflectionModal({ materiaSlug, topico, initialValue = ''
 
         {/* Footer */}
         <div className="px-5 py-4 border-t border-border bg-muted/10 flex flex-col-reverse sm:flex-row items-center justify-between gap-3 shrink-0">
-          {!isChatNote && (
-            <button
-              onClick={onComplete}
-              disabled={isSubmitting}
-              className="w-full sm:w-auto px-4 py-2.5 sm:py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
-            >
-              Pular e Encerrar
-            </button>
-          )}
+
           <button
             onClick={handleSubmit}
             disabled={isSubmitting || !reflection.trim()}

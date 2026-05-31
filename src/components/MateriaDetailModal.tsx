@@ -327,15 +327,6 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     Roadmap
                   </p>
                   <div className="flex items-center gap-3">
-                    {flatEmenta.length > 0 && allHiddenTopics.length > 0 && (
-                      <button
-                        onClick={toggleRevealAll}
-                        className="flex items-center gap-1.5 text-[10px] font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded bg-muted/20 hover:bg-muted/50 border border-border/50"
-                      >
-                        {areAllRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                        {areAllRevealed ? "Ocultar" : "Revelar"}
-                      </button>
-                    )}
                     <span className="text-[10px] font-medium bg-foreground/10 text-foreground px-2 py-0.5 rounded-full">
                       {allDone ? 'Base concluída' : `${ementaConcluida.length} de ${flatEmenta.length}`}
                     </span>
@@ -345,8 +336,8 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 {/* Timeline vertical */}
                 <div className="relative">
                   {(() => {
-                    const startIdx = areAllRevealed ? 0 : Math.max(0, currentIdx - 2);
-                    const endIdx = areAllRevealed ? flatEmenta.length : Math.min(flatEmenta.length, currentIdx + 4 + expandedCount);
+                    const startIdx = Math.max(0, currentIdx - 2);
+                    const endIdx = Math.min(flatEmenta.length, currentIdx + 2);
                     const visibleEmenta = flatEmenta.slice(startIdx, endIdx);
                     
                     return (
@@ -469,32 +460,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                   )}
                                 </div>
 
-                                {/* Eye Toggle */}
-                                {!isCurrent && (
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setUnhiddenTopics(prev => {
-                                        const newSet = new Set(prev);
-                                        if (newSet.has(step)) {
-                                          newSet.delete(step);
-                                          if (selectedSub === step) setSelectedSub(null);
-                                        } else {
-                                          newSet.add(step);
-                                        }
-                                        return newSet;
-                                      });
-                                      playPopSound();
-                                    }}
-                                    className={cn(
-                                      "p-1.5 rounded-full transition-all shrink-0 mt-[-2px]",
-                                      isVisible ? "text-primary hover:bg-primary/10" : "text-muted-foreground hover:bg-muted/50 opacity-30 hover:opacity-100"
-                                    )}
-                                    title={isVisible ? "Ocultar tópico" : "Ver tópico"}
-                                  >
-                                    {isVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                  </button>
-                                )}
+                                  {/* Eye Toggle Removido (Fog of War ativo) */}
                               </div>
                               </div>
 
@@ -505,17 +471,14 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                         })}
 
                         {endIdx < flatEmenta.length && (
-                          <div className="flex gap-3 opacity-50 mt-2">
+                          <div className="flex gap-3 opacity-30 mt-2">
                             <div className="flex flex-col items-center">
                               <div className="w-6 h-6 flex items-center justify-center shrink-0 text-muted-foreground">⋮</div>
                             </div>
-                            <div className="flex-1 pb-4">
-                              <button 
-                                onClick={() => setExpandedCount(prev => prev + 5)}
-                                className="text-xs font-medium text-primary hover:underline"
-                              >
-                                Ver próximos {Math.min(5, flatEmenta.length - endIdx)} tópicos
-                              </button>
+                            <div className="flex-1 pb-4 flex items-center">
+                              <span className="text-xs font-medium text-muted-foreground italic">
+                                Continue estudando para dissipar a neblina...
+                              </span>
                             </div>
                           </div>
                         )}
