@@ -15,6 +15,13 @@ import { HistoricoGlobalDrawer } from '@/components/HistoricoGlobalDrawer';
 import { useOrdemMaterias } from '@/hooks/useOrdemMaterias';
 import { DailyTopicCard } from '@/components/DailyTopicCard';
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   DndContext,
   closestCenter,
   KeyboardSensor,
@@ -274,6 +281,26 @@ export default function Index() {
               Quiz
             </button>
 
+            {/* Botão Sugestão do Dia */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <button
+                  className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  Sugestão
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md p-6 rounded-3xl bg-background border border-border">
+                <DialogHeader className="mb-2">
+                  <DialogTitle className="text-xl font-semibold">O que estudar?</DialogTitle>
+                </DialogHeader>
+                <div className="mt-4">
+                  <DailyTopicCard />
+                </div>
+              </DialogContent>
+            </Dialog>
+
             {/* Botão de Planejar com IA */}
             <button
               onClick={() => setIsIAModalOpen(true)}
@@ -328,11 +355,7 @@ export default function Index() {
           />
         </div>
 
-        {!isLoading && searchQuery.trim().length === 0 && (
-          <div className="mb-8">
-            <DailyTopicCard />
-          </div>
-        )}
+
 
         {searchQuery.trim().length > 0 ? (
           <div className="space-y-6">
