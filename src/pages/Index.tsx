@@ -112,18 +112,28 @@ export default function Index() {
 
   useEffect(() => {
     const paramSlug = searchParams.get('materia');
-    if (paramSlug && estados.length > 0) {
+    if (paramSlug && !isLoading && estados.length > 0) {
       const mat = estados.find(e => e.config.slug === paramSlug);
-      if (mat) {
+      if (mat && (!modalOpen || selectedEstado?.config.slug !== paramSlug)) {
         setSelectedEstado(mat);
         setModalOpen(true);
-        setSearchParams(prev => {
-          prev.delete('materia');
-          return prev;
-        }, { replace: true });
       }
+    } else if (!paramSlug && modalOpen) {
+      setModalOpen(false);
+      setTimeout(() => setSelectedEstado(null), 300);
     }
-  }, [searchParams, estados, setSearchParams]);
+  }, [searchParams, estados, isLoading, modalOpen, selectedEstado]);
+
+  const handleModalOpenChange = (open: boolean) => {
+    if (!open) {
+      setSearchParams(prev => {
+        prev.delete('materia');
+        return prev;
+      });
+    } else {
+      setModalOpen(true);
+    }
+  };
   const [isHistoricoOpen, setIsHistoricoOpen] = useState(false);
   const { disableFogOfWar, toggleFogOfWar } = useSettings();
 
@@ -202,25 +212,11 @@ export default function Index() {
       navigate(`/categoria/${estado.config.slug}`);
       return;
     }
-    setSelectedEstado(estado);
-    setModalOpen(true);
+    setSearchParams(prev => {
+      prev.set('materia', estado.config.slug);
+      return prev;
+    });
   };
-
-  // Reabre o modal automaticamente se vier do redirecionamento de sessão encerrada/pausada
-  const openMateriaParam = searchParams.get('materia');
-
-  useEffect(() => {
-    if (openMateriaParam && !isLoading && estados.length > 0) {
-      const estadoParaAbrir = estados.find(e => e.config.slug === openMateriaParam);
-      if (estadoParaAbrir) {
-        setSelectedEstado(estadoParaAbrir);
-        setModalOpen(true);
-      }
-      // Limpa a URL para não reabrir se recarregar a página
-      searchParams.delete('materia');
-      setSearchParams(searchParams, { replace: true });
-    }
-  }, [openMateriaParam, isLoading, estados, searchParams, setSearchParams]);
 
 
 
@@ -535,7 +531,7 @@ export default function Index() {
       <MateriaDetailModal 
         estado={selectedEstado} 
         open={modalOpen} 
-        onOpenChange={setModalOpen} 
+        onOpenChange={handleModalOpenChange} 
       />
 
       <HistoricoGlobalDrawer
