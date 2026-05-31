@@ -14,6 +14,7 @@ import { ptBR } from 'date-fns/locale';
 import { supabase } from '@/integrations/supabase/client';
 import { useTopicosEmergentes } from '@/hooks/useTopicosEmergentes';
 import { useFloatingChat } from '@/contexts/FloatingChatContext';
+import { useSettings } from '@/hooks/useSettings';
 
 
 interface Props {
@@ -30,6 +31,8 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const [expandedSession, setExpandedSession] = useState<number | null>(null);
   const [expandedCount, setExpandedCount] = useState(0);
   const [unhiddenTopics, setUnhiddenTopics] = useState<Set<string>>(new Set());
+  const [areAllRevealed, setAreAllRevealed] = useState(false);
+  const { disableFogOfWar } = useSettings();
 
   interface TopicSupplement {
     preview: string;
@@ -174,17 +177,6 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const currentIdx = firstUncompletedIdx === -1 ? flatEmenta.length : firstUncompletedIdx;
   const allDone = flatEmenta.length > 0 && ementaConcluida.length >= flatEmenta.length;
 
-  const allHiddenTopics = flatEmenta.filter((t, i) => i !== currentIdx);
-  const areAllRevealed = unhiddenTopics.size > 0 && allHiddenTopics.every(t => unhiddenTopics.has(t));
-
-  const toggleRevealAll = () => {
-    playPopSound();
-    if (areAllRevealed) {
-      setUnhiddenTopics(new Set());
-    } else {
-      setUnhiddenTopics(new Set(allHiddenTopics));
-    }
-  };
 
   const handleToggleTopico = (e: React.MouseEvent, topico: string, isCompleted: boolean) => {
     e.stopPropagation();
@@ -336,8 +328,8 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 {/* Timeline vertical */}
                 <div className="relative">
                   {(() => {
-                    const startIdx = Math.max(0, currentIdx - 2);
-                    const endIdx = Math.min(flatEmenta.length, currentIdx + 2);
+                    const startIdx = (disableFogOfWar && areAllRevealed) ? 0 : Math.max(0, currentIdx - 2);
+                    const endIdx = (disableFogOfWar && areAllRevealed) ? flatEmenta.length : Math.min(flatEmenta.length, currentIdx + 2);
                     const visibleEmenta = flatEmenta.slice(startIdx, endIdx);
                     
                     return (
@@ -460,7 +452,36 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                   )}
                                 </div>
 
-                                  {/* Eye Toggle Removido (Fog of War ativo) */}
+                                  {/* Eye Toggle (Condicional pela config) */}
+                                  {disableFogOfWar && !isCurrent && !isCompleted && !isPaused && (
+                                    <div className={cn(
+                                      "absolute right-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity",
+                                      isVisible ? "opacity-100" : ""
+                                    )}>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          e.preventDefault();
+                                          playPopSound();
+                                          if (areAllRevealed) {
+                                            setAreAllRevealed(false);
+                                            setUnhiddenTopics(new Set());
+                                          } else {
+                                            setUnhiddenTopics(prev => {
+                                              const next = new Set(prev);
+                                              if (next.has(step)) next.delete(step);
+                                              else next.add(step);
+                                              return next;
+                                            });
+                                          }
+                                        }}
+                                        className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                                        title={isVisible ? "Ocultar tópico" : "Revelar tópico"}
+                                      >
+                                        {isVisible ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                                      </button>
+                                    </div>
+                                  )}
                               </div>
                               </div>
 
@@ -475,10 +496,21 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                             <div className="flex flex-col items-center">
                               <div className="w-6 h-6 flex items-center justify-center shrink-0 text-muted-foreground">⋮</div>
                             </div>
-                            <div className="flex-1 pb-4 flex items-center">
+                            <div className="flex-1 pb-4 flex items-center justify-between">
                               <span className="text-xs font-medium text-muted-foreground italic">
                                 Continue estudando para dissipar a neblina...
                               </span>
+                              {disableFogOfWar && (
+                                <button
+                                  onClick={() => {
+                                    playPopSound();
+                                    setAreAllRevealed(true);
+                                  }}
+                                  className="text-[10px] text-muted-foreground hover:text-foreground underline underline-offset-2"
+                                >
+                                  Revelar tudo
+                                </button>
+                              )}
                             </div>
                           </div>
                         )}

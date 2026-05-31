@@ -10,8 +10,10 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
 import { PlanejarMateriaModal } from '@/components/PlanejarMateriaModal';
-import { Search, History, CalendarCheck, BrainCircuit, Sparkles } from 'lucide-react';
+import { Search, History, CalendarCheck, BrainCircuit, Sparkles, Settings } from 'lucide-react';
 import { HistoricoGlobalDrawer } from '@/components/HistoricoGlobalDrawer';
+import { useSettings } from '@/hooks/useSettings';
+import { Switch } from '@/components/ui/switch';
 import { useOrdemMaterias } from '@/hooks/useOrdemMaterias';
 import { DailyTopicCard } from '@/components/DailyTopicCard';
 import {
@@ -123,6 +125,7 @@ export default function Index() {
     }
   }, [searchParams, estados, setSearchParams]);
   const [isHistoricoOpen, setIsHistoricoOpen] = useState(false);
+  const { disableFogOfWar, toggleFogOfWar } = useSettings();
 
   const { fixadas, toggleFixada, isFixada } = useMateriasFixadas();
   const { ordem, atualizarOrdem } = useOrdemMaterias();
@@ -317,6 +320,40 @@ export default function Index() {
               <History className="w-3.5 h-3.5" />
               Histórico
             </button>
+
+            {/* Configurações */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <button
+                  className="flex items-center justify-center shrink-0 w-8 h-8 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground transition-all shadow-sm"
+                  title="Configurações"
+                >
+                  <Settings className="w-4 h-4" />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md p-6 rounded-3xl bg-background border border-border">
+                <DialogHeader className="mb-4">
+                  <DialogTitle className="text-xl font-semibold flex items-center gap-2">
+                    <Settings className="w-5 h-5 text-muted-foreground" />
+                    Configurações
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border border-border/50">
+                    <div className="space-y-1 pr-4">
+                      <h4 className="text-sm font-medium text-foreground">Desativar Neblina na Ementa</h4>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        Permite ver a ementa inteira revelada e usar o botão "Olhinho" para mostrar e esconder os tópicos futuros.
+                      </p>
+                    </div>
+                    <Switch
+                      checked={disableFogOfWar}
+                      onCheckedChange={toggleFogOfWar}
+                    />
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
 
             {/* Retenção de Memória */}
             {metricasRevisao && metricasRevisao.length > 0 && (
