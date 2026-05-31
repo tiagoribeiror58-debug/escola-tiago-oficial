@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useFolhasEstado, useSessoes, calcularOfensiva, useEmentaConcluida, useMetricasRevisao } from '@/hooks/useSessoes';
+import { useFolhasEstado, useSessoes, useEmentaConcluida, useMetricasRevisao } from '@/hooks/useSessoes';
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import { useMateriasFixadas } from '@/hooks/useMateriasFixadas';
 import MateriaCard from '@/components/MateriaCard';
@@ -93,8 +93,7 @@ export default function Index() {
     month: 'long',
   });
 
-  const ofensiva = sessoes ? calcularOfensiva(sessoes) : 0;
-  
+
   const [modalOpen, setModalOpen] = useState(false);
   const [isIAModalOpen, setIsIAModalOpen] = useState(false);
   const [selectedEstado, setSelectedEstado] = useState<MateriaEstado | null>(null);
@@ -318,17 +317,6 @@ export default function Index() {
               <History className="w-3.5 h-3.5" />
               Histórico
             </button>
-
-            {/* Atalho Ofensiva */}
-            <div className={cn(
-              "flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all shadow-sm",
-              ofensiva > 0 
-                ? "bg-[hsl(var(--warning)/0.1)] border-[hsl(var(--warning)/0.3)] text-[hsl(var(--warning))]" 
-                : "bg-card border-border text-muted-foreground"
-            )}>
-              <Flame className={cn("w-3.5 h-3.5", ofensiva > 0 && "animate-pulse")} />
-              {ofensiva} {ofensiva === 1 ? 'dia' : 'dias'}
-            </div>
 
             {/* Retenção de Memória */}
             {metricasRevisao && metricasRevisao.length > 0 && (
