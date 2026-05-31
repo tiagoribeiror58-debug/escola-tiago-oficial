@@ -859,31 +859,7 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
                         disabled={isLoadingChip}
                         onClick={() => {
                           playPopSound();
-
-                          if (isTopicChip && materia?.slug) {
-                            setLoadingChip(action);
-                            const titulo = isTopicChip[1].trim().replace(/^["']|["']$/g, '');
-                            
-                            const promise = supabase.from('topicos_emergentes').insert({
-                              materia_slug: materia.slug,
-                              titulo: titulo,
-                              descricao: titulo,
-                              session_key: sessionKey
-                            }).then(({ error }) => {
-                              if (error) throw error;
-                              queryClient.invalidateQueries({ queryKey: ['topicos-emergentes', materia.slug] });
-                            }).finally(() => {
-                              setLoadingChip(null);
-                            });
-
-                            toast.promise(promise, {
-                              loading: 'Criando tópico no roadmap...',
-                              success: `Tópico "${titulo}" criado com sucesso! 🎉`,
-                              error: 'Falha ao criar o tópico.'
-                            });
-                          } else {
-                            handleSend(action);
-                          }
+                          handleSend(action);
                         }}
                         className="text-[11px] md:text-xs font-medium px-3 py-1.5 rounded-full bg-muted text-muted-foreground hover:bg-foreground hover:text-background transition-colors active:scale-95 whitespace-nowrap disabled:opacity-50 disabled:pointer-events-none flex items-center gap-1.5"
                       >

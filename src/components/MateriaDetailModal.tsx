@@ -131,7 +131,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
     // Busca tópicos emergentes que "nasceram" de uma sessão relacionada a este step
     if (topicosEmergentes && topicosEmergentes.length > 0) {
       const stepSessions = sessoesMateria.filter(s => 
-        norm(s.topico).includes(norm(step)) || norm(step).includes(norm(s.topico))
+        norm(s.topico) === norm(step)
       );
       const stepSessionKeys = new Set(stepSessions.map(s => s.session_key).filter(Boolean));
       
@@ -206,11 +206,11 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
     
   // Identifica se o tópico selecionado está pausado.
   // Regra original: tem sessão neste tópico e ele ainda não está na ementa_concluida.
-  const norm = (s?: string | null) => (s || '').toLowerCase().trim();
+
   const sessaoDesteTopico = sessoesMateria.find(s =>
     selectedSub != null &&
     !ementaConcluida.includes(selectedSub) &&
-    (norm(s.topico).includes(norm(selectedSub)) || norm(selectedSub).includes(norm(s.topico)))
+    (norm(s.topico) === norm(selectedSub))
   );
   const isSelectedSubPaused = !!(selectedSub && sessaoDesteTopico);
 
@@ -362,13 +362,13 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                           const idx = startIdx + i;
                           const norm = (s: string) => s.toLowerCase().trim();
                           const normLocal = (s?: string | null) => (s || '').toLowerCase().trim();
-                          const isCompleted = ementaConcluida.some(d => normLocal(d).includes(normLocal(step)) || normLocal(step).includes(normLocal(d)));
+                          const isCompleted = ementaConcluida.some(d => normLocal(d) === normLocal(step));
                           const isCurrent = currentIdx === idx;
                           // Regra correta: só marca como pausado se existir sessão com decisao_proxima='Pausada'
                           // para este tópico. Evita falsos positivos com sessões já encerradas.
                           const isPaused = !isCompleted && sessoesMateria.some(s =>
                             s.decisao_proxima === 'Pausada' &&
-                            (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico)))
+                            (normLocal(s.topico) === normLocal(step))
                           );
                           const isLast = idx === flatEmenta.length - 1;
                           const isVisible = areAllRevealed || isCurrent || unhiddenTopics.has(step);
@@ -400,10 +400,10 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                       
                                       let url = `/sessao/${config.slug}?sub=${encodeURIComponent(step)}`;
                                       if (isPaused) {
-                                        const sessaoPausada = sessoesMateria.find(s => s.decisao_proxima === 'Pausada' && (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico))));
+                                        const sessaoPausada = sessoesMateria.find(s => s.decisao_proxima === 'Pausada' && (normLocal(s.topico) === normLocal(step)));
                                         if (sessaoPausada?.session_key) url = `/sessao/${config.slug}?resume=${sessaoPausada.session_key}`;
                                       } else if (isCompleted) {
-                                        const sessaoConc = sessoesMateria.find(s => !!s.session_key && (normLocal(s.topico).includes(normLocal(step)) || normLocal(step).includes(normLocal(s.topico))));
+                                        const sessaoConc = sessoesMateria.find(s => !!s.session_key && (normLocal(s.topico) === normLocal(step)));
                                         if (sessaoConc?.session_key) url = `/sessao/${config.slug}?resume=${sessaoConc.session_key}`;
                                       }
                                       navigate(url);
