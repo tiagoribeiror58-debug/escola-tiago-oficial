@@ -95,7 +95,7 @@ Contexto da matéria: ${materiaName} - ${descricaoMateria || ''}`;
     if (youtubeKey && parsed.youtube_queries && parsed.youtube_queries.length > 0) {
       try {
         const query = parsed.youtube_queries[0];
-        const ytRes = await fetch(\`https://www.googleapis.com/youtube/v3/search?part=snippet&q=\${encodeURIComponent(query)}&type=video&maxResults=1&key=\${youtubeKey}\`);
+        const ytRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=1&key=${youtubeKey}`);
         if (ytRes.ok) {
           const ytData = await ytRes.json();
           if (ytData.items && ytData.items.length > 0) {
@@ -103,7 +103,7 @@ Contexto da matéria: ${materiaName} - ${descricaoMateria || ''}`;
             youtube_videos.push({
               title: item.snippet.title,
               thumbnail: item.snippet.thumbnails?.high?.url || item.snippet.thumbnails?.default?.url,
-              url: \`https://www.youtube.com/watch?v=\${item.id.videoId}\`
+              url: `https://www.youtube.com/watch?v=${item.id.videoId}`
             });
           }
         } else {
