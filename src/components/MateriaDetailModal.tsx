@@ -31,8 +31,23 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
   const [expandedSession, setExpandedSession] = useState<number | null>(null);
   const [expandedCount, setExpandedCount] = useState(0);
   const [unhiddenTopics, setUnhiddenTopics] = useState<Set<string>>(new Set());
+  const [localDisableFogOfWar, setLocalDisableFogOfWar] = useState(false);
 
   const { disableFogOfWar } = useSettings();
+  const effectiveDisableFogOfWar = disableFogOfWar || localDisableFogOfWar;
+
+  const toggleAllFog = () => {
+    setLocalDisableFogOfWar(prev => !prev);
+  };
+
+  const toggleTopicVisibility = (topic: string) => {
+    setUnhiddenTopics(prev => {
+      const next = new Set(prev);
+      if (next.has(topic)) next.delete(topic);
+      else next.add(topic);
+      return next;
+    });
+  };
 
   interface TopicSupplement {
     preview: string;
@@ -319,6 +334,15 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                     Roadmap
                   </p>
                   <div className="flex items-center gap-3">
+                    {!disableFogOfWar && (
+                      <button
+                        onClick={toggleAllFog}
+                        className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                        title={effectiveDisableFogOfWar ? "Ocultar tópicos distantes" : "Revelar todo o roadmap"}
+                      >
+                        {effectiveDisableFogOfWar ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                      </button>
+                    )}
                     <span className="text-[10px] font-medium bg-foreground/10 text-foreground px-2 py-0.5 rounded-full">
                       {allDone ? 'Base concluída' : `${ementaConcluida.length} de ${flatEmenta.length}`}
                     </span>
@@ -328,8 +352,8 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 {/* Timeline vertical */}
                 <div className="relative">
                   {(() => {
-                    const startIdx = disableFogOfWar ? 0 : Math.max(0, currentIdx - 2);
-                    const endIdx = disableFogOfWar ? flatEmenta.length : Math.min(flatEmenta.length, currentIdx + 2);
+                    const startIdx = effectiveDisableFogOfWar ? 0 : Math.max(0, currentIdx - 2);
+                    const endIdx = effectiveDisableFogOfWar ? flatEmenta.length : Math.min(flatEmenta.length, currentIdx + 2);
                     const visibleEmenta = flatEmenta.slice(startIdx, endIdx);
                     
                     return (
@@ -354,7 +378,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                             (normLocal(s.topico) === normLocal(step))
                           );
                           const isLast = idx === flatEmenta.length - 1;
-                          const isVisible = disableFogOfWar || isCurrent || unhiddenTopics.has(step);
+                          const isVisible = effectiveDisableFogOfWar || isCurrent || unhiddenTopics.has(step);
 
                           const currentPhase = config.fases?.find(f => f.topicos.includes(step));
                           const prevTopic = idx > 0 ? flatEmenta[idx - 1] : null;
@@ -451,7 +475,18 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                     </p>
                                   )}
                                 </div>
-
+                                {!isCompleted && !isCurrent && !effectiveDisableFogOfWar && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      toggleTopicVisibility(step);
+                                    }}
+                                    className="p-1.5 opacity-0 group-hover:opacity-100 transition-opacity rounded hover:bg-muted ml-2"
+                                    title={unhiddenTopics.has(step) ? "Ocultar tópico" : "Revelar tópico"}
+                                  >
+                                    {unhiddenTopics.has(step) ? <Eye className="w-4 h-4 text-muted-foreground" /> : <EyeOff className="w-4 h-4 text-muted-foreground/40" />}
+                                  </button>
+                                )}
                               </div>
                               </div>
 
