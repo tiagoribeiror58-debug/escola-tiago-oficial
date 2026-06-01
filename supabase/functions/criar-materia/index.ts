@@ -68,7 +68,7 @@ Regras adicionais para a ementa:
         "Authorization": `Bearer ${geminiKey}`,
       },
       body: JSON.stringify({
-        model: "gemini-2.5-flash", // Utilizando a versão mais rápida e otimizada (Flash)
+        model: "gemini-3.5-flash", // Utilizando a versão mais rápida e otimizada (Flash)
         temperature: 0.7,
         messages: [
           { role: "system", content: systemPrompt },
