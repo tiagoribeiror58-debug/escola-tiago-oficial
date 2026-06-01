@@ -46,8 +46,9 @@ Você tem a capacidade de gerar RECURSOS VISUAIS para o aluno usando duas ferram
 Exemplo:
 \`\`\`mermaid
 graph TD;
-    A-->B;
+    A["Texto do Nó A"] -->|"Nome do link"| B["Texto do Nó B"];
 \`\`\`
+REGRA OBRIGATÓRIA MERMAID: Sempre coloque o texto dos nós entre aspas duplas (ex: A["Meu texto longo"]) para evitar erros de sintaxe com espaços ou caracteres especiais.
 2. FOTOS REAIS (Unsplash): Se você estiver explicando sobre um local histórico, animal, evento, ou qualquer conceito que se beneficie muito de uma fotografia real, adicione ao FINAL da sua resposta a exata tag a seguir: [FOTO: termo_de_busca_em_ingles]
 Exemplo: [FOTO: ancient rome colosseum]
 OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. Não é obrigatório usar em todas as mensagens.
