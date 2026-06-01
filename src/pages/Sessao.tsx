@@ -126,10 +126,14 @@ export default function Sessao() {
         if (error) {
           console.error("Erro ao salvar rascunho automático da sessão:", error);
           draftSavedRef.current = false; // tenta de novo se falhar
+        } else {
+          // Invalida a query 'sessoes' para garantir que os tópicos emergentes 
+          // achem a sessionKey desta sessão em andamento no mapa (evitando órfãos na UI)
+          queryClient.invalidateQueries({ queryKey: ['sessoes'] });
         }
       });
     }
-  }, [messageCount, resumeKey, materiaConfig, ultimaSessao, slug, sessionKey, sub, ementaConcluida]);
+  }, [messageCount, resumeKey, materiaConfig, ultimaSessao, slug, sessionKey, sub, ementaConcluida, queryClient]);
 
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
