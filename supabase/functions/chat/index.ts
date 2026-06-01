@@ -9,8 +9,8 @@ const corsHeaders = {
 // Cadeia de fallback: tenta do mais moderno ao mais estável.
 // Se um estiver sobrecarregado (overloaded), tenta o próximo automaticamente.
 const MODELS = [
-  { id: "gemini-3.5-flash", provider: "google" },       // Novo modelo principal: rápido e multimodal
-  { id: "gemini-2.5-flash", provider: "google" },       // Fallback caso 3.5-flash esteja sobrecarregado (503)
+  { id: "deepseek-chat", provider: "deepseek" },       // Novo modelo principal: rápido e multimodal
+  { id: "deepseek-chat", provider: "deepseek" },       // Fallback caso 3.5-flash esteja sobrecarregado (503)
   { id: "claude-haiku-4-5-20251001", provider: "anthropic" }, // Fallback para Anthropic
   { id: "claude-sonnet-4-5-20250929", provider: "anthropic" } // Fallback final
 ];
@@ -32,7 +32,7 @@ serve(async (req) => {
 
     const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
     // IMPORTANTE: Nunca coloque chaves hardcoded no código!
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
 
     const TAVILY_API_KEY = Deno.env.get("TAVILY_API_KEY");
     let finalSystemPrompt = systemPrompt || "You are a helpful assistant.";
@@ -64,20 +64,20 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
           const contextStr = recentMessages.map((m: any) => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n");
           const lastUserMessage = [...messages].reverse().find((m: any) => m.role === 'user')?.content;
 
-          if (lastUserMessage && TAVILY_API_KEY && GEMINI_API_KEY) {
+          if (lastUserMessage && TAVILY_API_KEY && DEEPSEEK_API_KEY) {
             try {
               console.log(`[chat] Verificando intenção de busca com Gemini...`);
               
-              const intentResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
+              const intentResponse = await fetch("https://api.deepseek.com/chat/completions", {
                 method: "POST",
                 headers: {
-                  "Authorization": `Bearer ${GEMINI_API_KEY}`,
+                  "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  model: "gemini-3.5-flash",
+                  model: "deepseek-chat",
                   messages: [
-                    { role: "system", content: "Você é um especialista em formular queries de busca. Leia o histórico da conversa. A última mensagem do usuário requer internet em tempo real (notícias, cotações, referências atuais, validação de fontes, anos 2024/2025/2026+)?\nSe NÃO precisar de busca (conhecimento estático), retorne APENAS a palavra: NAO\nSe PRECISAR, formule a melhor query de busca para o Google (curta e direta) que resolva a dúvida. Retorne APENAS a query. Não explique nada." },
+                    { role: "system", content: "Você é um especialista em formular queries de busca. Leia o histórico da conversa. A última mensagem do usuário requer internet em tempo real (notícias, cotações, referências atuais, validação de fontes, anos 2024/2025/2026+)?\nSe NÃO precisar de busca (conhecimento estático), retorne APENAS a palavra: NAO\nSe PRECISAR, formule a melhor query de busca para o deepseek (curta e direta) que resolva a dúvida. Retorne APENAS a query. Não explique nada." },
                     { role: "user", content: `Histórico recente:\n${contextStr}` }
                   ],
                   max_tokens: 30,
@@ -121,17 +121,17 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
                       console.log(`[chat] Contexto dinâmico injetado com sucesso!`);
 
                       // Detectar tópico emergente (fire-and-forget)
-                      if (materiaSlug && GEMINI_API_KEY) {
+                      if (materiaSlug && DEEPSEEK_API_KEY) {
                         (async () => {
                           try {
-                            const topicDetectResp = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
+                            const topicDetectResp = await fetch("https://api.deepseek.com/chat/completions", {
                               method: "POST",
                               headers: {
-                                "Authorization": `Bearer ${GEMINI_API_KEY}`,
+                                "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
                                 "Content-Type": "application/json",
                               },
                               body: JSON.stringify({
-                                model: "gemini-3.5-flash",
+                                model: "deepseek-chat",
                                 messages: [
                                   { role: "system", content: `Você é um curador de currículo educacional. Analise o conteúdo de busca fornecido e determine se ele contém UM tópico de estudo concreto e específico que seria valioso para um aluno que estuda '${materiaSlug}'. Se sim, retorne um JSON com exatamente este formato: {\"titulo\": \"Título conciso do tópico\", \"descricao\": \"Uma frase explicando o que o aluno aprenderá\", \"fonte_url\": \"URL mais relevante\"}. Se NÃO houver tópico novo relevante, retorne apenas: null` },
                                   { role: "user", content: `Conteúdo da busca:\n${snippets.substring(0, 2000)}` }
@@ -193,11 +193,11 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
           // --- 3. STREAMING PRINCIPAL ---
           let success = false;
           for (const modelDef of MODELS) {
-            const isGoogle = modelDef.provider === "google";
+            const isdeepseek = modelDef.provider === "deepseek";
             
             // Ignora o modelo se não houver chave para ele
-            if (isGoogle && !GEMINI_API_KEY) continue;
-            if (!isGoogle && !ANTHROPIC_API_KEY) continue;
+            if (isdeepseek && !DEEPSEEK_API_KEY) continue;
+            if (!isdeepseek && !ANTHROPIC_API_KEY) continue;
             
             console.log(`[chat] Tentando modelo: ${modelDef.id} (Provider: ${modelDef.provider})`);
 
@@ -205,10 +205,10 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
             let headers: Record<string, string> = { "Content-Type": "application/json" };
             let body: any = { stream: true };
 
-            if (isGoogle) {
-              // Usamos a API compatível com OpenAI do Google AI Studio para manter o padrão SSE do frontend!
-              url = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-              headers["Authorization"] = `Bearer ${GEMINI_API_KEY}`;
+            if (isdeepseek) {
+              // Usamos a API compatível com OpenAI do deepseek AI Studio para manter o padrão SSE do frontend!
+              url = "https://api.deepseek.com/chat/completions";
+              headers["Authorization"] = `Bearer ${DEEPSEEK_API_KEY}`;
               body.model = modelDef.id;
               body.max_tokens = 2048;
               body.messages = [
@@ -235,7 +235,7 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
               const t = await response.text();
               console.error(`[chat] Model ${modelDef.id} error ${response.status}:`, t);
               // Se falhou, tenta o próximo modelo (fallback) se ainda houver.
-              // O Google retorna 429 para rate limit, a Anthropic retorna 400 para sem créditos, etc.
+              // O deepseek retorna 429 para rate limit, a Anthropic retorna 400 para sem créditos, etc.
               console.warn(`[chat] Falha no modelo ${modelDef.id}. Tentando o próximo...`);
               continue;
             }

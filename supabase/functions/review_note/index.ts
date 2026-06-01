@@ -22,8 +22,8 @@ serve(async (req) => {
       );
     }
 
-    const geminiKey = Deno.env.get('GEMINI_API_KEY');
-    if (!geminiKey) throw new Error('GEMINI_API_KEY não configurada');
+    const geminiKey = Deno.env.get('DEEPSEEK_API_KEY');
+    if (!geminiKey) throw new Error('DEEPSEEK_API_KEY não configurada');
 
     const isHighlight = reflection.startsWith('Trecho destacado:');
     
@@ -52,14 +52,14 @@ Revise a anotação do aluno. Corrija se houver algum erro conceitual grave. Em 
 Mantenha o tom encorajador e direto. Retorne APENAS a sua revisão/complemento.`;
     }
 
-    const aiResponse = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
+    const aiResponse = await fetch('https://api.deepseek.com/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${geminiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gemini-2.5-flash',
+        model: 'deepseek-chat',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
       }),

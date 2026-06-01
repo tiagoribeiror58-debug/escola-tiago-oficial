@@ -14,8 +14,8 @@ serve(async (req) => {
   try {
     const { action, materiaSlug, completedTopics, n, questionText, userAnswer, topico } = await req.json();
 
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-    if (!GEMINI_API_KEY) {
+    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
+    if (!DEEPSEEK_API_KEY) {
       throw new Error("Missing API Key");
     }
 
@@ -30,14 +30,14 @@ Retorne APENAS um JSON válido seguindo este array de objetos:
 ]
 NÃO retorne markdown, nem \`\`\`json, nem explicações. Apenas o array JSON puro, sem formatação.`;
 
-      const resp = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
+      const resp = await fetch("https://api.deepseek.com/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${GEMINI_API_KEY}`,
+          "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gemini-2.5-flash",
+          model: "deepseek-chat",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.7,
         }),
@@ -64,14 +64,14 @@ Avalie a resposta do aluno e retorne um JSON puro seguindo este objeto:
 }
 NÃO retorne markdown, nem \`\`\`json. Apenas o JSON puro, sem formatação extra.`;
 
-      const resp = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
+      const resp = await fetch("https://api.deepseek.com/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${GEMINI_API_KEY}`,
+          "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gemini-2.5-flash",
+          model: "deepseek-chat",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.3,
         }),

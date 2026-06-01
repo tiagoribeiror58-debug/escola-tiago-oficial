@@ -24,9 +24,9 @@ serve(async (req: Request) => {
     }
 
     // 2. Chaves de ambiente (nunca expostas pro frontend)
-    const geminiKey = Deno.env.get("GEMINI_API_KEY");
+    const geminiKey = Deno.env.get("DEEPSEEK_API_KEY");
     if (!geminiKey) {
-      throw new Error("Chave GEMINI_API_KEY não configurada no Supabase.");
+      throw new Error("Chave DEEPSEEK_API_KEY não configurada no Supabase.");
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -61,14 +61,14 @@ Regras adicionais para a ementa:
       : `Texto base fornecido pelo aluno: ${texto_base}`;
 
     // 4. Chamar a API do Gemini
-    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
+    const response = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${geminiKey}`,
       },
       body: JSON.stringify({
-        model: "gemini-2.5-flash", // Utilizando a versão mais rápida e otimizada (Flash)
+        model: "deepseek-chat", // Utilizando a versão mais rápida e otimizada (Flash)
         temperature: 0.7,
         messages: [
           { role: "system", content: systemPrompt },
