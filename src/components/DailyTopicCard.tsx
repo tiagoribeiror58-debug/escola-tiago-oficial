@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Sparkles, ArrowRight, RefreshCw } from 'lucide-react';
 import { useDailyTopic } from '@/hooks/useDailyTopic';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export function DailyTopicCard() {
   const [selectedMateria, setSelectedMateria] = useState<string>('all');
@@ -41,16 +42,17 @@ export function DailyTopicCard() {
     <div className="flex flex-col gap-1 w-full">
       {availableMaterias && availableMaterias.length > 0 && (
         <div className="flex items-center gap-2 mb-2 w-full">
-          <select 
-            value={selectedMateria}
-            onChange={(e) => setSelectedMateria(e.target.value)}
-            className="flex-1 bg-muted/30 border border-border/50 text-sm rounded-xl px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 transition-colors"
-          >
-            <option value="all">Todas as matérias</option>
-            {availableMaterias.map(m => (
-              <option key={m.slug} value={m.slug}>{m.nome}</option>
-            ))}
-          </select>
+          <Select value={selectedMateria} onValueChange={setSelectedMateria}>
+            <SelectTrigger className="flex-1 h-[38px] bg-muted/30 border-border/50 text-sm rounded-xl px-3 text-foreground focus:ring-1 focus:ring-primary/50 transition-colors border shadow-none">
+              <SelectValue placeholder="Todas as matérias" />
+            </SelectTrigger>
+            <SelectContent className="max-h-60 rounded-xl">
+              <SelectItem value="all">Todas as matérias</SelectItem>
+              {availableMaterias.map(m => (
+                <SelectItem key={m.slug} value={m.slug}>{m.nome}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <button 
             onClick={refresh}
             className="p-2 rounded-xl border border-border/50 bg-muted/30 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors shrink-0"
