@@ -10,6 +10,7 @@ const corsHeaders = {
 // Se um estiver sobrecarregado (overloaded), tenta o próximo automaticamente.
 const MODELS = [
   { id: "gemini-3.5-flash", provider: "google" },       // Novo modelo principal: rápido e multimodal
+  { id: "gemini-2.5-flash", provider: "google" },       // Fallback caso 3.5-flash esteja sobrecarregado (503)
   { id: "claude-haiku-4-5-20251001", provider: "anthropic" }, // Fallback para Anthropic
   { id: "claude-sonnet-4-5-20250929", provider: "anthropic" } // Fallback final
 ];
