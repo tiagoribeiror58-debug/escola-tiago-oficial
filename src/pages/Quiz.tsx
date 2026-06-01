@@ -9,7 +9,7 @@ import {
   useSaveQuizAnswer, 
   useCompleteQuizSession, 
   useTodayQuizCount,
-  useTodayQuizHistory
+  useQuizHistory
 } from '@/hooks/useQuiz';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -37,11 +37,12 @@ export default function Quiz() {
   const [answer, setAnswer] = useState('');
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
-
+  const [historyFilter, setHistoryFilter] = useState<'today' | 'all'>('today');
+  
   const { data: settings, isLoading: loadingSettings } = useUserSettings();
   const { data: topics, isLoading: loadingTopics } = useAllCompletedTopics();
   const { data: todayCount, isLoading: loadingCount } = useTodayQuizCount();
-  const { data: todayHistory, isLoading: loadingHistory } = useTodayQuizHistory();
+  const { data: dbHistory, isLoading: loadingHistory } = useQuizHistory(historyFilter);
 
   const createSession = useCreateQuizSession();
   const saveAnswer = useSaveQuizAnswer();
@@ -53,9 +54,8 @@ export default function Quiz() {
   const hasStartedRef = useRef(false);
 
   useEffect(() => {
-    // Populate history from database if it's empty in local state
-    if (todayHistory && todayHistory.length > 0 && history.length === 0) {
-      const mappedHistory = todayHistory.map(item => ({
+    if (dbHistory) {
+      const mappedHistory = dbHistory.map(item => ({
         question: {
           topico: item.topico,
           materiaSlug: item.materia_slug,
@@ -67,7 +67,7 @@ export default function Quiz() {
       }));
       setHistory(mappedHistory);
     }
-  }, [todayHistory]);
+  }, [dbHistory]);
 
 
 
@@ -361,9 +361,25 @@ export default function Quiz() {
         {/* History Section */}
         {history.length > 0 && (
           <div className="w-full space-y-6 mt-4 border-t border-border/50 pt-8 animate-in fade-in duration-500">
-            <h3 className="font-semibold text-xl flex items-center gap-2">
-              <History className="w-5 h-5 text-primary" /> Histórico da Sessão
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-xl flex items-center gap-2">
+                <History className="w-5 h-5 text-primary" /> Histórico da Sessão
+              </h3>
+              <div className="flex bg-muted/50 p-1 rounded-lg">
+                <button 
+                  onClick={() => setHistoryFilter('today')} 
+                  className={cn("px-3 py-1 text-sm rounded-md transition-all", historyFilter === 'today' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground")}
+                >
+                  Hoje
+                </button>
+                <button 
+                  onClick={() => setHistoryFilter('all')} 
+                  className={cn("px-3 py-1 text-sm rounded-md transition-all", historyFilter === 'all' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground")}
+                >
+                  Tudo
+                </button>
+              </div>
+            </div>
             
             <div className="space-y-4">
               {history.map((item, idx) => (

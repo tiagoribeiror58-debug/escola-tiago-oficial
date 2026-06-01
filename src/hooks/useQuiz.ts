@@ -133,24 +133,29 @@ export function useTodayQuizCount() {
   });
 }
 
-// Fetch the actual answers for today's history
-export function useTodayQuizHistory() {
+// Fetch the actual answers for history
+export function useQuizHistory(filter: 'today' | 'all' = 'today') {
   return useQuery({
-    queryKey: ['today-quiz-history'],
+    queryKey: ['quiz-history', filter],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
 
-      const startOfDay = new Date();
-      startOfDay.setHours(0, 0, 0, 0);
-
-      const { data, error } = await supabase
+      let query = supabase
         .from('quiz_answers')
         .select('*')
         .eq('user_id', user.id)
-        .gte('created_at', startOfDay.toISOString())
         .order('created_at', { ascending: false });
 
+      if (filter === 'today') {
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+        query = query.gte('created_at', startOfDay.toISOString());
+      } else {
+        query = query.limit(100); // hard limit for performance
+      }
+
+      const { data, error } = await query;
       if (error) throw error;
       return data || [];
     }
