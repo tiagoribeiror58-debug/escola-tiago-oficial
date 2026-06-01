@@ -352,19 +352,12 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 {/* Timeline vertical */}
                 <div className="relative">
                   {(() => {
-                    const startIdx = effectiveDisableFogOfWar ? 0 : Math.max(0, currentIdx - 2);
-                    const endIdx = effectiveDisableFogOfWar ? flatEmenta.length : Math.min(flatEmenta.length, currentIdx + 2);
-                    const visibleEmenta = flatEmenta.slice(startIdx, endIdx);
+                    const startIdx = 0;
+                    const endIdx = flatEmenta.length;
+                    const visibleEmenta = flatEmenta;
                     
                     return (
                       <>
-                        {startIdx > 0 && (
-                          <div className="flex gap-3 mb-2 opacity-50">
-                            <div className="flex flex-col items-center">
-                              <div className="w-6 h-6 flex items-center justify-center shrink-0 text-muted-foreground">⋮</div>
-                            </div>
-                          </div>
-                        )}
                         {visibleEmenta.map((step, i) => {
                           const idx = startIdx + i;
                           const norm = (s: string) => s.toLowerCase().trim();
@@ -378,7 +371,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                             (normLocal(s.topico) === normLocal(step))
                           );
                           const isLast = idx === flatEmenta.length - 1;
-                          const isVisible = effectiveDisableFogOfWar || isCurrent || unhiddenTopics.has(step);
+                          const isVisible = effectiveDisableFogOfWar || isCurrent || isCompleted || unhiddenTopics.has(step) || (idx >= currentIdx - 2 && idx <= currentIdx + 2);
 
                           const currentPhase = config.fases?.find(f => f.topicos.includes(step));
                           const prevTopic = idx > 0 ? flatEmenta[idx - 1] : null;
@@ -495,25 +488,9 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                             </div>
                           );
                         })}
-
-                        {endIdx < flatEmenta.length && (
-                          <div className="flex gap-3 opacity-30 mt-2">
-                            <div className="flex flex-col items-center">
-                              <div className="w-6 h-6 flex items-center justify-center shrink-0 text-muted-foreground">⋮</div>
-                            </div>
-                            <div className="flex-1 pb-4 flex items-center justify-between">
-                              <span className="text-xs font-medium text-muted-foreground italic">
-                                Continue estudando para dissipar a neblina...
-                              </span>
-
-                            </div>
-                          </div>
-                        )}
                       </>
                     );
                   })()}
-
-
                 </div>
               </div>
             );
