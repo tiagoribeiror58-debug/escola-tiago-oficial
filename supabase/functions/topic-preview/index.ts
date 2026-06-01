@@ -54,7 +54,7 @@ Contexto da matéria: ${materiaName} - ${descricaoMateria || ''}`;
         "Authorization": `Bearer ${geminiKey}`,
       },
       body: JSON.stringify({
-        model: "gemini-3.5-flash",
+        model: "gemini-2.5-flash",
         temperature: 0.5,
         messages: [
           { role: "system", content: systemPrompt },

@@ -59,7 +59,7 @@ Mantenha o tom encorajador e direto. Retorne APENAS a sua revisão/complemento.`
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gemini-3.5-flash',
+        model: 'gemini-2.5-flash',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
       }),

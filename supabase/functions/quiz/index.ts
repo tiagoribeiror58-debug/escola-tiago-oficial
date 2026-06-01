@@ -37,7 +37,7 @@ NÃO retorne markdown, nem \`\`\`json, nem explicações. Apenas o array JSON pu
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.5-flash",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.7,
         }),
@@ -71,7 +71,7 @@ NÃO retorne markdown, nem \`\`\`json. Apenas o JSON puro, sem formatação extr
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.5-flash",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.3,
         }),
