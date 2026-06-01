@@ -54,7 +54,7 @@ Contexto da matéria: ${materiaName} - ${descricaoMateria || ''}`;
         "Authorization": `Bearer ${geminiKey}`,
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
+        model: "deepseek-v4-flash",
         temperature: 0.5,
         messages: [
           { role: "system", content: systemPrompt },

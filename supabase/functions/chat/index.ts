@@ -9,8 +9,8 @@ const corsHeaders = {
 // Cadeia de fallback: tenta do mais moderno ao mais estável.
 // Se um estiver sobrecarregado (overloaded), tenta o próximo automaticamente.
 const MODELS = [
-  { id: "deepseek-chat", provider: "deepseek" },       // Novo modelo principal: rápido e multimodal
-  { id: "deepseek-chat", provider: "deepseek" },       // Fallback caso 3.5-flash esteja sobrecarregado (503)
+  { id: "deepseek-v4-flash", provider: "deepseek" },       // Novo modelo principal: rápido e multimodal
+  { id: "deepseek-v4-flash", provider: "deepseek" },       // Fallback caso 3.5-flash esteja sobrecarregado (503)
   { id: "claude-haiku-4-5-20251001", provider: "anthropic" }, // Fallback para Anthropic
   { id: "claude-sonnet-4-5-20250929", provider: "anthropic" } // Fallback final
 ];
@@ -75,7 +75,7 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  model: "deepseek-chat",
+                  model: "deepseek-v4-flash",
                   messages: [
                     { role: "system", content: "Você é um especialista em formular queries de busca. Leia o histórico da conversa. A última mensagem do usuário requer internet em tempo real (notícias, cotações, referências atuais, validação de fontes, anos 2024/2025/2026+)?\nSe NÃO precisar de busca (conhecimento estático), retorne APENAS a palavra: NAO\nSe PRECISAR, formule a melhor query de busca para o deepseek (curta e direta) que resolva a dúvida. Retorne APENAS a query. Não explique nada." },
                     { role: "user", content: `Histórico recente:\n${contextStr}` }
@@ -131,7 +131,7 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
                                 "Content-Type": "application/json",
                               },
                               body: JSON.stringify({
-                                model: "deepseek-chat",
+                                model: "deepseek-v4-flash",
                                 messages: [
                                   { role: "system", content: `Você é um curador de currículo educacional. Analise o conteúdo de busca fornecido e determine se ele contém UM tópico de estudo concreto e específico que seria valioso para um aluno que estuda '${materiaSlug}'. Se sim, retorne um JSON com exatamente este formato: {\"titulo\": \"Título conciso do tópico\", \"descricao\": \"Uma frase explicando o que o aluno aprenderá\", \"fonte_url\": \"URL mais relevante\"}. Se NÃO houver tópico novo relevante, retorne apenas: null` },
                                   { role: "user", content: `Conteúdo da busca:\n${snippets.substring(0, 2000)}` }

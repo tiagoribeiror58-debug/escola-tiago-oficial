@@ -68,7 +68,7 @@ Regras adicionais para a ementa:
         "Authorization": `Bearer ${geminiKey}`,
       },
       body: JSON.stringify({
-        model: "deepseek-chat", // Utilizando a versão mais rápida e otimizada (Flash)
+        model: "deepseek-v4-flash", // Utilizando a versão mais rápida e otimizada (Flash)
         temperature: 0.7,
         messages: [
           { role: "system", content: systemPrompt },
