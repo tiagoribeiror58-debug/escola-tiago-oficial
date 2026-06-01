@@ -146,6 +146,29 @@ export default function Sessao() {
     return () => window.removeEventListener('beforeunload', handler);
   }, []);
 
+  const topicCompleteRef = useRef(topicComplete);
+  useEffect(() => {
+    topicCompleteRef.current = topicComplete;
+  }, [topicComplete]);
+
+  // Fallback: auto-save ao desmontar o componente (ex: botão Voltar do navegador)
+  useEffect(() => {
+    return () => {
+      if (messagesRef.current.length > 0 && !topicCompleteRef.current && !isSavingRef.current) {
+        const duracaoMin = Math.round((Date.now() - startTimeRef.current) / 60000);
+        const messagesSnapshot = messagesRef.current.map(({ role, content }) => ({ role, content }));
+        
+        supabase.from('sessoes').update({
+          messages_json: messagesSnapshot,
+          duracao_min: duracaoMin > 0 ? duracaoMin : 1,
+          decisao_proxima: 'Pausada'
+        }).eq('session_key', sessionKey).then(() => {
+          supabase.from('chat_messages').delete().eq('session_key', sessionKey).then();
+        });
+      }
+    };
+  }, [sessionKey]);
+
   const doEncerrar = useCallback(async (forceComplete: boolean = false, isPause: boolean = false) => {
     // BUG-02: impede duplo encerramento (ex: usuário clica 2x após erro)
     if (isSavingRef.current) return;
