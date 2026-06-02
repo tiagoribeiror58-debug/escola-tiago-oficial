@@ -142,59 +142,7 @@ export default function Categoria() {
               </div>
             )}
 
-            {/* Preview das áreas */}
-            {filhos.length > 0 && (
-              <div>
-                <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                  O que você vai aprender
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {filhos.map((filho) => {
-                    const topicos = filho.isCategory
-                      ? (filho.children || []).map(c => c.nome)
-                      : filho.fases
-                        ? filho.fases.flatMap(f => f.topicos)
-                        : (filho.ementa || []);
-                    const preview = topicos.slice(0, 3);
 
-                    return (
-                      <div
-                        key={filho.slug}
-                        onClick={() => handleCardClick(filho)}
-                        className="group flex flex-col gap-1.5 p-3.5 rounded-xl border border-border/40 bg-background/60 hover:bg-muted/60 hover:border-border/70 cursor-pointer transition-all"
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-base leading-none">{filho.emoji}</span>
-                          <span className="text-sm font-medium">{filho.nome}</span>
-                        </div>
-                        {filho.descricao && (
-                          <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
-                            {filho.descricao}
-                          </p>
-                        )}
-                        {preview.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-0.5">
-                            {preview.map((t, i) => (
-                              <span
-                                key={i}
-                                className="px-1.5 py-0.5 rounded-md bg-foreground/[0.06] text-[10px] text-muted-foreground"
-                              >
-                                {t}
-                              </span>
-                            ))}
-                            {topicos.length > 3 && (
-                              <span className="px-1.5 py-0.5 rounded-md bg-foreground/[0.06] text-[10px] text-muted-foreground">
-                                +{topicos.length - 3} mais
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </div>
         </div>
 

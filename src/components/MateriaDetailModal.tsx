@@ -371,7 +371,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                             (normLocal(s.topico) === normLocal(step))
                           );
                           const isLast = idx === flatEmenta.length - 1;
-                          const isVisible = effectiveDisableFogOfWar || isCurrent || isCompleted || unhiddenTopics.has(step) || (idx >= currentIdx - 2 && idx <= currentIdx + 2);
+                          const isVisible = effectiveDisableFogOfWar || isCurrent || isCompleted || unhiddenTopics.has(step);
 
                           const currentPhase = config.fases?.find(f => f.topicos.includes(step));
                           const prevTopic = idx > 0 ? flatEmenta[idx - 1] : null;
