@@ -24,7 +24,7 @@ import { escritaHub } from './materias/escrita';
 import { liderancaHub } from './materias/lideranca';
 import { habilitacaoHub } from './materias/habilitacao';
 
-export const MATERIAS: MateriaConfig[] = [
+const RAW_MATERIAS: MateriaConfig[] = [
   gestaoSistemasHub,
   elonMuskHub,
   founderSolo,
@@ -50,6 +50,29 @@ export const MATERIAS: MateriaConfig[] = [
   liderancaHub,
   habilitacaoHub,
 ];
+
+function flattenSuperHubs(materias: MateriaConfig[]): MateriaConfig[] {
+  const result: MateriaConfig[] = [];
+  for (const m of materias) {
+    if (m.isCategory && m.children) {
+      const subCategories = m.children.filter(c => c.isCategory);
+      const subMaterias = m.children.filter(c => !c.isCategory);
+      
+      if (subMaterias.length > 0) {
+        result.push({ ...m, children: subMaterias });
+      }
+      
+      if (subCategories.length > 0) {
+        result.push(...flattenSuperHubs(subCategories));
+      }
+    } else {
+      result.push(m);
+    }
+  }
+  return result;
+}
+
+export const MATERIAS: MateriaConfig[] = flattenSuperHubs(RAW_MATERIAS);
 
 export function getMateriaBySlug(slug: string, list: MateriaConfig[] = MATERIAS): MateriaConfig | undefined {
   for (const m of list) {
