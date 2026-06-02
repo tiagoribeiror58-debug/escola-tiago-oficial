@@ -161,6 +161,32 @@ export function useFolhasEstado() {
   };
 }
 
+export function useTodosEstadosFlat() {
+  const { data: sessoes, isLoading: isLoadingSessoes, error: errorSessoes } = useSessoes();
+  const { data: materiasGeradas, isLoading: isLoadingGeradas } = useMateriasGeradas();
+
+  const TODAS_MATERIAS = mesclarMaterias(materiasGeradas);
+
+  const todosFlat: MateriaConfig[] = [];
+  const extrair = (lista: MateriaConfig[]) => {
+    lista.forEach(m => {
+      todosFlat.push(m);
+      if (m.children && m.children.length > 0) extrair(m.children);
+    });
+  };
+  extrair(TODAS_MATERIAS);
+
+  const estados: MateriaEstado[] = todosFlat.map(config => buildMateriaEstado(config, sessoes || []));
+
+  estados.sort((a, b) => b.totalSessoes - a.totalSessoes);
+
+  return { 
+    estados, 
+    isLoading: isLoadingSessoes || isLoadingGeradas, 
+    error: errorSessoes 
+  };
+}
+
 export function useUltimaSessao(materia: string) {
   return useQuery({
     queryKey: ['ultima-sessao', materia],

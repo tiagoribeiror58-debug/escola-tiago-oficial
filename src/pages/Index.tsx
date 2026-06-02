@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useFolhasEstado, useSessoes, useEmentaConcluida, useMetricasRevisao } from '@/hooks/useSessoes';
+import { useTodosEstadosFlat, useSessoes, useEmentaConcluida, useMetricasRevisao } from '@/hooks/useSessoes';
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import { useMateriasFixadas } from '@/hooks/useMateriasFixadas';
 import MateriaCard from '@/components/MateriaCard';
@@ -16,6 +16,8 @@ import { useSettings } from '@/hooks/useSettings';
 import { Switch } from '@/components/ui/switch';
 import { useOrdemMaterias } from '@/hooks/useOrdemMaterias';
 import { DailyTopicCard } from '@/components/DailyTopicCard';
+import { RecomendacaoCard } from '@/components/RecomendacaoCard';
+import { useProximoPassoRecomendado } from '@/hooks/useRecomendacao';
 import {
   Dialog,
   DialogContent,
@@ -79,9 +81,10 @@ function getGreeting(): string {
 }
 
 export default function Index() {
-  const { estados, isLoading } = useFolhasEstado();
+  const { estados, isLoading } = useTodosEstadosFlat();
   const { foco, toggleFoco } = useMateriasFoco();
   const { data: sessoes } = useSessoes();
+  const recomendacao = useProximoPassoRecomendado();
   const { data: metricasRevisao } = useMetricasRevisao();
   const averageRetention = metricasRevisao && metricasRevisao.length > 0
     ? Math.round(metricasRevisao.reduce((acc, m) => acc + m.score, 0) / metricasRevisao.length)
@@ -140,7 +143,9 @@ export default function Index() {
   const { fixadas, toggleFixada, isFixada } = useMateriasFixadas();
   const { ordem, atualizarOrdem } = useOrdemMaterias();
   
-  const [visibleLimit, setVisibleLimit] = useState(4);
+  const [filterType, setFilterType] = useState<'all' | 'materias' | 'hubs'>('all');
+  const [visibleLimitMaterias, setVisibleLimitMaterias] = useState(4);
+  const [visibleLimitHubs, setVisibleLimitHubs] = useState(4);
 
   const estadosFocados = foco.length > 0 
     ? estados.filter(e => foco.includes(e.config.slug))
@@ -193,7 +198,11 @@ export default function Index() {
     return dataB - dataA;
   });
 
-  const visibleEstados = displayedEstados.slice(0, visibleLimit);
+  const displayedMaterias = displayedEstados.filter(e => !e.config.isCategory);
+  const displayedHubs = displayedEstados.filter(e => e.config.isCategory);
+
+  const visibleMaterias = displayedMaterias.slice(0, visibleLimitMaterias);
+  const visibleHubs = displayedHubs.slice(0, visibleLimitHubs);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -373,6 +382,14 @@ export default function Index() {
           {renderBadges()}
         </div>
 
+        {/* Recomendação Foco Inteligente */}
+        {foco.length > 0 && recomendacao.estado && !searchQuery && (
+          <RecomendacaoCard 
+            recomendacao={recomendacao} 
+            onClick={() => handleCardClick(recomendacao.estado!)} 
+          />
+        )}
+
         {/* Barra de Pesquisa */}
         <div className="mb-8 relative">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -448,10 +465,40 @@ export default function Index() {
 
         {/* Separador de Outras Disciplinas (se necessário, agora pode ser o título principal do grid) */}
         {!isLoading && displayedEstados.length > 0 && (
-          <div className="mb-6">
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
               Sua Mesa de Estudos
             </h3>
+            
+            <div className="flex items-center p-1 bg-muted/30 rounded-xl border border-border/50 self-start sm:self-auto">
+              <button
+                onClick={() => setFilterType('all')}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                  filterType === 'all' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Tudo
+              </button>
+              <button
+                onClick={() => setFilterType('materias')}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                  filterType === 'materias' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Matérias
+              </button>
+              <button
+                onClick={() => setFilterType('hubs')}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                  filterType === 'hubs' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                Hubs
+              </button>
+            </div>
           </div>
         )}
 
@@ -463,52 +510,97 @@ export default function Index() {
             ))}
           </div>
         ) : (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-              <SortableContext
-                items={visibleEstados.map(e => e.config.slug)}
-                strategy={rectSortingStrategy}
-              >
-                {visibleEstados.map(estado => (
-                  <SortableItem
-                    key={estado.config.slug}
-                    id={estado.config.slug}
-                    estado={estado}
-                    onClick={() => handleCardClick(estado)}
-                    isPinned={isFixada(estado.config.slug)}
-                    onTogglePin={(e: React.MouseEvent) => {
-                      e.stopPropagation();
-                      toggleFixada(estado.config.slug);
-                    }}
-                  />
-                ))}
-              </SortableContext>
-            </div>
-          </DndContext>
-        )}
+          <div className="space-y-8 mb-8">
+            {(filterType === 'all' || filterType === 'hubs') && displayedHubs.length > 0 && (
+              <div>
+                <h4 className="text-sm font-medium mb-3 text-muted-foreground">Hubs em Foco</h4>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                    <SortableContext items={visibleHubs.map(e => e.config.slug)} strategy={rectSortingStrategy}>
+                      {visibleHubs.map(estado => (
+                        <SortableItem
+                          key={estado.config.slug}
+                          id={estado.config.slug}
+                          estado={estado}
+                          onClick={() => handleCardClick(estado)}
+                          isPinned={isFixada(estado.config.slug)}
+                          onTogglePin={(e: React.MouseEvent) => {
+                            e.stopPropagation();
+                            toggleFixada(estado.config.slug);
+                          }}
+                        />
+                      ))}
+                    </SortableContext>
+                  </div>
+                </DndContext>
 
-        {!isLoading && displayedEstados.length > 4 && (
-          <div className="flex items-center gap-2 mb-8">
-            {visibleLimit > 4 && (
-              <button
-                onClick={() => setVisibleLimit(prev => Math.max(4, prev - 4))}
-                className="flex-1 py-3 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
-              >
-                Ver menos (esconder 4)
-              </button>
+                {displayedHubs.length > 4 && (
+                  <div className="flex items-center gap-2 mb-4">
+                    {visibleLimitHubs > 4 && (
+                      <button
+                        onClick={() => setVisibleLimitHubs(prev => Math.max(4, prev - 4))}
+                        className="flex-1 py-2.5 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
+                      >
+                        Ver menos hubs
+                      </button>
+                    )}
+                    {visibleLimitHubs < displayedHubs.length && (
+                      <button
+                        onClick={() => setVisibleLimitHubs(prev => prev + 4)}
+                        className="flex-1 py-2.5 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
+                      >
+                        Ver mais hubs ({Math.min(visibleLimitHubs + 4, displayedHubs.length)} de {displayedHubs.length})
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
-            
-            {visibleLimit < displayedEstados.length && (
-              <button
-                onClick={() => setVisibleLimit(prev => prev + 4)}
-                className="flex-1 py-3 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
-              >
-                Ver mais (mostrar até {Math.min(visibleLimit + 4, displayedEstados.length)} de {displayedEstados.length})
-              </button>
+
+            {(filterType === 'all' || filterType === 'materias') && displayedMaterias.length > 0 && (
+              <div>
+                <h4 className="text-sm font-medium mb-3 text-muted-foreground">Matérias em Foco</h4>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                    <SortableContext items={visibleMaterias.map(e => e.config.slug)} strategy={rectSortingStrategy}>
+                      {visibleMaterias.map(estado => (
+                        <SortableItem
+                          key={estado.config.slug}
+                          id={estado.config.slug}
+                          estado={estado}
+                          onClick={() => handleCardClick(estado)}
+                          isPinned={isFixada(estado.config.slug)}
+                          onTogglePin={(e: React.MouseEvent) => {
+                            e.stopPropagation();
+                            toggleFixada(estado.config.slug);
+                          }}
+                        />
+                      ))}
+                    </SortableContext>
+                  </div>
+                </DndContext>
+
+                {displayedMaterias.length > 4 && (
+                  <div className="flex items-center gap-2 mb-4">
+                    {visibleLimitMaterias > 4 && (
+                      <button
+                        onClick={() => setVisibleLimitMaterias(prev => Math.max(4, prev - 4))}
+                        className="flex-1 py-2.5 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
+                      >
+                        Ver menos matérias
+                      </button>
+                    )}
+                    {visibleLimitMaterias < displayedMaterias.length && (
+                      <button
+                        onClick={() => setVisibleLimitMaterias(prev => prev + 4)}
+                        className="flex-1 py-2.5 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
+                      >
+                        Ver mais matérias ({Math.min(visibleLimitMaterias + 4, displayedMaterias.length)} de {displayedMaterias.length})
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
           </div>
         )}

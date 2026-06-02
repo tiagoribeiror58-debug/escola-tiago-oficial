@@ -9,7 +9,8 @@ import {
   useSaveQuizAnswer, 
   useCompleteQuizSession, 
   useTodayQuizCount,
-  useQuizHistory
+  useQuizHistory,
+  TopicDateFilter
 } from '@/hooks/useQuiz';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -38,9 +39,17 @@ export default function Quiz() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [historyFilter, setHistoryFilter] = useState<'today' | 'all'>('today');
+  const [topicFilter, setTopicFilter] = useState<TopicDateFilter>('all');
+  const [customStart, setCustomStart] = useState<string>('');
+  const [customEnd, setCustomEnd] = useState<string>('');
+  const [selectedMateria, setSelectedMateria] = useState<string>('');
   
   const { data: settings, isLoading: loadingSettings } = useUserSettings();
-  const { data: topics, isLoading: loadingTopics } = useAllCompletedTopics();
+  const { data: topics, isLoading: loadingTopics } = useAllCompletedTopics(
+    topicFilter, 
+    customStart ? new Date(customStart) : undefined, 
+    customEnd ? new Date(customEnd) : undefined
+  );
   const { data: todayCount, isLoading: loadingCount } = useTodayQuizCount();
   const { data: dbHistory, isLoading: loadingHistory } = useQuizHistory(historyFilter);
 
@@ -245,29 +254,74 @@ export default function Quiz() {
                 <p className="text-muted-foreground text-sm mb-8 text-center">
                   Você tem <strong className="text-primary">{remaining} perguntas</strong> disponíveis para revisar hoje. O seu histórico atual está logo abaixo.
                 </p>
-                <button
-                  onClick={() => handleStart()}
-                  className="w-full py-4 bg-primary text-primary-foreground rounded-xl font-medium text-lg hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20"
-                >
-                  Gerar Perguntas
-                </button>
+                <div className="w-full mb-6 space-y-4 text-left">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest pl-1">
+                      Filtrar tópicos concluídos por data
+                    </label>
+                    <select 
+                      value={topicFilter}
+                      onChange={(e) => setTopicFilter(e.target.value as TopicDateFilter)}
+                      className="w-full bg-card border border-border/50 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                    >
+                      <option value="all">Todo o Histórico (Qualquer data)</option>
+                      <option value="today">Hoje</option>
+                      <option value="yesterday">Ontem</option>
+                      <option value="last_7_days">Últimos 7 dias</option>
+                      <option value="last_30_days">Últimos 30 dias</option>
+                      <option value="custom">Data Personalizada</option>
+                    </select>
+                  </div>
 
-                <div className="w-full mt-4 flex justify-center">
-                  <select 
-                    className="bg-transparent border-none text-muted-foreground text-sm cursor-pointer hover:text-primary transition-colors focus:outline-none text-center"
-                    onChange={(e) => {
-                      if (e.target.value) handleStart(e.target.value);
-                    }}
-                    defaultValue=""
-                  >
-                    <option value="" disabled>Focar em uma matéria específica? (Opcional)</option>
-                    {Array.from(new Set((topics || []).map(t => t.materia_slug))).map(slug => (
-                      <option key={slug} value={slug} className="bg-background text-foreground text-left">
-                        {slug.replace(/-/g, ' ').toUpperCase()}
-                      </option>
-                    ))}
-                  </select>
+                  {topicFilter === 'custom' && (
+                    <div className="flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+                      <div className="flex-1">
+                        <label className="text-xs text-muted-foreground mb-1 block pl-1">Início</label>
+                        <input 
+                          type="date"
+                          value={customStart}
+                          onChange={(e) => setCustomStart(e.target.value)}
+                          className="w-full bg-card border border-border/50 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <label className="text-xs text-muted-foreground mb-1 block pl-1">Fim</label>
+                        <input 
+                          type="date"
+                          value={customEnd}
+                          onChange={(e) => setCustomEnd(e.target.value)}
+                          className="w-full bg-card border border-border/50 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest pl-1">
+                      Focar em uma matéria? (Opcional)
+                    </label>
+                    <select 
+                      className="w-full bg-card border border-border/50 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                      onChange={(e) => setSelectedMateria(e.target.value)}
+                      value={selectedMateria}
+                    >
+                      <option value="">Todas as matérias ({topics?.length || 0} tópicos filtrados)</option>
+                      {Array.from(new Set((topics || []).map(t => t.materia_slug))).map(slug => (
+                        <option key={slug} value={slug}>
+                          {slug.replace(/-/g, ' ').toUpperCase()}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
+
+                <button
+                  onClick={() => handleStart(selectedMateria || undefined)}
+                  disabled={!topics || topics.length === 0}
+                  className="w-full py-4 bg-primary text-primary-foreground rounded-xl font-medium text-lg hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:pointer-events-none"
+                >
+                  {(!topics || topics.length === 0) ? "Nenhum tópico encontrado" : "Gerar Perguntas"}
+                </button>
               </div>
             )}
           </div>

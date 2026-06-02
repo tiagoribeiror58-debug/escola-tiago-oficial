@@ -162,13 +162,53 @@ export function useQuizHistory(filter: 'today' | 'all' = 'today') {
   });
 }
 
-export function useAllCompletedTopics() {
+export type TopicDateFilter = 'all' | 'today' | 'yesterday' | 'last_7_days' | 'last_30_days' | 'custom';
+
+export function useAllCompletedTopics(
+  filter: TopicDateFilter = 'all', 
+  customStart?: Date, 
+  customEnd?: Date
+) {
   return useQuery({
-    queryKey: ['all-completed-topics'],
+    queryKey: ['all-completed-topics', filter, customStart?.toISOString(), customEnd?.toISOString()],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('ementa_concluida')
         .select('materia, topico');
+
+      if (filter === 'today') {
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+        query = query.gte('created_at', startOfDay.toISOString());
+      } else if (filter === 'yesterday') {
+        const startOfYesterday = new Date();
+        startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+        startOfYesterday.setHours(0, 0, 0, 0);
+        
+        const endOfYesterday = new Date();
+        endOfYesterday.setDate(endOfYesterday.getDate() - 1);
+        endOfYesterday.setHours(23, 59, 59, 999);
+        
+        query = query.gte('created_at', startOfYesterday.toISOString()).lte('created_at', endOfYesterday.toISOString());
+      } else if (filter === 'last_7_days') {
+        const startOf7 = new Date();
+        startOf7.setDate(startOf7.getDate() - 7);
+        startOf7.setHours(0, 0, 0, 0);
+        query = query.gte('created_at', startOf7.toISOString());
+      } else if (filter === 'last_30_days') {
+        const startOf30 = new Date();
+        startOf30.setDate(startOf30.getDate() - 30);
+        startOf30.setHours(0, 0, 0, 0);
+        query = query.gte('created_at', startOf30.toISOString());
+      } else if (filter === 'custom' && customStart && customEnd) {
+        const start = new Date(customStart);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(customEnd);
+        end.setHours(23, 59, 59, 999);
+        query = query.gte('created_at', start.toISOString()).lte('created_at', end.toISOString());
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       

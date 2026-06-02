@@ -232,11 +232,28 @@ export default function Biblioteca() {
                               {catEstados.length} matérias
                             </span>
                           </div>
-                          <div className="text-muted-foreground/50 group-hover:text-muted-foreground transition-colors p-1 bg-muted/30 rounded-lg pointer-events-auto cursor-pointer" onClick={(e) => {
-                            e.stopPropagation();
-                            toggleCat(cat.slug);
-                          }}>
-                            {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                          <div className="flex items-center gap-2 pointer-events-auto">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFoco(cat.slug);
+                              }}
+                              className={cn(
+                                "p-1.5 rounded-lg transition-all",
+                                isFocado(cat.slug) 
+                                  ? "text-[hsl(var(--success))] bg-[hsl(var(--success)/0.1)] hover:bg-[hsl(var(--success)/0.2)]" 
+                                  : "text-muted-foreground bg-muted/30 hover:bg-muted/50"
+                              )}
+                              title={isFocado(cat.slug) ? "Remover Hub do Foco" : "Fixar Hub no Foco"}
+                            >
+                              {isFocado(cat.slug) ? <Pin className="w-4 h-4 fill-current" /> : <Pin className="w-4 h-4" />}
+                            </button>
+                            <div className="text-muted-foreground/50 group-hover:text-muted-foreground transition-colors p-1.5 bg-muted/30 hover:bg-muted/50 rounded-lg cursor-pointer" onClick={(e) => {
+                              e.stopPropagation();
+                              toggleCat(cat.slug);
+                            }}>
+                              {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                            </div>
                           </div>
                         </div>
                         {cat.descricao && (
