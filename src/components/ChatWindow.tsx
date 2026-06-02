@@ -841,8 +841,8 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
               messages.length > 0 &&
               messages[messages.length - 1].role === 'assistant';
             const lastMsg = showChipsRow ? messages[messages.length - 1] : null;
-            const match = lastMsg?.content.match(/<chips>([\s\S]*?)<\/chips>/i);
-            const dynamicChips = match ? match[1].split('|').map(c => c.trim()).filter(Boolean) : [];
+            const match = lastMsg?.content.match(/<chips>([\s\S]*?)(?:<\/chips>|$)/i);
+            const dynamicChips = match ? match[1].split('|').map(c => c.trim().replace(/<\/?chips>/gi, '')).filter(Boolean) : [];
             const hasTTS = 'speechSynthesis' in window;
             if (!showChipsRow && !hasTTS) return null;
             return (
