@@ -1,44 +1,73 @@
-import { useState, useEffect } from 'react';
-
-const STORAGE_KEY = '@escola-tiago:materias-fixadas';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 export function useMateriasFixadas() {
-  const [fixadas, setFixadas] = useState<string[]>(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) return JSON.parse(stored);
-      return [];
-    } catch {
-      return [];
+  const queryClient = useQueryClient();
+
+  const { data: fixadas = [] } = useQuery({
+    queryKey: ['materias-fixadas'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
+      const { data, error } = await supabase
+        .from('materias_fixadas')
+        .select('slug');
+
+      if (error) {
+        console.error('Erro ao buscar matérias fixadas:', error);
+        return [];
+      }
+      return data.map(d => d.slug);
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutos
+  });
+
+  const toggleMutation = useMutation({
+    mutationFn: async (slug: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Usuário não autenticado");
+
+      const isFixada = fixadas.includes(slug);
+
+      if (isFixada) {
+        const { error } = await supabase
+          .from('materias_fixadas')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('slug', slug);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('materias_fixadas')
+          .insert({ user_id: user.id, slug });
+        if (error) throw error;
+      }
+    },
+    // Otimização para refletir na UI imediatamente (optimistic update)
+    onMutate: async (slug) => {
+      await queryClient.cancelQueries({ queryKey: ['materias-fixadas'] });
+      const previous = queryClient.getQueryData<string[]>(['materias-fixadas']);
+      
+      queryClient.setQueryData<string[]>(['materias-fixadas'], old => {
+        if (!old) return [slug];
+        return old.includes(slug) ? old.filter(s => s !== slug) : [...old, slug];
+      });
+
+      return { previous };
+    },
+    onError: (err, newTodo, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(['materias-fixadas'], context.previous);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['materias-fixadas'] });
     }
   });
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(fixadas));
-      window.dispatchEvent(new Event('materias-fixadas-updated'));
-    } catch (e) {
-      console.error('Falha ao salvar as matérias fixadas', e);
-    }
-  }, [fixadas]);
-
-  useEffect(() => {
-    const handleSync = () => {
-      try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) setFixadas(JSON.parse(stored));
-      } catch {}
-    };
-    window.addEventListener('materias-fixadas-updated', handleSync);
-    return () => window.removeEventListener('materias-fixadas-updated', handleSync);
-  }, []);
-
   const toggleFixada = (slug: string) => {
-    setFixadas(prev => 
-      prev.includes(slug) 
-        ? prev.filter(s => s !== slug) 
-        : [...prev, slug]
-    );
+    toggleMutation.mutate(slug);
   };
 
   const isFixada = (slug: string) => fixadas.includes(slug);
