@@ -56,40 +56,6 @@ Abordagem obrigatória:
           ]
         },
         {
-          slug: 'logica',
-          nome: 'Lógica',
-          emoji: '⊢',
-          parent: 'mente-cognicao',
-          whyStart: 'Com a metacognição ativa, você precisa do motor do raciocínio rigoroso. Lógica é o filtro que separa argumentos válidos dos inválidos.',
-          descricao: 'Argumentação, falácias e pensamento rigoroso sem viés.',
-          contexto: `Foco: estrutura lógica de argumentos — dedução, indução, falácias.
-
-Abordagem obrigatória:
-- Explique a estrutura formal do conceito antes de apresentar exemplos.
-- Para falácias: explique por que a estrutura falha logicamente antes de nomear.
-- Problemas práticos só depois que o mecanismo lógico estiver estabelecido.`,
-          ementa: [
-            'Proposições e Valores Verdade',
-            'Operadores Lógicos (E, OU, NÃO, SE)',
-            'Argumentos Dedutivos vs Indutivos',
-            'Falácias Formais e Informais',
-            'Viés de Sobrevivência e Causalidade vs Correlação',
-            'Modelagem de Problemas Complexos',
-            'Lógica de Predicados: Quantificadores (Todo, Algum)',
-            'Silogismos: Validade vs Solidez',
-            'Abdução: Raciocínio para a Melhor Explicação',
-            'Pensamento Sistêmico e Feedback Loops',
-            'Paradoxos Clássicos e o que Eles Ensinam',
-            'Teoria dos Jogos: Decisões Interdependentes',
-            'Análise de Custo-Benefício e Decisão Racional',
-            'Raciocínio Contrafactual (E Se?)',
-            'Limites do Raciocínio Formal: O Teorema de Gödel',
-            'Lógica Bayesiana: Atualizando Crenças com Evidências',
-            'Argumentação Probabilística vs Determinística',
-            'Viés Narrativo: Quando Histórias Enganam a Lógica'
-          ]
-        },
-        {
           slug: 'psicologia',
           nome: 'Psicologia',
           emoji: '🪞',

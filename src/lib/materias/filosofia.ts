@@ -48,16 +48,26 @@ Abordagem obrigatória:
       emoji: '⚖️',
       isCategory: false,
       parent: 'filosofia-hub',
-      whyStart: 'Se você não sabe identificar um argumento ruim, vai ser manipulado por qualquer pessoa que fale com confiança.',
-      descricao: 'Lógica formal e informal para blindar seu pensamento contra enganos.',
-      contexto: `Foco: lógica como arma de defesa intelectual. O aluno precisa sair conseguindo desmontar argumentos ruins em tempo real.
+      whyStart: 'Se você não sabe identificar um argumento ruim, vai ser manipulado por qualquer pessoa que fale com confiança. A lógica é o filtro que separa o válido do inválido.',
+      descricao: 'Lógica formal, informal, vieses e raciocínio estruturado para blindar seu pensamento contra enganos.',
+      contexto: `Foco: estrutura lógica de argumentos e defesa intelectual. O aluno precisa sair conseguindo desmontar falácias em tempo real e estruturar modelos válidos.
 
 Abordagem obrigatória:
+- Explique a estrutura formal do conceito antes de apresentar os exemplos práticos.
 - Todo conceito precisa de um exemplo de argumento real (política, mídia, vendas) onde a falácia aparece.
-- Não ensine lógica como matemática abstrata. Ensine como detecção de bullshit.`,
+- Não ensine lógica apenas como matemática abstrata. Ensine como detecção de bullshit e modelagem de problemas.`,
       ementa: [
+        'Proposições e Valores Verdade',
+        'Operadores Lógicos (E, OU, NÃO, SE)',
         'Anatomia de um Argumento: Premissas, Conclusão e Validade',
         'Dedução vs Indução vs Abdução: Três Formas de Raciocinar',
+        'Modus Ponens, Modus Tollens e Silogismos Básicos',
+        'Silogismos: Validade vs Solidez',
+        'Tabelas-Verdade: O Esqueleto da Lógica Proposicional',
+        'Lógica de Predicados: Quantificadores (Todo, Algum)',
+        'Lógica Modal Básica: Necessidade vs Possibilidade',
+        'Limites do Raciocínio Formal: O Teorema de Gödel',
+        'Falácias Formais e Informais',
         'Falácia do Espantalho: Atacar Uma Versão Distorcida do Argumento',
         'Falácia Ad Hominem: Atacar a Pessoa em Vez da Ideia',
         'Apelo à Emoção: Quando o Sentimento Substitui a Evidência',
@@ -71,9 +81,16 @@ Abordagem obrigatória:
         'Tu Quoque: "Você Também Faz" Não É Defesa',
         'Falácia do Jogador (Gambler\'s Fallacy): Probabilidades Não Têm Memória',
         'Argumento da Incredulidade Pessoal: "Não Consigo Imaginar, Logo é Falso"',
-        'Modus Ponens, Modus Tollens e Silogismos Básicos',
-        'Tabelas-Verdade: O Esqueleto da Lógica Proposicional',
-        'Lógica Modal Básica: Necessidade vs Possibilidade'
+        'Viés de Sobrevivência e Causalidade vs Correlação',
+        'Viés Narrativo: Quando Histórias Enganam a Lógica',
+        'Modelagem de Problemas Complexos',
+        'Pensamento Sistêmico e Feedback Loops',
+        'Paradoxos Clássicos e o que Eles Ensinam',
+        'Teoria dos Jogos: Decisões Interdependentes',
+        'Análise de Custo-Benefício e Decisão Racional',
+        'Raciocínio Contrafactual (E Se?)',
+        'Lógica Bayesiana: Atualizando Crenças com Evidências',
+        'Argumentação Probabilística vs Determinística'
       ]
     },
     {
