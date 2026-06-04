@@ -122,7 +122,7 @@ Abordagem obrigatória:
             'Ladeira Escorregadia (Slippery Slope): Prever Catástrofe Sem Justificativa',
             'Falácia da Composição e da Divisão: Parte ≠ Todo',
             'Petição de Princípio (Raciocínio Circular): Concluir o Que Pressupôs',
-            'Falácia do Jogador (Gambler\\'s Fallacy): Probabilidades Não Têm Memória',
+            "Falácia do Jogador (Gambler's Fallacy): Probabilidades Não Têm Memória",
             'Argumento da Incredulidade Pessoal: "Não Consigo Imaginar, Logo é Falso"'
           ]
         },
