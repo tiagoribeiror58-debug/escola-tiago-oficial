@@ -16,13 +16,12 @@ export function MetaDiariaCard() {
 
   const topicosEstudadosHoje = useMemo(() => {
     if (!sessoes) return 0;
-    const getLocalIso = (date: Date) => {
-      return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0];
-    };
-    const hojeIso = getLocalIso(new Date());
+    const hojeData = new Date();
+    const hojeIso = `${hojeData.getFullYear()}-${String(hojeData.getMonth() + 1).padStart(2, '0')}-${String(hojeData.getDate()).padStart(2, '0')}`;
 
     const sessoesHoje = sessoes.filter(s => {
-      const sessaoIso = getLocalIso(new Date(s.data));
+      // Pega apenas a parte YYYY-MM-DD da string para evitar bugs de fuso horário
+      const sessaoIso = s.data.split('T')[0];
       return sessaoIso === hojeIso;
     });
 
