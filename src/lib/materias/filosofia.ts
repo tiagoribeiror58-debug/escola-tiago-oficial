@@ -22,24 +22,56 @@ Abordagem obrigatória:
 - Conecte cada conceito a uma decisão real que alguém tomaria melhor sabendo isso.
 - Sem jargão acadêmico desnecessário. Filosofia é ferramenta, não decoração.`,
       ementa: [
-        'O que é Conhecimento? (Crença Verdadeira Justificada e o Problema de Gettier)',
-        'Empirismo vs Racionalismo: De Onde Vem o Que Você Sabe?',
-        'O Problema da Indução de Hume: Por Que o Passado Não Garante o Futuro',
-        'Falseabilidade de Karl Popper: O Que Faz Uma Ideia Ser Científica',
-        'Paradigmas e Revoluções Científicas (Thomas Kuhn)',
-        'Viés de Confirmação Epistêmico: Você Só Vê o Que Já Acredita',
-        'O Problema da Demarcação: Ciência vs Pseudociência',
-        'Navalha de Ockham: A Explicação Mais Simples é Provavelmente a Certa',
-        'Bayesianismo: Atualizar Crenças com Nova Evidência',
-        'A Diferença entre Correlação e Causalidade (na Prática)',
+        // NÍVEL 1 — FUNDAMENTOS
+        'O que é Epistemologia',
+        'A diferença entre crença, opinião e conhecimento',
+        'Fontes do conhecimento: sentidos, razão, intuição, autoridade',
+        'O problema do ceticismo (posso estar errado sobre tudo?)',
         'Ceticismo Pirrônico: Suspender o Julgamento Quando a Evidência é Fraca',
+        'Verdade: o que significa algo ser verdadeiro',
+        'O Problema do Conhecimento Tácito (Michael Polanyi)',
+        'O Mapa Não é o Território (Korzybski e a Semântica Geral)',
+
+        // NÍVEL 2 — CORRENTES CLÁSSICAS
+        'Racionalismo — Descartes, Leibniz, Spinoza',
+        'Empirismo — Locke, Hume, Berkeley',
+        'Empirismo vs Racionalismo: De Onde Vem o Que Você Sabe?',
+        'Kant — a síntese entre razão e experiência',
+        'O problema da indução (Hume) - Por Que o Passado Não Garante o Futuro',
+        'Ceticismo clássico vs. ceticismo moderno',
+
+        // NÍVEL 3 — EPISTEMOLOGIA CONTEMPORÂNEA
+        'O que é Conhecimento? (Crença Verdadeira Justificada e o Problema de Gettier)',
+        'Fundacionalismo vs. Coerentismo vs. Confiabilismo',
+        'Epistemologia social — conhecimento coletivo e testemunho',
+        'Epistemologia do Testemunho: Quando Acreditar nos Outros',
+        'Epistemologia Reformada (Plantinga)',
+        'Naturalismo epistemológico (Quine)',
+
+        // NÍVEL 4 — FILOSOFIA DA CIÊNCIA
+        'O método científico e seus limites',
+        'O Problema da Demarcação: Ciência vs Pseudociência',
+        'Falsificacionismo (Popper): O Que Faz Uma Ideia Ser Científica',
+        'Paradigmas e Revoluções Científicas (Thomas Kuhn)',
+        'Programa de pesquisa — Lakatos',
+        'Anarquismo epistemológico — Feyerabend',
+        'Realismo vs. Antirrealismo científico',
+        'Navalha de Ockham: A Explicação Mais Simples é Provavelmente a Certa',
+        'A Diferença entre Correlação e Causalidade (na Prática)',
+
+        // NÍVEL 5 — AVANÇADO E APLICAÇÕES PRÁTICAS
+        'Epistemologia Virtue (Sosa, Zagzebski)',
+        'Conhecimento a priori vs. a posteriori — debates atuais',
+        'Epistemologia feminista e standpoint theory',
+        'Fake news, desinformação e epistemologia aplicada',
         'Argumento de Autoridade: Quando Confiar e Quando Desconfiar',
+        'Viés de Confirmação Epistêmico: Você Só Vê o Que Já Acredita',
         'O Efeito Dunning-Kruger e a Cegueira do Especialista',
         'Metacognição Epistêmica: Saber o Que Você Não Sabe',
-        'Epistemologia do Testemunho: Quando Acreditar nos Outros',
-        'O Problema do Conhecimento Tácito (Michael Polanyi)',
         'Heurísticas de Julgamento (Kahneman): Atalhos Que Enganam',
-        'O Mapa Não é o Território (Korzybski e a Semântica Geral)'
+        'Bayesianismo: Atualizar Crenças com Nova Evidência',
+        'IA e conhecimento — máquinas podem saber?',
+        'Metaepistemologia — podemos conhecer os limites do conhecimento?'
       ]
     },
     {
