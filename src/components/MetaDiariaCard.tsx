@@ -14,8 +14,8 @@ export function MetaDiariaCard() {
   const { data: sessoes } = useSessoes();
   const metaDiaria = 3;
 
-  const topicosEstudadosHoje = useMemo(() => {
-    if (!sessoes) return 0;
+  const { topicosEstudadosHoje, listaTopicos } = useMemo(() => {
+    if (!sessoes) return { topicosEstudadosHoje: 0, listaTopicos: [] };
     const hojeData = new Date();
     const hojeIso = `${hojeData.getFullYear()}-${String(hojeData.getMonth() + 1).padStart(2, '0')}-${String(hojeData.getDate()).padStart(2, '0')}`;
 
@@ -25,8 +25,18 @@ export function MetaDiariaCard() {
       return sessaoIso === hojeIso;
     });
 
-    const topicosUnicos = new Set(sessoesHoje.map(s => `${s.materia}-${s.topico}`));
-    return topicosUnicos.size;
+    const topicosUnicosMap = new Map();
+    sessoesHoje.forEach(s => {
+      const key = `${s.materia}-${s.topico}`;
+      if (!topicosUnicosMap.has(key)) {
+        topicosUnicosMap.set(key, s);
+      }
+    });
+
+    return {
+      topicosEstudadosHoje: topicosUnicosMap.size,
+      listaTopicos: Array.from(topicosUnicosMap.values())
+    };
   }, [sessoes]);
 
   const progresso = Math.min((topicosEstudadosHoje / metaDiaria) * 100, 100);
@@ -101,6 +111,26 @@ export function MetaDiariaCard() {
               A verdadeira recompensa não é um troféu virtual ou pontos numa tela, mas sim a <strong>construção do seu próprio hábito e a clareza do seu conhecimento</strong>. Cada tópico concluído é um degrau a mais na sua evolução pessoal, e isso ninguém tira de você.
             </p>
           </div>
+
+          {listaTopicos.length > 0 && (
+            <div className="mt-6 pt-6 border-t border-border/50">
+              <h4 className="font-medium text-foreground mb-3 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                Tópicos estudados hoje
+              </h4>
+              <ul className="space-y-2">
+                {listaTopicos.map((s: any) => (
+                  <li key={`${s.materia}-${s.topico}`} className="text-xs flex items-start gap-2 bg-muted/20 p-2.5 rounded-lg border border-border/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    <div>
+                      <span className="text-muted-foreground uppercase text-[10px] font-semibold block mb-0.5">{s.materia.replace(/-/g, ' ')}</span>
+                      <span className="text-foreground leading-tight block">{s.topico}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
