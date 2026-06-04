@@ -57,19 +57,15 @@ Abordagem obrigatória:
 - Todo conceito precisa de um exemplo de argumento real (política, mídia, vendas) onde a falácia aparece.
 - Não ensine lógica apenas como matemática abstrata. Ensine como detecção de bullshit e modelagem de problemas.`,
       ementa: [
-        'Proposições e Valores Verdade',
-        'Operadores Lógicos (E, OU, NÃO, SE)',
-        'Anatomia de um Argumento: Premissas, Conclusão e Validade',
+        // NÍVEL 1 — FUNDAMENTOS
+        'O que é Lógica e para que serve',
+        'Anatomia de um Argumento: Premissas, Conclusão e Validade vs Verdade',
         'Dedução vs Indução vs Abdução: Três Formas de Raciocinar',
-        'Modus Ponens, Modus Tollens e Silogismos Básicos',
-        'Silogismos: Validade vs Solidez',
-        'Tabelas-Verdade: O Esqueleto da Lógica Proposicional',
-        'Lógica de Predicados: Quantificadores (Todo, Algum)',
-        'Lógica Modal Básica: Necessidade vs Possibilidade',
-        'Limites do Raciocínio Formal: O Teorema de Gödel',
+        'Pensamento Crítico Básico',
         'Falácias Formais e Informais',
         'Falácia do Espantalho: Atacar Uma Versão Distorcida do Argumento',
         'Falácia Ad Hominem: Atacar a Pessoa em Vez da Ideia',
+        'Falácia de Apelo à Autoridade',
         'Apelo à Emoção: Quando o Sentimento Substitui a Evidência',
         'Falso Dilema: Criar Duas Opções Quando Existem Mais',
         'Ladeira Escorregadia (Slippery Slope): Prever Catástrofe Sem Justificativa',
@@ -83,9 +79,46 @@ Abordagem obrigatória:
         'Argumento da Incredulidade Pessoal: "Não Consigo Imaginar, Logo é Falso"',
         'Viés de Sobrevivência e Causalidade vs Correlação',
         'Viés Narrativo: Quando Histórias Enganam a Lógica',
+
+        // NÍVEL 2 — LÓGICA CLÁSSICA
+        'Lógica Aristotélica — silogismos',
+        'Modus Ponens, Modus Tollens e Silogismos Básicos',
+        'Silogismos: Validade vs Solidez',
+        'Lógica Proposicional — conectivos (e, ou, não, se...então)',
+        'Proposições e Valores Verdade',
+        'Operadores Lógicos (E, OU, NÃO, SE)',
+        'Tabelas-Verdade: O Esqueleto da Lógica Proposicional',
+        'Equivalências lógicas',
+        'Argumentos válidos e inválidos formalmente',
+
+        // NÍVEL 3 — LÓGICA DE PREDICADOS
+        'Lógica de Predicados: Quantificadores (Todo, Algum, Nenhum)',
+        'Predicados e variáveis',
+        'Formalização de argumentos do cotidiano',
+        'Introdução às provas formais',
+
+        // NÍVEL 4 — LÓGICAS NÃO-CLÁSSICAS
+        'Lógica Modal Básica: Necessidade vs Possibilidade',
+        'Lógica Deôntica — obrigação e permissão',
+        'Lógica Paraconsistente — contradições sem explosão',
+        'Lógica Fuzzy — verdades graduais (nem 0 nem 1)',
+        'Lógica Temporal',
+
+        // NÍVEL 5 — LÓGICA MATEMÁTICA E METAMATEMÁTICA
+        'Teoria dos Conjuntos básica',
+        'Indução matemática',
+        'Limites do Raciocínio Formal: Teoremas de Completude e Incompletude (Gödel)',
+        'Decidibilidade e computabilidade — Turing',
+        'Lógica e linguagem formal',
+
+        // NÍVEL 6 — APLICAÇÕES AVANÇADAS
+        'Lógica e Inteligência Artificial',
+        'Lógica Jurídica e argumentação',
+        'Lógica e Linguística — semântica formal',
+        'Lógica Epistêmica — raciocínio sobre conhecimento',
+        'Paradoxos Clássicos (Mentiroso, Sorites, Russell) e o que Eles Ensinam',
         'Modelagem de Problemas Complexos',
         'Pensamento Sistêmico e Feedback Loops',
-        'Paradoxos Clássicos e o que Eles Ensinam',
         'Teoria dos Jogos: Decisões Interdependentes',
         'Análise de Custo-Benefício e Decisão Racional',
         'Raciocínio Contrafactual (E Se?)',
