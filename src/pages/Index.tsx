@@ -17,6 +17,7 @@ import { Switch } from '@/components/ui/switch';
 import { useOrdemMaterias } from '@/hooks/useOrdemMaterias';
 import { DailyTopicCard } from '@/components/DailyTopicCard';
 import { RecomendacaoCard } from '@/components/RecomendacaoCard';
+import { MetaDiariaCard } from '@/components/MetaDiariaCard';
 import { useProximoPassoRecomendado } from '@/hooks/useRecomendacao';
 import {
   Dialog,
@@ -381,6 +382,9 @@ export default function Index() {
         <div className="sm:hidden flex items-center gap-2 overflow-x-auto pb-4 mb-4 -mx-4 px-4 scrollbar-none">
           {renderBadges()}
         </div>
+
+        {/* Meta Diária Card */}
+        <MetaDiariaCard />
 
         {/* Recomendação Foco Inteligente */}
         {foco.length > 0 && recomendacao.estado && !searchQuery && (
