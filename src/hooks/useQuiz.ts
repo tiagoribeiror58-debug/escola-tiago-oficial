@@ -162,6 +162,28 @@ export function useQuizHistory(filter: 'today' | 'all' = 'today') {
   });
 }
 
+export function useWrongTopics() {
+  return useQuery({
+    queryKey: ['wrong-topics'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return [];
+
+      const { data, error } = await supabase
+        .from('quiz_answers')
+        .select('topico')
+        .eq('user_id', user.id)
+        .eq('status', 'errado');
+
+      if (error) throw error;
+      
+      // Get unique topics
+      const uniqueTopics = Array.from(new Set(data.map(d => d.topico)));
+      return uniqueTopics;
+    }
+  });
+}
+
 export type TopicDateFilter = 'all' | 'today' | 'yesterday' | 'last_7_days' | 'last_30_days' | 'custom';
 
 export function useAllCompletedTopics(

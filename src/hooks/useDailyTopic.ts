@@ -71,8 +71,10 @@ export function useDailyTopic(filterMateriaSlug?: string) {
     }
 
     if (filteredUncompleted.length > 0) {
-      const randomIdx = Math.floor(Math.random() * filteredUncompleted.length);
-      setDailyTopic(filteredUncompleted[randomIdx]);
+      // Pega o tópico sequencial mais fácil baseado no refreshCount
+      // Se refreshCount passar do limite, volta ao começo (módulo)
+      const index = refreshCount % filteredUncompleted.length;
+      setDailyTopic(filteredUncompleted[index]);
     } else {
       setDailyTopic(null);
     }

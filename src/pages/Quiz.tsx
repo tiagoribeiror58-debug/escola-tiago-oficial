@@ -10,6 +10,7 @@ import {
   useCompleteQuizSession, 
   useTodayQuizCount,
   useQuizHistory,
+  useWrongTopics,
   TopicDateFilter
 } from '@/hooks/useQuiz';
 import { supabase } from '@/integrations/supabase/client';
@@ -43,6 +44,7 @@ export default function Quiz() {
   const [customStart, setCustomStart] = useState<string>('');
   const [customEnd, setCustomEnd] = useState<string>('');
   const [selectedMateria, setSelectedMateria] = useState<string>('');
+  const [quizMode, setQuizMode] = useState<'all' | 'wrong'>('all');
   
   const { data: settings, isLoading: loadingSettings } = useUserSettings();
   const { data: topics, isLoading: loadingTopics } = useAllCompletedTopics(
@@ -52,13 +54,17 @@ export default function Quiz() {
   );
   const { data: todayCount, isLoading: loadingCount } = useTodayQuizCount();
   const { data: dbHistory, isLoading: loadingHistory } = useQuizHistory(historyFilter);
+  const { data: wrongTopicsData } = useWrongTopics();
 
   const createSession = useCreateQuizSession();
   const saveAnswer = useSaveQuizAnswer();
   const completeSession = useCompleteQuizSession();
 
-  const limit = settings?.daily_quiz_limit || 5;
-  const remaining = Math.max(0, limit - (todayCount || 0));
+  // Quantidade dinâmica baseada no número de tópicos do período selecionado
+  const filteredTopicsCount = topics?.length || 0;
+  let dynamicQuestionLimit = 3;
+  if (filteredTopicsCount > 3 && filteredTopicsCount <= 10) dynamicQuestionLimit = 5;
+  if (filteredTopicsCount > 10) dynamicQuestionLimit = 7;
 
   const hasStartedRef = useRef(false);
 
@@ -83,7 +89,7 @@ export default function Quiz() {
   const handleStart = async (selectedMateriaSlug?: string) => {
     try {
       setPhase('generating');
-      const limitForSession = Math.min(remaining, 5); // Max 5 per session
+      const limitForSession = dynamicQuestionLimit;
       
       const session = await createSession.mutateAsync(limitForSession);
       setSessionId(session.id);
@@ -98,6 +104,17 @@ export default function Quiz() {
           sourceTopics = filtered;
         } else {
           toast.error("Nenhum tópico concluído para essa matéria.");
+          setPhase('idle');
+          return;
+        }
+      }
+
+      // Filtra apenas tópicos errados se o modo for ativado
+      if (quizMode === 'wrong') {
+        const wrongSet = new Set(wrongTopicsData || []);
+        sourceTopics = sourceTopics.filter(t => wrongSet.has(t.topico));
+        if (sourceTopics.length === 0) {
+          toast.error("Nenhum tópico com erro no histórico para este filtro.");
           setPhase('idle');
           return;
         }
@@ -240,19 +257,11 @@ export default function Quiz() {
                   Explorar Biblioteca
                 </button>
               </div>
-            ) : remaining <= 0 ? (
-              <div className="flex flex-col items-center bg-muted/30 border border-border/50 p-8 rounded-3xl">
-                <CheckCircle2 className="w-12 h-12 text-green-500 mb-4" />
-                <h2 className="text-xl font-bold mb-2">Meta Diária Atingida</h2>
-                <p className="text-muted-foreground text-sm">
-                  Seu cérebro precisa de descanso para consolidar a memória. Você já respondeu {todayCount} perguntas hoje. Volte amanhã!
-                </p>
-              </div>
             ) : (
               <div className="flex flex-col items-center bg-card/50 border border-primary/20 shadow-[0_0_30px_rgba(var(--primary),0.1)] p-8 rounded-3xl">
                 <h2 className="text-2xl font-bold mb-2">Revisão Pendente</h2>
                 <p className="text-muted-foreground text-sm mb-8 text-center">
-                  Você tem <strong className="text-primary">{remaining} perguntas</strong> disponíveis para revisar hoje. O seu histórico atual está logo abaixo.
+                  Baseado no seu volume de estudos neste período, o sistema gerará <strong className="text-primary">{dynamicQuestionLimit} perguntas</strong>.
                 </p>
                 <div className="w-full mb-6 space-y-4 text-left">
                   <div className="flex flex-col gap-2">
@@ -312,6 +321,26 @@ export default function Quiz() {
                         </option>
                       ))}
                     </select>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest pl-1">
+                      Modo do Quiz
+                    </label>
+                    <div className="flex bg-muted/50 p-1 rounded-xl">
+                      <button 
+                        onClick={() => setQuizMode('all')} 
+                        className={cn("flex-1 py-2 text-sm font-medium rounded-lg transition-all", quizMode === 'all' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground")}
+                      >
+                        Todos os Tópicos
+                      </button>
+                      <button 
+                        onClick={() => setQuizMode('wrong')} 
+                        className={cn("flex-1 py-2 text-sm font-medium rounded-lg transition-all", quizMode === 'wrong' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground")}
+                      >
+                        Focar nas Erradas
+                      </button>
+                    </div>
                   </div>
                 </div>
 
