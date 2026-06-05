@@ -45,7 +45,7 @@ export function DailyTopicCard() {
     <div className="flex flex-col gap-1 w-full">
       {availableMaterias && availableMaterias.length > 0 && (
         <div className="flex items-center gap-2 mb-2 w-full">
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>
               <button
                 role="combobox"
