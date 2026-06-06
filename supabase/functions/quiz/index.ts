@@ -37,7 +37,7 @@ NÃO retorne markdown, nem \`\`\`json, nem explicações. Apenas o array JSON pu
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "deepseek-v4-flash",
+          model: "deepseek-chat",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.7,
         }),
@@ -53,10 +53,12 @@ NÃO retorne markdown, nem \`\`\`json, nem explicações. Apenas o array JSON pu
 
     if (action === "evaluate") {
       const regrasFeedback = forceAnswer 
-        ? `REGRAS PARA O FEEDBACK: O aluno desistiu de responder. Ignore a resposta do aluno e apenas forneça a resposta correta de forma clara, direta e didática.`
+        ? `REGRAS PARA O FEEDBACK: O aluno desistiu/pediu a resposta. Forneça uma explicação profunda, detalhada e altamente didática (Técnica Feynman). Descreva os mecanismos, o "porquê" das coisas, e conecte os conceitos de forma lógica em um parágrafo rico e claro.`
         : `REGRAS PARA O FEEDBACK:
-1. Se o status for "correto": Parabenize rapidamente e complemente a resposta se necessário.
-2. Se o status for "errado" ou "parcial": VOCÊ ESTÁ ESTRITAMENTE PROIBIDO DE REVELAR A RESPOSTA CORRETA. Atue como um tutor socrático. Aponte o que faz sentido (se houver), e dê uma dica sutil ou faça uma pergunta guiada para que o aluno chegue à conclusão sozinho na próxima tentativa. Crie atrito cognitivo.`;
+1. Em TODAS as suas intervenções, aja como um mentor brilhante. Nunca dê respostas curtas ou superficiais. Use a Técnica Feynman para explicar.
+2. Se o status for "correto": Confirme o acerto e expanda o conceito com uma explicação rica, mostrando a lógica profunda por trás do assunto.
+3. Se o status for "errado" ou "parcial": Explique os mecanismos e a lógica real por trás da parte que o aluno errou de forma detalhada e didática (em um parágrafo robusto, como faria um grande professor). Ensine o aluno. Após a explicação profunda, finalize com uma pergunta instigante ou dica para que ele aplique a lógica na próxima tentativa. Nunca diga apenas "continue revisando".`;
+
 
       const prompt = `O aluno está respondendo a uma pergunta de revisão de Active Recall.
 Tópico: ${topico}
@@ -80,7 +82,7 @@ NÃO retorne markdown, nem \`\`\`json. Apenas o JSON puro, sem formatação extr
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "deepseek-v4-flash",
+          model: "deepseek-chat",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.3,
         }),
