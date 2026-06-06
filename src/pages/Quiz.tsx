@@ -448,15 +448,18 @@ export default function Quiz() {
 
               {currentFeedback && (
                 <div className={cn(
-                  "mb-4 p-4 rounded-xl border animate-in fade-in slide-in-from-bottom-2",
-                  currentFeedback.status === 'parcial' ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-800 dark:text-indigo-200" :
-                  currentFeedback.status === 'errado' ? "bg-red-500/10 border-red-500/20 text-red-800 dark:text-red-200" : ""
+                  "mb-6 p-5 rounded-2xl border backdrop-blur-md animate-in fade-in slide-in-from-bottom-2",
+                  currentFeedback.status === 'parcial' ? "bg-indigo-500/5 border-indigo-500/20 shadow-[0_0_20px_rgba(99,102,241,0.05)]" :
+                  currentFeedback.status === 'errado' ? "bg-red-500/5 border-red-500/20 shadow-[0_0_20px_rgba(239,68,68,0.05)]" : ""
                 )}>
-                  <div className="flex items-center gap-2 mb-2 font-semibold">
-                    {currentFeedback.status === 'parcial' ? <Sparkles className="w-5 h-5 text-indigo-500" /> : <AlertCircle className="w-5 h-5 text-red-500" />}
-                    <span className="capitalize">{currentFeedback.status === 'parcial' ? 'Dica do Mentor' : 'Ainda não é isso'}</span>
+                  <div className={cn(
+                    "flex items-center gap-2 mb-2.5 font-semibold",
+                    currentFeedback.status === 'parcial' ? "text-indigo-600 dark:text-indigo-400" : "text-red-600 dark:text-red-400"
+                  )}>
+                    {currentFeedback.status === 'parcial' ? <Sparkles className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+                    <span className="tracking-wide">{currentFeedback.status === 'parcial' ? 'Dica do Mentor' : 'Ainda não é isso'}</span>
                   </div>
-                  <p className="text-sm leading-relaxed">{currentFeedback.feedback}</p>
+                  <p className="text-[15px] leading-relaxed text-foreground/90">{currentFeedback.feedback}</p>
                 </div>
               )}
 
