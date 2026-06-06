@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { action, materiaSlug, completedTopics, n, questionText, userAnswer, topico } = await req.json();
+    const { action, materiaSlug, completedTopics, n, questionText, userAnswer, topico, forceAnswer } = await req.json();
 
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
     if (!DEEPSEEK_API_KEY) {
@@ -52,6 +52,12 @@ NÃO retorne markdown, nem \`\`\`json, nem explicações. Apenas o array JSON pu
     }
 
     if (action === "evaluate") {
+      const regrasFeedback = forceAnswer 
+        ? `REGRAS PARA O FEEDBACK: O aluno desistiu de responder. Ignore a resposta do aluno e apenas forneça a resposta correta de forma clara, direta e didática.`
+        : `REGRAS PARA O FEEDBACK:
+1. Se o status for "correto": Parabenize rapidamente e complemente a resposta se necessário.
+2. Se o status for "errado" ou "parcial": VOCÊ ESTÁ ESTRITAMENTE PROIBIDO DE REVELAR A RESPOSTA CORRETA. Atue como um tutor socrático. Aponte o que faz sentido (se houver), e dê uma dica sutil ou faça uma pergunta guiada para que o aluno chegue à conclusão sozinho na próxima tentativa. Crie atrito cognitivo.`;
+
       const prompt = `O aluno está respondendo a uma pergunta de revisão de Active Recall.
 Tópico: ${topico}
 Pergunta: ${questionText}
@@ -60,8 +66,11 @@ Resposta do aluno: ${userAnswer}
 Avalie a resposta do aluno e retorne um JSON puro seguindo este objeto:
 {
   "status": "correto" | "errado" | "parcial",
-  "feedback": "Um feedback curto, motivador e direto, complementando a resposta se necessário ou corrigindo o erro de forma didática."
+  "feedback": "..."
 }
+
+${regrasFeedback}
+
 NÃO retorne markdown, nem \`\`\`json. Apenas o JSON puro, sem formatação extra.`;
 
       const resp = await fetch("https://api.deepseek.com/chat/completions", {

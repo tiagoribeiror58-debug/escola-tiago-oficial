@@ -45,6 +45,8 @@ export default function Quiz() {
   const [customEnd, setCustomEnd] = useState<string>('');
   const [selectedMateria, setSelectedMateria] = useState<string>('');
   const [quizMode, setQuizMode] = useState<'all' | 'wrong'>('all');
+  const [currentFeedback, setCurrentFeedback] = useState<{ status: string; feedback: string } | null>(null);
+  const [giveUpUsed, setGiveUpUsed] = useState(false);
   
   const { data: settings, isLoading: loadingSettings } = useUserSettings();
   const { data: topics, isLoading: loadingTopics } = useAllCompletedTopics(
@@ -153,6 +155,72 @@ export default function Quiz() {
     }
   };
 
+  const saveAndAdvance = async (status: string, feedback: string, finalAnswer: string) => {
+    const currentQ = questions[currentIndex];
+    if (sessionId) {
+      await saveAnswer.mutateAsync({
+        session_id: sessionId,
+        materia_slug: currentQ.materiaSlug,
+        topico: currentQ.topico,
+        question_text: currentQ.text,
+        user_answer: finalAnswer,
+        status,
+        feedback
+      });
+    }
+
+    setHistory(prev => [
+      {
+        question: currentQ,
+        userAnswer: finalAnswer,
+        status,
+        feedback
+      },
+      ...prev
+    ]);
+
+    setAnswer('');
+    setCurrentFeedback(null);
+    setGiveUpUsed(false);
+
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex(prev => prev + 1);
+      setPhase('active');
+    } else {
+      if (sessionId) {
+        await completeSession.mutateAsync(sessionId);
+      }
+      setPhase('finished');
+    }
+  };
+
+  const handleGiveUp = async () => {
+    try {
+      setPhase('evaluating');
+      const currentQ = questions[currentIndex];
+
+      const { data, error } = await supabase.functions.invoke('quiz', {
+        body: {
+          action: 'evaluate',
+          topico: currentQ.topico,
+          questionText: currentQ.text,
+          userAnswer: "O usuário desistiu de tentar responder e pediu a resposta.",
+          forceAnswer: true
+        }
+      });
+
+      if (error) throw error;
+      const evalData = data as { status: string; feedback: string };
+      
+      setGiveUpUsed(true);
+      await saveAndAdvance('errado', evalData.feedback, answer || "Desistiu");
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao pular resposta.');
+      setPhase('active');
+    }
+  };
+
   const handleSubmitAnswer = async () => {
     if (!answer.trim()) return;
     
@@ -172,41 +240,12 @@ export default function Quiz() {
       if (error) throw error;
 
       const evalData = data as { status: string; feedback: string };
-      
-      // Save to database
-      if (sessionId) {
-        await saveAnswer.mutateAsync({
-          session_id: sessionId,
-          materia_slug: currentQ.materiaSlug,
-          topico: currentQ.topico,
-          question_text: currentQ.text,
-          user_answer: answer,
-          status: evalData.status,
-          feedback: evalData.feedback
-        });
-      }
+      setCurrentFeedback(evalData);
 
-      // Add to history
-      setHistory(prev => [
-        {
-          question: currentQ,
-          userAnswer: answer,
-          status: evalData.status,
-          feedback: evalData.feedback
-        },
-        ...prev
-      ]);
-
-      // Move to next question automatically
-      setAnswer('');
-      if (currentIndex < questions.length - 1) {
-        setCurrentIndex(prev => prev + 1);
-        setPhase('active');
+      if (evalData.status === 'correto') {
+        await saveAndAdvance(evalData.status, evalData.feedback, answer);
       } else {
-        if (sessionId) {
-          await completeSession.mutateAsync(sessionId);
-        }
-        setPhase('finished');
+        setPhase('active');
       }
 
     } catch (error) {
@@ -406,16 +445,42 @@ export default function Quiz() {
                   }
                 }}
               />
+
+              {currentFeedback && (
+                <div className={cn(
+                  "mb-4 p-4 rounded-xl border animate-in fade-in slide-in-from-bottom-2",
+                  currentFeedback.status === 'parcial' ? "bg-amber-500/10 border-amber-500/30 text-amber-900 dark:text-amber-200" :
+                  currentFeedback.status === 'errado' ? "bg-red-500/10 border-red-500/30 text-red-900 dark:text-red-200" : ""
+                )}>
+                  <div className="flex items-center gap-2 mb-2 font-semibold">
+                    {currentFeedback.status === 'parcial' ? <AlertCircle className="w-5 h-5 text-amber-500" /> : <XCircle className="w-5 h-5 text-red-500" />}
+                    <span className="capitalize">{currentFeedback.status}</span>
+                  </div>
+                  <p className="text-sm leading-relaxed">{currentFeedback.feedback}</p>
+                </div>
+              )}
+
               <div className="flex items-center justify-between">
-                <div className="text-xs text-muted-foreground hidden sm:block">
-                  Pressione <kbd className="font-mono bg-muted px-1 rounded border border-border">Cmd</kbd> + <kbd className="font-mono bg-muted px-1 rounded border border-border">Enter</kbd>
+                <div className="flex items-center gap-4">
+                  <div className="text-xs text-muted-foreground hidden sm:block">
+                    Pressione <kbd className="font-mono bg-muted px-1 rounded border border-border">Cmd</kbd> + <kbd className="font-mono bg-muted px-1 rounded border border-border">Enter</kbd>
+                  </div>
+                  {currentFeedback && !giveUpUsed && (
+                    <button 
+                      onClick={handleGiveUp}
+                      disabled={phase === 'evaluating'}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors underline decoration-border underline-offset-4 font-medium"
+                    >
+                      Pular / Mostrar Resposta
+                    </button>
+                  )}
                 </div>
                 <button 
                   onClick={handleSubmitAnswer}
                   disabled={!answer.trim() || phase === 'evaluating'}
                   className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:brightness-110 active:scale-95 transition-all disabled:opacity-50 ml-auto"
                 >
-                  Avaliar
+                  {currentFeedback ? 'Tentar Novamente' : 'Avaliar'}
                 </button>
               </div>
             </div>
