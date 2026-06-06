@@ -26,7 +26,11 @@ serve(async (req) => {
 O objetivo é Active Recall (Retrieval Practice). As perguntas devem ser diretas, focando na essência do que foi aprendido.
 Retorne APENAS um JSON válido seguindo este array de objetos:
 [
-  { "topico": "Nome exato do tópico de onde a pergunta foi extraída (use os nomes exatos da lista fornecida)", "text": "A pergunta em si" }
+  { 
+    "topico": "Nome exato do tópico de onde a pergunta foi extraída", 
+    "text": "A pergunta em si",
+    "dica": "Uma dica sutil que ajude o aluno a lembrar, mas sem dar a resposta direta"
+  }
 ]
 NÃO retorne markdown, nem \`\`\`json, nem explicações. Apenas o array JSON puro, sem formatação.`;
 

@@ -22,6 +22,7 @@ interface Question {
   topico: string;
   materiaSlug: string;
   text: string;
+  dica?: string;
 }
 
 interface HistoryItem {
@@ -47,6 +48,7 @@ export default function Quiz() {
   const [quizMode, setQuizMode] = useState<'all' | 'wrong'>('all');
   const [currentFeedback, setCurrentFeedback] = useState<{ status: string; feedback: string } | null>(null);
   const [giveUpUsed, setGiveUpUsed] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   
   const { data: settings, isLoading: loadingSettings } = useUserSettings();
   const { data: topics, isLoading: loadingTopics } = useAllCompletedTopics(
@@ -182,6 +184,7 @@ export default function Quiz() {
     setAnswer('');
     setCurrentFeedback(null);
     setGiveUpUsed(false);
+    setShowHint(false);
 
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(prev => prev + 1);
@@ -431,6 +434,28 @@ export default function Quiz() {
               <h2 className="text-2xl font-semibold leading-tight mb-6">
                 {questions[currentIndex].text}
               </h2>
+
+              {questions[currentIndex].dica && (
+                <div className="mb-6">
+                  {!showHint ? (
+                    <button
+                      onClick={() => setShowHint(true)}
+                      className="inline-flex items-center gap-2 text-sm font-medium text-amber-600 dark:text-amber-500 hover:text-amber-700 dark:hover:text-amber-400 transition-colors bg-amber-500/10 hover:bg-amber-500/20 px-3 py-1.5 rounded-full"
+                    >
+                      <Sparkles className="w-4 h-4" />
+                      Ver Dica Inicial
+                    </button>
+                  ) : (
+                    <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20 text-amber-900 dark:text-amber-200/90 text-sm animate-in fade-in slide-in-from-top-2">
+                      <div className="flex items-center gap-2 font-medium mb-1 text-amber-600 dark:text-amber-400">
+                        <Sparkles className="w-4 h-4" />
+                        Dica
+                      </div>
+                      {questions[currentIndex].dica}
+                    </div>
+                  )}
+                </div>
+              )}
 
               <textarea
                 value={answer}
