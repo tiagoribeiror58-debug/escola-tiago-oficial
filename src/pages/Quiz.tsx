@@ -449,12 +449,12 @@ export default function Quiz() {
               {currentFeedback && (
                 <div className={cn(
                   "mb-4 p-4 rounded-xl border animate-in fade-in slide-in-from-bottom-2",
-                  currentFeedback.status === 'parcial' ? "bg-amber-500/10 border-amber-500/30 text-amber-900 dark:text-amber-200" :
-                  currentFeedback.status === 'errado' ? "bg-red-500/10 border-red-500/30 text-red-900 dark:text-red-200" : ""
+                  currentFeedback.status === 'parcial' ? "bg-indigo-500/10 border-indigo-500/20 text-indigo-800 dark:text-indigo-200" :
+                  currentFeedback.status === 'errado' ? "bg-red-500/10 border-red-500/20 text-red-800 dark:text-red-200" : ""
                 )}>
                   <div className="flex items-center gap-2 mb-2 font-semibold">
-                    {currentFeedback.status === 'parcial' ? <AlertCircle className="w-5 h-5 text-amber-500" /> : <XCircle className="w-5 h-5 text-red-500" />}
-                    <span className="capitalize">{currentFeedback.status}</span>
+                    {currentFeedback.status === 'parcial' ? <Sparkles className="w-5 h-5 text-indigo-500" /> : <AlertCircle className="w-5 h-5 text-red-500" />}
+                    <span className="capitalize">{currentFeedback.status === 'parcial' ? 'Dica do Mentor' : 'Ainda não é isso'}</span>
                   </div>
                   <p className="text-sm leading-relaxed">{currentFeedback.feedback}</p>
                 </div>
@@ -471,7 +471,7 @@ export default function Quiz() {
                       disabled={phase === 'evaluating'}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors underline decoration-border underline-offset-4 font-medium"
                     >
-                      Pular / Mostrar Resposta
+                      Desistir e ver resposta
                     </button>
                   )}
                 </div>
@@ -480,7 +480,7 @@ export default function Quiz() {
                   disabled={!answer.trim() || phase === 'evaluating'}
                   className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:brightness-110 active:scale-95 transition-all disabled:opacity-50 ml-auto"
                 >
-                  {currentFeedback ? 'Tentar Novamente' : 'Avaliar'}
+                  Enviar Resposta
                 </button>
               </div>
             </div>
