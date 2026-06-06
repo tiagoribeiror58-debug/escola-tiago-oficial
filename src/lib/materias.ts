@@ -23,7 +23,6 @@ import { filosofiaHub } from './materias/filosofia';
 import { escritaHub } from './materias/escrita';
 import { liderancaHub } from './materias/lideranca';
 import { habilitacaoHub } from './materias/habilitacao';
-import { economia } from './materias/economia';
 
 const RAW_MATERIAS: MateriaConfig[] = [
   gestaoSistemasHub,
@@ -50,7 +49,6 @@ const RAW_MATERIAS: MateriaConfig[] = [
   escritaHub,
   liderancaHub,
   habilitacaoHub,
-  economia,
 ];
 
 function flattenSuperHubs(materias: MateriaConfig[]): MateriaConfig[] {
