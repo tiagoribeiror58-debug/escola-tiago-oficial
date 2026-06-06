@@ -269,7 +269,7 @@ export default function Quiz() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col relative overflow-hidden">
       {/* Header */}
-      <header className="p-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background/80 backdrop-blur-md z-10">
+      <header className="p-4 border-b border-border/50 flex items-center justify-between sticky top-0 bg-background z-10">
         <button onClick={() => navigate('/')} className="p-2 -ml-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -421,7 +421,7 @@ export default function Quiz() {
 
             <div className="bg-card border-2 border-primary/20 shadow-sm rounded-3xl p-6 md:p-8 relative">
               {phase === 'evaluating' && (
-                <div className="absolute inset-0 z-10 bg-background/50 backdrop-blur-sm rounded-3xl flex flex-col items-center justify-center animate-in fade-in">
+                <div className="absolute inset-0 z-10 bg-background/90 rounded-3xl flex flex-col items-center justify-center animate-in fade-in">
                   <Loader2 className="w-8 h-8 animate-spin text-primary mb-3" />
                   <span className="font-medium text-primary">Analisando resposta...</span>
                 </div>
@@ -473,7 +473,7 @@ export default function Quiz() {
 
               {currentFeedback && (
                 <div className={cn(
-                  "mb-6 p-5 rounded-2xl border backdrop-blur-md animate-in fade-in slide-in-from-bottom-2",
+                  "mb-6 p-5 rounded-2xl border animate-in fade-in slide-in-from-bottom-2",
                   currentFeedback.status === 'parcial' ? "bg-indigo-500/5 border-indigo-500/20 shadow-[0_0_20px_rgba(99,102,241,0.05)]" :
                   currentFeedback.status === 'errado' ? "bg-red-500/5 border-red-500/20 shadow-[0_0_20px_rgba(239,68,68,0.05)]" : ""
                 )}>
