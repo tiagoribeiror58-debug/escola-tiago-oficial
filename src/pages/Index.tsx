@@ -148,9 +148,8 @@ export default function Index() {
   const [visibleLimitMaterias, setVisibleLimitMaterias] = useState(4);
   const [visibleLimitHubs, setVisibleLimitHubs] = useState(4);
 
-  const estadosFocados = foco.length > 0 
-    ? estados.filter(e => foco.includes(e.config.slug))
-    : [];
+  // Itens na Home: o que estiver no Foco manual OU tiver qualquer sessão registrada
+  const baseEstados = estados.filter(e => foco.includes(e.config.slug) || e.totalSessoes > 0);
 
   // Sensors for drag and drop
   const sensors = useSensors(
@@ -164,21 +163,34 @@ export default function Index() {
     })
   );
 
-  // Ordenação: 1º Fixadas, 2º Ordem Customizada (se existir), 3º Mais acessadas, 4º Recência
-  const displayedEstados = [...estadosFocados].sort((a, b) => {
+  // Ordenação: 1º Fixadas (Pin), 2º Engajamento (Sessões > Recência), 3º Ordem Customizada (Drag Drop)
+  const displayedEstados = [...baseEstados].sort((a, b) => {
     const slugA = a.config.slug;
     const slugB = b.config.slug;
     
     const aFix = isFixada(slugA);
     const bFix = isFixada(slugB);
     
-    // 1. Fixadas vêm primeiro
+    // 1. Fixadas vêm primeiro de forma absoluta
     if (aFix && !bFix) return -1;
     if (!aFix && bFix) return 1;
 
-    // Se ambas forem fixadas OU ambas não-fixadas, caem nas regras normais
+    // Se ambas forem fixadas OU ambas não-fixadas:
     
-    // 2. Se a pessoa tem ordem salva
+    // 2. Maior engajamento (total de sessões)
+    if (b.totalSessoes !== a.totalSessoes) {
+      return b.totalSessoes - a.totalSessoes;
+    }
+
+    // 3. Desempate por recência
+    const dataA = a.ultimaSessao ? new Date(a.ultimaSessao.data).getTime() : 0;
+    const dataB = b.ultimaSessao ? new Date(b.ultimaSessao.data).getTime() : 0;
+    if (dataA !== dataB) {
+      return dataB - dataA;
+    }
+
+    // 4. Se empatar em tudo (ex: 0 sessões e nunca estudadas, mas no foco manual),
+    // usa a ordem do Drag & Drop
     const indexA = ordem.indexOf(slugA);
     const indexB = ordem.indexOf(slugB);
 
@@ -186,17 +198,10 @@ export default function Index() {
       return indexA - indexB;
     }
     
-    if (indexA !== -1 && indexB === -1) return -1; // Com ordem salva ganha de sem ordem
+    if (indexA !== -1 && indexB === -1) return -1;
     if (indexA === -1 && indexB !== -1) return 1;
 
-    // 3. Empate técnico sem ordem manual (comportamento padrão)
-    if (b.totalSessoes !== a.totalSessoes) {
-      return b.totalSessoes - a.totalSessoes;
-    }
-
-    const dataA = a.ultimaSessao ? new Date(a.ultimaSessao.data).getTime() : 0;
-    const dataB = b.ultimaSessao ? new Date(b.ultimaSessao.data).getTime() : 0;
-    return dataB - dataA;
+    return 0;
   });
 
   const displayedMaterias = displayedEstados.filter(e => !e.config.isCategory);
