@@ -105,35 +105,76 @@ Abordagem obrigatória:
     },
     {
       slug: 'founder-produto-ux',
-      nome: 'Produto, UX & Design',
-      emoji: '🎨',
+      nome: 'Product Manager — Do Zero ao Avançado',
+      emoji: '🎯',
       parent: 'founder-solo',
-      whyStart: 'O usuário não vê seu código, ele vê a interface. UX excelente constrói confiança imediata e reduz churn.',
-      descricao: 'Design intuitivo, onboarding perfeito e desenvolvimento guiado pelo feedback real em 2026.',
-      contexto: `Foco: UI/UX pragmático e design systems.
-Abordagem obrigatória:
-- Como desenhar interfaces que parecem profissionais usando bibliotecas e Tailwind.
-- A regra do "Menos é Mais" em features.
-- Dados quantitativos + qualitativos para decisão de produto.`,
-      ementa: [
-        'Design Systems e Tailwind: Consistência Visual Rápida',
-        'Onboarding: Engenharia do Momento Aha!',
-        'A Arte de Dizer Não a Novas Features (e Convencer o Cliente)',
-        'Entrevistas com Usuários: Como Fazer as Perguntas Certas',
-        'Wireframing e Prototipagem Rápida com Figma e v0.dev',
-        'Métricas de Engajamento e Retenção de Produto',
-        'Micro-Interações que Encantam o Usuário',
-        'Jobs to Be Done (JTBD): Entendendo o Que o Usuário Realmente Quer',
-        'Heatmaps e Session Recordings: Microsoft Clarity e Hotjar Gratuitos',
-        'A/B Testing de Baixo Custo para Solo Founders',
-        'Design Responsivo e Mobile-First: Não É Opcional em 2026',
-        'Acessibilidade (a11y): O Mínimo Que Todo Produto Precisa',
-        'Churn Analysis: Por Que os Usuários Somem e Como Prever',
-        'Gamificação Sutil: Streaks, Badges e Loops de Engajamento',
-        'Modo Escuro, Animações e Glassmorphism: Design Premium Para SaaS',
-        'Internacionalização (i18n): Preparando o Produto para o Mercado Global',
-        'NPS e CSAT: Como Medir e Interpretar Satisfação do Cliente',
-        'Product Roadmap Solo: Como Priorizar com Um Backlog Infinito'
+      whyStart: 'O PM é o CEO do produto. Ele não coda, não desenha, não vende — mas é responsável por tudo. Quem domina PM consegue transformar qualquer ideia em produto que pessoas pagam para usar.',
+      descricao: 'Descoberta, priorização, métricas, UX/design e estratégia de produto — da ideia ao produto que escala.',
+      contexto: 'O aluno é founder solo que precisa acumular a função de PM. Foco na ponte entre usuário, negócio e engenharia. Quando citar frameworks, indique de onde vieram (ex: Teresa Torres, "Continuous Discovery Habits", 2021).',
+      fases: [
+        {
+          nome: 'Fase 1 — Fundamentos: O Que é Produto e Qual é o Papel do PM',
+          topicos: [
+            'O Papel do PM: a ponte entre Engenharia, UX e Negócios — sem autoridade formal',
+            'O que é um produto digital — diferença entre produto, feature e projeto',
+            'Product Discovery vs Product Delivery — onde a maioria das empresas erra',
+            'Jobs-to-be-Done (JTBD): entender o que o usuário realmente "contrata" o produto para fazer',
+            'Entrevistas de Usuário: como fazer as perguntas certas sem contaminar a resposta',
+            'O Problema com Soluções Prematuras — o viés de confirmação em Product Management',
+            'Personas vs Jobs: quando cada modelo ajuda e quando atrapalha',
+            'Ciclo de Vida do Produto: Introdução, Crescimento, Maturidade e Declínio',
+            'Platform Products vs End-User Products — lógica e dinâmicas diferentes',
+            'O Documento de Visão de Produto (PRD simplificado): o que precisa ter',
+            'Inception: como alinhar toda a equipe no começo de um produto',
+            'MVP: o que é, o que não é, e por que a maioria faz errado'
+          ]
+        },
+        {
+          nome: 'Fase 2 — Intermediário: Priorização, Métricas e Ciclo de Produto',
+          topicos: [
+            'Frameworks de Priorização: RICE, Kano, MoSCoW — quando usar cada um',
+            'Gestão de Backlog: a diferença entre um backlog vivo e um cemitério de ideias',
+            'Roadmap Estratégico: Now/Next/Later vs Roadmap Baseado em Datas',
+            'North Star Metric: encontrando a única métrica que resume o valor entregue',
+            'AARRR (Pirate Metrics): Aquisição, Ativação, Retenção, Receita e Referência',
+            'Cohort Analysis e Churn: como ler a saúde real do produto nos dados',
+            'Testes A/B e Experimentação Contínua: hipóteses, amostras e significância',
+            'Opportunity Solution Tree (Teresa Torres, 2021): mapeando oportunidades sem viés',
+            'Continuous Discovery Habits: rotina de pesquisa semanal com usuários reais',
+            'OKRs para Produto: metas aspiracionais vs tarefas operacionais',
+            'Stakeholder Management: alinhando liderança, vendas e engenharia sem guerras',
+            'Go-to-Market de Novas Features: como lançar sem gerar confusão',
+            'Heatmaps e Session Recordings: lendo o comportamento silencioso do usuário',
+            'Feedback Loops: NPS, CSAT e CES — o que cada um mede de fato',
+            'Dados quantitativos + qualitativos: por que nenhum dos dois sozinho resolve',
+            'Unit Economics aplicados a produto: CAC, LTV e Payback Period'
+          ]
+        },
+        {
+          nome: 'Fase 3 — Avançado: UX, Design e Estratégia de Produto em 2026',
+          topicos: [
+            'Product-Led Growth (PLG): deixar o produto ser o principal canal de aquisição',
+            'Growth Loops: construindo ciclos virais sustentáveis — viral, paid e content loops',
+            'Pricing Strategy: Freemium, Usage-Based, Value-Based — a lógica de cada modelo',
+            'Product Ops: escalando a função de produto quando o time cresce',
+            'Wireframing e Prototipagem Rápida com Figma e v0.dev',
+            'Design Systems: tokens, componentes e consistência visual como vantagem competitiva',
+            'Heurísticas de Nielsen: os 10 princípios que todo PM precisa saber avaliar',
+            'Onboarding: engenharia do Momento "Aha!" — reduzindo fricção na ativação',
+            'Micro-interações e Animações de Feedback: quando UX encanta e quando distrai',
+            'Acessibilidade (a11y e WCAG): o mínimo não negociável em qualidade de produto',
+            'Dark Patterns: o que nunca fazer e como identificar na concorrência',
+            'A Arte de Dizer Não: como recusar features sem perder aliados',
+            'AI-First Product Management: gerenciando features de IA não-determinísticas',
+            'Evaluation-Driven PM: como medir qualidade de output de modelos de linguagem',
+            'Agentes como Produto: UX para sistemas autônomos e interações com AI Agents',
+            'Competitive Analysis: frameworks para mapear concorrentes sem viés',
+            'API as a Product: quando desenvolvedores são seus clientes principais',
+            'Produto Internacional: localização, adaptação cultural e armadilhas de i18n',
+            'Ethical Product Design: responsabilidade do PM sobre impacto social e Dark Patterns',
+            'Churn Analysis: por que usuários somem e como antecipar antes de perder'
+          ]
+        }
       ]
     },
     {
