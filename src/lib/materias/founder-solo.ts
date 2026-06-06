@@ -330,6 +330,49 @@ Abordagem obrigatória:
         'Terapia e Coaching para Founders: Investimento, Não Fraqueza',
         'O Papel do Ego no Empreendedorismo: Combustível ou Sabotador?'
       ]
+    },
+    {
+      slug: 'design',
+      nome: 'Design Visual & UX',
+      emoji: '◑',
+      parent: 'founder-solo',
+      layout: 'canvas',
+      widget: 'DesignPreview',
+      whyStart: 'O melhor algoritmo do mundo fracassa se a interface do usuário (UX) for ruim. Design não é estética — é a lógica de como humanos percebem e interagem com sistemas.',
+      descricao: 'Hierarquia, tipografia, gestalt e design centrado no usuário — dos fundamentos perceptivos ao design nativo de IA.',
+      contexto: 'Foco: princípios estruturais do design — hierarquia, gestalt, percepção visual. Abordagem obrigatória: explique o princípio perceptivo ou cognitivo por trás de cada decisão de design. Só depois: peça que o aluno critique um design real.',
+      ementa: [
+        'Leis da Gestalt Aplicadas a Interfaces',
+        'Teoria das Cores e Contraste',
+        'Tipografia e Escala Tipográfica',
+        'Espaçamento e Hierarquia Visual',
+        'UI vs UX: A Experiência do Usuário',
+        'Heurísticas de Nielsen',
+        'Sistemas de Design: Tokens, Componentes e Documentação',
+        'Prototipagem: Do Sketch ao Figma Interativo',
+        'Testes de Usabilidade: Métodos e Análise',
+        'Design Responsivo e Mobile-First',
+        'Acessibilidade (WCAG): Design para Todos',
+        'Microinterações e Animações de Feedback',
+        'Dark Patterns: O que Nunca Fazer',
+        'Design de Onboarding: Reduzindo Fricção',
+        'Motion Design: Movimento com Propósito',
+        'Design para IA: Interfaces Conversacionais e Probabilísticas',
+        'Machine Experience (MX): Otimizando para Humanos e Agentes',
+        'Explainable UX: Transparência em Decisões de IA',
+        'Adaptive UI: Interfaces que se Ajustam ao Contexto do Usuário',
+        'Design Multimodal: Voz, Gesto e Toque Integrados',
+        'Calm Design: Reduzindo Sobrecarga Cognitiva',
+        'Design Emocional: Microcopies que Geram Conexão',
+        'UX Writing: Escrevendo para Interfaces',
+        'Information Architecture: Organizando Conteúdo Complexo',
+        'Design Sprint: Prototipando em 5 Dias (Google Ventures)',
+        'Atomic Design: Átomos, Moléculas e Organismos',
+        'Psicologia Cognitiva Aplicada a UX: Hick, Fitts e Miller',
+        'Design de Dashboards e Visualização de Dados',
+        'Design de Formulários: Reduzindo Abandono',
+        'Sustentabilidade Digital: Design Eco-Consciente'
+      ]
     }
   ]
 };
