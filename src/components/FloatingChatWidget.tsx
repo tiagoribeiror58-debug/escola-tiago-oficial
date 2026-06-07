@@ -48,21 +48,22 @@ export function FloatingChatWidget() {
   const globalPromptContext = useMemo(() => {
     if (materiaSlug) return "";
     let contextStr = "Matérias da escola e seus tópicos:\n";
-    MATERIAS.forEach(m => {
+    const processMateria = (m: any) => {
       let topics: string[] = [];
       if (m.fases) {
-        topics = m.fases.flatMap(f => f.topicos);
+        topics = m.fases.flatMap((f: any) => f.topicos);
       } else if (m.ementa) {
         topics = m.ementa;
       }
-      if (m.children) {
-        const childTopics = m.children.flatMap(c => 
-          c.fases ? c.fases.flatMap(f => f.topicos) : (c.ementa || [])
-        );
-        topics = [...topics, ...childTopics];
-      }
       if (topics.length > 0) {
         contextStr += `- ${m.nome}: ${topics.slice(0, 15).join(', ')}${topics.length > 15 ? '...' : ''}\n`;
+      }
+    };
+
+    MATERIAS.forEach(m => {
+      processMateria(m);
+      if (m.children) {
+        m.children.forEach((c: any) => processMateria(c));
       }
     });
     return contextStr;
