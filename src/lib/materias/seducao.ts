@@ -15,26 +15,46 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'Comece aqui ou você vai desperdiçar todas as técnicas. Sem o estado interno correto, cada abordagem vai parecer forçada e vai ser percebida como tal.',
       contexto: 'Foque em psicologia comportamental, estoicismo prático e reestruturação cognitiva. Ensine que a verdadeira confiança não é "saber que vai dar certo", mas "saber que ficará bem independente do resultado".',
-      ementa: [
-        'Desconstrução de Crenças Limitantes sobre Atração',
-        'Ansiedade de Aproximação (AA): Entendendo a Resposta de Luta/Fuga',
-        'Independência de Resultado: O Paradoxo da Atração',
-        'Validação Interna vs. Externa (O Fim da Necessidade)',
-        'Identidade e Auto-Conceito: Quem você é quando ninguém está olhando',
-        'Masculinidade e Propósito: A Missão como Âncora',
-        'Superando o Nice Guy: Por que agradou demais não funciona',
-        'Controle de Frame: Quem dita a realidade da interação?',
-        'Presença e Grounding (Ancoragem Física)',
-        'Lidando com Rejeição como Feedback Direto',
-        'Abundância vs. Escassez na Prática',
-        'Estado Emocional: Como Calibrar sua Energia',
-        'Congruência: Alinhar o que você Pensa, Fala e Faz',
-        'Desapego do Resultado em Tempo Real',
-        'Construindo uma Rotina de Desenvolvimento Pessoal',
-        'Saindo da Zona de Conforto: O Protocolo de Exposição',
-        'Comunidade e Accountability para Inner Game',
-        'Meditação e Mindfulness para Presença Social',
-        'Alto Status: O que Realmente Projeta Dominância Social'
+      fases: [
+        {
+          nome: 'NÍVEL 1 — FUNDAÇÃO COGNITIVA (O que está quebrando você por dentro)',
+          topicos: [
+            'Desconstrução de Crenças Limitantes sobre Atração',
+            'Ansiedade de Aproximação (AA): Entendendo a Resposta de Luta/Fuga',
+            'Validação Interna vs. Externa (O Fim da Necessidade)',
+            'Superando o Nice Guy: Por que agradou demais não funciona'
+          ]
+        },
+        {
+          nome: 'NÍVEL 2 — IDENTIDADE E PROPÓSITO (Quem você é)',
+          topicos: [
+            'Identidade e Auto-Conceito: Quem você é quando ninguém está olhando',
+            'Masculinidade e Propósito: A Missão como Âncora',
+            'Congruência: Alinhar o que você Pensa, Fala e Faz',
+            'Alto Status: O que Realmente Projeta Dominância Social'
+          ]
+        },
+        {
+          nome: 'NÍVEL 3 — ESTADO E PRESENÇA (Como você aparece)',
+          topicos: [
+            'Presença e Grounding (Ancoragem Física)',
+            'Estado Emocional: Como Calibrar sua Energia',
+            'Controle de Frame: Quem dita a realidade da interação?',
+            'Meditação e Mindfulness para Presença Social'
+          ]
+        },
+        {
+          nome: 'NÍVEL 4 — ANTIFRAGILIDADE E AÇÃO (Como você se comporta sob pressão)',
+          topicos: [
+            'Independência de Resultado: O Paradoxo da Atração',
+            'Lidando com Rejeição como Feedback Direto',
+            'Abundância vs. Escassez na Prática',
+            'Desapego do Resultado em Tempo Real',
+            'Saindo da Zona de Conforto: O Protocolo de Exposição',
+            'Comunidade e Accountability para Inner Game',
+            'Construindo uma Rotina de Desenvolvimento Pessoal'
+          ]
+        }
       ]
     },
     {
