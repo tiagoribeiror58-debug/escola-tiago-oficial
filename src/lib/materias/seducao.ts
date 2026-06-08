@@ -22,7 +22,9 @@ export const seducaoHub: MateriaConfig = {
             'Desconstrução de Crenças Limitantes sobre Atração',
             'Ansiedade de Aproximação (AA): Entendendo a Resposta de Luta/Fuga',
             'Validação Interna vs. Externa (O Fim da Necessidade)',
-            'Superando o Nice Guy: Por que agradou demais não funciona'
+            'Superando o Nice Guy: Por que agradou demais não funciona',
+            'O Mecanismo do Julgamento Social: Por que o Cérebro Antecipa Rejeição',
+            'Autocompaixão sem Auto-Sabotagem: A Diferença entre Gentileza e Fraqueza'
           ]
         },
         {
@@ -31,7 +33,10 @@ export const seducaoHub: MateriaConfig = {
             'Identidade e Auto-Conceito: Quem você é quando ninguém está olhando',
             'Masculinidade e Propósito: A Missão como Âncora',
             'Congruência: Alinhar o que você Pensa, Fala e Faz',
-            'Alto Status: O que Realmente Projeta Dominância Social'
+            'Alto Status: O que Realmente Projeta Dominância Social',
+            'Os 3 Níveis de Identidade: Comportamentos, Hábitos e Crenças Nucleares',
+            'Construindo um Sistema de Valores Pessoais Invioláveis',
+            'A Persona Social vs. O Verdadeiro Self: Máscara ou Armadura?'
           ]
         },
         {
@@ -40,7 +45,10 @@ export const seducaoHub: MateriaConfig = {
             'Presença e Grounding (Ancoragem Física)',
             'Estado Emocional: Como Calibrar sua Energia',
             'Controle de Frame: Quem dita a realidade da interação?',
-            'Meditação e Mindfulness para Presença Social'
+            'Meditação e Mindfulness para Presença Social',
+            'Regulação do Sistema Nervoso Autônomo (Simpático vs Parassimpático)',
+            'Voz, Ritmo e Tonalidade: O Impacto Físico da Presença',
+            'Contato Visual como Ferramenta de Dominância e Conexão'
           ]
         },
         {
@@ -52,7 +60,10 @@ export const seducaoHub: MateriaConfig = {
             'Desapego do Resultado em Tempo Real',
             'Saindo da Zona de Conforto: O Protocolo de Exposição',
             'Comunidade e Accountability para Inner Game',
-            'Construindo uma Rotina de Desenvolvimento Pessoal'
+            'Construindo uma Rotina de Desenvolvimento Pessoal',
+            'Antifragilidade Social: Crescer com a Pressão em vez de Quebrar',
+            'Inércia Social: Por que Começar é Sempre o Passo Mais Difícil',
+            'Pós-Rejeição: O Protocolo para Não Deixar uma Falha Definir o Padrão'
           ]
         }
       ]
