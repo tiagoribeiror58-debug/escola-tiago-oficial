@@ -7,7 +7,6 @@ import Index from "./pages/Index.tsx";
 import Sessao from "./pages/Sessao.tsx";
 import Historico from "./pages/Historico.tsx";
 import Categoria from "./pages/Categoria.tsx";
-import Biblioteca from "./pages/Biblioteca.tsx";
 import Quiz from "./pages/Quiz.tsx";
 import Notas from "./pages/Notas.tsx";
 import Auth from "./pages/Auth.tsx";
@@ -34,7 +33,6 @@ const App = () => (
             <Route path="/historico/:materia" element={<ProtectedRoute><Historico /></ProtectedRoute>} />
             <Route path="/categoria/:slug" element={<ProtectedRoute><Categoria /></ProtectedRoute>} />
             <Route path="/categoria/:slug/:sub" element={<ProtectedRoute><Categoria /></ProtectedRoute>} />
-            <Route path="/biblioteca" element={<ProtectedRoute><Biblioteca /></ProtectedRoute>} />
             <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
             <Route path="/notas" element={<ProtectedRoute><Notas /></ProtectedRoute>} />
             

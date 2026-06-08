@@ -4,7 +4,7 @@ import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import { useMateriasFixadas } from '@/hooks/useMateriasFixadas';
 import MateriaCard from '@/components/MateriaCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen, Library, Flame, Play } from 'lucide-react';
+import { BookOpen, Library, Flame, Play, ChevronRight, ChevronDown, Pin } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -14,11 +14,12 @@ import { Search, History, CalendarCheck, BrainCircuit, Sparkles, Settings } from
 import { HistoricoGlobalDrawer } from '@/components/HistoricoGlobalDrawer';
 import { useSettings } from '@/hooks/useSettings';
 import { Switch } from '@/components/ui/switch';
-import { useOrdemMaterias } from '@/hooks/useOrdemMaterias';
+import { useOrdemMaterias, useOrdemHubs } from '@/hooks/useOrdemMaterias';
 import { DailyTopicCard } from '@/components/DailyTopicCard';
 import { RecomendacaoCard } from '@/components/RecomendacaoCard';
 import { MetaDiariaCard } from '@/components/MetaDiariaCard';
 import { useProximoPassoRecomendado } from '@/hooks/useRecomendacao';
+import { MATERIAS, getAllLeafSlugs } from '@/lib/materias';
 import {
   Dialog,
   DialogContent,
@@ -41,6 +42,7 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
   rectSortingStrategy,
+  verticalListSortingStrategy,
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -75,6 +77,31 @@ function SortableItem({ id, estado, onClick, isPinned, onTogglePin }: any) {
   );
 }
 
+function SortableHubItem({ id, children, isExpanded, toggleCat }: any) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : 'auto',
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className={cn("mb-6 bg-card border border-border/50 rounded-2xl p-4 transition-all hover:border-border/80", isDragging && "opacity-60 ring-2 ring-primary scale-[1.01]")}>
+      <div {...attributes} {...listeners} className="cursor-move">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function getGreeting(): string {
   const h = new Date().getHours();
   if (h < 12) return 'Bom dia, Tiago';
@@ -84,7 +111,7 @@ function getGreeting(): string {
 
 export default function Index() {
   const { estados, isLoading } = useTodosEstadosFlat();
-  const { foco, toggleFoco } = useMateriasFoco();
+  const { foco, toggleFoco, isFocado } = useMateriasFoco();
   const { data: sessoes } = useSessoes();
   const recomendacao = useProximoPassoRecomendado();
   const { data: metricasRevisao } = useMetricasRevisao();
@@ -99,7 +126,6 @@ export default function Index() {
     day: 'numeric',
     month: 'long',
   });
-
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isIAModalOpen, setIsIAModalOpen] = useState(false);
@@ -144,34 +170,43 @@ export default function Index() {
 
   const { fixadas, toggleFixada, isFixada } = useMateriasFixadas();
   const { ordem, atualizarOrdem } = useOrdemMaterias();
+  const { ordemHubs, atualizarOrdemHubs } = useOrdemHubs();
   
-  const [filterType, setFilterType] = useState<'all' | 'materias' | 'hubs'>('all');
+  const [currentTab, setCurrentTab] = useState<'foco' | 'materias' | 'hubs'>('foco');
   const [visibleLimitMaterias, setVisibleLimitMaterias] = useState(4);
   const [visibleLimitHubs, setVisibleLimitHubs] = useState(4);
+  
+  // Controle das sanfonas dos hubs
+  const [expandedCats, setExpandedCats] = useState<Set<string>>(new Set());
 
-  // Itens na Home: o que estiver no Foco manual OU tiver qualquer sessão registrada
-  const baseEstados = estados.filter(e => foco.includes(e.config.slug) || e.totalSessoes > 0);
+  const toggleCat = (slug: string) => {
+    const next = new Set(expandedCats);
+    if (next.has(slug)) {
+      next.delete(slug);
+    } else {
+      next.add(slug);
+    }
+    setExpandedCats(next);
+  };
+
+  // Itens na Mesa de Estudos: o que estiver no Foco manual OU tiver qualquer sessão registrada
+  const baseEstadosFoco = estados.filter(e => foco.includes(e.config.slug) || e.totalSessoes > 0);
 
   // Sensors for drag and drop
   const sensors = useSensors(
     useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 5,
-      },
+      activationConstraint: { distance: 5 },
     }),
     useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 250,
-        tolerance: 5,
-      },
+      activationConstraint: { delay: 250, tolerance: 5 },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
 
-  // Ordenação: 1º Fixadas (Pin), 2º Engajamento (Sessões > Recência), 3º Ordem Customizada (Drag Drop)
-  const displayedEstados = [...baseEstados].sort((a, b) => {
+  // Ordenação da Mesa de Estudos
+  const displayedFoco = [...baseEstadosFoco].sort((a, b) => {
     const slugA = a.config.slug;
     const slugB = b.config.slug;
     
@@ -182,8 +217,6 @@ export default function Index() {
     if (aFix && !bFix) return -1;
     if (!aFix && bFix) return 1;
 
-    // Se ambas forem fixadas OU ambas não-fixadas:
-    
     // 2. Maior engajamento (total de sessões)
     if (b.totalSessoes !== a.totalSessoes) {
       return b.totalSessoes - a.totalSessoes;
@@ -196,35 +229,25 @@ export default function Index() {
       return dataB - dataA;
     }
 
-    // 4. Se empatar em tudo (ex: 0 sessões e nunca estudadas, mas no foco manual),
-    // usa a ordem do Drag & Drop
+    // 4. Ordem Customizada (Drag Drop)
     const indexA = ordem.indexOf(slugA);
     const indexB = ordem.indexOf(slugB);
 
-    if (indexA !== -1 && indexB !== -1) {
-      return indexA - indexB;
-    }
-    
+    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
     if (indexA !== -1 && indexB === -1) return -1;
     if (indexA === -1 && indexB !== -1) return 1;
-
     return 0;
   });
 
-  const displayedMaterias = displayedEstados.filter(e => !e.config.isCategory);
-  const displayedHubs = displayedEstados.filter(e => e.config.isCategory);
+  const displayedMateriasFoco = displayedFoco.filter(e => !e.config.isCategory);
+  const displayedHubsFoco = displayedFoco.filter(e => e.config.isCategory);
 
-  const visibleMaterias = displayedMaterias.slice(0, visibleLimitMaterias);
-  const visibleHubs = displayedHubs.slice(0, visibleLimitHubs);
-
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEndFoco = (event: DragEndEvent) => {
     const { active, over } = event;
-    
     if (over && active.id !== over.id) {
-      const oldIndex = displayedEstados.findIndex(e => e.config.slug === active.id);
-      const newIndex = displayedEstados.findIndex(e => e.config.slug === over.id);
-      
-      const novaOrdemArray = arrayMove(displayedEstados, oldIndex, newIndex).map(e => e.config.slug);
+      const oldIndex = displayedFoco.findIndex(e => e.config.slug === active.id);
+      const newIndex = displayedFoco.findIndex(e => e.config.slug === over.id);
+      const novaOrdemArray = arrayMove(displayedFoco, oldIndex, newIndex).map(e => e.config.slug);
       atualizarOrdem(novaOrdemArray);
     }
   };
@@ -240,64 +263,81 @@ export default function Index() {
     });
   };
 
-
-
   const [searchQuery, setSearchQuery] = useState('');
+  const normalizedQuery = searchQuery.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-  const normalizeString = (str: string) =>
-    str
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
-
-  const searchResults = searchQuery.trim().length > 0
-    ? estados.map(e => {
-        const query = normalizeString(searchQuery);
-        const matchesNome = normalizeString(e.config.nome).includes(query);
-        const matchesDescricao = e.config.descricao ? normalizeString(e.config.descricao).includes(query) : false;
+  // ---- Filtro Aba "Explorar Matérias" ----
+  const todasMateriasIsoladas = estados.filter(e => !e.config.isCategory);
+  const searchResultsMaterias = normalizedQuery.length > 0
+    ? todasMateriasIsoladas.map(e => {
+        const matchesNome = e.config.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedQuery);
+        const matchesDescricao = e.config.descricao ? e.config.descricao.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedQuery) : false;
         
         let matchedTopics: string[] = [];
         if (e.config.ementa) {
-          matchedTopics = [...matchedTopics, ...e.config.ementa.filter(t => normalizeString(t).includes(query))];
+          matchedTopics = [...matchedTopics, ...e.config.ementa.filter(t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedQuery))];
         }
         if (e.config.fases) {
           e.config.fases.forEach(f => {
             if (f.topicos) {
-              matchedTopics = [...matchedTopics, ...f.topicos.filter(t => normalizeString(t).includes(query))];
+              matchedTopics = [...matchedTopics, ...f.topicos.filter(t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedQuery))];
             }
           });
         }
-        
         const isMatch = matchesNome || matchesDescricao || matchedTopics.length > 0;
         return isMatch ? { estado: e, matchedTopics } : null;
       }).filter(Boolean) as { estado: MateriaEstado, matchedTopics: string[] }[]
     : [];
 
+  // ---- Filtro Aba "Explorar Hubs" ----
+  // Resolvendo o BUG do drag and drop: a ordenação base (quando ordemHubs estiver parcial ou vazio)
+  // tem que ser estável usando o índice original de MATERIAS.
+  const sortedAndFilteredHubs = [...MATERIAS]
+    .sort((a, b) => {
+      const indexA = ordemHubs.indexOf(a.slug);
+      const indexB = ordemHubs.indexOf(b.slug);
+      if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+      if (indexA !== -1) return -1;
+      if (indexB !== -1) return 1;
+      
+      // Fallback para ordem original em MATERIAS para manter estabilidade
+      const origIndexA = MATERIAS.findIndex(m => m.slug === a.slug);
+      const origIndexB = MATERIAS.findIndex(m => m.slug === b.slug);
+      return origIndexA - origIndexB;
+    })
+    .filter(cat => {
+      if (!normalizedQuery) return true;
+      const catName = cat.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const catDesc = cat.descricao?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      if (catName.includes(normalizedQuery)) return true;
+      if (catDesc?.includes(normalizedQuery)) return true;
+      if (cat.children) {
+        return cat.children.some(child => {
+          const cName = child.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+          const cDesc = child.descricao?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+          return cName.includes(normalizedQuery) || cDesc?.includes(normalizedQuery);
+        });
+      }
+      return false;
+    });
+
+  const visibleExplorarHubs = normalizedQuery ? sortedAndFilteredHubs : sortedAndFilteredHubs.slice(0, visibleLimitHubs);
+
+  // Renderiza Badges do Header
   const renderBadges = () => (
     <>
-      {/* Botão de Notas */}
-      <button
-        onClick={() => navigate('/notas')}
-        className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
-      >
+      <button onClick={() => navigate('/notas')} className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm">
         Notas
       </button>
 
-      {/* Botão de Quiz */}
-      <button
-        onClick={() => navigate('/quiz')}
-        className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-[hsl(var(--primary)/0.1)] border-[hsl(var(--primary)/0.3)] text-primary hover:bg-[hsl(var(--primary)/0.2)] text-xs font-medium transition-all shadow-sm"
-      >
+      <button onClick={() => navigate('/quiz')} className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-[hsl(var(--primary)/0.1)] border-[hsl(var(--primary)/0.3)] text-primary hover:bg-[hsl(var(--primary)/0.2)] text-xs font-medium transition-all shadow-sm">
         <Sparkles className="w-3.5 h-3.5" />
         Quiz
       </button>
 
-      {/* Botão Sugestão do Dia */}
       <Dialog>
         <DialogTrigger asChild>
-          <button
-            className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
-          >
+          <button className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm">
             <BookOpen className="w-3.5 h-3.5" />
             Sugestão
           </button>
@@ -312,31 +352,19 @@ export default function Index() {
         </DialogContent>
       </Dialog>
 
-      {/* Botão de Planejar com IA */}
-      <button
-        onClick={() => setIsIAModalOpen(true)}
-        className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-emerald-500/10 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/20 text-xs font-medium transition-all shadow-sm"
-      >
+      <button onClick={() => setIsIAModalOpen(true)} className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-emerald-500/10 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/20 text-xs font-medium transition-all shadow-sm">
         <Sparkles className="w-3.5 h-3.5" />
         IA
       </button>
 
-      {/* Botão do Histórico */}
-      <button
-        onClick={() => setIsHistoricoOpen(true)}
-        className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm"
-      >
+      <button onClick={() => setIsHistoricoOpen(true)} className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm">
         <History className="w-3.5 h-3.5" />
         Histórico
       </button>
 
-      {/* Configurações */}
       <Dialog>
         <DialogTrigger asChild>
-          <button
-            className="flex items-center justify-center shrink-0 w-8 h-8 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground transition-all shadow-sm"
-            title="Configurações"
-          >
+          <button className="flex items-center justify-center shrink-0 w-8 h-8 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground transition-all shadow-sm" title="Configurações">
             <Settings className="w-4 h-4" />
           </button>
         </DialogTrigger>
@@ -355,16 +383,12 @@ export default function Index() {
                   Permite ver a ementa inteira revelada e usar o botão "Olhinho" para mostrar e esconder os tópicos futuros.
                 </p>
               </div>
-              <Switch
-                checked={disableFogOfWar}
-                onCheckedChange={toggleFogOfWar}
-              />
+              <Switch checked={disableFogOfWar} onCheckedChange={toggleFogOfWar} />
             </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Retenção de Memória */}
       {metricasRevisao && metricasRevisao.length > 0 && (
         <div className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-blue-500/10 border-blue-500/20 text-blue-500 text-xs font-medium transition-all shadow-sm" title={`${metricasRevisao.length} revisões feitas`}>
           <BrainCircuit className="w-3.5 h-3.5" />
@@ -377,148 +401,82 @@ export default function Index() {
   return (
     <div className="min-h-screen">
       <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
-        {/* Header com Saudação e Ofensiva */}
+        {/* Header */}
         <div className="mb-6 sm:mb-8 flex items-center justify-between gap-4">
           <div>
             <h1 className="text-xl font-semibold tracking-tight">{getGreeting()}</h1>
             <p className="text-sm text-muted-foreground mt-0.5 capitalize">{hoje}</p>
           </div>
-          
           <div className="hidden sm:flex items-center gap-2">
             {renderBadges()}
-
           </div>
         </div>
 
-        {/* Badges Mobile - Ocupando uma linha inteira rolável abaixo da saudação */}
+        {/* Badges Mobile */}
         <div className="sm:hidden flex items-center gap-2 overflow-x-auto pb-4 mb-4 -mx-4 px-4 scrollbar-none">
           {renderBadges()}
         </div>
 
-        {/* Meta Diária Card */}
+        {/* Meta Diária */}
         <MetaDiariaCard />
 
-        {/* Recomendação Foco Inteligente */}
-        {foco.length > 0 && recomendacao.estado && !searchQuery && (
+        {/* Tabs de Navegação */}
+        {!isLoading && (
+          <div className="flex items-center p-1.5 bg-muted/30 rounded-[1.25rem] border border-border/50 self-start sm:self-auto w-full mb-8 overflow-x-auto scrollbar-none">
+            <button
+              onClick={() => { setCurrentTab('foco'); setSearchQuery(''); }}
+              className={cn(
+                "flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap",
+                currentTab === 'foco' ? "bg-background shadow-md text-foreground ring-1 ring-border" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              )}
+            >
+              Mesa de Estudos
+            </button>
+            <button
+              onClick={() => { setCurrentTab('materias'); setSearchQuery(''); }}
+              className={cn(
+                "flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap",
+                currentTab === 'materias' ? "bg-background shadow-md text-foreground ring-1 ring-border" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              )}
+            >
+              Explorar Matérias
+            </button>
+            <button
+              onClick={() => { setCurrentTab('hubs'); setSearchQuery(''); }}
+              className={cn(
+                "flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all whitespace-nowrap",
+                currentTab === 'hubs' ? "bg-background shadow-md text-foreground ring-1 ring-border" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              )}
+            >
+              Explorar Hubs
+            </button>
+          </div>
+        )}
+
+        {/* Barra de Pesquisa Contextual */}
+        {currentTab !== 'foco' && (
+          <div className="mb-8 relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-muted-foreground" />
+            </div>
+            <input
+              type="text"
+              placeholder={currentTab === 'materias' ? "Pesquisar todas as matérias..." : "Pesquisar hubs e categorias..."}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-4 bg-card border border-border/50 rounded-2xl text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all shadow-sm"
+            />
+          </div>
+        )}
+
+        {/* Recomendação na Mesa de Estudos */}
+        {currentTab === 'foco' && foco.length > 0 && recomendacao.estado && !searchQuery && (
           <RecomendacaoCard 
             recomendacao={recomendacao} 
             onClick={() => handleCardClick(recomendacao.estado!)} 
           />
         )}
 
-        {/* Barra de Pesquisa */}
-        <div className="mb-8 relative">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-muted-foreground" />
-          </div>
-          <input
-            type="text"
-            placeholder="O que você quer estudar agora?..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-4 bg-card border border-border/50 rounded-2xl text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all shadow-sm"
-          />
-        </div>
-
-
-
-        {searchQuery.trim().length > 0 ? (
-          <div className="space-y-6">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest px-1">
-              Resultados da busca ({searchResults.length})
-            </h3>
-            {searchResults.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-                {searchResults.map(result => (
-                  <div key={result.estado.config.slug} className="flex flex-col gap-1">
-                    <MateriaCard
-                      estado={result.estado}
-                      onClick={() => handleCardClick(result.estado)}
-                    />
-                    {result.matchedTopics.length > 0 && (
-                      <div className="ml-2 pl-2 border-l-2 border-border text-[11px] text-muted-foreground mt-1 space-y-1">
-                        {result.matchedTopics.slice(0, 3).map((topic, i) => (
-                          <div key={i} className="line-clamp-1 flex items-center gap-1.5 opacity-80">
-                            <span className="w-1 h-1 rounded-full bg-muted-foreground/50 shrink-0" />
-                            {topic}
-                          </div>
-                        ))}
-                        {result.matchedTopics.length > 3 && (
-                          <div className="text-[10px] text-muted-foreground/50 italic pl-2.5">
-                            +{result.matchedTopics.length - 3} tópicos
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="p-8 text-center text-muted-foreground bg-muted/30 rounded-2xl border border-dashed border-border/50">
-                Nenhuma matéria encontrada com esse nome.
-              </div>
-            )}
-          </div>
-        ) : !isLoading && foco.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center p-12 mt-12 border border-dashed rounded-[2rem] bg-card">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-6">
-              <Library className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <h2 className="text-xl font-semibold mb-2">Mesa de estudos vazia</h2>
-            <p className="text-muted-foreground text-sm max-w-sm mb-8">
-              Sua tela inicial é restrita para evitar paralisia por análise. Vá até a biblioteca e escolha no que focar agora.
-            </p>
-            <button
-              onClick={() => navigate('/biblioteca')}
-              className="bg-foreground text-background px-8 py-3 rounded-xl text-sm font-medium hover:opacity-90 transition-all active:scale-95 shadow-xl shadow-foreground/10 flex items-center gap-2"
-            >
-              <Library className="w-4 h-4" />
-              Explorar Biblioteca
-            </button>
-          </div>
-        ) : (
-          <>
-
-        {/* Separador de Outras Disciplinas (se necessário, agora pode ser o título principal do grid) */}
-        {!isLoading && displayedEstados.length > 0 && (
-          <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
-              Sua Mesa de Estudos
-            </h3>
-            
-            <div className="flex items-center p-1 bg-muted/30 rounded-xl border border-border/50 self-start sm:self-auto">
-              <button
-                onClick={() => setFilterType('all')}
-                className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
-                  filterType === 'all' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                Tudo
-              </button>
-              <button
-                onClick={() => setFilterType('materias')}
-                className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
-                  filterType === 'materias' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                Matérias
-              </button>
-              <button
-                onClick={() => setFilterType('hubs')}
-                className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
-                  filterType === 'hubs' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
-                )}
-              >
-                Hubs
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Grid Residual */}
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -527,112 +485,348 @@ export default function Index() {
           </div>
         ) : (
           <div className="space-y-8 mb-8">
-            {(filterType === 'all' || filterType === 'hubs') && displayedHubs.length > 0 && (
-              <div>
-                <h4 className="text-sm font-medium mb-3 text-muted-foreground">Hubs em Foco</h4>
-                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                    <SortableContext items={visibleHubs.map(e => e.config.slug)} strategy={rectSortingStrategy}>
-                      {visibleHubs.map(estado => (
-                        <SortableItem
+            
+            {/* ABA: MESA DE ESTUDOS */}
+            {currentTab === 'foco' && (
+              <>
+                {displayedFoco.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center text-center p-12 mt-4 border border-dashed rounded-[2rem] bg-card">
+                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-6">
+                      <Library className="w-8 h-8 text-muted-foreground" />
+                    </div>
+                    <h2 className="text-xl font-semibold mb-2">Mesa de estudos vazia</h2>
+                    <p className="text-muted-foreground text-sm max-w-sm mb-8">
+                      Sua mesa está limpa para evitar distrações. Explore as matérias ou hubs e fixe o que deseja focar agora.
+                    </p>
+                    <button
+                      onClick={() => setCurrentTab('materias')}
+                      className="bg-foreground text-background px-8 py-3 rounded-xl text-sm font-medium hover:opacity-90 transition-all active:scale-95 shadow-xl shadow-foreground/10 flex items-center gap-2"
+                    >
+                      <Library className="w-4 h-4" />
+                      Explorar Matérias
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {displayedHubsFoco.length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-medium mb-3 text-muted-foreground">Hubs em Foco</h4>
+                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                            <SortableContext items={displayedHubsFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
+                              {displayedHubsFoco.map(estado => (
+                                <SortableItem
+                                  key={estado.config.slug}
+                                  id={estado.config.slug}
+                                  estado={estado}
+                                  onClick={() => handleCardClick(estado)}
+                                  isPinned={isFixada(estado.config.slug)}
+                                  onTogglePin={(e: React.MouseEvent) => {
+                                    e.stopPropagation();
+                                    toggleFixada(estado.config.slug);
+                                  }}
+                                />
+                              ))}
+                            </SortableContext>
+                          </div>
+                        </DndContext>
+                      </div>
+                    )}
+                    {displayedMateriasFoco.length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-medium mb-3 text-muted-foreground">Matérias em Foco</h4>
+                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                            <SortableContext items={displayedMateriasFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
+                              {displayedMateriasFoco.map(estado => (
+                                <SortableItem
+                                  key={estado.config.slug}
+                                  id={estado.config.slug}
+                                  estado={estado}
+                                  onClick={() => handleCardClick(estado)}
+                                  isPinned={isFixada(estado.config.slug)}
+                                  onTogglePin={(e: React.MouseEvent) => {
+                                    e.stopPropagation();
+                                    toggleFixada(estado.config.slug);
+                                  }}
+                                />
+                              ))}
+                            </SortableContext>
+                          </div>
+                        </DndContext>
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+
+            {/* ABA: EXPLORAR MATÉRIAS */}
+            {currentTab === 'materias' && (
+              <>
+                {searchQuery.trim().length > 0 ? (
+                  <div className="space-y-6">
+                    <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest px-1">
+                      Resultados da busca ({searchResultsMaterias.length})
+                    </h3>
+                    {searchResultsMaterias.length > 0 ? (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                        {searchResultsMaterias.map(result => (
+                          <div key={result.estado.config.slug} className="flex flex-col gap-1">
+                            <MateriaCard
+                              estado={result.estado}
+                              onClick={() => handleCardClick(result.estado)}
+                              isPinned={isFocado(result.estado.config.slug)}
+                              onTogglePin={(e: React.MouseEvent) => {
+                                e.stopPropagation();
+                                toggleFoco(result.estado.config.slug);
+                              }}
+                            />
+                            {result.matchedTopics.length > 0 && (
+                              <div className="ml-2 pl-2 border-l-2 border-border text-[11px] text-muted-foreground mt-1 space-y-1">
+                                {result.matchedTopics.slice(0, 3).map((topic, i) => (
+                                  <div key={i} className="line-clamp-1 flex items-center gap-1.5 opacity-80">
+                                    <span className="w-1 h-1 rounded-full bg-muted-foreground/50 shrink-0" />
+                                    {topic}
+                                  </div>
+                                ))}
+                                {result.matchedTopics.length > 3 && (
+                                  <div className="text-[10px] text-muted-foreground/50 italic pl-2.5">
+                                    +{result.matchedTopics.length - 3} tópicos
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-8 text-center text-muted-foreground bg-muted/30 rounded-2xl border border-dashed border-border/50">
+                        Nenhuma matéria encontrada.
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                      {todasMateriasIsoladas.slice(0, visibleLimitMaterias).map(estado => (
+                        <MateriaCard
                           key={estado.config.slug}
-                          id={estado.config.slug}
                           estado={estado}
                           onClick={() => handleCardClick(estado)}
-                          isPinned={isFixada(estado.config.slug)}
+                          isPinned={isFocado(estado.config.slug)}
                           onTogglePin={(e: React.MouseEvent) => {
                             e.stopPropagation();
-                            toggleFixada(estado.config.slug);
+                            toggleFoco(estado.config.slug);
                           }}
                         />
                       ))}
-                    </SortableContext>
-                  </div>
-                </DndContext>
-
-                {displayedHubs.length > 4 && (
-                  <div className="flex items-center gap-2 mb-4">
-                    {visibleLimitHubs > 4 && (
-                      <button
-                        onClick={() => setVisibleLimitHubs(prev => Math.max(4, prev - 4))}
-                        className="flex-1 py-2.5 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
-                      >
-                        Ver menos hubs
-                      </button>
-                    )}
-                    {visibleLimitHubs < displayedHubs.length && (
-                      <button
-                        onClick={() => setVisibleLimitHubs(prev => prev + 4)}
-                        className="flex-1 py-2.5 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
-                      >
-                        Ver mais hubs ({Math.min(visibleLimitHubs + 4, displayedHubs.length)} de {displayedHubs.length})
-                      </button>
+                    </div>
+                    {todasMateriasIsoladas.length > visibleLimitMaterias && (
+                      <div className="flex items-center gap-2 mb-4">
+                        <button
+                          onClick={() => setVisibleLimitMaterias(prev => prev + 6)}
+                          className="flex-1 py-3 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed border-border hover:bg-muted transition-colors"
+                        >
+                          Ver mais matérias ({Math.min(visibleLimitMaterias + 6, todasMateriasIsoladas.length)} de {todasMateriasIsoladas.length})
+                        </button>
+                      </div>
                     )}
                   </div>
                 )}
-              </div>
+              </>
             )}
 
-            {(filterType === 'all' || filterType === 'materias') && displayedMaterias.length > 0 && (
-              <div>
-                <h4 className="text-sm font-medium mb-3 text-muted-foreground">Matérias em Foco</h4>
-                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                    <SortableContext items={visibleMaterias.map(e => e.config.slug)} strategy={rectSortingStrategy}>
-                      {visibleMaterias.map(estado => (
-                        <SortableItem
-                          key={estado.config.slug}
-                          id={estado.config.slug}
-                          estado={estado}
-                          onClick={() => handleCardClick(estado)}
-                          isPinned={isFixada(estado.config.slug)}
-                          onTogglePin={(e: React.MouseEvent) => {
-                            e.stopPropagation();
-                            toggleFixada(estado.config.slug);
-                          }}
-                        />
-                      ))}
-                    </SortableContext>
-                  </div>
-                </DndContext>
+            {/* ABA: EXPLORAR HUBS */}
+            {currentTab === 'hubs' && (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={(event) => {
+                  const { active, over } = event;
+                  if (over && active.id !== over.id) {
+                    // Ordenamos o array original MATERIAS exatamente com a lógica estável
+                    const sortedHubsOriginal = [...MATERIAS].sort((a, b) => {
+                      const indexA = ordemHubs.indexOf(a.slug);
+                      const indexB = ordemHubs.indexOf(b.slug);
+                      if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                      if (indexA !== -1) return -1;
+                      if (indexB !== -1) return 1;
+                      const origIndexA = MATERIAS.findIndex(m => m.slug === a.slug);
+                      const origIndexB = MATERIAS.findIndex(m => m.slug === b.slug);
+                      return origIndexA - origIndexB;
+                    });
 
-                {displayedMaterias.length > 4 && (
-                  <div className="flex items-center gap-2 mb-4">
-                    {visibleLimitMaterias > 4 && (
-                      <button
-                        onClick={() => setVisibleLimitMaterias(prev => Math.max(4, prev - 4))}
-                        className="flex-1 py-2.5 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
-                      >
-                        Ver menos matérias
-                      </button>
-                    )}
-                    {visibleLimitMaterias < displayedMaterias.length && (
-                      <button
-                        onClick={() => setVisibleLimitMaterias(prev => prev + 4)}
-                        className="flex-1 py-2.5 rounded-xl text-[12px] font-medium text-muted-foreground bg-muted/20 hover:bg-muted/50 transition-colors"
-                      >
-                        Ver mais matérias ({Math.min(visibleLimitMaterias + 4, displayedMaterias.length)} de {displayedMaterias.length})
-                      </button>
-                    )}
-                  </div>
-                )}
+                    const oldIndex = sortedHubsOriginal.findIndex(e => e.slug === active.id);
+                    const newIndex = sortedHubsOriginal.findIndex(e => e.slug === over.id);
+                    
+                    if (oldIndex !== -1 && newIndex !== -1) {
+                      const novaOrdem = arrayMove(sortedHubsOriginal, oldIndex, newIndex).map(e => e.slug);
+                      atualizarOrdemHubs(novaOrdem);
+                    }
+                  }
+                }}
+              >
+                <SortableContext
+                  items={visibleExplorarHubs.map(cat => cat.slug)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {visibleExplorarHubs.map(cat => {
+                    const leafSlugs = getAllLeafSlugs(cat);
+                    const catEstados = leafSlugs
+                      .map(slug => estados.find(e => e.config.slug === slug))
+                      .filter(Boolean) as typeof estados;
+                    
+                    if (catEstados.length === 0) return null;
+
+                    const isExpanded = expandedCats.has(cat.slug) || normalizedQuery.length > 0;
+
+                    return (
+                      <SortableHubItem key={cat.slug} id={cat.slug}>
+                        <div
+                          onClick={(e) => toggleCat(cat.slug)}
+                          className="group flex items-start gap-3 cursor-pointer select-none"
+                        >
+                          <div className="w-10 h-10 rounded-xl bg-foreground/[0.06] border border-border/40 flex items-center justify-center text-xl shrink-0 mt-0.5 group-hover:bg-foreground/10 transition-colors">
+                            {cat.emoji}
+                          </div>
+                          <div className="flex-1 min-w-0 pointer-events-none">
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-2">
+                                <h2 className="text-base font-semibold tracking-tight text-foreground group-hover:text-foreground/80 transition-colors">
+                                  {cat.nome}
+                                </h2>
+                                <span className="text-[10px] font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                                  {catEstados.length} matérias
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 pointer-events-auto">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleFoco(cat.slug);
+                                  }}
+                                  className={cn(
+                                    "p-1.5 rounded-lg transition-all",
+                                    isFocado(cat.slug) 
+                                      ? "text-[hsl(var(--success))] bg-[hsl(var(--success)/0.1)] hover:bg-[hsl(var(--success)/0.2)]" 
+                                      : "text-muted-foreground bg-muted/30 hover:bg-muted/50"
+                                  )}
+                                  title={isFocado(cat.slug) ? "Remover Hub do Foco" : "Fixar Hub no Foco"}
+                                >
+                                  {isFocado(cat.slug) ? <Pin className="w-4 h-4 fill-current" /> : <Pin className="w-4 h-4" />}
+                                </button>
+                                <div className="text-muted-foreground/50 group-hover:text-muted-foreground transition-colors p-1.5 bg-muted/30 hover:bg-muted/50 rounded-lg cursor-pointer" onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleCat(cat.slug);
+                                }}>
+                                  {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                                </div>
+                              </div>
+                            </div>
+                            {cat.descricao && (
+                              <p className="text-[12px] text-muted-foreground mt-0.5 leading-relaxed line-clamp-2 pr-6">
+                                {cat.descricao}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {isExpanded && (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-5 border-t border-border/50 cursor-default" onPointerDown={e => e.stopPropagation()}>
+                            {catEstados
+                              .filter(estado => {
+                                if (!normalizedQuery) return true;
+                                const catName = cat.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                                const catDesc = cat.descricao?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                                if (catName.includes(normalizedQuery) || catDesc?.includes(normalizedQuery)) return true;
+                                
+                                const estName = estado.config.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                                const estDesc = estado.config.descricao?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                                return estName.includes(normalizedQuery) || estDesc?.includes(normalizedQuery);
+                              })
+                              .map((estado, index) => {
+                              const pinned = isFocado(estado.config.slug);
+                              return (
+                                <div key={estado.config.slug}>
+                                  <div 
+                                    className={cn(
+                                      "group relative overflow-hidden rounded-2xl border transition-all cursor-pointer h-full",
+                                      pinned 
+                                        ? "border-[hsl(var(--success)/0.4)] bg-[hsl(var(--success)/0.03)]" 
+                                        : "border-border/50 bg-card hover:border-border/80"
+                                    )}
+                                  >
+                                    <div 
+                                      onClick={() => handleCardClick(estado)}
+                                      className="p-5"
+                                    >
+                                      <div className="flex items-start justify-between gap-4">
+                                        <div className="flex-1">
+                                          <div className="flex items-center gap-3 mb-2">
+                                            <span className="text-2xl">{estado.config.emoji}</span>
+                                            <div className="flex flex-col">
+                                              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-0.5">
+                                                {normalizedQuery ? 'MATÉRIA' : `Etapa ${index + 1}`}
+                                              </span>
+                                              <h3 className="font-semibold text-foreground tracking-tight leading-tight">
+                                                {estado.config.nome}
+                                              </h3>
+                                            </div>
+                                          </div>
+                                          <p className="text-[13px] text-muted-foreground line-clamp-2">
+                                            {estado.config.descricao}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleFoco(estado.config.slug);
+                                      }}
+                                      className={cn(
+                                        "absolute top-4 right-4 p-2 rounded-xl transition-all z-10",
+                                        pinned 
+                                          ? "text-[hsl(var(--success))] bg-[hsl(var(--success)/0.1)] hover:bg-[hsl(var(--success)/0.2)]" 
+                                          : "text-muted-foreground bg-muted/50 hover:bg-muted opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                      )}
+                                      title={pinned ? "Remover do Foco" : "Fixar no Foco"}
+                                    >
+                                      {pinned ? <Pin className="w-4 h-4 fill-current" /> : <Pin className="w-4 h-4" />}
+                                    </button>
+                                    
+                                    <div className="px-5 pb-5 pt-1 pointer-events-none">
+                                       <span className="text-[11px] font-medium text-muted-foreground bg-muted/50 px-2 py-1 rounded-md">
+                                          {estado.totalSessoes} {estado.totalSessoes === 1 ? 'sessão' : 'sessões'}
+                                       </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </SortableHubItem>
+                    );
+                  })}
+                </SortableContext>
+              </DndContext>
+            )}
+            
+            {currentTab === 'hubs' && !normalizedQuery && sortedAndFilteredHubs.length > visibleLimitHubs && (
+              <div className="flex items-center gap-2 mb-8 mt-4">
+                <button
+                  onClick={() => setVisibleLimitHubs(prev => prev + 4)}
+                  className="flex-1 py-3 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed border-border hover:bg-muted transition-colors"
+                >
+                  Ver mais Hubs ({Math.min(visibleLimitHubs + 4, sortedAndFilteredHubs.length)} de {sortedAndFilteredHubs.length})
+                </button>
               </div>
             )}
+            
           </div>
-        )}
-
-        {!isLoading && (
-          <button
-            onClick={() => navigate('/biblioteca')}
-            className="w-full mb-12 py-4 px-4 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed hover:bg-muted transition-colors flex items-center justify-center gap-2"
-          >
-            <Library className="w-4 h-4" />
-            Gerenciar Foco na Biblioteca
-          </button>
-        )}
-
-
-        </>
         )}
       </div>
 
