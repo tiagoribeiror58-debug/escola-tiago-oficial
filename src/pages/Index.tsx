@@ -173,6 +173,8 @@ export default function Index() {
   const { ordemHubs, atualizarOrdemHubs } = useOrdemHubs();
   
   const [currentTab, setCurrentTab] = useState<'foco' | 'materias' | 'hubs'>('foco');
+  const [focoFilterType, setFocoFilterType] = useState<'all' | 'materias' | 'hubs'>('all');
+  const [visibleLimitFoco, setVisibleLimitFoco] = useState(4);
   const [visibleLimitMaterias, setVisibleLimitMaterias] = useState(4);
   const [visibleLimitHubs, setVisibleLimitHubs] = useState(4);
   
@@ -239,8 +241,9 @@ export default function Index() {
     return 0;
   });
 
-  const displayedMateriasFoco = displayedFoco.filter(e => !e.config.isCategory);
-  const displayedHubsFoco = displayedFoco.filter(e => e.config.isCategory);
+  const visibleFoco = displayedFoco.slice(0, visibleLimitFoco);
+  const displayedMateriasFoco = visibleFoco.filter(e => !e.config.isCategory);
+  const displayedHubsFoco = visibleFoco.filter(e => e.config.isCategory);
 
   const handleDragEndFoco = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -508,7 +511,38 @@ export default function Index() {
                   </div>
                 ) : (
                   <>
-                    {displayedHubsFoco.length > 0 && (
+                    {displayedFoco.length > 0 && (
+                      <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
+                        <button
+                          onClick={() => setFocoFilterType('all')}
+                          className={cn(
+                            "px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap",
+                            focoFilterType === 'all' ? "bg-foreground text-background" : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                          )}
+                        >
+                          Tudo
+                        </button>
+                        <button
+                          onClick={() => setFocoFilterType('materias')}
+                          className={cn(
+                            "px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap",
+                            focoFilterType === 'materias' ? "bg-foreground text-background" : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                          )}
+                        >
+                          Apenas Matérias
+                        </button>
+                        <button
+                          onClick={() => setFocoFilterType('hubs')}
+                          className={cn(
+                            "px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap",
+                            focoFilterType === 'hubs' ? "bg-foreground text-background" : "bg-muted/50 text-muted-foreground hover:bg-muted"
+                          )}
+                        >
+                          Apenas Hubs
+                        </button>
+                      </div>
+                    )}
+                    {(focoFilterType === 'all' || focoFilterType === 'hubs') && displayedHubsFoco.length > 0 && (
                       <div>
                         <h4 className="text-sm font-medium mb-3 text-muted-foreground">Hubs em Foco</h4>
                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
@@ -532,7 +566,7 @@ export default function Index() {
                         </DndContext>
                       </div>
                     )}
-                    {displayedMateriasFoco.length > 0 && (
+                    {(focoFilterType === 'all' || focoFilterType === 'materias') && displayedMateriasFoco.length > 0 && (
                       <div>
                         <h4 className="text-sm font-medium mb-3 text-muted-foreground">Matérias em Foco</h4>
                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
@@ -554,6 +588,16 @@ export default function Index() {
                             </SortableContext>
                           </div>
                         </DndContext>
+                      </div>
+                    )}
+                    {displayedFoco.length > visibleLimitFoco && (
+                      <div className="flex items-center gap-2 mb-4 mt-2">
+                        <button
+                          onClick={() => setVisibleLimitFoco(prev => prev + 4)}
+                          className="flex-1 py-3 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed border-border hover:bg-muted transition-colors"
+                        >
+                          Ver mais foco ({Math.min(visibleLimitFoco + 4, displayedFoco.length)} de {displayedFoco.length})
+                        </button>
                       </div>
                     )}
                   </>
