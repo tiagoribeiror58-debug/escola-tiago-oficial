@@ -65,7 +65,7 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
           const contextStr = recentMessages.map((m: any) => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n");
           const lastUserMessage = [...messages].reverse().find((m: any) => m.role === 'user')?.content;
 
-          if (lastUserMessage && TAVILY_API_KEY && DEEPSEEK_API_KEY) {
+          if (lastUserMessage && DEEPSEEK_API_KEY) {
             try {
               console.log(`[chat] Verificando intenção de busca com Gemini...`);
               
@@ -91,56 +91,80 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
                 const decision = intentData.choices?.[0]?.message?.content?.trim();
                 console.log(`[chat] Decisão/Query de Busca (Gemini): ${decision}`);
 
-                // --- 2. BUSCA NA TAVILY ---
+                // --- 2. BUSCA NA TAVILY OU FALLBACK ---
                 if (decision && decision.toUpperCase() !== 'NAO' && decision.toUpperCase() !== 'NÃO') {
                   const searchQuery = decision;
-                  console.log(`[chat] Acionando busca na Tavily com a query: "${searchQuery}"`);
+                  console.log(`[chat] Acionando busca na web com a query: "${searchQuery}"`);
                   
                   // EMITE O EVENTO DE BUSCA PARA O FRONTEND! (Indicador visual em tempo real)
                   controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'search_intent', query: searchQuery })}\n\n`));
                   
-                  const tavilyResponse = await fetch("https://api.tavily.com/search", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      api_key: TAVILY_API_KEY,
-                      query: searchQuery,
-                      search_depth: "basic",
-                      include_images: false,
-                      include_answer: false,
-                      max_results: 3,
-                    }),
-                  });
+                  let snippets = "";
 
-                  if (tavilyResponse.ok) {
-                    const tavilyData = await tavilyResponse.json();
-                    const results: any[] = tavilyData.results || [];
-                    const snippets = results.map((r: any) => `[${r.title || 'Referência'}](${r.url}):\n${r.content}`).join("\n\n");
+                  if (TAVILY_API_KEY) {
+                    try {
+                      const tavilyResponse = await fetch("https://api.tavily.com/search", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          api_key: TAVILY_API_KEY,
+                          query: searchQuery,
+                          search_depth: "basic",
+                          include_images: false,
+                          include_answer: false,
+                          max_results: 3,
+                        }),
+                      });
+
+                      if (tavilyResponse.ok) {
+                        const tavilyData = await tavilyResponse.json();
+                        const results: any[] = tavilyData.results || [];
+                        snippets = results.map((r: any) => `[${r.title || 'Referência'}](${r.url}):\n${r.content}`).join("\n\n");
+                      } else {
+                        console.warn(`[chat] Falha na Tavily API:`, await tavilyResponse.text());
+                      }
+                    } catch (err) {
+                      console.error(`[chat] Erro ao chamar Tavily:`, err);
+                    }
+                  }
+
+                  if (!snippets) {
+                    console.log(`[chat] Tavily indisponível ou sem chave. Usando DuckDuckGo fallback...`);
+                    try {
+                      const ddg = await import("npm:duck-duck-scrape");
+                      const ddgResults = await ddg.search(searchQuery);
+                      const results = ddgResults.results || [];
+                      snippets = results.slice(0, 3).map((r: any) => `[${r.title}](${r.url}):\n${r.description}`).join("\n\n");
+                    } catch (err) {
+                      console.error(`[chat] Erro no DuckDuckGo fallback:`, err);
+                    }
+                  }
                     
-                    if (snippets) {
-                      finalSystemPrompt += `\n\n<contexto_tempo_real>\nOs seguintes dados de tempo real foram recuperados da web agora (usando a ferramenta de busca). Use essas informações para responder com precisão atualizada.\n\n${snippets}\n</contexto_tempo_real>`;
-                      console.log(`[chat] Contexto dinâmico injetado com sucesso!`);
+                  if (snippets) {
+                    finalSystemPrompt += `\n\n<contexto_tempo_real>\nOs seguintes dados de tempo real foram recuperados da web agora (usando a ferramenta de busca). Use essas informações para responder com precisão atualizada.\n\n${snippets}\n</contexto_tempo_real>`;
+                    console.log(`[chat] Contexto dinâmico injetado com sucesso!`);
 
-                      // Detectar tópico emergente (fire-and-forget)
-                      if (materiaSlug && DEEPSEEK_API_KEY) {
-                        (async () => {
-                          try {
-                            const topicDetectResp = await fetch("https://api.deepseek.com/chat/completions", {
-                              method: "POST",
-                              headers: {
-                                "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
-                                "Content-Type": "application/json",
-                              },
-                              body: JSON.stringify({
-                                model: "deepseek-v4-flash",
-                                messages: [
-                                  { role: "system", content: `Você é um curador de currículo educacional. Analise o conteúdo de busca fornecido e determine se ele contém UM tópico de estudo concreto e específico que seria valioso para um aluno que estuda '${materiaSlug}'. Se sim, retorne um JSON com exatamente este formato: {\"titulo\": \"Título conciso do tópico\", \"descricao\": \"Uma frase explicando o que o aluno aprenderá\", \"fonte_url\": \"URL mais relevante\"}. Se NÃO houver tópico novo relevante, retorne apenas: null` },
-                                  { role: "user", content: `Conteúdo da busca:\n${snippets.substring(0, 2000)}` }
-                                ],
-                                max_tokens: 200,
-                                temperature: 0.1,
-                              }),
-                            });
+                    // Detectar tópico emergente (fire-and-forget)
+                    if (materiaSlug && DEEPSEEK_API_KEY) {
+                      (async () => {
+                        try {
+                          const topicDetectResp = await fetch("https://api.deepseek.com/chat/completions", {
+                            method: "POST",
+                            headers: {
+                              "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                              model: "deepseek-v4-flash",
+                              messages: [
+                                { role: "system", content: `Você é um curador de currículo educacional. Analise o conteúdo de busca fornecido e determine se ele contém UM tópico de estudo concreto e específico que seria valioso para um aluno que estuda '${materiaSlug}'. Se sim, retorne um JSON com exatamente este formato: {\"titulo\": \"Título conciso do tópico\", \"descricao\": \"Uma frase explicando o que o aluno aprenderá\", \"fonte_url\": \"URL mais relevante\"}. Se NÃO houver tópico novo relevante, retorne apenas: null` },
+                                { role: "user", content: `Conteúdo da busca:\n${snippets.substring(0, 2000)}` }
+                              ],
+                              max_tokens: 200,
+                              temperature: 0.1,
+                            }),
+                          });
+
 
                             if (topicDetectResp.ok) {
                               const topicData = await topicDetectResp.json();
