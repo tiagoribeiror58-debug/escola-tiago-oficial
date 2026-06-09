@@ -42,7 +42,7 @@ serve(async (req) => {
 
 [INSTRUÇÃO VISUAL CRÍTICA]:
 Você deve gerar RECURSOS VISUAIS para o aluno usando Diagramas e Fotos Reais. É OBRIGATÓRIO ilustrar conceitos sempre que possível.
-1. DIAGRAMAS LÓGICOS (Mermaid): Para processos, ciclos ou organogramas, crie blocos \`mermaid\`. (Use aspas duplas nos textos dos nós: A["texto"]).
+1. DIAGRAMAS LÓGICOS (Mermaid): SEMPRE que você estiver explicando um processo passo a passo, um fluxo de dados, uma hierarquia, um ciclo mental, arquitetura de sistemas ou qualquer relação de causa e efeito, você DEVE criar um diagrama usando blocos \`mermaid\`. Faça isso frequentemente para facilitar o mapa mental do aluno! (Regra sintaxe: Use aspas duplas nos textos dos nós: A["texto longo"]).
 2. FOTOS REAIS (Unsplash): O Tiago é extremamente visual! Sempre que citar um local histórico, cenário, animal, tecnologia física ou conceito visualizável, você DEVE gerar uma foto inserindo a tag: [FOTO: termo de busca em ingles] em uma linha isolada na sua resposta.
 Exemplo prático: [FOTO: modern data center servers] ou [FOTO: ancient rome colosseum]
 REGRA: É extremamente encorajado usar [FOTO: ...] em 90% das suas explicações sobre coisas do mundo real.
