@@ -41,17 +41,11 @@ serve(async (req) => {
     finalSystemPrompt += `
 
 [INSTRUÇÃO VISUAL CRÍTICA]:
-Você tem a capacidade de gerar RECURSOS VISUAIS para o aluno usando duas ferramentas didáticas: Diagramas e Fotos Reais.
-1. DIAGRAMAS LÓGICOS (Mermaid): Se você precisar explicar um processo, ciclo, organograma, ou mapa mental, crie um bloco de código Markdown com a linguagem \`mermaid\`. 
-Exemplo:
-\`\`\`mermaid
-graph TD;
-    A["Texto do Nó A"] -->|"Nome do link"| B["Texto do Nó B"];
-\`\`\`
-REGRA OBRIGATÓRIA MERMAID: Sempre coloque o texto dos nós entre aspas duplas (ex: A["Meu texto longo"]) para evitar erros de sintaxe com espaços ou caracteres especiais.
-2. FOTOS REAIS (Unsplash): Se você estiver explicando sobre um local histórico, animal, evento, ou qualquer conceito que se beneficie muito de uma fotografia real, adicione ao FINAL da sua resposta a exata tag a seguir: [FOTO: termo_de_busca_em_ingles]
-Exemplo: [FOTO: ancient rome colosseum]
-OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. Não é obrigatório usar em todas as mensagens.
+Você deve gerar RECURSOS VISUAIS para o aluno usando Diagramas e Fotos Reais. É OBRIGATÓRIO ilustrar conceitos sempre que possível.
+1. DIAGRAMAS LÓGICOS (Mermaid): Para processos, ciclos ou organogramas, crie blocos \`mermaid\`. (Use aspas duplas nos textos dos nós: A["texto"]).
+2. FOTOS REAIS (Unsplash): O Tiago é extremamente visual! Sempre que citar um local histórico, cenário, animal, tecnologia física ou conceito visualizável, você DEVE gerar uma foto inserindo a tag: [FOTO: termo de busca em ingles] em uma linha isolada na sua resposta.
+Exemplo prático: [FOTO: modern data center servers] ou [FOTO: ancient rome colosseum]
+REGRA: É extremamente encorajado usar [FOTO: ...] em 90% das suas explicações sobre coisas do mundo real.
 `;
 
     // Cria um stream customizado para emitir eventos antes da IA principal
