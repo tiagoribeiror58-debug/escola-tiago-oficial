@@ -46,6 +46,9 @@ Você deve gerar RECURSOS VISUAIS para o aluno usando Diagramas e Fotos Reais. �
 2. FOTOS REAIS (Unsplash): O Tiago é extremamente visual! Sempre que citar um local histórico, cenário, animal, tecnologia física ou conceito visualizável, você DEVE gerar uma foto inserindo a tag: [FOTO: termo de busca em ingles] em uma linha isolada na sua resposta.
 Exemplo prático: [FOTO: modern data center servers] ou [FOTO: ancient rome colosseum]
 REGRA: É extremamente encorajado usar [FOTO: ...] em 90% das suas explicações sobre coisas do mundo real.
+
+[REGRA DE OURO]:
+Absolutamente TODA MENSAGEM SUA, sem exceção, DEVE terminar isoladamente com a tag <chips>Sugestão 1|Sugestão 2</chips>. Omitir essa tag quebra a interface do sistema!
 `;
 
     // Cria um stream customizado para emitir eventos antes da IA principal
