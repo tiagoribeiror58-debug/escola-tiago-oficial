@@ -139,41 +139,6 @@ Abordagem obrigatória:
       descricao: 'Otimização da máquina biológica para máxima performance.',
       children: [
         {
-          slug: 'neurociencia',
-          nome: 'Neurociência',
-          emoji: '🧬',
-          parent: 'corpo-biologia',
-          whyStart: 'Comece pelo hardware. Antes de adotar qualquer protocolo de performance, entenda os mecanismos cerebrais que os justificam.',
-          descricao: 'Entenda os mecanismos mecânicos do seu cérebro por trás de hábitos e vícios.',
-          contexto: `Foco: mecanismos cerebrais reais — LTP, neuroplasticidade, consolidação de memória.
-
-Abordagem obrigatória:
-- Comece sempre pelo mecanismo biológico. Só depois conecte com comportamento.
-- Nunca parta do comportamento sem antes ter explicado o substrato neural.
-- Desmistifique neuromitos explicando onde o mecanismo real diverge.`,
-          ementa: [
-            'Neuroplasticidade Hebbiana',
-            'O Circuito de Recompensa (Dopamina)',
-            'Córtex Pré-Frontal vs Amígdala',
-            'Consolidação de Memória (LTP)',
-            'Neurogênese Adulta e Exercício',
-            'Serotonina, Noradrenalina e Humor',
-            'O Papel do GABA e Glutamato no Aprendizado',
-            'A Rede de Modo Padrão (Default Mode Network)',
-            'Neurociência do Hábito: Cue-Routine-Reward',
-            'Atenção e o Locus Coeruleus',
-            'Plasticidade Dependente de Experiência',
-            'Neurodegeneração e Prevenção do Alzheimer',
-            'Psilocibina e Neuroplasticidade (Pesquisa Atual)',
-            'Sono e Consolidação de Memória (Sistema Glinfático)',
-            'Neurociência do Medo e Extinção do Condicionamento',
-            'Microbioma e Neurotransmissores: O Eixo Intestino-Cérebro',
-            'Neurofeedback: Treinando o Cérebro com Dados em Tempo Real',
-            'Neurociência da Criatividade: Redes de Insight',
-            'Brain-Computer Interfaces: O Futuro da Neurotecnologia'
-          ]
-        },
-        {
           slug: 'nutricao-otimizada',
           nome: 'Nutrição Otimizada',
           emoji: '🥑',

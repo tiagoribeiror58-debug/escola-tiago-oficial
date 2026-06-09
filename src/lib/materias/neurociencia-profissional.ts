@@ -8,6 +8,97 @@ export const neurocienciaProfissional: MateriaConfig = {
   descricao: 'A neurociência não é uma profissão — é uma lente. Aprenda a enxergar cada setor do mundo através do cérebro humano.',
   children: [
     {
+      slug: 'neurociencia-geral',
+      nome: 'Neurociência Geral e Fundamentos',
+      emoji: '🧠',
+      parent: 'neurociencia-profissional',
+      whyStart: 'A fundação de tudo. Antes de aplicar a neurociência a qualquer área específica, você precisa dominar as engrenagens da máquina neural.',
+      descricao: 'Mecanismos fundamentais do cérebro: da célula às grandes redes, a biologia de como pensamos, sentimos e agimos.',
+      contexto: `Foco: compreender a biologia fundamental do sistema nervoso sem atalhos comportamentais prematuros.
+
+Abordagem obrigatória:
+- Sempre defina a estrutura física antes da função cognitiva.
+- Evite explicações finalistas (ex: "o cérebro faz isso para..."). Descreva o mecanismo de pressão seletiva e química.
+- Destrua neuromitos logo de cara, separando neurociência dura de autoajuda baseada no cérebro.`,
+      fases: [
+        {
+          nome: 'Fase 1: Bases Celulares (A Máquina e as Peças)',
+          topicos: [
+            'História da Neurociência: De Cajal e Golgi à Optogenética',
+            'O Neurônio Anatômico: Dendritos, Soma, Axônio, Bainha de Mielina',
+            'Potencial de Ação: O Princípio Tudo ou Nada e os Canais Iônicos',
+            'Células da Glia: O Sistema de Suporte Silencioso (Astrócitos, Oligodendrócitos, Micróglia)',
+            'A Sinapse: Fenda Sináptica, Vesículas e Receptores',
+            'Neurotransmissores Fundamentais: Glutamato (Acelera) e GABA (Freia)',
+            'Moduladores Neurais: Dopamina, Serotonina, Noradrenalina, Acetilcolina',
+            'Integração Neural: Somatório Espacial e Temporal nos Dendritos',
+            'Plasticidade Sináptica de Curto Prazo (Facilitação e Depressão)',
+            'O Eixo Eletroquímico: Como a Química Vira Eletricidade e Vice-Versa'
+          ]
+        },
+        {
+          nome: 'Fase 2: Neuroanatomia Macroscópica (O Mapa do Cérebro)',
+          topicos: [
+            'O Córtex Cerebral: As 6 Camadas e a Hierarquia do Processamento',
+            'Lobos Cerebrais Básicos: Frontal, Parietal, Temporal, Occipital',
+            'O Sistema Límbico: Amígdala, Hipocampo e o Cérebro Emocional',
+            'Gânglios da Base: O Acelerador e Freio do Movimento e Pensamento',
+            'O Tronco Encefálico: Ponte, Bulbo, Mesencéfalo e Sobrevivência Básica',
+            'O Cerebelo: Muito Além do Equilíbrio e Coordenação',
+            'Tálamo: A Estação de Roteamento Sensorial',
+            'Hipotálamo: O Controlador Hormonal e o Eixo HPA',
+            'Sistema Nervoso Periférico: Somático vs Autônomo (Simpático e Parassimpático)',
+            'O Sistema Ventricular e o Líquido Cefalorraquidiano (LCR)',
+            'A Barreira Hematoencefálica: Como o Cérebro se Protege do Próprio Sangue'
+          ]
+        },
+        {
+          nome: 'Fase 3: Sistemas Sensoriais e Percepção (Como Sentimos)',
+          topicos: [
+            'O Princípio da Transdução Sensorial: Como a Física vira Biologia',
+            'Sistema Visual: Da Retina ao Córtex Occipital (V1, V2, V3...)',
+            'Vias Visuais: A Via "O Que" (Ventral) e a Via "Onde" (Dorsal)',
+            'Sistema Auditivo: Cóclea, Células Ciliadas e Córtex Auditivo',
+            'Somatossensorial: O Homúnculo de Penfield e a Percepção do Toque',
+            'A Dor (Nocicepção): Córtex Insular e Modulação Endógena da Dor',
+            'Olfato e Paladar: Os Sentidos Químicos e o Caminho Direto para o Límbico',
+            'Propriocepção e Interocepção: Como o Cérebro Sente a Si Mesmo',
+            'Integração Multissensorial: Como o Cérebro Junta as Peças (Ex: Efeito McGurk)',
+            'O Cérebro Preditivo: Como a Percepção é uma Alucinação Controlada (Predictive Coding)'
+          ]
+        },
+        {
+          nome: 'Fase 4: Neuroplasticidade e Aprendizado (Como Mudamos)',
+          topicos: [
+            'Neuroplasticidade Hebbiana: O Princípio Fundamental',
+            'LTP (Potenciação de Longo Prazo): A Base Molecular da Memória',
+            'LTD (Depressão de Longo Prazo): O Esquecimento como Ferramenta Biológica',
+            'Neurogênese Adulta: O Debate e as Evidências no Hipocampo',
+            'Períodos Críticos e Janelas de Plasticidade no Desenvolvimento',
+            'Mielinização e Velocidade de Processamento na Infância e Adolescência',
+            'Epigenética Neural: Como a Experiência Muda a Expressão Gênica no Cérebro',
+            'Reorganização Cortical Após Lesões (Neuroplasticidade Estrutural)',
+            'O Papel do Sono na Plasticidade e Consolidação (Replay Hipocampal)',
+            'Fatores Tróficos: BDNF e o "Adubo" do Cérebro'
+          ]
+        },
+        {
+          nome: 'Fase 5: Ritmos Cerebrais e Consciência (O Tempo do Cérebro)',
+          topicos: [
+            'Eletroencefalografia (EEG) Básica: Ondas Alpha, Beta, Theta, Delta e Gamma',
+            'O Ciclo Circadiano: O Núcleo Supraquiasmático e a Melatonina',
+            'A Arquitetura do Sono: Fases NREM (1, 2, 3/4) e o Sono REM',
+            'Sonhos e Sono REM: Paralisia Muscular e Consolidação Emocional',
+            'O Sistema Ativador Reticular Ascendente (SARA) e o Estado de Vigília',
+            'A Rede de Modo Padrão (Default Mode Network - DMN): O Cérebro em Repouso',
+            'Atenção e a Rede Frontoparietal: O Foco Top-Down vs Bottom-Up',
+            'Os Correlatos Neurais da Consciência: O Problema Difícil (Hard Problem)',
+            'Estados Alterados de Consciência: Meditação, Fluxo (Flow) e Psicodélicos'
+          ]
+        }
+      ],
+    },
+    {
       slug: 'neuro-saude-clinica',
       nome: 'Neurociência na Saúde e Clínica',
       emoji: '🏥',
