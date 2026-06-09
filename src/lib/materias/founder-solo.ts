@@ -8,6 +8,84 @@ export const founderSolo: MateriaConfig = {
   descricao: 'Desenvolvimento integral para fundadores solo: de engenharia a vendas, IA nativa e alavancagem máxima em 2026.',
   children: [
     {
+      slug: 'ia-operacional',
+      nome: 'IA Operacional & Eficiência',
+      emoji: '👷',
+      parent: 'founder-solo',
+      whyStart: 'Antes de entender os pesos matemáticos de um modelo, aprenda a usá-lo como ferramenta. E para um founder solo, IA não é luxo, é a equipe inteira.',
+      descricao: 'Uso diário para ganho massivo de eficiência pessoal. Fluxos de trabalho, GPT, Claude, MCP e automações.',
+      contexto: `Foco: táticas brutais de eficiência pessoal e fluxos de trabalho do dia a dia.
+O aluno é um "Pedreiro de Prompt" evoluindo para um maestro de agentes, querendo resolver tarefas rapidamente, de forma pragmática.`,
+      fases: [
+        {
+          nome: 'Fundamentos do Operador Centauro',
+          topicos: [
+            'O Mindset do Operador Centauro: Humano + Máquina em Sinergia',
+            'Anatomia de um Prompt de Alta Precisão (Role, Context, Constraints)',
+            'System Prompts vs User Prompts: Arquitetura de Instruções',
+            'Iteração e Refinamento de Contexto (Chaining)',
+            'Comparando Modelos: GPT vs Claude vs Gemini vs Modelos Abertos',
+            'Custo de Token: Otimizando a Fatura de API sem Perder Qualidade',
+            'Avaliação de Outputs: Como Medir a Qualidade Real da IA'
+          ]
+        },
+        {
+          nome: 'Estratégias Cognitivas e Prompting Avançado',
+          topicos: [
+            'Few-Shot Prompting: Guiando o Modelo com Exemplos Cirúrgicos',
+            'Chain-of-Thought: Fazendo a IA Pensar Passo a Passo em Voz Alta',
+            'Tree-of-Thought: Explorando Múltiplas Ramificações de Raciocínio Simultaneamente',
+            'Meta-Prompting: Usando uma IA para Gerar o Prompt Perfeito para Outra',
+            'Prompt Caching: Otimizando Latência e Custo em Contextos Longos',
+            'Raciocínio Estendido (Modelos o1, R1): Quando e Como Usar Pensamento Lento'
+          ]
+        },
+        {
+          nome: 'Produtividade, Conteúdo e Operações Diárias',
+          topicos: [
+            'Automatizando Tarefas Repetitivas Administrativas (Emails, Reuniões, Resumos)',
+            'Usando IA para Pesquisa, Síntese de Livros e Mapeamento de Mercado',
+            'IA como Coautor para Criação de Conteúdo (Blog, LinkedIn, X, Newsletters)',
+            'Prompts e Code Interpreter para Análise de Dados e Planilhas Financeiras',
+            'IA para Gestão de Projetos, Criação de OKRs e Documentação Técnica',
+            'Criação de Prompts Dinâmicos e Templates para Uso Contínuo'
+          ]
+        },
+        {
+          nome: 'Ecossistema, APIs e Customização',
+          topicos: [
+            'Construindo GPTs Customizados para Funções Específicas da Sua Empresa',
+            'A Primeira Integração com a API da OpenAI ou Anthropic',
+            'Automações No-Code com IA (Make, Zapier, n8n + LLMs)',
+            'Workflows Compostos: Encadeando Múltiplas Chamadas de IA no Backend',
+            'Artifacts (Claude) e Canvas (ChatGPT): IAs que Geram Interfaces e Docs ao Vivo'
+          ]
+        },
+        {
+          nome: 'Conectividade Avançada: O Poder do MCP',
+          topicos: [
+            'MCP (Model Context Protocol): O Padrão Universal de Conectividade da Anthropic',
+            'Como Funciona o Claude Desktop + Acesso ao Sistema de Arquivos (Local MCP)',
+            'Integrando Claude ao Notion via MCP: A IA Lendo e Editando Seu Cérebro Digital',
+            'Conectores MCP Populares: GitHub, Slack, Google Drive e Suas Aplicações',
+            'Ferramentas de IA Agêntica e "Tool Use" (Function Calling)',
+            'Acessando Bancos de Dados: A IA Consultando SQL e Postgres via MCP Diretamente'
+          ]
+        },
+        {
+          nome: 'Vibe Coding, Agentes Autônomos e Terminal',
+          topicos: [
+            'IA para Programação Básica: Como Pedir Código Sem Saber Programar (Vibe Coding)',
+            'Sistemas Multi-Agente Básicos: Dividindo Tarefas Complexas Entre IAs',
+            'IDEs Impulsionadas por IA: O Fluxo de Trabalho no Cursor e Windsurf',
+            'Claude Code e Terminal Agents: Dando à IA o Controle da Linha de Comando',
+            'AI Coding Assistants: Como Revisar, Testar e Validar o Código que a Máquina Gerou',
+            'Agentes Autônomos Avançados (Devin, AutoGPT, BabyAGI): O Que é Real e o Que é Hype'
+          ]
+        }
+      ]
+    },
+    {
       slug: 'founder-ia-automacao',
       nome: 'IA & Automação para Founders',
       emoji: '🤖',

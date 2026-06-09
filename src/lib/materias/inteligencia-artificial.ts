@@ -7,52 +7,7 @@ export const iaHub: MateriaConfig = {
   isCategory: true,
   descricao: 'Com a base computacional sólida, você avança para a fronteira algorítmica. Aqui você deixa de apenas codar regras para ensinar sistemas a aprenderem.',
   children: [
-    {
-      slug: 'ia-operacional',
-      nome: 'IA Operacional & Eficiência',
-      emoji: '👷',
-      parent: 'ia-hub',
-      whyStart: 'Antes de entender os pesos matemáticos de um modelo, aprenda a usá-lo como ferramenta.',
-      descricao: 'Uso diário para ganho massivo de eficiência pessoal. Fluxos de trabalho, GPT, Claude.',
-      contexto: `Foco: táticas brutais de eficiência pessoal e fluxos de trabalho do dia a dia.
-O aluno é um "Pedreiro de Prompt", quer resolver tarefas rapidamente, de forma pragmática.`,
-      ementa: [
-        // === EXISTENTES ===
-        'O Mindset do Operador Centauro',
-        'Anatomia de um Prompt de Alta Precisão (Role, Context, Constraints)',
-        'Iteração e Refinamento de Contexto (Chaining)',
-        'Automatizando Tarefas Repetitivas (Copywriting, Resumos, Emails)',
-        'Few-Shot Prompting: Guiando com Exemplos',
-        'Chain-of-Thought: Fazendo a IA Pensar em Voz Alta',
-        'Prompts para Análise de Dados e Planilhas',
-        'Usando IA para Pesquisa e Síntese de Informações',
-        'Análise de Dados Avançada via Agentes (Code Interpreter)',
-        'Automações No-Code conectadas a IA (Zapier/Make + OpenAI)',
-        'Criação de Prompts Dinâmicos (Templates)',
-        'Sistemas Multi-Agente Básicos',
-        'Construindo GPTs Customizados',
-        'API da OpenAI/Anthropic: Primeira Integração',
-        'Avaliação de Outputs: Como Medir Qualidade da IA',
-        'Custo de Token: Otimizando sua Fatura de API',
-        // === NOVOS ===
-        'Tree-of-Thought: Explorando Ramificações de Raciocínio',
-        'Meta-Prompting: Usando IA para Gerar Prompts Melhores',
-        'Prompt Caching e Otimização de Latência',
-        'System Prompts vs User Prompts: Arquitetura de Instruções',
-        'Comparando Modelos: GPT vs Claude vs Gemini vs Open Source',
-        'IA para Programação: Copilot, Cursor e Vibe Coding',
-        'Usando IA para Criação de Conteúdo (Blog, LinkedIn, X)',
-        'IA para Gestão de Projetos e Documentação Técnica',
-        'Workflows Compostos: Encadeando Múltiplas IAs',
-        'MCP (Model Context Protocol): Conectando IA a Ferramentas',
-        // === 2026 ===
-        'Raciocínio Estendido (Extended Thinking / o1 / R1): Quando Usar',
-        'Vibe Coding com Agentes Autônomos (Devin, Codex CLI, Windsurf)',
-        'Claude Code e Terminal Agents: IA no Linha de Comando',
-        'AI Coding Assistants: Como Revisar e Validar Código Gerado por IA',
-        'Artifacts e Canvas: IAs que Geram Interfaces ao Vivo'
-      ]
-    },
+
     {
       slug: 'ciencia-dados-preditiva',
       nome: 'Machine Learning Clássico & Preditivo',
