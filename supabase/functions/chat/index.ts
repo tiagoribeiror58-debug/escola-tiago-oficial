@@ -100,6 +100,7 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
                   controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'search_intent', query: searchQuery })}\n\n`));
                   
                   let snippets = "";
+                  let firstUrl = "";
 
                   if (TAVILY_API_KEY) {
                     try {
@@ -119,6 +120,7 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
                       if (tavilyResponse.ok) {
                         const tavilyData = await tavilyResponse.json();
                         const results: any[] = tavilyData.results || [];
+                        if (results.length > 0) firstUrl = results[0].url;
                         snippets = results.map((r: any) => `[${r.title || 'Referência'}](${r.url}):\n${r.content}`).join("\n\n");
                       } else {
                         console.warn(`[chat] Falha na Tavily API:`, await tavilyResponse.text());
@@ -134,6 +136,7 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
                       const ddg = await import("npm:duck-duck-scrape");
                       const ddgResults = await ddg.search(searchQuery);
                       const results = ddgResults.results || [];
+                      if (results.length > 0) firstUrl = results[0].url;
                       snippets = results.slice(0, 3).map((r: any) => `[${r.title}](${r.url}):\n${r.description}`).join("\n\n");
                     } catch (err) {
                       console.error(`[chat] Erro no DuckDuckGo fallback:`, err);
@@ -165,48 +168,44 @@ OBSERVAÇÃO: Só use esses recursos se eles realmente ajudarem no aprendizado. 
                             }),
                           });
 
-
-                            if (topicDetectResp.ok) {
-                              const topicData = await topicDetectResp.json();
-                              const rawText = topicData.choices?.[0]?.message?.content?.trim() || '';
-                              if (rawText && rawText !== 'null' && rawText.includes('{')) {
-                                const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-                                if (jsonMatch) {
-                                  const topicJson = JSON.parse(jsonMatch[0]);
-                                  if (topicJson?.titulo) {
-                                    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
-                                    const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-                                    if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
-                                      await fetch(`${SUPABASE_URL}/rest/v1/topicos_emergentes`, {
-                                        method: "POST",
-                                        headers: {
-                                          "Content-Type": "application/json",
-                                          "apikey": SUPABASE_SERVICE_KEY,
-                                          "Authorization": `Bearer ${SUPABASE_SERVICE_KEY}`,
-                                          "Prefer": "return=minimal",
-                                        },
-                                        body: JSON.stringify({
-                                          materia_slug: materiaSlug,
-                                          titulo: topicJson.titulo,
-                                          descricao: topicJson.descricao || null,
-                                          fonte_url: topicJson.fonte_url || results[0]?.url || null,
-                                          session_key: sessionKey || null,
-                                        }),
-                                      });
-                                      console.log(`[chat] 🌐 Tópico emergente salvo: "${topicJson.titulo}" para ${materiaSlug}`);
-                                    }
+                          if (topicDetectResp.ok) {
+                            const topicData = await topicDetectResp.json();
+                            const rawText = topicData.choices?.[0]?.message?.content?.trim() || '';
+                            if (rawText && rawText !== 'null' && rawText.includes('{')) {
+                              const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+                              if (jsonMatch) {
+                                const topicJson = JSON.parse(jsonMatch[0]);
+                                if (topicJson?.titulo) {
+                                  const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+                                  const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+                                  if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+                                    await fetch(`${SUPABASE_URL}/rest/v1/topicos_emergentes`, {
+                                      method: "POST",
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                        "apikey": SUPABASE_SERVICE_KEY,
+                                        "Authorization": `Bearer ${SUPABASE_SERVICE_KEY}`,
+                                        "Prefer": "return=minimal",
+                                      },
+                                      body: JSON.stringify({
+                                        materia_slug: materiaSlug,
+                                        titulo: topicJson.titulo,
+                                        descricao: topicJson.descricao || null,
+                                        fonte_url: topicJson.fonte_url || firstUrl || null,
+                                        session_key: sessionKey || null,
+                                      }),
+                                    });
+                                    console.log(`[chat] 🌐 Tópico emergente salvo: "${topicJson.titulo}" para ${materiaSlug}`);
                                   }
                                 }
                               }
                             }
-                          } catch (err) {
-                            console.warn('[chat] Falha não crítica na detecção de tópico emergente:', err);
                           }
-                        })();
-                      }
+                        } catch (err) {
+                          console.warn('[chat] Falha não crítica na detecção de tópico emergente:', err);
+                        }
+                      })();
                     }
-                  } else {
-                     console.warn(`[chat] Falha na Tavily API:`, await tavilyResponse.text());
                   }
                 }
               }
