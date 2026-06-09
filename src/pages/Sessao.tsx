@@ -486,7 +486,7 @@ export default function Sessao() {
       <header className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 border-b border-border">
         <button
           onClick={() => {
-            if (!topicComplete && !isAlreadyCompleted && messageCount > 0) {
+            if (!isAlreadyCompleted && messageCount > 0) {
               handlePausar();
             } else {
               navigate(`/?materia=${slug}`);
@@ -509,8 +509,8 @@ export default function Sessao() {
           </span>
         )}
 
-        {/* Botão Pausar — apenas se o tópico não foi concluído e tem mensagens para salvar */}
-        {!topicComplete && !isAlreadyCompleted && messageCount > 0 && (
+        {/* Botão Pausar — disponível para salvar a sessão a qualquer momento */}
+        {!isAlreadyCompleted && messageCount > 0 && (
           <button
             onClick={handlePausar}
             disabled={saving}
