@@ -4,3 +4,7 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const getLocalIso = (date: Date = new Date()) => {
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+};

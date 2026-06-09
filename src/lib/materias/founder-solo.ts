@@ -373,6 +373,67 @@ Abordagem obrigatória:
         'Design de Formulários: Reduzindo Abandono',
         'Sustentabilidade Digital: Design Eco-Consciente'
       ]
+    },
+    {
+      slug: 'visao-estrategica-inovacao',
+      nome: 'Visão Estratégica & Inovação',
+      emoji: '🔭',
+      parent: 'founder-solo',
+      whyStart: 'Operar bem uma empresa é necessário, mas insuficiente. Os founders que mudam o jogo não competem — eles criam categorias. Esta matéria é sobre enxergar o que ainda não existe e ter a coragem intelectual de construir.',
+      descricao: 'De Zero to One a Antifragilidade: os modelos mentais dos inovadores de fronteira que constroem monopólios, criam categorias e moldam o futuro.',
+      contexto: `Foco: estratégia não-linear e pensamento de primeiros princípios aplicado a negócios de fronteira.
+
+Abordagem obrigatória:
+- Sempre parta do mecanismo antes da aplicação: "por que competição reduz lucro?" antes de citar Thiel.
+- Conecte cada modelo mental a uma decisão real que o aluno pode tomar hoje.
+- Seja cético: ensine as limitações de cada framework (Zero to One não funciona para todo tipo de negócio).
+- Pergunte sempre: "o que você sabe que poucas pessoas sabem?" — esse é o coração de toda inovação real.
+- Nunca romantize o empreendedorismo: inovação real é rara, arriscada e cara. Ensine a calcular o risco.`,
+      fases: [
+        {
+          nome: 'Fase 1 — Fundamentos: Por que Inovação é Diferente de Melhoria',
+          topicos: [
+            'A Distinção Fundamental: Inovação Incremental vs Inovação de Categoria (Zero to One)',
+            'Por que Competição é para Perdedores: O Argumento Central de Peter Thiel',
+            'Pensamento de Primeiros Princípios: Como Elon Musk Desmonta Verdades Aceitas',
+            'O Paradigma da Inovação Disruptiva: Clayton Christensen e a Teoria dos Jobs-to-be-Done',
+            'Segredos e Verdades Contraintuitivas: O Que Você Sabe que Ninguém Mais Sabe?',
+            'O Problema do Crescimento Incremental: Horizonte 1, 2 e 3 de McKinsey',
+            'Viés de Confirmação na Estratégia: Por que Líderes de Mercado Ignoram Ameaças Óbvias',
+            'A Diferença entre Ser Pioneiro e Ser Fundador de Categoria',
+          ]
+        },
+        {
+          nome: 'Fase 2 — Intermediário: Construindo Vantagens Injustas',
+          topicos: [
+            'Efeitos de Rede (Network Effects) e a Lei de Metcalfe: Valor Cresce Exponencialmente com Usuários',
+            'Tipos de Moats: Vantagens Competitivas que o Dinheiro Não Compra Facilmente',
+            'Custo Marginal Zero: Por que Software, Mídia e IA são Negócios Únicos na História',
+            'Alavancagem de Código e Mídia: Escalando sem Custo Marginal de Replicação (Naval)',
+            'O Volante de Crescimento da Amazon (Flywheel): A Lógica dos Sistemas que se Alimentam',
+            'Inovação Permissionless: Como Tecnologias Descentralizadas Redistribuem o Poder',
+            'A Engenharia do Timing: Por que "Muito Cedo" Mata Tanto quanto "Muito Tarde"',
+            'Monopólios de Fato: Como Google, Meta e Stripe Constroem Posições Inalcançáveis',
+            'Riqueza vs Status: O Jogo de Soma Positiva vs Soma Zero (Naval Ravikant)',
+            'O Paradoxo do Sucesso: Como o Que Te Trouxe Aqui Pode Te Impedir de Avançar',
+          ]
+        },
+        {
+          nome: 'Fase 3 — Avançado: Pensamento de Fronteira e a Era da IA',
+          topicos: [
+            'Pensamento Assintótico: Enxergando o Limite Teórico e Trabalhando de Trás Pra Frente',
+            'Second-Order Thinking: Consequências das Consequências das Suas Decisões',
+            'Antifragilidade Empresarial: Construindo Organizações que Ganham com o Caos (Taleb)',
+            'IA como Alavanca de Escala Infinita: O Novo Paradigma de Fundadores com Poucos Recursos',
+            'Defensibilidade no Mundo AI-First: O Que Não é Copiável Quando IA Comoditiza Tudo',
+            'Categoria Design: A Arte de Criar um Mercado em vez de Competir em Um',
+            'A Lógica do Monopólio Tecnológico: Quando Dominar um Nicho é a Estratégia Correta',
+            'Geopolítica e Teses Macro: Como Mudanças Estruturais Globais Criam Janelas de Oportunidade',
+            'Construindo a Empresa de 1 Pessoa com Impacto de 100: O Founder Aumentado por IA',
+            'Síntese: Mapeando Sua Tese de Inovação — O Que Você Está Apostando e Por Quê',
+          ]
+        }
+      ]
     }
   ]
 };

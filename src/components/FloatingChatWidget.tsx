@@ -8,7 +8,7 @@ import ReflectionModal from '@/components/ReflectionModal';
 import { X, Minus, MessageCircle, Maximize2, Loader2, Square, Plus, History } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { cn } from '@/lib/utils';
+import { cn, getLocalIso } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -94,7 +94,7 @@ export function FloatingChatWidget() {
       const sessionPayload = {
         materia: materiaSlug || 'global-assistant',
         topico: topico || 'Chat Livre',
-        data: new Date().toISOString().split('T')[0],
+        data: getLocalIso(),
         duracao_min: Math.max(1, Math.round((Date.now() - startTimeRef.current) / 60000)),
         messages_json: messagesRef.current.map(({ role, content }) => ({ role, content })),
         session_key: sessionKey,
@@ -157,7 +157,7 @@ export function FloatingChatWidget() {
 
     try {
       const messages = messagesRef.current;
-      const hoje = new Date().toISOString().split('T')[0];
+      const hoje = getLocalIso();
       const duracaoMin = Math.round((Date.now() - startTimeRef.current) / 60000);
 
       const ementaFlat = materiaConfig.fases

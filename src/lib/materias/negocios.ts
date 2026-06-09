@@ -284,37 +284,6 @@ Abordagem obrigatória:
           layout: 'split',
           widget: 'FinanceLab'
         },
-        {
-          slug: 'visao-estrategica-inovacao',
-          nome: 'Visão Estratégica & Inovação',
-          emoji: '🔭',
-          parent: 'business-growth',
-          whyStart: 'Você aprendeu a operar e escalar empresas normais. Esta etapa ensina como inovadores de fronteira constroem monopólios tecnológicos e moldam o futuro.',
-          descricao: 'Modelos mentais de inovação radical, Zero to One, efeitos de rede e construção de monopólios.',
-          contexto: `Foco: estratégias não-lineares, pensamento de primeiros princípios aplicado aos negócios e construção de monopólios baseados nas premissas de Thiel, Musk, Naval e outros inovadores mundiais.`,
-          ementa: [
-            'Zero to One: Por que a Competição é para Perdedores (Peter Thiel)',
-            'Pensamento de Primeiros Princípios Aplicado a Negócios (Elon Musk)',
-            'Riqueza vs Status: O Jogo de Longo Prazo (Naval Ravikant)',
-            'O Paradigma da Inovação Desruptiva (Clayton Christensen)',
-            'Efeitos de Rede (Network Effects) e a Lei de Metcalfe',
-            'Segredos e Verdades Contraintuitivas: O que você sabe que ninguém mais sabe?',
-            'O Problema do Crescimento Incremental (Horizonte 1 vs Horizonte 3)',
-            'Construindo Vantagens Competitivas Injustas (Moats)',
-            'Custo Marginal Zero: A Economia do Software e da Internet',
-            'O Modelo de Escala da Amazon: Volante de Crescimento (Flywheel)',
-            'Inovação Permissionless e Tecnologias Descentralizadas',
-            'Alavancagem de Código e Mídia (Sem custo marginal de replicação)',
-            'A Engenharia do Momento (Timing): Surfar vs Criar a Onda',
-            'Monopólios Naturais e Escalabilidade Geopolítica',
-            'Pensamento Assintótico: Enxergando o Limite Teórico da Eficiência',
-            'IA como Alavanca de Escala Infinita: O Novo Paradigma',
-            'Defensibilidade no Mundo AI-First: O que Não é Copiável',
-            'Second-Order Thinking: Consequências das Consequências',
-            'Antifragilidade Empresarial: Ganhando com o Caos (Taleb)'
-          ],
-          layout: 'narrative'
-        }
       ]
     }
   ]

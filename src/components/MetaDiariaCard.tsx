@@ -20,9 +20,12 @@ export function MetaDiariaCard() {
     const hojeIso = `${hojeData.getFullYear()}-${String(hojeData.getMonth() + 1).padStart(2, '0')}-${String(hojeData.getDate()).padStart(2, '0')}`;
 
     const sessoesHoje = sessoes.filter(s => {
-      // Pega apenas a parte YYYY-MM-DD da string para evitar bugs de fuso horário
-      const sessaoIso = s.data.split('T')[0];
-      return sessaoIso === hojeIso;
+      const sessaoData = new Date(s.data);
+      return (
+        sessaoData.getFullYear() === hojeData.getFullYear() &&
+        sessaoData.getMonth() === hojeData.getMonth() &&
+        sessaoData.getDate() === hojeData.getDate()
+      );
     });
 
     const topicosUnicosMap = new Map();

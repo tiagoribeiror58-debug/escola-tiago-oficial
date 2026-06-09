@@ -11,6 +11,7 @@ import { ArrowLeft, Square, Loader2, Pause, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ChatMessage } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
+import { getLocalIso } from '@/lib/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { playSuccessSound } from '@/lib/audioUtils';
@@ -116,7 +117,7 @@ export default function Sessao() {
         session_key: sessionKey,
         materia: slug,
         topico: topicoDestaSessaoRascunho || 'Sessão iniciada',
-        data: new Date().toISOString().split('T')[0],
+        data: getLocalIso(),
         dificuldade: 'media',
         nivel: ultimaSessao?.nivel || 1,
         duracao_min: 1,
@@ -179,7 +180,7 @@ export default function Sessao() {
 
     try {
       let sessionData;
-      const hoje = new Date().toISOString().split('T')[0];
+      const hoje = getLocalIso();
       const duracaoMin = Math.round((Date.now() - startTimeRef.current) / 60000);
 
       // Passa a ementa e o tópico atual para que a edge function calcule
@@ -336,7 +337,7 @@ export default function Sessao() {
     setSaving(true);
 
     try {
-      const hoje = new Date().toISOString().split('T')[0];
+      const hoje = getLocalIso();
       const duracaoMin = Math.round((Date.now() - startTimeRef.current) / 60000);
 
       const ementaFlat = materiaConfig.fases
