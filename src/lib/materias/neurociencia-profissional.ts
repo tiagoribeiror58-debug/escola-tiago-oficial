@@ -182,7 +182,22 @@ Abordagem obrigatória:
             'Comunicação de Diagnósticos Neurológicos: A Dimensão Humana',
             'O Futuro da Neurologia: Genômica, iPSCs e Medicina de Precisão Neural'
           ]
-        },
+        }
+      ],
+    },
+    {
+      slug: 'psicologia-saude-mental',
+      nome: 'Psicologia e Saúde Mental',
+      emoji: '🪞',
+      parent: 'neurociencia-profissional',
+      whyStart: 'A mente é o software rodando no hardware neural. Entender vieses, emoções e como blindar a mente contra o estresse é a base da resiliência.',
+      descricao: 'Vieses cognitivos, regulação emocional, prevenção de burnout e antifragilidade psicológica.',
+      contexto: `Foco: mecanismos psicológicos reais — vieses, regulação emocional, padrões de comportamento e resiliência clínica.
+
+Abordagem obrigatória:
+- Explique o mecanismo do viés ou padrão antes de dar exemplos.
+- Para regulação emocional: explique o processo fisiológico e cognitivo antes de qualquer estratégia prática.`,
+      fases: [
         {
           nome: 'Psicologia Comportamental e Vieses',
           topicos: [
