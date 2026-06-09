@@ -1,5 +1,4 @@
 import { MateriaConfig } from '@/types';
-import { performanceIntelecto } from './materias/performance';
 import { elonMuskHub } from './materias/elon-musk';
 import { gestaoSistemasHub } from './materias/gestao-processos';
 import { founderSolo } from './materias/founder-solo';
@@ -28,7 +27,7 @@ const RAW_MATERIAS: MateriaConfig[] = [
   gestaoSistemasHub,
   elonMuskHub,
   founderSolo,
-  performanceIntelecto,
+
   tecnologiaNegocios,
   comunicacaoInfluencia,
   fundamentosAcademicos,

@@ -180,7 +180,63 @@ Abordagem obrigatória:
             'Neurologia Pediátrica: Desenvolvimento Neural e Vulnerabilidades',
             'Bioética em Neurociência Clínica: Capacidade, Consentimento e Neuroenhancement',
             'Comunicação de Diagnósticos Neurológicos: A Dimensão Humana',
-            'O Futuro da Neurologia: Genômica, iPSCs e Medicina de Precisão Neural',
+            'O Futuro da Neurologia: Genômica, iPSCs e Medicina de Precisão Neural'
+          ]
+        },
+        {
+          nome: 'Psicologia Comportamental e Vieses',
+          topicos: [
+            'A Estrutura da Psique (Consciente vs Inconsciente)',
+            'Vieses Cognitivos Fundamentais (Confirmação, Ancoragem)',
+            'Teoria do Apego e Relacionamentos',
+            'Inteligência Emocional e Regulação de Afeto',
+            'Terapia Cognitivo-Comportamental (Práticas)',
+            'Arquétipos e o Inconsciente Coletivo',
+            'Sistemas 1 e 2: O Cérebro Rápido e Lento (Kahneman)',
+            'Heurísticas e Atalhos Mentais',
+            'Motivação: Teoria da Autodeterminação (Deci & Ryan)',
+            'Condicionamento Clássico e Operante (Pavlov e Skinner)',
+            'Psicologia do Trauma e Respostas Defensivas',
+            'Autoeficácia e Mindset de Crescimento (Dweck)',
+            'Personalidade: Big Five e Tipos MBTI',
+            'Influência Social: Conformismo e Obediência (Milgram)',
+            'Psicologia Positiva e Bem-Estar (Seligman)',
+            'Narcisismo, Maquiavelismo e Psicopatia (Dark Triad)',
+            'Mecanismos de Defesa e Autoengano',
+            'Flexibilidade Cognitiva: Desaprender e Reaprender na Era da IA',
+            'Psicologia da Colaboração Humano-IA: Identidade e Valor Próprio',
+            'Antifragilidade Emocional: Transformando Estresse em Crescimento',
+            'Dopamine Detox: Restaurando o Circuito de Recompensa',
+            'Psicologia da Procrastinação: Raízes e Soluções',
+            'Flow States: Psicologia do Desempenho Ótimo',
+            'Síndrome do Impostor: Mecanismo e Superação'
+          ]
+        },
+        {
+          nome: 'Saúde Mental e Resiliência',
+          topicos: [
+            'A Biologia do Estresse (Cortisol e Amígdala)',
+            'Burnout vs Cansaço (Diferenças Estruturais)',
+            'Antifragilidade (Crescendo com a Pressão)',
+            'Reestruturação Cognitiva (TCC Aplicada)',
+            'Gestão de Ansiedade e Gatilhos',
+            'Regulação do Sistema Nervoso Autônomo (Respiração)',
+            'Mindfulness e a Prática da Atenção Plena',
+            'Terapia de Aceitação e Compromisso (ACT)',
+            'Higiene do Sono para Saúde Mental',
+            'Isolamento Social e Saúde Psicológica',
+            'Procrastinação: Raízes Emocionais e Soluções',
+            'Perfeccionismo Adaptativo vs Desadaptativo',
+            'Construindo uma Rotina de Recuperação (Recovery Stack)',
+            'Journaling Terapêutico e Processamento de Experiências',
+            'Encontrando Propósito: Ikigai e Sentido na Vida',
+            'Resiliência em Ambientes de Mudança Exponencial',
+            'Gestão de Tecnoestresse e Sobrecarga de Informação',
+            'Estoicismo Digital: Equilíbrio em Mercados Voláteis',
+            'Eco-Ansiedade e Incerteza Existencial na Era da IA',
+            'Limites Saudáveis com Tecnologia e Redes Sociais',
+            'Solitude Produtiva: O Poder de Estar Só',
+            'Terapia Baseada em Evidências: Quando Procurar Ajuda'
           ]
         }
       ],
@@ -528,7 +584,34 @@ Abordagem obrigatória:
             'Carga Cognitiva na Educação Digital: Design de Interface e Memória de Trabalho',
             'Neuroeducação em Escala: O Abismo entre Laboratório e Política Pública',
             'O Papel do Neurocientista em Startups de Edtech',
-            'O Futuro: Neurofeedback Educacional e Personalização Neural',
+            'O Futuro: Neurofeedback Educacional e Personalização Neural'
+          ]
+        },
+        {
+          nome: 'Metacognição e Sistemas Práticos',
+          topicos: [
+            'Leitura Inspecional e Leitura Analítica',
+            'A Ilusão da Fluência (Por que reler não funciona)',
+            'Sistemas de Anotação Inteligente (Zettelkasten)',
+            'Gestão de Carga Cognitiva e Foco (Deep Work)',
+            'Feynman Technique: Explicar para entender',
+            'Modelos Mentais de Primeiro Princípio',
+            'Repetição Espaçada (Spaced Repetition e Anki)',
+            'Recuperação Ativa: Testes como Ferramenta de Estudo',
+            'O Efeito Geração e a Elaboração Ativa',
+            'Interleaving: Alternando Tópicos para Reter Mais',
+            'Como Criar um Sistema de Notas Permanentes',
+            'Chunking: Agrupando Informação para Memória de Longo Prazo',
+            'Sleep Learning: O Papel do Sono na Consolidação',
+            'Calibração de Conhecimento: Saber o Que Você Não Sabe',
+            'Construindo um Segundo Cérebro (PKM System)',
+            'Produtividade Profunda: Cal Newport na Prática',
+            'Estratégias para Estudar Matérias Difíceis',
+            'IA como Parceira de Estudo: Usando LLMs para Aprender Melhor',
+            'Técnica Pomodoro vs Time Blocking: Quando Usar Cada',
+            'Digital Detox: Recuperando Atenção na Era das Notificações',
+            'Curva do Esquecimento de Ebbinghaus: A Matemática da Memória',
+            'Mapas Mentais e Visual Thinking para Retenção'
           ]
         }
       ],
@@ -620,7 +703,7 @@ Abordagem obrigatória:
             'Ética na Pesquisa com Humanos: Comitê de Ética, TCLE e Anonimização',
             'Ética na Pesquisa com Animais: Os Três Rs (Replace, Reduce, Refine)',
             'Diversidade em Neurociência: Por Que Amostras WEIRD Distorcem a Ciência',
-            'O Futuro: Neurociência de Precisão, Big Data e Consortiums Globais',
+            'O Futuro: Neurociência de Precisão, Big Data e Consortiums Globais'
           ]
         }
       ],
@@ -630,14 +713,13 @@ Abordagem obrigatória:
       nome: 'Neurociência no Esporte e Performance',
       emoji: '⚡',
       parent: 'neurociencia-profissional',
-      whyStart: 'Performance não é só músculo — é o sistema nervoso que comanda o músculo. O cérebro cansa antes do corpo. Esse é o jogo real.',
-      descricao: 'Fadiga central, foco, neurofeedback e a ciência da performance cognitivo-física.',
-      contexto: `Foco: neurobiologia da performance humana — motor, cognitivo e emocional.
+      whyStart: 'Performance não é só músculo — é o sistema nervoso que comanda o músculo. O cérebro cansa antes do corpo. Esse é o jogo real. E com a máquina otimizada, a biologia trabalha a seu favor.',
+      descricao: 'Fadiga central, foco, neurofeedback, nutrição e a ciência da performance cognitivo-física.',
+      contexto: `Foco: neurobiologia da performance humana — motor, cognitivo, nutricional e emocional.
 
 Abordagem obrigatória:
 - Explique a diferença entre fadiga periférica (muscular) e fadiga central (neural) antes de qualquer protocolo.
-- Seja crítico sobre técnicas sem evidência robusta.
-- Conecte o mecanismo neural à aplicação prática no treino ou competição.`,
+- Conecte sempre o mecanismo metabólico e neural à aplicação prática no treino, competição e nutrição.`,
       fases: [
         {
           nome: 'Controle Motor e Aprendizado',
@@ -651,7 +733,7 @@ Abordagem obrigatória:
             'Prática Mental e Visualização: Córtex Motor Ativa Mesmo Sem Movimento',
             'Transferência de Aprendizado Motor: Quando Aprender A Ajuda a Aprender B',
             'Bloqueio Contextual vs Prática Aleatória: A Neurociência do Treino Variado',
-            'Neuroplasticidade Motora em Atletas de Elite: O Cérebro do Expert',
+            'Neuroplasticidade Motora em Atletas de Elite: O Cérebro do Expert'
           ]
         },
         {
@@ -664,7 +746,7 @@ Abordagem obrigatória:
             'Amônia Cerebral e Fadiga durante Exercício Prolongado',
             'Hipoglicemia e Função Cognitiva durante o Exercício: O Limite do Combustível',
             'Calor e Performance Cognitiva: Hipotálamo, Temperatura e Tomada de Decisão',
-            'Altitude e Hipóxia: Impacto no Desempenho Neural e Motor',
+            'Altitude e Hipóxia: Impacto no Desempenho Neural e Motor'
           ]
         },
         {
@@ -676,7 +758,7 @@ Abordagem obrigatória:
             'Antecipação de Movimento do Oponente: Leitura de Pistas e Neurônios-Espelho',
             'Tomada de Decisão sob Pressão: O Papel do Córtex Pré-Frontal e da Amígdala',
             'Memória de Trabalho em Esportes Coletivos: Manter o Mapa Cognitivo do Jogo',
-            'Criatividade Tática: Insight Neural no Contexto Esportivo',
+            'Criatividade Tática: Insight Neural no Contexto Esportivo'
           ]
         },
         {
@@ -690,7 +772,55 @@ Abordagem obrigatória:
             'Regulação Emocional em Atletas: Estratégias Baseadas no Córtex Pré-Frontal',
             'Mindfulness em Esportes: Atenção Presente e Resposta Autônoma',
             'Psicologia Positiva e Neuroquímica da Confiança: Testosterona e Cortisol',
-            'Rituais Pré-Performance: Redes Neurais de Preparação e Ativação',
+            'Rituais Pré-Performance: Redes Neurais de Preparação e Ativação'
+          ]
+        },
+        {
+          nome: 'Nutrição Otimizada e Metabolismo',
+          topicos: [
+            'O Mecanismo da Insulina e Glicemia',
+            'Macronutrientes: Proteínas, Carboidratos e Gorduras',
+            'Jejum Intermitente e Autofagia',
+            'Microbioma Intestinal e Eixo Intestino-Cérebro',
+            'Suplementação Baseada em Evidências',
+            'Proteína: Quantidade Ótima e Timing',
+            'Gorduras Saturadas vs Insaturadas: O Debate Correto',
+            'Carboidratos e Performance: Quando São Aliados',
+            'Micronutrientes Críticos: Zinco, Ferro, B12 e Folato',
+            'Dieta Cetogênica: Mecanismo, Benefícios e Riscos',
+            'Inflamação Crônica e Comida Anti-inflamatória',
+            'Hidratação e Eletrólitos na Performance',
+            'Leitura de Rótulos: O Que Realmente Importa',
+            'Nutrição para Cognição: O Cérebro na Mesa',
+            'Comer para Longevidade: Azul Blue Zones',
+            'GLP-1 e Semaglutida: A Ciência por Trás da Revolução',
+            'Nutrigenômica: Dieta Personalizada por DNA',
+            'Ultra-Processados: O Impacto Neurológico da Comida Industrial',
+            'Suplementação Estratégica: O Stack Baseado em Evidências'
+          ]
+        },
+        {
+          nome: 'Fisiologia, Treino e Hipertrofia',
+          topicos: [
+            'Vias de Sinalização (mTOR) e Hipertrofia',
+            'Sistemas Energéticos (ATP-CP, Glicolítico, Oxidativo)',
+            'Sobrecarga Progressiva (O Motor do Crescimento)',
+            'VO2 Max e Saúde Mitocondrial',
+            'Recuperação Muscular e Prevenção de Lesões',
+            'Fibras Musculares: Tipo I vs Tipo II',
+            'Periodização: Ondulação e Ciclos de Treino',
+            'Frequência, Volume e Intensidade: O Triângulo do Treino',
+            'Deload: A Importância do Descanso Programado',
+            'Cardio para Longevidade vs Cardio para Performance',
+            'Zona 2: O Treino Aeróbico que Todo Mundo Ignora',
+            'Hormônios e Treino: Testosterona, GH e Cortisol',
+            'Mobilidade e Flexibilidade para Longevidade',
+            'Nutrição Peri-Treino: O Que Comer e Quando',
+            'Monitoramento de Performance: RPE, HRV e Métricas',
+            'Exercícios Isométricos e Excêntricos para Tendões',
+            'Treinamento Funcional vs Bodybuilding: Trade-offs',
+            'Longevidade Física: O Protocolo de Peter Attia',
+            'Rucking e Zone 2: O Cardio mais Eficiente que Existe'
           ]
         },
         {
@@ -713,7 +843,7 @@ Abordagem obrigatória:
             'SERE Training e Resiliência Neural: Como o Estresse Extremo é Processado',
             'Performance Cognitiva em Privação de Sono e Estresse Agudo',
             'Dor como Percepção Neural: Por Que Atletas Suportam Mais',
-            'O Papel do Neurocientista em Centros de Alto Rendimento e Defesa',
+            'O Papel do Neurocientista em Centros de Alto Rendimento e Defesa'
           ]
         }
       ],
