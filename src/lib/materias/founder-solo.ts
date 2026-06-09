@@ -38,38 +38,167 @@ Abordagem obrigatória:
       ]
     },
     {
-      slug: 'founder-marketing-growth',
-      nome: 'Marketing & Distribuição',
+      slug: 'founder-marketing-distribuicao',
+      nome: 'Marketing, Posicionamento & Distribuição',
       emoji: '📣',
       parent: 'founder-solo',
-      whyStart: 'Sem distribuição, seu produto invisível morre. Founders solo precisam construir audiência e canais antes mesmo do código.',
-      descricao: 'Estratégias de Growth, SEO, Comunidade e Marketing de Conteúdo para founders em 2026.',
-      contexto: `Foco: Distribuição eficiente para times de 1 pessoa.
+      whyStart: 'O maior erro de founders técnicos: construir um produto incrível que ninguém sabe que existe. Distribuição não é o que você faz depois de construir — é o que você planeja antes. Sem um canal de aquisição que funciona sem você, o negócio é um emprego disfarçado.',
+      descricao: 'Da psicologia do consumidor ao motor de crescimento: posicionamento, branding, canais orgânicos, growth loops e distribuição escalável para founders solo em 2026.',
+      contexto: `Foco: construção de demanda e audiência como ativos permanentes, não campanhas pontuais.
+
 Abordagem obrigatória:
-- Como alavancar canais orgânicos sem gasto massivo em Ads.
-- Building in Public e construção de autoridade.
-- Distribuição assíncrona via conteúdo perene.`,
-      ementa: [
-        'Building in Public: Estratégia de Transparência Radical',
-        'SEO Técnico e de Conteúdo para SaaS em 2026',
-        'Cold Email Estruturado e Escalonável com Personalização por IA',
-        'Criação de Comunidades (Discord, Circle, WhatsApp Premium)',
-        'Lançamentos no Product Hunt: O Guia Definitivo 2026',
-        'Marketing de Conteúdo: Artigos e Vídeos Técnicos que Convertem',
-        'Parcerias e Co-Marketing para Solo Founders',
-        'LinkedIn como Canal de Aquisição B2B: Táticas que Funcionam',
-        'Twitter/X: Como Construir Audiência Técnica do Zero',
-        'Newsletter como Ativo de Distribuição: Do Zero a 10k Leitores',
-        'SEO Conversacional e Otimização para AI Search (SGE, Perplexity)',
-        'Affiliate Marketing e Programas de Referência Automatizados',
-        'Vídeo Curto para SaaS: TikTok, Reels e Shorts que Geram Trial',
-        'Podcast como Canal de Autoridade: Como Começar Sem Estrutura',
-        'Virality Loop: Projetando Crescimento Orgânico no Produto',
-        'Retargeting de Baixo Custo: Google e Meta com Orçamento Micro',
-        'Presença em Marketplaces: AppSumo, Capterra, G2 e Alternativas',
-        'Press e PR Orgânica: Como Conseguir Mídia Sem Assessoria'
+- Sempre parta do mecanismo: "por que as pessoas compram?" antes de falar de ferramenta ou canal.
+- JTBD, Kahneman, Cialdini: explique o princípio psicológico antes da aplicação.
+- Diferencie estratégia de conteúdo (o mapa) de produção de conteúdo (a execução).
+- Para cada canal: explique o custo, o teto de crescimento e quando parar.
+- Growth Hacking: desmistifique. É experimentação barata e rápida — ensine o método, não o mito.
+- Questione romantismos: "Building in Public funciona para todo tipo de produto? Por quê não?"`,
+      fases: [
+        {
+          nome: 'Por Que as Pessoas Compram: Psicologia e Mecanismo de Decisão',
+          topicos: [
+            'Marketing vs Publicidade vs Propaganda: As Três Coisas que Founders Confundem o Tempo Todo',
+            'Jobs To Be Done (JTBD): O Cliente Nunca Compra o Produto — Ele Contrata uma Solução para um Progresso',
+            'Sistema 1 e Sistema 2 de Kahneman: Como a Decisão Acontece Emocionalmente Antes de Ser Racionalizada',
+            'Psicologia da Prova Social, Autoridade e Reciprocidade (Cialdini): o Mecanismo Neural por Trás',
+            'Percepção de Valor vs Preço Real: Por que o Barato Parece Suspeito e o Caro Parece Superior',
+            'O Paradoxo da Escolha (Barry Schwartz): Menos Opções Vendem Mais — a Ciência da Decisão por Sobrecarga',
+            'Ancoragem, Decoy e Framing: Como a Apresentação do Preço Altera a Percepção do Valor',
+            'Efeito Halo: Como a Primeira Impressão de um Produto Contamina Todas as Percepções Seguintes',
+            'Neuromarketing: O Que o Dado Real Diz Sobre Consumo (e o Que é Mito de Vendedor)',
+            'Comportamento do Consumidor na Era Digital: Atenção Fragmentada, Ciclos de Decisão Curtos e o Doom Scroll',
+          ]
+        },
+        {
+          nome: 'Posicionamento, Branding e Construção de Categoria',
+          topicos: [
+            'Posicionamento Estratégico: Ocupar uma Categoria Mental Antes de Competir em Preço',
+            'Branding para Founders Solo: Não é Logotipo — é Gestão de Percepção Sistemática',
+            'Os 4 Ps do Marketing: O Framework Original, Suas Limitações e o Que Substituiu Cada Um',
+            'Estratégia de Oceano Azul (Kim & Mauborgne): Como Criar Mercados sem Concorrência Direta',
+            'Category Design: Inventar uma Categoria vs Competir em Uma Existente — Quando Cada Um Faz Sentido',
+            'Storytelling Estrutural para Founders: Como Joseph Campbell e Donald Miller Aplicam ao SaaS',
+            'Copywriting de Conversão: Headlines, CTAs e Landing Pages — Engenharia de Resposta, Não Escrita Bonita',
+            'Frameworks de Copy: PAS (Problema-Agitação-Solução), AIDA e FAB — O Mecanismo por Trás de Cada Um',
+            'Personal Branding como Canal de Distribuição: Você como Mídia Própria Permanente',
+            'Gestão de Crise de Imagem para Founders: O Que Fazer Quando o Twitter Decide que Você Errou',
+            'Arquitetura de Marca Solo: Quando Separar Marca Pessoal e Marca de Produto',
+          ]
+        },
+        {
+          nome: 'Canais Orgânicos e Distribuição Assíncrona',
+          topicos: [
+            'Content Marketing Estratégico: A Diferença entre Ter uma Estratégia de Conteúdo e Produzir Conteúdo',
+            'SEO Técnico e de Conteúdo para SaaS: Como Funciona um Mecanismo de Busca Antes de Falar em Palavras-chave',
+            'SEO Conversacional e AEO (Answer Engine Optimization) para Perplexity, ChatGPT e Google AI Overviews',
+            'Building in Public: Quando Transparência Radical Vira Canal de Aquisição — e Quando Não Funciona',
+            'Newsletter como Ativo de Distribuição: Do Zero a 10k Leitores Sem Pagar por Isso',
+            'Podcast como Canal de Autoridade: Como Começar Sem Estrutura de Rádio',
+            'LinkedIn como Canal de Aquisição B2B: O Algoritmo, o Formato e o Que Engaja de Fato',
+            'Twitter/X: Construindo Audiência Técnica — A Diferença entre Viralizar e Acumular',
+            'YouTube e Vídeo Longo para SaaS: SEO em Vídeo e Conteúdo que Não Envelhece',
+            'Vídeo Curto (Reels, Shorts, TikTok): Como Adaptar Conteúdo Técnico para Formato de 60 Segundos',
+            'UGC (User Generated Content): Quando o Próprio Cliente Vira Criador e Distribuidor',
+            'Presença em Marketplaces: AppSumo, Capterra, G2 e Product Hunt — O Guia Definitivo 2026',
+          ]
+        },
+        {
+          nome: 'Growth, Loops Virais e Escala Orgânica',
+          topicos: [
+            'A Anatomia de um Funil de Aquisição para Founders Solo: AARRR sem Complexidade de Corporação',
+            'Growth Loops vs Funil Linear: Por que Loops Escalam e Funis Têm Teto',
+            'Product-Led Growth (PLG): Projetar o Produto Para Que Ele Seja o Próprio Canal de Aquisição',
+            'Virality Loop e Coeficiente K: Como Calcular e Projetar Crescimento Orgânico por Indicação',
+            'North Star Metric: Encontrar a Única Métrica que Resume o Valor Entregue pelo Produto',
+            'Cold Email com Personalização por IA: O Que Ainda Funciona em 2026 e Por Quê',
+            'Parcerias e Co-Marketing: Como Dois Founders Solo Multiplicam Audiência um do Outro',
+            'Affiliate Marketing e Programas de Referência Automatizados: Exercendo Influência com Alinhamento de Incentivos',
+            'Retargeting de Baixo Custo: Google e Meta com Orçamento Micro para Quem Não Tem Verba de Growth',
+            'Press e PR Orgânica: Como Conseguir Mídia Sem Assessoria de Imprensa',
+            'Construindo Comunidade (Discord, Circle, WhatsApp): Quando Comunidade é Canal — e Quando é Distração',
+            'Marketing Analytics para Founders: Como Montar um Dashboard de Aquisição Sem se Perder em Métricas de Vaidade',
+          ]
+        }
       ]
     },
+    {
+      slug: 'founder-vendas-receita',
+      nome: 'Vendas, Receita & Precificação',
+      emoji: '💰',
+      parent: 'founder-solo',
+      whyStart: 'Se não gera receita, é um hobby. Cobrar desde o dia 1 é o teste mais honesto de se você resolve um problema real. O founder que não sabe vender depende do acaso — e o acaso tem uma taxa de churn muito alta.',
+      descricao: 'Da primeira conversa ao pipeline escalável: The Mom Test, metodologia de vendas, precificação estratégica e construção de receita recorrente saudável para o founder solo.',
+      contexto: `Foco: receita real — como cobrar, quanto cobrar e como vender sendo o único vendedor (às vezes introvertido).
+
+Abordagem obrigatória:
+- Comece pelo The Mom Test: o erro mais caro do founder é confundir elogio com intenção de compra.
+- Para cada metodologia (SPIN, BANT, MEDDIC): explique o problema que ela resolve antes de aplicar o script.
+- Seja honesto sobre rejeição: não é pessoal, é dado. Reformule o jogo mentalmente.
+- Pricing não é só número: é posicionamento, sinalização de valor e filtragem de cliente errado.
+- PLG e Sales-Led não são rivais — ensine quando cada abordagem faz sentido e como combinar.`,
+      fases: [
+        {
+          nome: 'A Primeira Venda: Validando que Alguém Paga de Verdade',
+          topicos: [
+            'The Mom Test (Rob Fitzpatrick): Como Fazer Perguntas que Não Mentem para Você — o Livro mais Subestimado de Startups',
+            'A Diferença Entre Interesse, Intenção de Compra e Pagamento: Como Distinguir em Tempo Real',
+            'Perfil de Cliente Ideal (ICP): Quem É, Quem Definitivamente Não É, e Por Que Recusar Cliente Errado Salva o Negócio',
+            'Como Fazer a Primeira Venda Sendo Founder — Sem Equipe, Sem Script, Às Vezes Sem Produto Terminado',
+            'Demos que Convertem: Estrutura de Demonstração de Produto, o Que Nunca Fazer e Como Terminar com CTA',
+            'Copywriting para Landing Pages, Emails Frios e Propostas Comerciais: Engenharia de Resposta Antes de Palavra Bonita',
+            'Funil de Conversão de SaaS: Da Visita ao MRR — Onde os Founders Perdem o Cliente (e Por Quê)',
+            'Lidando com Rejeições: Reformulando como Dado Estratégico, Não como Fracasso Pessoal',
+            'Discovery Call: As Perguntas Certas Antes de Apresentar Qualquer Coisa — Diagnóstico Antes de Remédio',
+            'Proposta Comercial que Fecha: Estrutura, Linguagem e o Que Nunca Incluir no PDF',
+          ]
+        },
+        {
+          nome: 'Metodologia de Vendas e Pipeline Repetível',
+          topicos: [
+            'SPIN Selling (Neil Rackham): Situação, Problema, Implicação e Necessidade de Solução — a Lógica por Trás',
+            'Qualificação de Leads: BANT (Budget, Authority, Need, Timeline) e MEDDIC para o Contexto Solo',
+            'Contorno de Objeções: As 10 Mais Comuns em SaaS e Como Quebrar Cada Uma sem Soar Manipulador',
+            'Negociação de Contratos: Como Não Dar Desconto sem Perder o Cliente — a Psicologia do Ancor e do Silêncio',
+            'Proposta de Valor: Como Apresentar ROI sem Soar como Vendedor de Feirão ou Consultor de PowerPoint',
+            'Pipeline de Vendas com CRM Solo: Notion, HubSpot Free ou Pipedrive — Qual Escolher e Como Não Deixar Esfriar',
+            'Follow-up Estruturado: O Timing, a Frequência e o Tom que Mantém o Lead Quente sem Incomodar',
+            'Vendas Enterprise como Solo Founder: Quando e Como Entrar no Upmarket sem Morrer no Processo',
+            'Fechamento: Técnicas de Closing sem Pressão Abusiva — Hard Close, Trial Close e Next Step Close',
+            'Análise Win/Loss: Por Que Você Perdeu (ou Ganhou) e o Que Esse Dado Diz sobre Posicionamento e ICP',
+          ]
+        },
+        {
+          nome: 'Precificação Estratégica e Modelos de Receita',
+          topicos: [
+            'A Psicologia do Preço: Por que o Número que Você Escolhe Comunica Antes de Ser Calculado',
+            'Value-Based Pricing: Cobrar pelo Valor Gerado pelo Cliente, Não pelo Custo de Produção',
+            'Freemium vs Trial vs Pago Desde o Dia 1: a Lógica Econômica por Trás de Cada Modelo',
+            'Usage-Based Pricing: Cobrar pelo Uso como AWS — Quando Funciona e Quando Destrói a Previsibilidade',
+            'Annual Plans: Como Convencer o Cliente a Pagar o Ano Todo (e o Impacto no Fluxo de Caixa)',
+            'Pricing Pages que Convertem: Hierarquia de Planos, Ancoragem de Valor e o Efeito Decoy na Prática',
+            'Quando e Como Aumentar o Preço Sem Perder a Base de Clientes',
+            'PLG vs Sales-Led: Quando Deixar o Produto Vender e Quando Você Precisa Ser o Vendedor',
+            'Bundling e Unbundling: A Arte de Empacotar Features para Maximizar Receita Percebida',
+          ]
+        },
+        {
+          nome: 'Receita Recorrente, Retenção e Expansão',
+          topicos: [
+            'MRR, ARR e a Matemática Real do SaaS: O Que Cada Número Esconde e Revela',
+            'Churn Rate: Por Que Crescer Sem Reter é Encher um Balde Furado — e Como Calcular o Teto do Negócio',
+            'Net Revenue Retention (NRR) Acima de 100%: A Única Métrica que Prova que o Produto Funciona de Verdade',
+            'Upselling e Cross-selling: Expansão de Receita Sem Custo de Aquisição',
+            'Customer Success como Prevenção de Churn: A Diferença entre Suporte Reativo e CS Proativo',
+            'Recuperação de Churn: Como Reativar Clientes que Cancelaram — Win-Back Campaigns e Timing',
+            'Cohort Analysis de Receita: Lendo a Saúde Financeira Longitudinal, Não Só o MRR do Mês',
+            'Expansão para Enterprise: Contratos Anuais, SLAs e o Que Muda no Processo de Vendas',
+            'Vendas por Indicação (Referral): O Canal que Não Envelhece e Tem CAC Próximo de Zero',
+            'Construindo um Modelo de Receita Previsível: Combinando PLG, Sales e Expansão em Sistema',
+          ]
+        }
+      ]
+    },
+
     {
       slug: 'founder-dev-arquitetura',
       nome: 'Desenvolvimento & Arquitetura',
