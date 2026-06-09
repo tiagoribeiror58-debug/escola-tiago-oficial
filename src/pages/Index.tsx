@@ -172,8 +172,20 @@ export default function Index() {
   const { ordem, atualizarOrdem } = useOrdemMaterias();
   const { ordemHubs, atualizarOrdemHubs } = useOrdemHubs();
   
-  const [currentTab, setCurrentTab] = useState<'foco' | 'materias' | 'hubs'>('foco');
-  const [focoFilterType, setFocoFilterType] = useState<'all' | 'materias' | 'hubs'>('all');
+  const [currentTab, setCurrentTab] = useState<'foco' | 'materias' | 'hubs'>(() => {
+    return (localStorage.getItem('@escola-tiago:currentTab') as any) || 'foco';
+  });
+  const [focoFilterType, setFocoFilterType] = useState<'all' | 'materias' | 'hubs'>(() => {
+    return (localStorage.getItem('@escola-tiago:focoFilterType') as any) || 'all';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('@escola-tiago:currentTab', currentTab);
+  }, [currentTab]);
+
+  useEffect(() => {
+    localStorage.setItem('@escola-tiago:focoFilterType', focoFilterType);
+  }, [focoFilterType]);
   const [visibleLimitFocoHubs, setVisibleLimitFocoHubs] = useState(4);
   const [visibleLimitFocoMaterias, setVisibleLimitFocoMaterias] = useState(6);
   const [visibleLimitMaterias, setVisibleLimitMaterias] = useState(6);
