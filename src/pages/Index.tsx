@@ -174,7 +174,8 @@ export default function Index() {
   
   const [currentTab, setCurrentTab] = useState<'foco' | 'materias' | 'hubs'>('foco');
   const [focoFilterType, setFocoFilterType] = useState<'all' | 'materias' | 'hubs'>('all');
-  const [visibleLimitFoco, setVisibleLimitFoco] = useState(6);
+  const [visibleLimitFocoHubs, setVisibleLimitFocoHubs] = useState(4);
+  const [visibleLimitFocoMaterias, setVisibleLimitFocoMaterias] = useState(6);
   const [visibleLimitMaterias, setVisibleLimitMaterias] = useState(6);
   const [visibleLimitHubs, setVisibleLimitHubs] = useState(4);
   
@@ -245,17 +246,17 @@ export default function Index() {
 
   // Quais itens aparecem em cada seção dado o filtro ativo
   const visibleHubsFoco = (focoFilterType === 'all' || focoFilterType === 'hubs')
-    ? focusedHubs.slice(0, visibleLimitFoco)
+    ? focusedHubs.slice(0, visibleLimitFocoHubs)
     : [];
   const visibleMateriasFoco = (focoFilterType === 'all' || focoFilterType === 'materias')
-    ? focusedMaterias.slice(0, visibleLimitFoco)
+    ? focusedMaterias.slice(0, visibleLimitFocoMaterias)
     : [];
 
-  // Total filtrado — usado para o botão "ver mais" e contagem
+  // Totais para os botões "ver mais"
   const filteredFocoHubsTotal = focusedHubs.length;
   const filteredFocoMateriasTotal = focusedMaterias.length;
-  const showVerMaisHubs = (focoFilterType === 'all' || focoFilterType === 'hubs') && filteredFocoHubsTotal > visibleLimitFoco;
-  const showVerMaisMaterias = (focoFilterType === 'all' || focoFilterType === 'materias') && filteredFocoMateriasTotal > visibleLimitFoco;
+  const showVerMaisHubs = (focoFilterType === 'all' || focoFilterType === 'hubs') && filteredFocoHubsTotal > visibleLimitFocoHubs;
+  const showVerMaisMaterias = (focoFilterType === 'all' || focoFilterType === 'materias') && filteredFocoMateriasTotal > visibleLimitFocoMaterias;
 
   const handleDragEndFoco = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -545,7 +546,7 @@ export default function Index() {
                     {displayedFoco.length > 0 && (
                       <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
                         <button
-                          onClick={() => { setFocoFilterType('all'); setVisibleLimitFoco(6); }}
+                          onClick={() => { setFocoFilterType('all'); setVisibleLimitFocoHubs(4); setVisibleLimitFocoMaterias(6); }}
                           className={cn(
                             "px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap",
                             focoFilterType === 'all' ? "bg-foreground text-background" : "bg-muted/50 text-muted-foreground hover:bg-muted"
@@ -554,7 +555,7 @@ export default function Index() {
                           Tudo
                         </button>
                         <button
-                          onClick={() => { setFocoFilterType('materias'); setVisibleLimitFoco(6); }}
+                          onClick={() => { setFocoFilterType('materias'); setVisibleLimitFocoMaterias(6); }}
                           className={cn(
                             "px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap",
                             focoFilterType === 'materias' ? "bg-foreground text-background" : "bg-muted/50 text-muted-foreground hover:bg-muted"
@@ -563,7 +564,7 @@ export default function Index() {
                           Apenas Matérias
                         </button>
                         <button
-                          onClick={() => { setFocoFilterType('hubs'); setVisibleLimitFoco(6); }}
+                          onClick={() => { setFocoFilterType('hubs'); setVisibleLimitFocoHubs(4); }}
                           className={cn(
                             "px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap",
                             focoFilterType === 'hubs' ? "bg-foreground text-background" : "bg-muted/50 text-muted-foreground hover:bg-muted"
@@ -577,7 +578,7 @@ export default function Index() {
                       <div>
                         <h4 className="text-sm font-medium mb-3 text-muted-foreground">Hubs em Foco</h4>
                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
                             <SortableContext items={visibleHubsFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
                               {visibleHubsFoco.map(estado => (
                                 <SortableItem
@@ -595,13 +596,21 @@ export default function Index() {
                             </SortableContext>
                           </div>
                         </DndContext>
+                        {showVerMaisHubs && (
+                          <button
+                            onClick={() => setVisibleLimitFocoHubs(prev => prev + 4)}
+                            className="w-full mb-6 py-2.5 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed border-border hover:bg-muted transition-colors"
+                          >
+                            Ver mais hubs ({Math.min(visibleLimitFocoHubs + 4, filteredFocoHubsTotal)} de {filteredFocoHubsTotal})
+                          </button>
+                        )}
                       </div>
                     )}
                     {visibleMateriasFoco.length > 0 && (
                       <div>
                         <h4 className="text-sm font-medium mb-3 text-muted-foreground">Matérias em Foco</h4>
                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
                             <SortableContext items={visibleMateriasFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
                               {visibleMateriasFoco.map(estado => (
                                 <SortableItem
@@ -619,16 +628,14 @@ export default function Index() {
                             </SortableContext>
                           </div>
                         </DndContext>
-                      </div>
-                    )}
-                    {(showVerMaisHubs || showVerMaisMaterias) && (
-                      <div className="flex items-center gap-2 mb-4 mt-2">
-                        <button
-                          onClick={() => setVisibleLimitFoco(prev => prev + 6)}
-                          className="flex-1 py-3 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed border-border hover:bg-muted transition-colors"
-                        >
-                          Ver mais ({visibleLimitFoco + 6} de {focoFilterType === 'hubs' ? filteredFocoHubsTotal : focoFilterType === 'materias' ? filteredFocoMateriasTotal : filteredFocoHubsTotal + filteredFocoMateriasTotal})
-                        </button>
+                        {showVerMaisMaterias && (
+                          <button
+                            onClick={() => setVisibleLimitFocoMaterias(prev => prev + 6)}
+                            className="w-full mb-4 py-2.5 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed border-border hover:bg-muted transition-colors"
+                          >
+                            Ver mais matérias ({Math.min(visibleLimitFocoMaterias + 6, filteredFocoMateriasTotal)} de {filteredFocoMateriasTotal})
+                          </button>
+                        )}
                       </div>
                     )}
                   </>
