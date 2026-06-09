@@ -10,46 +10,7 @@ export const marketingHub: MateriaConfig = {
     'Marketing é o que faz o mundo saber que você existe. Não é sobre anúncios ou seguidores — é sobre entender como as pessoas tomam decisões e como você posiciona sua solução no caminho delas. Sem isso, o melhor produto do mundo morre na prateleira.',
   children: [
     // ─────────────────────────────────────────────────────────────
-    // 1. MARKETING CONCEITUAL
-    // ─────────────────────────────────────────────────────────────
-    {
-      slug: 'marketing-conceitual',
-      nome: 'Marketing Conceitual',
-      emoji: '🧠',
-      parent: 'marketing-hub',
-      whyStart:
-        'Antes de qualquer ferramenta ou tática, você precisa entender o mecanismo: por que as pessoas compram. Quem pula essa etapa aprende a apertar botões sem saber o que está fazendo — e quando a campanha falha, não sabe por quê.',
-      descricao: 'Fundamentos, psicologia de consumo, posicionamento e a lógica por trás de toda decisão de compra.',
-      contexto: `Foco: os modelos mentais fundamentais do marketing. Ensine o PORQUÊ antes do COMO.
-
-Abordagem obrigatória:
-- Para cada framework (4 Ps, JTBD, etc.): explique o problema que ele resolve e onde falha antes de aplicar.
-- Psicologia do consumidor não é manipulação — ensine com ética e mecanismo real.
-- Questione aplicações superficiais: "Qual é a limitação dessa estratégia no seu contexto?"
-- Branding não é estética; é gestão de percepção. Ensine a diferença.`,
-      ementa: [
-        'Branding: Posicionamento, Identidade e Percepção',
-        'Psicologia do Consumidor: Gatilhos Mentais de Compra',
-        'Os 4 Ps do Marketing: O Framework Original e Suas Limitações',
-        'Posicionamento de Mercado: Diferenciação e Categoria Mental',
-        'Jobs To Be Done (JTBD): Comprando o Progresso, Não o Produto',
-        'Percepção de Valor vs Preço: Por que o Barato Parece Suspeito',
-        'Marketing vs Publicidade vs Propaganda: Distinções que Importam',
-        'A Psicologia da Prova Social e da Autoridade (Cialdini)',
-        'Estratégia de Oceano Azul: Criando Mercados Sem Competição',
-        'O Paradoxo da Escolha: Menos Opções Vendem Mais',
-        'Storytelling Estrutural: Por que Histórias Vendem Mais que Argumentos',
-        'Arquitetura de Marca: House of Brands vs Branded House',
-        'Comportamento do Consumidor na Era Digital (Atenção Fragmentada)',
-        'Neuromarketing: A Neurociência Por Trás do Consumo',
-        'Economia Comportamental Aplicada a Preços (Ancoragem)',
-        'O Efeito Halo: Como a Primeira Impressão Contamina Todo o Resto',
-        'Gestão de Crise de Imagem: O Que Fazer Quando Tudo Dá Errado'
-      ],
-    },
-
-    // ─────────────────────────────────────────────────────────────
-    // 2. MARKETING TÉCNICO
+    // 1. MARKETING TÉCNICO
     // ─────────────────────────────────────────────────────────────
     {
       slug: 'marketing-tecnico',

@@ -375,6 +375,113 @@ Abordagem obrigatória:
       ]
     },
     {
+      slug: 'marketing-conceitual',
+      nome: 'Marketing & Psicologia do Consumidor',
+      emoji: '📣',
+      parent: 'founder-solo',
+      whyStart: 'Antes de qualquer ferramenta ou tática, você precisa entender o mecanismo: por que as pessoas compram. Quem pula essa etapa aprende a apertar botões sem saber o que está fazendo — e quando a campanha falha, não sabe por quê.',
+      descricao: 'Fundamentos do marketing: psicologia de consumo, posicionamento e a lógica por trás de toda decisão de compra.',
+      contexto: `Foco: os modelos mentais fundamentais do marketing. Ensine o PORQUÊ antes do COMO.
+
+Abordagem obrigatória:
+- Para cada framework (4 Ps, JTBD, etc.): explique o problema que ele resolve e onde falha antes de aplicar.
+- Psicologia do consumidor não é manipulação — ensine com ética e mecanismo real.
+- Branding não é estética; é gestão de percepção. Ensine a diferença.`,
+      fases: [
+        {
+          nome: 'O Mecanismo da Decisão de Compra',
+          topicos: [
+            'Marketing vs Publicidade vs Propaganda: Distinções que Importam para Founders',
+            'Jobs To Be Done (JTBD): O Cliente Compra Progresso, Não Produto',
+            'Psicologia do Consumidor: Os Gatilhos Neurais que Antecedem a Compra',
+            'Sistema 1 e Sistema 2 de Kahneman: Como a Decisão Acontece Antes da Razão',
+            'Percepção de Valor vs Preço: Por que o Barato Parece Suspeito',
+            'O Paradoxo da Escolha: Menos Opções Vendem Mais (Barry Schwartz)',
+            'Economia Comportamental Aplicada a Preços: Ancoragem, Decoy e Framing',
+            'A Psicologia da Prova Social e da Autoridade (Cialdini)',
+          ]
+        },
+        {
+          nome: 'Posicionamento e Construção de Marca',
+          topicos: [
+            'Posicionamento de Mercado: Diferenciação e Ocupação de Categoria Mental',
+            'Branding: Posicionamento, Identidade e Gestão de Percepção',
+            'Estratégia de Oceano Azul: Criando Mercados Sem Competição (Kim & Mauborgne)',
+            'Os 4 Ps do Marketing: O Framework Original, Suas Limitações e o que Vem Depois',
+            'Storytelling Estrutural: Por que Histórias Vendem Mais que Argumentos Lógicos',
+            'O Efeito Halo: Como a Primeira Impressão Contamina Todo o Resto',
+            'Neuromarketing: A Neurociência Por Trás do Consumo (o que o dado diz de verdade)',
+            'Gestão de Crise de Imagem para Founders: O Que Fazer Quando Tudo Dá Errado',
+          ]
+        },
+        {
+          nome: 'Distribuição e Growth para Founders',
+          topicos: [
+            'A Anatomia de um Funil de Aquisição para Founders Solo',
+            'Product-Led Growth (PLG): Deixando o Produto Ser o Principal Canal',
+            'North Star Metric: A Única Métrica que Resume o Valor Entregue',
+            'Canais Orgânicos: SEO, Conteúdo e Audiência como Ativos Acumuláveis',
+            'Building in Public: Transparência como Estratégia de Distribuição',
+            'Cold Email com Personalização por IA: O Que Funciona em 2026',
+            'Comportamento do Consumidor na Era Digital: Atenção Fragmentada e Ciclos Curtos',
+          ]
+        }
+      ]
+    },
+    {
+      slug: 'founder-vendas',
+      nome: 'Vendas & Negociação para Founders',
+      emoji: '🤝',
+      parent: 'founder-solo',
+      whyStart: 'Se não gera receita, é um hobby. Cobrar desde o dia 1 é o teste mais honesto de se você está resolvendo um problema real. Founder que não sabe vender depende do acaso para sobreviver.',
+      descricao: 'Processo de vendas repetível para founders solo: do primeiro cliente ao pipeline escalável.',
+      contexto: `Foco: vender sendo o único vendedor — sem equipe, sem script pronto, às vezes sendo introvertido.
+
+Abordagem obrigatória:
+- Comece sempre pelo The Mom Test: o erro mais caro do founder é achar que está vendendo quando está só sendo elogiado.
+- Para cada metodologia (SPIN, BANT): explique o problema que ela resolve antes de aplicar.
+- Seja honesto sobre a rejeição: não é pessoal, é informação. Reformule o jogo.`,
+      fases: [
+        {
+          nome: 'A Primeira Venda: Validando que Alguém Paga',
+          topicos: [
+            'The Mom Test (Rob Fitzpatrick): Como Fazer Perguntas que Não Mentem para Você',
+            'A Diferença Entre Interesse e Intenção de Compra: Como Distinguir em Tempo Real',
+            'Perfil de Cliente Ideal (ICP): Quem É e Quem Definitivamente Não É',
+            'Como Fazer a Primeira Venda Sendo Founder (Sem Equipe, Sem Script)',
+            'Demonstrações de Produto que Convertem: Estrutura e o Que Nunca Fazer',
+            'Copywriting de Conversão para Landing Pages e Emails de Founder',
+            'Lidando com Rejeições: Reformulando como Dado, Não como Derrota',
+          ]
+        },
+        {
+          nome: 'Processo e Metodologia de Vendas',
+          topicos: [
+            'SPIN Selling: Situação, Problema, Implicação e Necessidade de Solução',
+            'Qualificação de Leads: BANT e MEDDIC na Prática de Solo Founders',
+            'O Processo de Discovery: Fazendo as Perguntas Certas Antes de Apresentar Qualquer Coisa',
+            'Contorno de Objeções: As 8 Mais Comuns e Como Quebrar Cada Uma',
+            'Negociação de Contratos: Como Não Dar Desconto e Fechar Igualmente',
+            'Proposta de Valor: Como Apresentar o ROI Sem Soar como Vendedor de Feirão',
+            'Pipeline de Vendas com CRM Solo: Notion, Linear ou Pipedrive para Times de 1',
+          ]
+        },
+        {
+          nome: 'Escala e Receita Recorrente',
+          topicos: [
+            'PLG vs Sales-Led: Quando Deixar o Produto Vender e Quando Você Precisa Vender',
+            'Value-Based Pricing: Cobrar pelo Valor Gerado, Não pelo Custo',
+            'Annual Plans: Como Convencer o Cliente a Pagar o Ano Todo',
+            'Upselling e Cross-selling: Receita sem Esforço Adicional',
+            'MRR, ARR e Churn: Entendendo a Saúde Real da Receita',
+            'Net Revenue Retention Acima de 100%: A Métrica que Prova que o Produto Funciona',
+            'Recuperação de Churn: Como Reativar Clientes que Cancelaram',
+            'Análise Win/Loss: Por Que Você Perdeu e O Que Fazer Com Esse Dado',
+          ]
+        }
+      ]
+    },
+    {
       slug: 'visao-estrategica-inovacao',
       nome: 'Visão Estratégica & Inovação',
       emoji: '🔭',
@@ -391,7 +498,7 @@ Abordagem obrigatória:
 - Nunca romantize o empreendedorismo: inovação real é rara, arriscada e cara. Ensine a calcular o risco.`,
       fases: [
         {
-          nome: 'Fase 1 — Fundamentos: Por que Inovação é Diferente de Melhoria',
+          nome: 'Por que Inovação é Diferente de Melhoria',
           topicos: [
             'A Distinção Fundamental: Inovação Incremental vs Inovação de Categoria (Zero to One)',
             'Por que Competição é para Perdedores: O Argumento Central de Peter Thiel',
@@ -404,7 +511,7 @@ Abordagem obrigatória:
           ]
         },
         {
-          nome: 'Fase 2 — Intermediário: Construindo Vantagens Injustas',
+          nome: 'Construindo Vantagens Injustas',
           topicos: [
             'Efeitos de Rede (Network Effects) e a Lei de Metcalfe: Valor Cresce Exponencialmente com Usuários',
             'Tipos de Moats: Vantagens Competitivas que o Dinheiro Não Compra Facilmente',
@@ -419,7 +526,7 @@ Abordagem obrigatória:
           ]
         },
         {
-          nome: 'Fase 3 — Avançado: Pensamento de Fronteira e a Era da IA',
+          nome: 'Pensamento de Fronteira e a Era da IA',
           topicos: [
             'Pensamento Assintótico: Enxergando o Limite Teórico e Trabalhando de Trás Pra Frente',
             'Second-Order Thinking: Consequências das Consequências das Suas Decisões',
