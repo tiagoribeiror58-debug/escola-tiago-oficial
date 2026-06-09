@@ -207,7 +207,6 @@ export default function Index() {
     })
   );
 
-  // Ordenação da Mesa de Estudos
   const displayedFoco = [...baseEstadosFoco].sort((a, b) => {
     const slugA = a.config.slug;
     const slugB = b.config.slug;
@@ -219,26 +218,25 @@ export default function Index() {
     if (aFix && !bFix) return -1;
     if (!aFix && bFix) return 1;
 
-    // 2. Maior engajamento (total de sessões)
-    if (b.totalSessoes !== a.totalSessoes) {
-      return b.totalSessoes - a.totalSessoes;
-    }
-
-    // 3. Desempate por recência
-    const dataA = a.ultimaSessao ? new Date(a.ultimaSessao.data).getTime() : 0;
-    const dataB = b.ultimaSessao ? new Date(b.ultimaSessao.data).getTime() : 0;
-    if (dataA !== dataB) {
-      return dataB - dataA;
-    }
-
-    // 4. Ordem Customizada (Drag Drop)
+    // 2. Ordem customizada (Drag & Drop) — prioridade máxima depois de fixadas
+    //    Se o usuário definiu uma ordem, ela PREVALECE sobre sessões e recência.
     const indexA = ordem.indexOf(slugA);
     const indexB = ordem.indexOf(slugB);
 
     if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+    // Um está na ordem salva, o outro não → o que está na ordem vai primeiro
     if (indexA !== -1 && indexB === -1) return -1;
     if (indexA === -1 && indexB !== -1) return 1;
-    return 0;
+
+    // 3. Fallback para itens nunca arrastados: maior engajamento
+    if (b.totalSessoes !== a.totalSessoes) {
+      return b.totalSessoes - a.totalSessoes;
+    }
+
+    // 4. Fallback final: recência
+    const dataA = a.ultimaSessao ? new Date(a.ultimaSessao.data).getTime() : 0;
+    const dataB = b.ultimaSessao ? new Date(b.ultimaSessao.data).getTime() : 0;
+    return dataB - dataA;
   });
 
   // Itens filtrados por tipo — aplicado ANTES de qualquer paginação
@@ -261,12 +259,31 @@ export default function Index() {
 
   const handleDragEndFoco = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const oldIndex = displayedFoco.findIndex(e => e.config.slug === active.id);
-      const newIndex = displayedFoco.findIndex(e => e.config.slug === over.id);
-      const novaOrdemArray = arrayMove(displayedFoco, oldIndex, newIndex).map(e => e.config.slug);
-      atualizarOrdem(novaOrdemArray);
-    }
+    if (!over || active.id === over.id) return;
+
+    const activeId = active.id as string;
+    const overId = over.id as string;
+
+    // Descobre se o item arrastado é hub ou matéria
+    const activeIsHub = displayedFoco.find(e => e.config.slug === activeId)?.config.isCategory ?? false;
+
+    // Opera na lista do tipo correto para calcular os novos índices
+    const listaMesmoTipo = displayedFoco.filter(e => e.config.isCategory === activeIsHub);
+    const oldIndex = listaMesmoTipo.findIndex(e => e.config.slug === activeId);
+    const newIndex = listaMesmoTipo.findIndex(e => e.config.slug === overId);
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    // Gera a nova ordem: itens do outro tipo mantêm posição, itens do mesmo tipo recebem nova ordem
+    const reordered = arrayMove(listaMesmoTipo, oldIndex, newIndex);
+    const outrosItens = displayedFoco.filter(e => e.config.isCategory !== activeIsHub);
+
+    // Salva a ordem mesclando os dois grupos (outros itens mantêm seus slugs na ordem salva)
+    const novaOrdemCompleta = [
+      ...outrosItens.map(e => e.config.slug),
+      ...reordered.map(e => e.config.slug),
+    ];
+    atualizarOrdem(novaOrdemCompleta);
   };
 
   const handleCardClick = (estado: MateriaEstado) => {
