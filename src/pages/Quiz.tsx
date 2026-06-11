@@ -40,24 +40,16 @@ export default function Quiz() {
   const [answer, setAnswer] = useState('');
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [historyFilter, setHistoryFilter] = useState<'today' | 'all'>('today');
   const [topicFilter, setTopicFilter] = useState<TopicDateFilter>('all');
-  const [customStart, setCustomStart] = useState<string>('');
-  const [customEnd, setCustomEnd] = useState<string>('');
   const [selectedMateria, setSelectedMateria] = useState<string>('');
-  const [quizMode, setQuizMode] = useState<'all' | 'wrong'>('all');
   const [currentFeedback, setCurrentFeedback] = useState<{ status: string; feedback: string } | null>(null);
   const [giveUpUsed, setGiveUpUsed] = useState(false);
   const [showHint, setShowHint] = useState(false);
   
   const { data: settings, isLoading: loadingSettings } = useUserSettings();
-  const { data: topics, isLoading: loadingTopics } = useAllCompletedTopics(
-    topicFilter, 
-    customStart ? new Date(customStart) : undefined, 
-    customEnd ? new Date(customEnd) : undefined
-  );
+  const { data: topics, isLoading: loadingTopics } = useAllCompletedTopics(topicFilter);
   const { data: todayCount, isLoading: loadingCount } = useTodayQuizCount();
-  const { data: dbHistory, isLoading: loadingHistory } = useQuizHistory(historyFilter);
+  const { data: dbHistory, isLoading: loadingHistory } = useQuizHistory('today');
   const { data: wrongTopicsData } = useWrongTopics();
 
   const createSession = useCreateQuizSession();
@@ -66,9 +58,9 @@ export default function Quiz() {
 
   // Quantidade dinâmica baseada no número de tópicos do período selecionado
   const filteredTopicsCount = topics?.length || 0;
-  let dynamicQuestionLimit = 3;
-  if (filteredTopicsCount > 3 && filteredTopicsCount <= 10) dynamicQuestionLimit = 5;
+  let dynamicQuestionLimit = 5;
   if (filteredTopicsCount > 10) dynamicQuestionLimit = 7;
+  if (filteredTopicsCount > 20) dynamicQuestionLimit = 10; // Max limit per session
 
   const hasStartedRef = useRef(false);
 
@@ -113,19 +105,13 @@ export default function Quiz() {
         }
       }
 
-      // Filtra apenas tópicos errados se o modo for ativado
-      if (quizMode === 'wrong') {
-        const wrongSet = new Set(wrongTopicsData || []);
-        sourceTopics = sourceTopics.filter(t => wrongSet.has(t.topico));
-        if (sourceTopics.length === 0) {
-          toast.error("Nenhum tópico com erro no histórico para este filtro.");
-          setPhase('idle');
-          return;
-        }
-      }
-
-      // Extract unique topics to send
-      topicNames = Array.from(new Set(sourceTopics.map(t => t.topico)));
+      // Para evitar repetição e focar de forma inteligente: mistura os tópicos concluídos com os errados
+      const wrongSet = new Set(wrongTopicsData || []);
+      const wrongTopics = sourceTopics.filter(t => wrongSet.has(t.topico));
+      // Vamos dar prioridade aos tópicos que ele errou no passado, se houver, misturando-os com os outros
+      const prioritizedTopics = [...wrongTopics, ...sourceTopics]; 
+      // O Set remove as duplicatas mantendo a ordem (os que ele errou ficam na frente, se quisermos passar para a IA)
+      topicNames = Array.from(new Set(prioritizedTopics.map(t => t.topico)));
 
       const { data, error } = await supabase.functions.invoke('quiz', {
         body: {
@@ -243,13 +229,12 @@ export default function Quiz() {
       if (error) throw error;
 
       const evalData = data as { status: string; feedback: string };
-      setCurrentFeedback(evalData);
+      const rawStatus = evalData.status?.toLowerCase().trim() || 'errado';
+      const status = rawStatus.includes('correto') ? 'correto' : rawStatus.includes('parcial') ? 'parcial' : 'errado';
+      
+      setCurrentFeedback({ status, feedback: evalData.feedback });
+      setPhase('active');
 
-      if (evalData.status === 'correto') {
-        await saveAndAdvance(evalData.status, evalData.feedback, answer);
-      } else {
-        setPhase('active');
-      }
 
     } catch (error) {
       console.error(error);
@@ -305,85 +290,13 @@ export default function Quiz() {
                 <p className="text-muted-foreground text-sm mb-8 text-center">
                   Baseado no seu volume de estudos neste período, o sistema gerará <strong className="text-primary">{dynamicQuestionLimit} perguntas</strong>.
                 </p>
-                <div className="w-full mb-6 space-y-4 text-left">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest pl-1">
-                      Filtrar tópicos concluídos por data
-                    </label>
-                    <select 
-                      value={topicFilter}
-                      onChange={(e) => setTopicFilter(e.target.value as TopicDateFilter)}
-                      className="w-full bg-card border border-border/50 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-                    >
-                      <option value="all">Todo o Histórico (Qualquer data)</option>
-                      <option value="today">Hoje</option>
-                      <option value="yesterday">Ontem</option>
-                      <option value="last_7_days">Últimos 7 dias</option>
-                      <option value="last_30_days">Últimos 30 dias</option>
-                      <option value="custom">Data Personalizada</option>
-                    </select>
-                  </div>
-
-                  {topicFilter === 'custom' && (
-                    <div className="flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
-                      <div className="flex-1">
-                        <label className="text-xs text-muted-foreground mb-1 block pl-1">Início</label>
-                        <input 
-                          type="date"
-                          value={customStart}
-                          onChange={(e) => setCustomStart(e.target.value)}
-                          className="w-full bg-card border border-border/50 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <label className="text-xs text-muted-foreground mb-1 block pl-1">Fim</label>
-                        <input 
-                          type="date"
-                          value={customEnd}
-                          onChange={(e) => setCustomEnd(e.target.value)}
-                          className="w-full bg-card border border-border/50 rounded-xl p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest pl-1">
-                      Focar em uma matéria? (Opcional)
-                    </label>
-                    <select 
-                      className="w-full bg-card border border-border/50 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-                      onChange={(e) => setSelectedMateria(e.target.value)}
-                      value={selectedMateria}
-                    >
-                      <option value="">Todas as matérias ({topics?.length || 0} tópicos filtrados)</option>
-                      {Array.from(new Set((topics || []).map(t => t.materia_slug))).map(slug => (
-                        <option key={slug} value={slug}>
-                          {slug.replace(/-/g, ' ').toUpperCase()}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-widest pl-1">
-                      Modo do Quiz
-                    </label>
-                    <div className="flex bg-muted/50 p-1 rounded-xl">
-                      <button 
-                        onClick={() => setQuizMode('all')} 
-                        className={cn("flex-1 py-2 text-sm font-medium rounded-lg transition-all", quizMode === 'all' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground")}
-                      >
-                        Todos os Tópicos
-                      </button>
-                      <button 
-                        onClick={() => setQuizMode('wrong')} 
-                        className={cn("flex-1 py-2 text-sm font-medium rounded-lg transition-all", quizMode === 'wrong' ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground")}
-                      >
-                        Focar nas Erradas
-                      </button>
-                    </div>
-                  </div>
+                <div className="w-full mb-6 text-left border border-border/50 bg-background/50 rounded-2xl p-4">
+                  <p className="text-sm text-foreground/80 leading-relaxed mb-4">
+                    Revisar é o que consolida o conhecimento na memória de longo prazo. O sistema vai puxar os tópicos que você estudou, focando onde você tem mais dificuldade.
+                  </p>
+                  <p className="text-sm text-foreground/80 leading-relaxed">
+                    Você fará <strong>no máximo {dynamicQuestionLimit} perguntas</strong> por sessão para não sobrecarregar sua mente.
+                  </p>
                 </div>
 
                 <button
@@ -391,7 +304,7 @@ export default function Quiz() {
                   disabled={!topics || topics.length === 0}
                   className="w-full py-4 bg-primary text-primary-foreground rounded-xl font-medium text-lg hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:pointer-events-none"
                 >
-                  {(!topics || topics.length === 0) ? "Nenhum tópico encontrado" : "Gerar Perguntas"}
+                  {(!topics || topics.length === 0) ? "Nenhum tópico encontrado" : "Gerar Bateria do Dia"}
                 </button>
               </div>
             )}
@@ -463,10 +376,14 @@ export default function Quiz() {
                 placeholder="Escreva sua resposta..."
                 className="w-full min-h-[120px] p-4 rounded-xl bg-muted/50 border border-input focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none mb-4"
                 autoFocus
-                disabled={phase === 'evaluating'}
+                disabled={phase === 'evaluating' || currentFeedback?.status === 'correto'}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-                     handleSubmitAnswer();
+                     if (currentFeedback?.status === 'correto') {
+                       saveAndAdvance('correto', currentFeedback.feedback, answer);
+                     } else {
+                       handleSubmitAnswer();
+                     }
                   }
                 }}
               />
@@ -474,15 +391,20 @@ export default function Quiz() {
               {currentFeedback && (
                 <div className={cn(
                   "mb-6 p-5 rounded-2xl border animate-in fade-in slide-in-from-bottom-2",
+                  currentFeedback.status === 'correto' ? "bg-green-500/5 border-green-500/20 shadow-[0_0_20px_rgba(34,197,94,0.05)]" :
                   currentFeedback.status === 'parcial' ? "bg-indigo-500/5 border-indigo-500/20 shadow-[0_0_20px_rgba(99,102,241,0.05)]" :
-                  currentFeedback.status === 'errado' ? "bg-red-500/5 border-red-500/20 shadow-[0_0_20px_rgba(239,68,68,0.05)]" : ""
+                  "bg-red-500/5 border-red-500/20 shadow-[0_0_20px_rgba(239,68,68,0.05)]"
                 )}>
                   <div className={cn(
                     "flex items-center gap-2 mb-2.5 font-semibold",
-                    currentFeedback.status === 'parcial' ? "text-indigo-600 dark:text-indigo-400" : "text-red-600 dark:text-red-400"
+                    currentFeedback.status === 'correto' ? "text-green-600 dark:text-green-400" :
+                    currentFeedback.status === 'parcial' ? "text-indigo-600 dark:text-indigo-400" : 
+                    "text-red-600 dark:text-red-400"
                   )}>
-                    {currentFeedback.status === 'parcial' ? <Sparkles className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
-                    <span className="tracking-wide">{currentFeedback.status === 'parcial' ? 'Dica do Mentor' : 'Ainda não é isso'}</span>
+                    {currentFeedback.status === 'correto' ? <CheckCircle2 className="w-5 h-5" /> : currentFeedback.status === 'parcial' ? <Sparkles className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+                    <span className="tracking-wide">
+                      {currentFeedback.status === 'correto' ? 'Correto!' : currentFeedback.status === 'parcial' ? 'Dica do Mentor' : 'Ainda não é isso'}
+                    </span>
                   </div>
                   <p className="text-[15px] leading-relaxed text-foreground/90">{currentFeedback.feedback}</p>
                 </div>
@@ -493,7 +415,7 @@ export default function Quiz() {
                   <div className="text-xs text-muted-foreground hidden sm:block">
                     Pressione <kbd className="font-mono bg-muted px-1 rounded border border-border">Cmd</kbd> + <kbd className="font-mono bg-muted px-1 rounded border border-border">Enter</kbd>
                   </div>
-                  {currentFeedback && !giveUpUsed && (
+                  {currentFeedback && currentFeedback.status !== 'correto' && !giveUpUsed && (
                     <button 
                       onClick={handleGiveUp}
                       disabled={phase === 'evaluating'}
@@ -503,13 +425,22 @@ export default function Quiz() {
                     </button>
                   )}
                 </div>
-                <button 
-                  onClick={handleSubmitAnswer}
-                  disabled={!answer.trim() || phase === 'evaluating'}
-                  className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:brightness-110 active:scale-95 transition-all disabled:opacity-50 ml-auto"
-                >
-                  Enviar Resposta
-                </button>
+                {currentFeedback?.status === 'correto' ? (
+                  <button 
+                    onClick={() => saveAndAdvance('correto', currentFeedback.feedback, answer)}
+                    className="px-6 py-3 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 active:scale-95 transition-all ml-auto flex items-center gap-2"
+                  >
+                    Próxima Pergunta <ArrowLeft className="w-4 h-4 rotate-180" />
+                  </button>
+                ) : (
+                  <button 
+                    onClick={handleSubmitAnswer}
+                    disabled={!answer.trim() || phase === 'evaluating'}
+                    className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:brightness-110 active:scale-95 transition-all disabled:opacity-50 ml-auto"
+                  >
+                    Enviar Resposta
+                  </button>
+                )}
               </div>
             </div>
           </div>
