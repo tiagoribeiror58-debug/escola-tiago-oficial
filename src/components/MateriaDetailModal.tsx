@@ -5,7 +5,7 @@ import { useSessoes, useEmentaConcluida, useToggleEmenta, useExcluirHistoricoTop
 import { useSessionMessages } from '@/hooks/useChatMessages';
 import { useNavigate, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map as MapIcon, History, Trash2, Eye, EyeOff } from 'lucide-react';
+import { ChevronRight, BookOpen, ChevronDown, ChevronUp, ArrowRight, Loader2, Map as MapIcon, History, Trash2, Eye, EyeOff, Pause } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { playPopSound } from '@/lib/audioUtils';
@@ -421,7 +421,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                         : "bg-muted/20 border-border/40 text-muted-foreground/50"
                                     )}
                                   >
-                                    {isCompleted ? '✓' : isCurrent ? '●' : (idx + 1)}
+                                    {isCompleted ? '✓' : isPaused ? <Pause className="w-3 h-3 fill-current" /> : isCurrent ? '●' : (idx + 1)}
                                   </button>
                                   {/* Linha conectora (não aparece no último item) */}
                                   {!isLast && (
