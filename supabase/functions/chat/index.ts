@@ -9,10 +9,9 @@ const corsHeaders = {
 // Cadeia de fallback: tenta do mais moderno ao mais estável.
 // Se um estiver sobrecarregado (overloaded), tenta o próximo automaticamente.
 const MODELS = [
-  { id: "deepseek-v4-flash", provider: "deepseek" },       // Novo modelo principal: rápido e multimodal
-  { id: "deepseek-v4-flash", provider: "deepseek" },       // Fallback caso 3.5-flash esteja sobrecarregado (503)
-  { id: "claude-haiku-4-5-20251001", provider: "anthropic" }, // Fallback para Anthropic
-  { id: "claude-sonnet-4-5-20250929", provider: "anthropic" } // Fallback final
+  { id: "deepseek-chat", provider: "deepseek" },
+  { id: "claude-3-5-haiku-20241022", provider: "anthropic" },
+  { id: "claude-3-5-sonnet-20241022", provider: "anthropic" }
 ];
 
 serve(async (req) => {
@@ -95,14 +94,17 @@ serve(async (req) => {
     finalSystemPrompt += `
 
 [INSTRUÇÃO VISUAL CRÍTICA]:
-Você deve gerar RECURSOS VISUAIS para o aluno usando Diagramas e Fotos Reais. É OBRIGATÓRIO ilustrar conceitos sempre que possível.
-1. DIAGRAMAS LÓGICOS (Mermaid): SEMPRE que você estiver explicando um processo passo a passo, um fluxo de dados, uma hierarquia, um ciclo mental, arquitetura de sistemas ou qualquer relação de causa e efeito, você DEVE criar um diagrama usando blocos \`mermaid\`. Faça isso frequentemente para facilitar o mapa mental do aluno! (Regra sintaxe: Use aspas duplas nos textos dos nós: A["texto longo"]).
-2. FOTOS REAIS (Unsplash): O Tiago é extremamente visual! Sempre que citar um local histórico, cenário, animal, tecnologia física ou conceito visualizável, você DEVE gerar uma foto inserindo a tag: [FOTO: termo de busca em ingles] em uma linha isolada na sua resposta.
-Exemplo prático: [FOTO: modern data center servers] ou [FOTO: ancient rome colosseum]
-REGRA: É extremamente encorajado usar [FOTO: ...] em 90% das suas explicações sobre coisas do mundo real.
+Você deve gerar RECURSOS VISUAIS para o aluno usando Diagramas lógicos.
+1. DIAGRAMAS LÓGICOS (Mermaid): SEMPRE que você estiver explicando um processo passo a passo, um fluxo de dados, uma hierarquia, um ciclo mental, arquitetura de sistemas ou qualquer relação de causa e efeito complexa, crie um diagrama usando blocos \`mermaid\`. (Regra sintaxe: Use aspas duplas nos textos dos nós: A["texto longo"]).
 
 [REGRA DE OURO]:
 Absolutamente TODA MENSAGEM SUA, sem exceção, DEVE terminar isoladamente com a tag <chips>Sugestão 1|Sugestão 2</chips>. Omitir essa tag quebra a interface do sistema!
+
+[INSTRUÇÃO DE TAMANHO E DIRETIVAS (MUITO IMPORTANTE)]:
+Você DEVE ser conciso. Vá direto ao ponto e não cuspa blocos de texto maçantes!
+Ensine o conceito de forma clara, dividindo em tópicos ou parágrafos curtos.
+PROIBIDO terminar suas respostas com perguntas ou pedindo permissão para continuar (ex: "Entendeu?", "Vamos avançar?", "Posso continuar?"). Apenas explique o conceito e encerre a mensagem. O sistema de chips já cuidará de dar opções ao usuário.
+NUNCA ultrapasse 3 ou 4 parágrafos curtos por mensagem.
 `;
 
     // Cria um stream customizado para emitir eventos antes da IA principal
@@ -127,7 +129,7 @@ Absolutamente TODA MENSAGEM SUA, sem exceção, DEVE terminar isoladamente com a
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  model: "deepseek-v4-flash",
+                  model: "deepseek-chat",
                   messages: [
                     { role: "system", content: "Você é um especialista em formular queries de busca. Leia o histórico da conversa e a última mensagem do usuário.\n\nDecida se é necessário buscar na web. Casos que EXIGEM busca:\n- Notícias, eventos ou dados de 2024/2025/2026+\n- Cotações, preços, métricas ou números de mercado\n- Exemplos reais de empresas específicas (Tesla, TikTok, Apple, etc)\n- Estratégias empresariais, modelos de negócio, cases reais\n- Qualquer dado que pode estar desatualizado ou incompleto no treinamento\n- Quando o usuário pede para 'continuar' em um exemplo específico e há dados verificáveis envolvidos\n\nCasos que NÃO precisam de busca:\n- Conceitos puros de matemática, física, lógica\n- Definições filosóficas e históricas bem estabelecidas\n- O usuário está apenas pedindo para continuar a explicação de um conceito abstrato\n\nSe NÃO precisar de busca, retorne APENAS: NAO\nSe PRECISAR, formule a melhor query de busca (curta e direta em inglês quando possível). Retorne APENAS a query." },
                     { role: "user", content: `Histórico recente:\n${contextStr}` }
@@ -209,7 +211,7 @@ Absolutamente TODA MENSAGEM SUA, sem exceção, DEVE terminar isoladamente com a
                               "Content-Type": "application/json",
                             },
                             body: JSON.stringify({
-                              model: "deepseek-v4-flash",
+                              model: "deepseek-chat",
                               messages: [
                                 { role: "system", content: `Você é um curador de currículo educacional. Analise o conteúdo de busca fornecido e determine se ele contém UM tópico de estudo concreto e específico que seria valioso para um aluno que estuda '${materiaSlug}'. Se sim, retorne um JSON com exatamente este formato: {\"titulo\": \"Título conciso do tópico\", \"descricao\": \"Uma frase explicando o que o aluno aprenderá\", \"fonte_url\": \"URL mais relevante\"}. Se NÃO houver tópico novo relevante, retorne apenas: null` },
                                 { role: "user", content: `Conteúdo da busca:\n${snippets.substring(0, 2000)}` }
@@ -284,7 +286,7 @@ Absolutamente TODA MENSAGEM SUA, sem exceção, DEVE terminar isoladamente com a
               url = "https://api.deepseek.com/chat/completions";
               headers["Authorization"] = `Bearer ${DEEPSEEK_API_KEY}`;
               body.model = modelDef.id;
-              body.max_tokens = 2048;
+              body.max_tokens = 600;
               body.messages = [
                 { role: "system", content: finalSystemPrompt },
                 ...messages
@@ -296,7 +298,7 @@ Absolutamente TODA MENSAGEM SUA, sem exceção, DEVE terminar isoladamente com a
               body.model = modelDef.id;
               body.system = finalSystemPrompt;
               body.messages = messages;
-              body.max_tokens = 2048;
+              body.max_tokens = 600;
             }
 
             const response = await fetch(url, {

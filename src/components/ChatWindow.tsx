@@ -393,7 +393,14 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
       if (!resp.ok || !resp.body) {
         const errorText = await resp.text();
         console.error("Stream failed with response:", errorText);
-        throw new Error('Stream failed');
+        let errorMessage = 'Stream failed';
+        try {
+          const parsed = JSON.parse(errorText);
+          errorMessage = parsed.message || parsed.error || errorText;
+        } catch {
+          errorMessage = errorText;
+        }
+        throw new Error(errorMessage);
       }
 
       const reader = resp.body.getReader();

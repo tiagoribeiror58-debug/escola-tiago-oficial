@@ -459,24 +459,49 @@ Abordagem obrigatória:
 - Como evitar burnout estrutural.
 - Priorização impiedosa (Matriz de Eisenhower, Timeboxing).
 - IA como delegação de baixo custo.`,
-      ementa: [
-        'Timeboxing e Trabalho Profundo (Deep Work) na Prática',
-        'A Arte da Priorização Impiedosa: O que Só Você Pode Fazer?',
-        'Delegação de Baixo Custo: Assistentes Virtuais, Freelancers e IA',
-        'Lidando com o Isolamento e a Solidão do Solo Founder',
-        'Prevenção de Burnout: Rotinas Não-Negociáveis e Limites Saudáveis',
-        'Métricas de Vaidade vs Métricas de Ação: Onde Focar a Energia',
-        'Context Switching: O Inimigo Silencioso da Produtividade',
-        'O Sistema de Notas do Founder: Obsidian, Notion e Second Brain',
-        'Gestão de E-mail e Comunicação Assíncrona para Não Ser Escravo',
-        'Semana Ideal do Founder: Como Estruturar Blocos de Tempo por Energia',
-        'Tomada de Decisão Rápida com Dados Incompletos (Good Enough)',
-        'OKRs Pessoais: Como Definir e Acompanhar as Metas Trimestrais',
-        'Processo de Review Semanal e Mensal: Rituais de Alta Performance',
-        'Terceirização de Tarefas de Alto Custo Cognitivo Baixo com IA',
-        'Dopamine Detox e Foco Sustentável em Mundo de Notificações',
-        'Journaling Estratégico para Founders: Clareza Mental e Direção',
-        'Sono, Exercício e Cognição: A Ciência por Trás da Alta Performance'
+      fases: [
+        {
+          nome: 'Fase 1: Fundamentos Físicos e Foco Profundo',
+          topicos: [
+            'Timeboxing e Trabalho Profundo (Deep Work) na Prática',
+            'A Arte da Priorização Impiedosa: O que Só Você Pode Fazer?',
+            'Context Switching: O Inimigo Silencioso da Produtividade',
+            'Sono, Exercício e Cognição: A Ciência por Trás da Alta Performance',
+            'Tomada de Decisão Rápida com Dados Incompletos (Good Enough)'
+          ]
+        },
+        {
+          nome: 'Fase 2: Saúde Mental e Sobrevivência Solo',
+          topicos: [
+            'Prevenção de Burnout: Rotinas Não-Negociáveis e Limites Saudáveis',
+            'Lidando com o Isolamento e a Solidão do Solo Founder',
+            'Dopamine Detox e Foco Sustentável em Mundo de Notificações',
+            'Métricas de Vaidade vs Métricas de Ação: Onde Focar a Energia'
+          ]
+        },
+        {
+          nome: 'Fase 3: O Cérebro Digital (Sistemas Pessoais)',
+          topicos: [
+            'O Sistema de Notas do Founder: Obsidian, Notion e Second Brain',
+            'Gestão de E-mail e Comunicação Assíncrona para Não Ser Escravo',
+            'Journaling Estratégico para Founders: Clareza Mental e Direção'
+          ]
+        },
+        {
+          nome: 'Fase 4: Rituais, Metas e Acompanhamento',
+          topicos: [
+            'Semana Ideal do Founder: Como Estruturar Blocos de Tempo por Energia',
+            'OKRs Pessoais: Como Definir e Acompanhar as Metas Trimestrais',
+            'Processo de Review Semanal e Mensal: Rituais de Alta Performance'
+          ]
+        },
+        {
+          nome: 'Fase 5: Delegação Extrema e Alavancagem com IA',
+          topicos: [
+            'Delegação de Baixo Custo: Assistentes Virtuais, Freelancers e IA',
+            'Terceirização de Tarefas de Alto Custo Cognitivo Baixo com IA'
+          ]
+        }
       ]
     },
     {
