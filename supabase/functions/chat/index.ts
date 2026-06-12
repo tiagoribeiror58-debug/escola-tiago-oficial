@@ -31,11 +31,64 @@ serve(async (req) => {
       );
     }
 
-    const ANTHROPIC_API_KEY = Deno.env.get("ANTHROPIC_API_KEY");
+    const ANTHROPIC_API_KEY     = Deno.env.get("ANTHROPIC_API_KEY");
     // IMPORTANTE: Nunca coloque chaves hardcoded no código!
-    const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
+    const DEEPSEEK_API_KEY      = Deno.env.get("DEEPSEEK_API_KEY");
+    const TAVILY_API_KEY        = Deno.env.get("TAVILY_API_KEY");
+    const SUPABASE_URL          = Deno.env.get("SUPABASE_URL");
+    const SUPABASE_ANON_KEY     = Deno.env.get("SUPABASE_ANON_KEY");
+    const SUPABASE_SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    const TAVILY_API_KEY = Deno.env.get("TAVILY_API_KEY");
+    // Custo por 1000 tokens em BRL (configurável por env var).
+    // Exemplo: R$0.003 por 1.000 tokens ≈ R$3 por 1M tokens.
+    const PRICE_PER_1K_TOKENS = parseFloat(Deno.env.get("PRICE_PER_1K_TOKENS") ?? "0.003");
+
+    // --- BILLING: Verificar saldo antes de processar ---
+    // Isso é o portão de entrada: sem saldo, sem acesso à IA.
+    let userId: string | null = null;
+    if (authHeader && SUPABASE_URL && SUPABASE_ANON_KEY && SUPABASE_SERVICE_ROLE) {
+      try {
+        // Identificar o usuário pelo JWT
+        const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+          headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": authHeader },
+        });
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          userId = userData.id ?? null;
+        }
+
+        if (userId) {
+          // Busca saldo atual pelo SUM do ledger de transações
+          const balanceRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_user_balance`, {
+            method: "POST",
+            headers: {
+              "apikey":        SUPABASE_SERVICE_ROLE,
+              "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE}`,
+              "Content-Type":  "application/json",
+            },
+            body: JSON.stringify({ p_user_id: userId }),
+          });
+          const balance = await balanceRes.json();
+          const balanceBrl = Number(balance ?? 0);
+
+          if (balanceBrl <= 0) {
+            // Saldo zerado: bloqueia o chat e avisa o usuário
+            return new Response(
+              JSON.stringify({
+                error: "saldo_insuficiente",
+                message: "Seu saldo acabou! Adicione créditos para continuar estudando.",
+              }),
+              { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+          }
+          console.log(`[chat] Saldo do usuário ${userId}: R$${balanceBrl.toFixed(4)} ✅`);
+        }
+      } catch (err) {
+        // Erro de billing não deve bloquear o app em desenvolvimento (log e continua)
+        console.warn("[chat] Erro ao verificar saldo (non-blocking):", err);
+      }
+    }
+
     let finalSystemPrompt = systemPrompt || "You are a helpful assistant.";
 
     // --- 0. INSTRUÇÕES VISUAIS (MERMAID & UNSPLASH) ---
@@ -275,6 +328,40 @@ Absolutamente TODA MENSAGEM SUA, sem exceção, DEVE terminar isoladamente com a
           if (!success) {
             // Se chegou aqui, TODOS os modelos do fallback falharam.
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'error', error: { message: 'Todas as IAs falharam (limite excedido ou sem créditos). Tente novamente mais tarde.' } })}\n\n`));
+          }
+
+          // --- BILLING: Debitar tokens consumidos (fire-and-forget, não bloqueia o stream) ---
+          // Estimativa de tokens: ~1 token = 4 caracteres. Calculamos pelos últimos messages + resposta.
+          // Para uma implementação exata, a API do Deepseek retorna usage no chunk final.
+          if (success && userId && SUPABASE_URL && SUPABASE_SERVICE_ROLE) {
+            (async () => {
+              try {
+                // Estimativa simples de tokens: soma de chars / 4
+                const inputChars  = messages.reduce((acc: number, m: any) => acc + (m.content?.length ?? 0), 0);
+                const estimatedTokens = Math.ceil((inputChars + 500) / 4); // +500 de output estimado
+                const costBrl = (estimatedTokens / 1000) * PRICE_PER_1K_TOKENS;
+
+                await fetch(`${SUPABASE_URL}/rest/v1/credit_transactions`, {
+                  method: "POST",
+                  headers: {
+                    "apikey":        SUPABASE_SERVICE_ROLE,
+                    "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE}`,
+                    "Content-Type":  "application/json",
+                    "Prefer":        "return=minimal",
+                  },
+                  body: JSON.stringify({
+                    user_id:     userId,
+                    type:        "USAGE",
+                    amount_brl:  -Math.abs(costBrl).toFixed(4),
+                    tokens:      estimatedTokens,
+                    description: `Chat — ~${estimatedTokens} tokens`,
+                  }),
+                });
+                console.log(`[chat] 💳 Debitado R$${costBrl.toFixed(4)} (~${estimatedTokens} tokens) para user ${userId}`);
+              } catch (err) {
+                console.warn("[chat] Erro ao debitar tokens (non-blocking):", err);
+              }
+            })();
           }
 
         } catch (e) {
