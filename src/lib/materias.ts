@@ -19,7 +19,6 @@ import { pragmatismoHub } from './materias/pragmatismo';
 import { marketingHub } from './materias/marketing';
 import { neurocienciaProfissional } from './materias/neurociencia-profissional';
 import { filosofiaHub } from './materias/filosofia';
-import { escritaHub } from './materias/escrita';
 import { liderancaHub } from './materias/lideranca';
 import { habilitacaoHub } from './materias/habilitacao';
 
@@ -45,7 +44,6 @@ const RAW_MATERIAS: MateriaConfig[] = [
   marketingHub,
   neurocienciaProfissional,
   filosofiaHub,
-  escritaHub,
   liderancaHub,
   habilitacaoHub,
 ];
