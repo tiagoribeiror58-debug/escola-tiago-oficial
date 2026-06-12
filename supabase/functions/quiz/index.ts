@@ -19,6 +19,51 @@ serve(async (req) => {
       throw new Error("Missing API Key");
     }
 
+    const SUPABASE_URL          = Deno.env.get("SUPABASE_URL");
+    const SUPABASE_ANON_KEY     = Deno.env.get("SUPABASE_ANON_KEY");
+    const SUPABASE_SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const PRICE_PER_1K_TOKENS = parseFloat(Deno.env.get("PRICE_PER_1K_TOKENS") ?? "0.003");
+
+    let userId: string | null = null;
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader && SUPABASE_URL && SUPABASE_ANON_KEY && SUPABASE_SERVICE_ROLE) {
+      try {
+        const userRes = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+          headers: { "apikey": SUPABASE_ANON_KEY, "Authorization": authHeader },
+        });
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          userId = userData.id ?? null;
+        }
+
+        if (userId) {
+          const balanceRes = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_user_balance`, {
+            method: "POST",
+            headers: {
+              "apikey":        SUPABASE_SERVICE_ROLE,
+              "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE}`,
+              "Content-Type":  "application/json",
+            },
+            body: JSON.stringify({ p_user_id: userId }),
+          });
+          const balance = await balanceRes.json();
+          const balanceBrl = Number(balance ?? 0);
+
+          if (balanceBrl <= 0) {
+            return new Response(
+              JSON.stringify({
+                error: "saldo_insuficiente",
+                message: "Seu saldo acabou! Adicione créditos para continuar estudando.",
+              }),
+              { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+          }
+        }
+      } catch (err) {
+        console.warn("[quiz] Erro ao verificar saldo (non-blocking):", err);
+      }
+    }
+
     if (action === "generate") {
       const prompt = `Gere ${n || 5} perguntas curtas de revisão sobre os seguintes tópicos que o aluno já estudou da matéria '${materiaSlug || 'Geral'}':
 [${(completedTopics || []).join(', ')}]
