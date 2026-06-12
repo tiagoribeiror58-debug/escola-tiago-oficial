@@ -13,6 +13,7 @@ import { PlanejarMateriaModal } from '@/components/PlanejarMateriaModal';
 import { Search, History, CalendarCheck, BrainCircuit, Sparkles, Settings, LogOut } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { HistoricoGlobalDrawer } from '@/components/HistoricoGlobalDrawer';
+import { BillingDashboard } from '@/components/BillingDashboard';
 import { useSettings } from '@/hooks/useSettings';
 import { Switch } from '@/components/ui/switch';
 import { useOrdemMaterias, useOrdemHubs } from '@/hooks/useOrdemMaterias';
@@ -379,6 +380,8 @@ export default function Index() {
   // Renderiza Badges do Header
   const renderBadges = () => (
     <>
+      <BillingDashboard />
+
       <button onClick={() => navigate('/notas')} className="flex items-center gap-1.5 shrink-0 px-3 py-1.5 rounded-lg border bg-card hover:bg-muted border-border text-muted-foreground hover:text-foreground text-xs font-medium transition-all shadow-sm">
         Notas
       </button>
