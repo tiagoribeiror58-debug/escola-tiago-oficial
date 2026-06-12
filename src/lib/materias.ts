@@ -12,14 +12,12 @@ import { seducaoHub } from './materias/seducao';
 import { primeirosprincipiosHub } from './materias/primeiros-principios';
 import { riquezaHub } from './materias/riqueza';
 import { comportamentoHub } from './materias/comportamento';
-import { biohackingHub } from './materias/biohacking';
 import { geopoliticaHub } from './materias/geopolitica';
 import { realidadeHub } from './materias/realidade';
 import { pragmatismoHub } from './materias/pragmatismo';
 import { marketingHub } from './materias/marketing';
 import { neurocienciaProfissional } from './materias/neurociencia-profissional';
 import { filosofiaHub } from './materias/filosofia';
-import { liderancaHub } from './materias/lideranca';
 import { habilitacaoHub } from './materias/habilitacao';
 
 const RAW_MATERIAS: MateriaConfig[] = [
@@ -37,14 +35,12 @@ const RAW_MATERIAS: MateriaConfig[] = [
   seducaoHub,
   riquezaHub,
   comportamentoHub,
-  biohackingHub,
   geopoliticaHub,
   realidadeHub,
   pragmatismoHub,
   marketingHub,
   neurocienciaProfissional,
   filosofiaHub,
-  liderancaHub,
   habilitacaoHub,
 ];
 

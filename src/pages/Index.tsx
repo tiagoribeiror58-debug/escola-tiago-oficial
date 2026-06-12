@@ -10,7 +10,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
 import { PlanejarMateriaModal } from '@/components/PlanejarMateriaModal';
-import { Search, History, CalendarCheck, BrainCircuit, Sparkles, Settings } from 'lucide-react';
+import { Search, History, CalendarCheck, BrainCircuit, Sparkles, Settings, LogOut } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { HistoricoGlobalDrawer } from '@/components/HistoricoGlobalDrawer';
 import { useSettings } from '@/hooks/useSettings';
 import { Switch } from '@/components/ui/switch';
@@ -120,6 +121,11 @@ export default function Index() {
     : 0;
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/auth', { replace: true });
+  };
 
   const hoje = new Date().toLocaleDateString('pt-BR', {
     weekday: 'long',
@@ -431,6 +437,18 @@ export default function Index() {
                 </p>
               </div>
               <Switch checked={disableFogOfWar} onCheckedChange={toggleFogOfWar} />
+            </div>
+
+            <div className="flex items-center justify-between p-4 bg-red-500/10 rounded-2xl border border-red-500/20">
+              <div className="space-y-1 pr-4">
+                <h4 className="text-sm font-medium text-red-500">Sair da Conta</h4>
+                <p className="text-xs text-red-500/80 leading-relaxed">
+                  Encerrar a sessão atual neste dispositivo.
+                </p>
+              </div>
+              <button onClick={handleLogout} className="flex items-center justify-center shrink-0 p-3 rounded-xl bg-red-500 hover:bg-red-600 text-white transition-all shadow-sm">
+                <LogOut className="w-5 h-5" />
+              </button>
             </div>
           </div>
         </DialogContent>

@@ -21,6 +21,7 @@ serve(async (req) => {
   }
 
   try {
+    const authHeader = req.headers.get("Authorization");
     const { messages, systemPrompt, materiaSlug, sessionKey } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
@@ -174,14 +175,13 @@ Absolutamente TODA MENSAGEM SUA, sem exceção, DEVE terminar isoladamente com a
                                 const topicJson = JSON.parse(jsonMatch[0]);
                                 if (topicJson?.titulo) {
                                   const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
-                                  const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-                                  if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+                                  if (SUPABASE_URL && authHeader) {
                                     await fetch(`${SUPABASE_URL}/rest/v1/topicos_emergentes`, {
                                       method: "POST",
                                       headers: {
                                         "Content-Type": "application/json",
-                                        "apikey": SUPABASE_SERVICE_KEY,
-                                        "Authorization": `Bearer ${SUPABASE_SERVICE_KEY}`,
+                                        "apikey": Deno.env.get("SUPABASE_ANON_KEY") || "",
+                                        "Authorization": authHeader,
                                         "Prefer": "return=minimal",
                                       },
                                       body: JSON.stringify({

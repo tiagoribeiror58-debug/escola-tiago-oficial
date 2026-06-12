@@ -365,11 +365,14 @@ export default function ChatWindow({ materia, ultimaSessao, onMessagesChange, on
     let topicAlreadyCreated = false; // Guard: evita criar o mesmo tópico 2x durante o streaming
 
     try {
+      const { data: { session: authSession } } = await supabase.auth.getSession();
+      const token = authSession?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
       const resp = await fetch(CHAT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ 
           // Enviamos o histórico completo da sessão atual.
