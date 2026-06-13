@@ -2,27 +2,27 @@ import { MateriaConfig } from '@/types';
 
 export const pragmatismoHub: MateriaConfig = {
   slug: 'pragmatismo-hub',
-  nome: 'Pragmatismo & Jogos de Poder',
+  nome: 'Pragmatism & Power Games',
   emoji: '♟️',
   isCategory: true,
-  descricao: 'As regras não escritas da ascensão: capital social, dinâmicas de poder, percepção, desejo mimético e pragmatismo aplicado. O que a escola nunca ensinou.',
+  descricao: 'The unwritten rules of rise: social capital, power dynamics, perception, mimetic desire, and applied pragmatism. What school never taught.',
   children: [
     {
       slug: 'capital-social',
-      nome: 'Capital Social & Relações Estratégicas',
+      nome: 'Social Capital & Strategic Relations',
       emoji: '🤝',
       isCategory: false,
       parent: 'pragmatismo-hub',
-      whyStart: 'Sem rede, todo conhecimento técnico morre na gaveta. Capital social é o multiplicador invisível de todas as outras competências — e pode ser construído intencionalmente.',
-      descricao: 'A mecânica das redes de poder, transferência de prestígio e acúmulo de capital via terceiros.',
-      contexto: `Foco: a teoria sociológica do capital aplicada à ascensão prática.
+      whyStart: 'Without a network, all technical knowledge dies in the drawer. Social capital is the invisible multiplier of all other skills — and can be built intentionally.',
+      descricao: 'The mechanics of power networks, transfer of prestige, and capital accumulation through third parties.',
+      contexto: `Focus: sociological theory of capital applied to practical rise.
 
-Abordagem obrigatória:
-- Parta sempre de Bourdieu para introduzir os 4 tipos de capital — sem essa base, tudo vira "dica de networking vazio".
-- Explique o MECANISMO antes do conselho: "por que laços fracos abrem mais portas que laços fortes?" — Granovetter. Depois aplique.
-- Desafie o romantismo: "fazer amigos sinceros" é diferente de "construir capital social estratégico" — e ambos são legítimos por razões distintas.
-- Nunca trate capital social como manipulação: é saber como sistemas relacionais funcionam, não enganar pessoas.
-- Pergunte sempre: "quem está entre você e o que você quer?" — mapeie o intermediário.`,
+Mandatory approach:
+- Always start from Bourdieu to introduce the 4 types of capital — without this basis, everything becomes "empty networking tips".
+- Explain the MECHANISM before the advice: "why do weak ties open more doors than strong ties?" — Granovetter. Then apply.
+- Challenge romanticism: "making sincere friends" is different from "building strategic social capital" — and both are legitimate for different reasons.
+- Never treat social capital as manipulation: it is knowing how relational systems work, not deceiving people.
+- Always ask: "who is between you and what you want?" — map the intermediary.`,
       ementa: [
         'Capital Social, Cultural, Simbólico e Econômico: A Teoria dos 4 Capitais de Bourdieu',
         'O Habitus: Como o Ambiente Molda Disposições Inconscientes de Classe',
@@ -53,20 +53,20 @@ Abordagem obrigatória:
     },
     {
       slug: 'jogos-de-poder',
-      nome: 'Jogos de Poder & Dinâmicas de Hierarquia',
+      nome: 'Power Games & Hierarchy Dynamics',
       emoji: '👁️',
       isCategory: false,
       parent: 'pragmatismo-hub',
-      whyStart: 'Todo ambiente social tem hierarquia e jogos não declarados. Quem não aprende a ler isso vira peão — mesmo sendo o mais competente da sala.',
-      descricao: 'As regras não escritas das hierarquias, Maquiavel aplicado, leitura de dinâmicas de poder e navegação política em qualquer organização.',
-      contexto: `Foco: a estrutura real do poder em qualquer sistema social — corporações, círculos sociais, política, família.
+      whyStart: 'Every social environment has hierarchies and undeclared games. Whoever does not learn to read this becomes a pawn — even being the most competent in the room.',
+      descricao: 'The unwritten rules of hierarchies, applied Machiavelli, reading power dynamics, and political navigation in any organization.',
+      contexto: `Focus: the real structure of power in any social system — corporations, social circles, politics, family.
 
-Abordagem obrigatória:
-- Comece sempre pela distinção PODER FORMAL vs PODER INFORMAL — quem tem o cargo vs quem tem a influência real.
-- Use Maquiavel como lente analítica, não como manual de vilania. O Príncipe é um tratado de realismo político — não de crueldade.
-- Para cada lei de Greene: explique o mecanismo psicológico por trás — não apresente como truque, apresente como descrição de como o mundo funciona.
-- Questione o aluno: "quais jogos de poder estão acontecendo no ambiente DELE agora?" — traga para o concreto.
-- Nunca romantize poder como fim em si mesmo — o objetivo é navegar com lucidez, não dominar por prazer.`,
+Mandatory approach:
+- Always start with the distinction FORMAL POWER vs INFORMAL POWER — who has the title vs who has the real influence.
+- Use Machiavelli as an analytical lens, not as a manual of villainy. The Prince is a treatise on political realism — not cruelty.
+- For each law of Greene: explain the psychological mechanism behind it — do not present it as a trick, present it as a description of how the world works.
+- Question the student: "what power games are happening in THEIR environment right now?" — bring it to the concrete.
+- Never romanticize power as an end in itself — the goal is to navigate with clarity, not to dominate for pleasure.`,
       ementa: [
         'Maquiavel e O Príncipe: Separando Moral de Eficácia Política',
         'A Natureza do Poder: Definição, Fontes e Tipos (French & Raven: 5 Bases do Poder)',
@@ -97,20 +97,20 @@ Abordagem obrigatória:
     },
     {
       slug: 'percepcao-e-imagem',
-      nome: 'Percepção, Imagem & Marca Pessoal',
+      nome: 'Perception, Image & Personal Branding',
       emoji: '🪞',
       isCategory: false,
       parent: 'pragmatismo-hub',
-      whyStart: 'O mundo julga em 100ms. Sua competência só é avaliada se a percepção inicial abriu a porta. Imagem é o filtro que decide se você chega a mostrar o que sabe.',
-      descricao: 'Psicologia da percepção, gestão de narrativa pessoal, brand pessoal e o efeito halo como dado estratégico.',
-      contexto: `Foco: a percepção como variável estratégica — não vaidade, mas engenharia de como você é lido.
+      whyStart: 'The world judges in 100ms. Your competence is only evaluated if the initial perception opened the door. Image is the filter that decides whether you get to show what you know.',
+      descricao: 'Psychology of perception, personal narrative management, personal branding, and the halo effect as strategic data.',
+      contexto: `Focus: perception as a strategic variable — not vanity, but engineering of how you are read.
 
-Abordagem obrigatória:
-- Parta da pesquisa de Nalini Ambady (100ms de julgamento) e Amy Cuddy (posturas de poder) como base científica — não como "dicas de postura".
-- Deixe claro: imagem não é falsidade — é controle consciente do que você comunica. A competência continua sendo necessária.
-- Para marca pessoal: pergunte "o que você quer que as pessoas digam de você quando você sai da sala?" — construa de trás pra frente.
-- Questione sempre a distinção entre FAMA e REPUTAÇÃO — a segunda é mais valiosa e mais difícil de construir.
-- O efeito halo não é opinião, é neurociência — trate como dado, não como julgamento moral.`,
+Mandatory approach:
+- Start from Nalini Ambady's research (100ms judgment) and Amy Cuddy (power poses) as a scientific basis — not as "posture tips".
+- Make it clear: image is not falsehood — it is conscious control of what you communicate. Competence remains necessary.
+- For personal branding: ask "what do you want people to say about you when you leave the room?" — build it backward.
+- Always question the distinction between FAME and REPUTATION — the second is more valuable and harder to build.
+- The halo effect is not opinion, it is neuroscience — treat it as data, not as a moral judgment.`,
       ementa: [
         'A Heurística da Aparência: Por que o Cérebro Infere Competência pela Estética',
         'Efeito Halo (Halo Effect): Como Atributos Físicos Contaminam Atributos Intelectuais',
@@ -138,20 +138,20 @@ Abordagem obrigatória:
     },
     {
       slug: 'mimetismo-e-desejo',
-      nome: 'Desejo, Mimetismo & Valor Percebido',
+      nome: 'Desire, Mimetism & Perceived Value',
       emoji: '🔥',
       isCategory: false,
       parent: 'pragmatismo-hub',
-      whyStart: 'René Girard explicou o desejo humano melhor que qualquer economista: nada é desejado em si mesmo — é desejado porque outro o deseja. Entender isso muda como você vende, cria e se posiciona.',
-      descricao: 'Teoria mimética de Girard, escassez artificial, criação de demanda social e posicionamento de valor percebido.',
-      contexto: `Foco: a mecânica do desejo humano aplicada a produto, posicionamento pessoal e estratégia de mercado.
+      whyStart: 'René Girard explained human desire better than any economist: nothing is desired in itself — it is desired because another desires it. Understanding this changes how you sell, create, and position yourself.',
+      descricao: 'Girard\'s mimetic theory, artificial scarcity, creation of social demand, and perceived value positioning.',
+      contexto: `Focus: the mechanics of human desire applied to product, personal positioning, and market strategy.
 
-Abordagem obrigatória:
-- Comece sempre pela teoria mimética de Girard — sem ela, tudo vira "dica de marketing" sem fundamento.
-- O triângulo do desejo (sujeito-mediador-objeto) deve ser explicado e depois identificado em situações reais do aluno.
-- Girard não é só marketing: é antropologia, violência coletiva e o bode expiatório — ensine a amplitude.
-- Para escassez: distinga ESCASSEZ REAL (recursos finitos) de ESCASSEZ ARTIFICIAL (construída para criar desejo) — ambas são válidas em contextos distintos.
-- Desafie o aluno: "qual é o seu mediador? Quem você imita sem perceber?" — isso muda a autoconsciência.`,
+Mandatory approach:
+- Always start with Girard's mimetic theory — without it, everything becomes "marketing tips" without foundation.
+- The triangle of desire (subject-mediator-object) must be explained and then identified in real student situations.
+- Girard is not just marketing: it is anthropology, collective violence, and the scapegoat — teach the amplitude.
+- For scarcity: distinguish REAL SCARCITY (finite resources) from ARTIFICIAL SCARCITY (built to create desire) — both are valid in different contexts.
+- Challenge the student: "what is your mediator? Who do you imitate without realizing?" — this changes self-awareness.`,
       ementa: [
         'Teoria Mimética de René Girard: O Desejo é Sempre Mediado por um Outro',
         'O Triângulo do Desejo: Sujeito, Mediador e Objeto — a Geometria do Querer',
@@ -159,7 +159,7 @@ Abordagem obrigatória:
         'A Rivalidade Mimética: Como o Desejo Compartilhado Gera Conflito',
         'O Mecanismo do Bode Expiatório (Scapegoat): A Válvula Coletiva da Violência Mimética',
         'Escassez Real vs Escassez Artificial: Construindo Urgência sem Destruir Credibilidade',
-        'A Psicologia do Luxo: Por que Preço Alto Pode Aumentar (não Diminuir) o Desejo',
+        'A Psicologia do Luxo: Por que Preço Alto Pode Aumentar (not Diminuir) o Desejo',
         'Efeito Veblen: Bens Cujo Consumo Cresce com o Preço — a Lógica do Impraticável',
         'Posicionamento Estratégico: Luxo vs Premium vs Commodity — Onde Você Mora?',
         'Exclusividade como Mecanismo de Desejo: Waitlists, Memberships e Convites Seletivos',
@@ -177,20 +177,20 @@ Abordagem obrigatória:
     },
     {
       slug: 'pragmatismo-aplicado',
-      nome: 'Pragmatismo Aplicado & Primeiros Princípios do Mundo Real',
+      nome: 'Applied Pragmatism & Real World First Principles',
       emoji: '🎯',
       isCategory: false,
       parent: 'pragmatismo-hub',
-      whyStart: 'A escola ensina como as coisas deveriam funcionar. Este módulo ensina como elas realmente funcionam — e dá ferramentas para agir com lucidez nessa diferença.',
-      descricao: 'Filosofia operacional pragmática, leitura de incentivos reais, pensamento de segundo nível e modelos mentais do mundo como ele é.',
-      contexto: `Foco: pragmatismo como filosofia operacional — não cinismo, não ingenuidade.
+      whyStart: 'School teaches how things should work. This module teaches how they really work — and gives tools to act with clarity in that difference.',
+      descricao: 'Pragmatic operational philosophy, reading real incentives, second-level thinking, and mental models of the world as it is.',
+      contexto: `Focus: pragmatism as operational philosophy — not cynicism, not naivety.
 
-Abordagem obrigatória:
-- Parta de William James e Peirce para situar o pragmatismo filosófico — sem isso, vira "dica de vida" sem raiz.
-- Para cada modelo mental: explique o PROBLEMA que ele resolve antes de aplicar. Munger não listou modelos por acaso — cada um serve a uma falha cognitiva específica.
-- Taleb é fundamental: Skin in the Game muda como o aluno avalia conselhos e instituições.
-- Questione constantemente: "qual é o incentivo real de quem está te dizendo isso?" — esse é o núcleo do pragmatismo.
-- Não romantize o cinismo: o objetivo é lucidez, não desconfiança patológica de tudo.`,
+Mandatory approach:
+- Start with William James and Peirce to situate philosophical pragmatism — without this, it becomes "life tips" without roots.
+- For each mental model: explain the PROBLEM it solves before applying. Munger did not list models by chance — each serves a specific cognitive failure.
+- Taleb is fundamental: Skin in the Game changes how the student evaluates advice and institutions.
+- Constantly question: "what is the real incentive of whoever is telling you this?" — this is the core of pragmatism.
+- Do not romanticize cynicism: the goal is clarity, not pathological distrust of everything.`,
       ementa: [
         'O que é Pragmatismo: William James, Peirce e a Filosofia do que Funciona na Prática',
         'Primeiros Princípios no Jogo Social: Separando a Narrativa da Mecânica Real',

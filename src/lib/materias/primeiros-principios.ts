@@ -2,14 +2,14 @@ import { MateriaConfig } from '@/types';
 
 export const primeirosprincipiosHub: MateriaConfig = {
   slug: 'primeiros-principios',
-  nome: 'Primeiros Princípios',
+  nome: 'First Principles',
   emoji: '⚛️',
   isCategory: true,
-  descricao: 'A trilha científica raiz. Matemática, lógica e arquiteturas que fundamentam toda inteligência artificial — ensinados do átomo até o transformer.',
+  descricao: 'The root scientific path. Mathematics, logic, and architectures that ground all artificial intelligence — taught from the atom to the transformer.',
   children: [
     {
       slug: 'matematica-ia',
-      nome: 'Matemática da Inteligência Artificial',
+      nome: 'Mathematics of Artificial Intelligence',
       emoji: '∑',
       isCategory: true,
       parent: 'primeiros-principios',
@@ -18,18 +18,18 @@ export const primeirosprincipiosHub: MateriaConfig = {
       children: [
         {
           slug: 'algebra-linear',
-          nome: 'Álgebra Linear',
+          nome: 'Linear Algebra',
           emoji: '▦',
           parent: 'matematica-ia',
           whyStart: 'Cada camada de uma rede neural é uma multiplicação de matrizes. Vetores, transformações lineares e espaços dimensionais são o vocabulário básico da IA.',
-          descricao: 'Vetores, matrizes, transformações lineares e espaços que descrevem dados e pesos.',
-          contexto: `Foco: a mecânica real da álgebra linear — não decoreba de fórmulas.
+          descricao: 'Vectors, matrices, linear transformations, and spaces that describe data and weights.',
+          contexto: `Focus: the real mechanics of linear algebra — not memorizing formulas.
 
-Abordagem obrigatória:
-- Comece sempre com a INTUIÇÃO GEOMÉTRICA: um vetor é uma seta no espaço. Uma matriz é uma transformação desse espaço.
-- Nunca apresente operação sem antes mostrar O QUE ELA FAZ VISUALMENTE ao espaço.
-- Ao ensinar multiplicação de matrizes, explique que é uma COMPOSIÇÃO de transformações.
-- Sempre conecte o conceito ao seu papel numa rede neural.`,
+Mandatory approach:
+- Always start with GEOMETRIC INTUITION: a vector is an arrow in space. A matrix is a transformation of that space.
+- Never present an operation without first showing WHAT IT DOES VISUALLY to the space.
+- When teaching matrix multiplication, explain that it is a COMPOSITION of transformations.
+- Always connect the concept to its role in a neural network.`,
           ementa: [
             'O que é um Vetor (intuição geométrica e notação)',
             'Operações Vetoriais: Soma, Subtração e Escalonamento',
@@ -56,17 +56,17 @@ Abordagem obrigatória:
         },
         {
           slug: 'calculo-gradiente',
-          nome: 'Cálculo & Gradiente',
+          nome: 'Calculus & Gradient',
           emoji: '∂',
           parent: 'matematica-ia',
           whyStart: 'O algoritmo de aprendizado de toda rede neural (backpropagation) é puro cálculo: derivadas em cadeia calculando em qual direção ajustar cada peso.',
-          descricao: 'Derivadas, regra da cadeia e gradiente descendente — o motor do aprendizado.',
-          contexto: `Foco: intuição do cálculo como linguagem de "mudança" — não resolução mecânica de limites.
+          descricao: 'Derivatives, chain rule, and gradient descent — the engine of learning.',
+          contexto: `Focus: intuition of calculus as a language of "change" — not mechanical resolution of limits.
 
-Abordagem obrigatória:
-- Derivada = taxa de mudança. Comece com exemplos físicos antes de qualquer função abstrata.
-- Ao chegar na regra da cadeia, conecte DIRETAMENTE ao backpropagation.
-- Gradiente descendente: use a metáfora da montanha com névoa.`,
+Mandatory approach:
+- Derivative = rate of change. Start with physical examples before any abstract function.
+- Upon reaching the chain rule, connect DIRECTLY to backpropagation.
+- Gradient descent: use the metaphor of a mountain with fog.`,
           ementa: [
             'O que é uma Derivada (intuição de inclinação e taxa de mudança)',
             'Derivadas de Funções Simples (sem decoreba — com raciocínio)',
@@ -90,17 +90,17 @@ Abordagem obrigatória:
         },
         {
           slug: 'probabilidade-bayes',
-          nome: 'Probabilidade & Inferência',
+          nome: 'Probability & Inference',
           emoji: 'P(x)',
           parent: 'matematica-ia',
           whyStart: 'Modelos de linguagem são distribuições de probabilidade sobre tokens. Para entender por que um LLM "chuta" uma palavra, você precisa entender distribuições.',
-          descricao: 'Probabilidade, distribuições, entropia e raciocínio sob incerteza.',
-          contexto: `Foco: raciocínio probabilístico real — não decoreba de fórmulas.
+          descricao: 'Probability, distributions, entropy, and reasoning under uncertainty.',
+          contexto: `Focus: real probabilistic reasoning — not memorizing formulas.
 
-Abordagem obrigatória:
-- Comece com a intuição de probabilidade como "grau de crença".
-- Ao ensinar Bayes, use exemplos concretos cotidianos antes da fórmula.
-- Conecte Entropia ao vocabulário de IA.`,
+Mandatory approach:
+- Start with the intuition of probability as "degree of belief".
+- When teaching Bayes, use concrete everyday examples before the formula.
+- Connect Entropy to the vocabulary of AI.`,
           ementa: [
             'Probabilidade como Grau de Crença (intuição, não decoreba)',
             'Probabilidade Condicional: P(A|B)',
@@ -125,18 +125,18 @@ Abordagem obrigatória:
     },
     {
       slug: 'python-cientifico',
-      nome: 'Python Científico',
+      nome: 'Scientific Python',
       emoji: '🐍',
       parent: 'primeiros-principios',
-      whyStart: 'Python é o microscópio da ciência de dados. Sem ele, você lê sobre IA mas não consegue verificar nada na prática.',
-      descricao: 'Python focado em ciência de dados: NumPy, Pandas, Matplotlib e primeiros modelos.',
-      contexto: `Foco: Python como ferramenta de verificação científica — não como desenvolvimento de software.
+      whyStart: 'Python is the microscope of data science. Without it, you read about AI but cannot verify anything in practice.',
+      descricao: 'Python focused on data science: NumPy, Pandas, Matplotlib, and first models.',
+      contexto: `Focus: Python as a tool for scientific verification — not as software development.
 
-Abordagem obrigatória:
-- Todo código deve ser precedido de UMA PERGUNTA que o aluno quer responder.
-- NumPy antes de qualquer biblioteca de ML.
-- Conecte cada função a um conceito matemático anterior.
-- O aluno deve conseguir escrever uma regressão linear do zero antes de usar bibliotecas de alto nível.`,
+Mandatory approach:
+- Every code must be preceded by A QUESTION that the student wants to answer.
+- NumPy before any ML library.
+- Connect each function to a previous mathematical concept.
+- The student must be able to write a linear regression from scratch before using high-level libraries.`,
       ementa: [
         'Ambiente: Por que Python, Jupyter e como instalar sem dor',
         'Lógica Python Básica (variáveis, loops, funções)',
@@ -169,27 +169,27 @@ Abordagem obrigatória:
     },
     {
       slug: 'redes-neurais-mecanismo',
-      nome: 'Redes Neurais: O Mecanismo',
+      nome: 'Neural Networks: The Mechanism',
       emoji: '🧠',
       isCategory: true,
       parent: 'primeiros-principios',
-      whyStart: 'Antes de estudar Transformers e LLMs, você precisa entender o que é um neurônio artificial e como uma rede aprende.',
-      descricao: 'Do neurônio artificial até redes profundas — o mecanismo real do aprendizado de máquina.',
+      whyStart: 'Before studying Transformers and LLMs, you need to understand what an artificial neuron is and how a network learns.',
+      descricao: 'From the artificial neuron to deep networks — the real mechanism of machine learning.',
       children: [
         {
           slug: 'neuronio-artificial',
-          nome: 'Do Neurônio à Rede',
+          nome: 'From Neuron to Network',
           emoji: '○',
           parent: 'redes-neurais-mecanismo',
           whyStart: 'Um neurônio artificial é simples. Uma coleção deles organizada em camadas resolve problemas que nenhum algoritmo clássico consegue.',
-          descricao: 'Perceptron, funções de ativação, camadas e o forward pass.',
-          contexto: `Foco: o mecanismo físico de um neurônio artificial — não a metáfora biológica vaga.
+          descricao: 'Perceptron, activation functions, layers, and the forward pass.',
+          contexto: `Focus: the physical mechanism of an artificial neuron — not the vague biological metaphor.
 
-Abordagem obrigatória:
-- Comece com um ÚNICO neurônio: entradas * pesos + bias → função de ativação → saída.
-- Explique por que a função de ativação não-linear é OBRIGATÓRIA.
-- O forward pass deve ser construído matematicamente pelo aluno.
-- Nunca use o termo "magia" — mostre exatamente O QUE muda durante o treinamento.`,
+Mandatory approach:
+- Start with a SINGLE neuron: inputs * weights + bias → activation function → output.
+- Explain why the non-linear activation function is MANDATORY.
+- The forward pass must be mathematically constructed by the student.
+- Never use the term "magic" — show exactly WHAT changes during training.`,
           ementa: [
             'O Perceptron: A Unidade Mínima',
             'Pesos (Weights) e Bias: os parâmetros ajustáveis',
@@ -220,18 +220,18 @@ Abordagem obrigatória:
         },
         {
           slug: 'transformer-anatomia',
-          nome: 'A Anatomia do Transformer',
+          nome: 'The Anatomy of the Transformer',
           emoji: '🔬',
           parent: 'redes-neurais-mecanismo',
           whyStart: 'O Transformer (paper "Attention is All You Need", 2017) mudou tudo. Entender sua arquitetura é o que separa quem usa IA de quem entende IA.',
-          descricao: 'Embeddings, Atenção Multi-Cabeça, positional encoding e a arquitetura completa.',
-          contexto: `Foco: o mecanismo real do Transformer — não a visão de alto nível que qualquer blog já cobre.
+          descricao: 'Embeddings, Multi-Head Attention, positional encoding, and the complete architecture.',
+          contexto: `Focus: the real mechanism of the Transformer — not the high-level view that any blog already covers.
 
-Abordagem obrigatória:
-- Comece com O PROBLEMA que o Transformer resolve.
-- Embeddings: o aluno deve entender que cada token vira um vetor em um espaço aprendido.
-- Atenção: ensine a analogia Query/Key/Value com exemplos de busca antes da fórmula.
-- A fórmula de Atenção deve ser derivada passo a passo, não entregue pronta.`,
+Mandatory approach:
+- Start with THE PROBLEM that the Transformer solves.
+- Embeddings: the student must understand that each token becomes a vector in a learned space.
+- Attention: teach the Query/Key/Value analogy with search examples before the formula.
+- The Attention formula must be derived step-by-step, not delivered ready-made.`,
           ementa: [
             'Tokenização: como texto vira números',
             'Word Embeddings: semântica em espaço vetorial',

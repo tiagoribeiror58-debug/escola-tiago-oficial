@@ -2,25 +2,25 @@ import { MateriaConfig } from '@/types';
 
 export const tecnologiaNegocios: MateriaConfig = {
   slug: 'tecnologia-negocios',
-  nome: 'Negócios & Empreendedorismo',
+  nome: 'Business & Entrepreneurship',
   emoji: '🚀',
   isCategory: true,
-  descricao: 'Desenvolvimento de negócios, growth, scale-ups e alocação de capital.',
+  descricao: 'Business development, growth, scale-ups, and capital allocation.',
   children: [
     {
       slug: 'empreendedorismo',
-      nome: 'Fundação & Startups',
+      nome: 'Foundations & Startups',
       emoji: '🏗️',
       parent: 'tecnologia-negocios',
-      whyStart: 'O ponto zero. Antes de vender, contratar ou investir, você precisa entender como uma empresa nasce — validação, dor real e o único número que importa: Product-Market Fit.',
-      descricao: 'Product-Market Fit, ideação e gestão de produtos escaláveis.',
-      contexto: `Foco: fundamentos reais de construção de negócios — validação, distribuição, escala.
+      whyStart: 'The zero point. Before selling, hiring, or investing, you need to understand how a company is born — validation, real pain, and the only metric that matters: Product-Market Fit.',
+      descricao: 'Product-Market Fit, ideation, and scalable product management.',
+      contexto: `Focus: real fundamentals of building businesses — validation, distribution, scale.
 
-Abordagem obrigatória:
-- Para cada modelo (Canvas, Lean, etc.): explique o problema que ele resolve e onde falha antes de qualquer aplicação.
-- Só depois de entender o mecanismo: peça aplicação a uma ideia real.
-- Questione romantismos com base em mecanismo — "o que estruturalmente poderia matar essa ideia?" — não como provocação vazia.
-- Nunca peça pitch ou plano sem antes ter estabelecido os fundamentos que deveriam sustentá-los.`,
+Mandatory approach:
+- For each model (Canvas, Lean, etc.): explain the problem it solves and where it fails before any application.
+- Only after understanding the mechanism: ask for application to a real idea.
+- Question romanticism based on mechanism — "what structurally could kill this idea?" — not as a hollow provocation.
+- Never ask for a pitch or plan without first establishing the fundamentals that should support them.`,
       ementa: [
         'A Anatomia de uma Startup',
         'Ideação e Identificação de Dores Reais',
@@ -46,18 +46,18 @@ Abordagem obrigatória:
     },
     {
       slug: 'financas-equity',
-      nome: 'Finanças & Equity',
+      nome: 'Finance & Equity',
       emoji: '📈',
       parent: 'tecnologia-negocios',
-      whyStart: 'Com receita entrando, você precisa entender o dinheiro. Valuation, juros compostos e unit economics — aqui você aprende a ler os números e decidir com inteligência financeira.',
-      descricao: 'Valuation, estrutura de capital e modelagem financeira.',
-      contexto: `Foco: fundamentos financeiros reais — fluxo de caixa, valuation, estrutura de capital.
+      whyStart: 'With revenue coming in, you need to understand the money. Valuation, compound interest, and unit economics — here you learn to read the numbers and decide with financial intelligence.',
+      descricao: 'Valuation, capital structure, and financial modeling.',
+      contexto: `Focus: real financial fundamentals — cash flow, valuation, capital structure.
 
-Abordagem obrigatória:
-- Explique o mecanismo financeiro antes de qualquer aplicação ou estudo de caso.
-- Para valuation: explique por que determinado método funciona e onde falha antes de aplicar.
-- Se o aluno perguntar "onde investir": responda com o framework de análise de risco/retorno.
-- Estudos de caso só depois que o mecanismo conceitual estiver sólido.`,
+Mandatory approach:
+- Explain the financial mechanism before any application or case study.
+- For valuation: explain why a certain method works and where it fails before applying.
+- If the student asks "where to invest": respond with the risk/return analysis framework.
+- Case studies only after the conceptual mechanism is solid.`,
       ementa: [
         'A Matemática do Juros Composto',
         'Unit Economics: CAC, LTV, Payback',
@@ -82,17 +82,17 @@ Abordagem obrigatória:
     },
     {
       slug: 'financas-corporativas',
-      nome: 'Finanças Corporativas',
+      nome: 'Corporate Finance',
       emoji: '🏦',
       parent: 'tecnologia-negocios',
-      whyStart: 'Quando o negócio cresce, a complexidade financeira cresce junto. DRE, balanço e M&A são para quem vai além da startup e entra em empresas estruturadas.',
-      descricao: 'Controladoria, demonstrações financeiras, M&A e tesouraria empresarial.',
-      contexto: `Foco: a mecânica financeira interna das grandes empresas. Prepare o aluno para atuar como analista financeiro, banker ou CFO.
+      whyStart: 'When the business grows, financial complexity grows with it. Income statements, balance sheets, and M&A are for those who go beyond startups and enter structured companies.',
+      descricao: 'Controlling, financial statements, M&A, and corporate treasury.',
+      contexto: `Focus: the internal financial mechanics of large companies. Prepare the student to act as a financial analyst, banker, or CFO.
 
-Abordagem obrigatória:
-- Explique o mecanismo de contabilidade antes de ensinar a ler os relatórios.
-- DRE, Balanço Patrimonial e DFC não são apenas tabelas; ensine como eles conversam entre si.
-- Para modelagem e M&A: explique as premissas e os trade-offs estruturais antes de calcular.`,
+Mandatory approach:
+- Explain the accounting mechanism before teaching how to read the reports.
+- Income statements (DRE), Balance Sheets, and Cash Flow Statements (DFC) are not just tables; teach how they talk to each other.
+- For modelage and M&A: explain the assumptions and structural trade-offs before calculating.`,
       ementa: [
         'A Tríade Contábil: DRE, Balanço Patrimonial e DFC',
         'Análise de Índices (Liquidez, ROE, ROA, Margem)',
@@ -117,12 +117,12 @@ Abordagem obrigatória:
     },
     {
       slug: 'gestao-lideranca',
-      nome: 'Gestão & Cultura',
+      nome: 'Management & Culture',
       emoji: '👑',
       parent: 'tecnologia-negocios',
-      whyStart: 'Com o negócio rodando, você precisa escalar pessoas. Liderança, OKRs e cultura determinam se a empresa cresce com você — ou depende de você.',
-      descricao: 'Liderança, OKRs, contratação e cultura organizacional.',
-      contexto: `Foco: alinhamento de incentivos e engenharia organizacional. Cultura é o que acontece quando o líder não está na sala.`,
+      whyStart: 'With the business running, you need to scale people. Leadership, OKRs, and culture determine whether the company grows with you — or depends on you.',
+      descricao: 'Leadership, OKRs, hiring, and organizational culture.',
+      contexto: `Focus: alignment of incentives and organizational engineering. Culture is what happens when the leader is not in the room.`,
       ementa: [
         'Cultura Organizacional (Design de Comportamentos)',
         'Metodologias Ágeis e OKRs',
@@ -147,12 +147,12 @@ Abordagem obrigatória:
     },
     {
       slug: 'direito-empresarial',
-      nome: 'Direito Empresarial & Tributário',
+      nome: 'Business & Tax Law',
       emoji: '⚖️',
       parent: 'tecnologia-negocios',
-      whyStart: 'Ignorar o arcabouço jurídico é o erro mais caro de um empreendedor. Esta etapa não é sobre virar advogado — é sobre saber quando você está em risco.',
-      descricao: 'Contratos, blindagem patrimonial, compliance e eficiência tributária.',
-      contexto: `Foco: as regras do jogo do mundo corporativo. Prepare o aluno para entender o arcabouço jurídico sem o juridiquês teórico.`,
+      whyStart: 'Ignoring the legal framework is an entrepreneur\'s most expensive mistake. This step is not about becoming a lawyer — it is about knowing when you are at risk.',
+      descricao: 'Contracts, asset protection, compliance, and tax efficiency.',
+      contexto: `Focus: the rules of the game of the corporate world. Prepare the student to understand the legal framework without the theoretical legalese.`,
       ementa: [
         'Tipos Societários (Ltda, S.A) e Responsabilidade Limitada',
         'Acordos de Sócios (Vesting, Cliff, Tag/Drag Along)',
@@ -178,18 +178,18 @@ Abordagem obrigatória:
     },
     {
       slug: 'private-equity-vc',
-      nome: 'Investimento Anjo & Venture Capital',
+      nome: 'Angel Investing & Venture Capital',
       emoji: '🦄',
       parent: 'tecnologia-negocios',
-      whyStart: 'A etapa final do founder: sentar do outro lado da mesa. Com o negócio construído, você aprende a avaliar outros, alocar capital e gerar retorno como investidor.',
-      descricao: 'Investimento direto em empresas reais, startups e equity-crowdfunding.',
-      contexto: `Foco: a dinâmica do investidor que senta à mesa com o founder. Ensine a avaliar teses, founders e o mecanismo de saída (exit).
+      whyStart: 'The founder\'s final stage: sitting on the other side of the table. With the business built, you learn to evaluate others, allocate capital, and generate return as an investor.',
+      descricao: 'Direct investment in real companies, startups, and equity crowdfunding.',
+      contexto: `Focus: the dynamics of the investor who sits at the table with the founder. Teach how to evaluate theses, founders, and the exit mechanism.
           
-Abordagem obrigatória:
-- Explique o conceito de "Skin in the Game" e alinhamento de interesses antes de falar de taxas.
-- Diferencie Investimento Anjo, VC e Private Equity pelo mecanismo de risco e maturidade da empresa.
-- Ensine a avaliar o "Founders-Market Fit" — por que ESSAS pessoas são as certas para ESSA dor?
-- Due Diligence não é só papelada; é ver se o mecanismo de crescimento é real.`,
+Mandatory approach:
+- Explain the concept of "Skin in the Game" and alignment of interests before talking about fees.
+- Differentiate Angel Investing, VC, and Private Equity by risk mechanism and company maturity.
+- Teach how to evaluate "Founders-Market Fit" — why THESE people are the right ones for THIS pain?
+- Due Diligence is not just paperwork; it is seeing if the growth mechanism is real.`,
       ementa: [
         'Teses de Investimento: Onde e por que colocar dinheiro',
         'Análise de Founders e Time (Soft Skills Hardcoded)',
@@ -212,6 +212,6 @@ Abordagem obrigatória:
       ],
       layout: 'split',
       widget: 'FinanceLab'
-    },
+    }
   ]
 };
