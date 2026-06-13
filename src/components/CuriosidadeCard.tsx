@@ -63,8 +63,9 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
     setIsLoading(true);
     try {
       const temaEspecifico = selectedMateria === 'all' ? undefined : allMateriasFlat.find(m => m.slug === selectedMateria)?.nome;
+      const todasMaterias = allMateriasFlat.map(m => m.nome);
       const { data, error } = await supabase.functions.invoke('curiosidade-dia', {
-        body: { materiasAtuais, temaEspecifico }
+        body: { materiasAtuais, temaEspecifico, todasMaterias }
       });
 
       if (error) throw error;

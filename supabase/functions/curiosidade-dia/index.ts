@@ -18,9 +18,10 @@ serve(async (req: Request) => {
       throw new Error("Missing DEEPSEEK_API_KEY");
     }
 
-    const { materiasAtuais, temaEspecifico } = await req.json().catch(() => ({ materiasAtuais: [], temaEspecifico: null }));
+    const { materiasAtuais, temaEspecifico, todasMaterias } = await req.json().catch(() => ({ materiasAtuais: [], temaEspecifico: null, todasMaterias: [] }));
 
     const isSpecific = !!temaEspecifico;
+    const listaParaAleatorio = todasMaterias?.length > 0 ? todasMaterias.join(", ") : 'Tecnologia, Negócios, Psicologia, Filosofia, Marketing, Inteligência Artificial';
     
     const systemPrompt = isSpecific 
     ? `You are a high-performance creative educational curator. 
@@ -36,18 +37,19 @@ Expected format:
 }`
     : `You are a high-performance creative educational curator. 
 Your task is to generate a "Did you know?" (Você Sabia?) curiosity that is extremely interesting, surprising, and educational.
-The curiosity MUST BE FROM ANY EXISTING AREA OF KNOWLEDGE (physics, history, biology, technology, psychology, astronomy, geography, engineering, cosmology, etc.). Choose different areas each time to surprise the user with diverse subjects.
+The curiosity MUST BE STRICTLY RELATED TO ONE OF THESE SPECIFIC SUBJECTS from the user's study app: ${listaParaAleatorio}.
+Pick ONE of these subjects randomly and generate a surprising fact about it. DO NOT generate facts about Astrophysics, Marine Biology, Astronomy, Astrology, Cosmology or any subject NOT in the list above.
 CRITICAL: The output MUST be written entirely in Brazilian Portuguese (pt-BR).
 Respond ONLY with a valid JSON object.
 Expected format:
 {
-  "tema": "The theme or area of knowledge of the curiosity in Portuguese. Ex: Astrofísica",
+  "tema": "The theme from the list above in Portuguese. Ex: Neurociência",
   "texto": "The text of the curiosity in Portuguese, written in an engaging, direct, and easy-to-understand way. It must be a very curious and non-obvious fact (about 2 to 3 sentences)."
 }`;
 
     const userMessage = isSpecific
       ? `Tell me an incredible new 'Did you know?' right now about ${temaEspecifico}. Remember to translate the output to Brazilian Portuguese. Return only the JSON.`
-      : "Tell me an incredible new 'Did you know?' right now about ANY subject existing in the world. Remember to translate the output to Brazilian Portuguese. Return only the JSON.";
+      : `Tell me an incredible new 'Did you know?' right now about ONE subject randomly chosen from this list: ${listaParaAleatorio}. Do NOT invent subjects outside this list. Remember to translate the output to Brazilian Portuguese. Return only the JSON.`;
 
     const response = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
