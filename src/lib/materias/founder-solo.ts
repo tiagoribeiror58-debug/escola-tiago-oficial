@@ -20,67 +20,67 @@ The student is a "Prompt Bricklayer" evolving into an agent conductor, wanting t
         {
           nome: 'Foundations of the Centaur Operator',
           topicos: [
-            'The Centaur Operator Mindset: Human + Machine in Synergy',
-            'Anatomy of a High-Precision Prompt (Role, Context, Constraints)',
-            'System Prompts vs User Prompts: Instruction Architecture',
-            'Context Iteration and Refinement (Chaining)',
-            'Comparing Models: GPT vs Claude vs Gemini vs Open Models',
-            'Token Cost: Optimizing the API Bill Without Losing Quality',
-            'Output Evaluation: How to Measure Real AI Quality'
+            'O Mindset do Operador Centauro: Humano + Máquina em Sinergia',
+            'Anatomia de um Prompt de Alta Precisão (Role, Context, Constraints)',
+            'System Prompts vs User Prompts: Arquitetura de Instruções',
+            'Iteração e Refinamento de Contexto (Chaining)',
+            'Comparando Modelos: GPT vs Claude vs Gemini vs Modelos Abertos',
+            'Custo de Token: Otimizando a Fatura de API sem Perder Qualidade',
+            'Avaliação de Outputs: Como Medir a Qualidade Real da IA'
           ]
         },
         {
           nome: 'Cognitive Strategies and Advanced Prompting',
           topicos: [
-            'Few-Shot Prompting: Guiding the Model with Surgical Examples',
-            'Chain-of-Thought: Making the AI Think Step by Step Out Loud',
-            'Tree-of-Thought: Exploring Multiple Reasoning Branches Simultaneously',
-            'Meta-Prompting: Using One AI to Generate the Perfect Prompt for Another',
-            'Prompt Caching: Optimizing Latency and Cost in Long Contexts',
-            'Extended Reasoning (o1, R1 Models): When and How to Use Slow Thinking'
+            'Few-Shot Prompting: Guiando o Modelo com Exemplos Cirúrgicos',
+            'Chain-of-Thought: Fazendo a IA Pensar Passo a Passo em Voz Alta',
+            'Tree-of-Thought: Exploring Múltiplas Ramificações de Raciocínio Simultaneamente',
+            'Meta-Prompting: Usando uma IA para Gerar o Prompt Perfeito para Outra',
+            'Prompt Caching: Otimizando Latência e Custo em Contextos Longos',
+            'Raciocínio Estendido (Modelos o1, R1): Quando e Como Usar Pensamento Lento'
           ]
         },
         {
           nome: 'Productivity, Content, and Daily Operations',
           topicos: [
-            'Automating Repetitive Administrative Tasks (Emails, Meetings, Summaries)',
-            'Using AI for Research, Book Synthesis, and Market Mapping',
-            'AI as a Co-author for Content Creation (Blog, LinkedIn, X, Newsletters)',
-            'Prompts and Code Interpreter for Data Analysis and Financial Spreadsheets',
-            'AI for Project Management, OKR Creation, and Technical Documentation',
-            'Creating Dynamic Prompts and Templates for Continuous Use'
+            'Automatizando Tarefas Repetitivas Administrativas (Emails, Reuniões, Resumos)',
+            'Usando IA para Pesquisa, Síntese de Livros e Mapeamento de Mercado',
+            'IA como Coautor para Criação de Conteúdo (Blog, LinkedIn, X, Newsletters)',
+            'Prompts e Code Interpreter para Análise de Dados e Planilhas Financeiras',
+            'IA para Gestão de Projetos, Criação de OKRs e Documentação Técnica',
+            'Criação de Prompts Dinâmicos e Templates para Uso Contínuo'
           ]
         },
         {
           nome: 'Ecosystem, APIs, and Customization',
           topicos: [
-            'Building Custom GPTs for Specific Roles in Your Company',
-            'The First Integration with the OpenAI or Anthropic API',
-            'No-Code Automations with AI (Make, Zapier, n8n + LLMs)',
-            'Compound Workflows: Chaining Multiple AI Calls in the Backend',
-            'Artifacts (Claude) and Canvas (ChatGPT): AIs That Generate Interfaces and Docs in Real-Time'
+            'Construindo GPTs Customizados para Funções Específicas da Sua Empresa',
+            'O Primeira Integração com a API da OpenAI ou Anthropic',
+            'Automações No-Code com IA (Make, Zapier, n8n + LLMs)',
+            'Workflows Compostos: Encadeando Múltiplas Chamadas de IA no Backend',
+            'Artifacts (Claude) e Canvas (ChatGPT): IAs que Geram Interfaces e Docs ao Vivo'
           ]
         },
         {
           nome: 'Advanced Connectivity: The Power of MCP',
           topicos: [
-            'MCP (Model Context Protocol): Anthropic\'s Universal Connectivity Standard',
-            'How Claude Desktop Works + Access to the File System (Local MCP)',
-            'Integrating Claude with Notion via MCP: AI Reading and Editing Your Digital Brain',
-            'Popular MCP Connectors: GitHub, Slack, Google Drive, and Their Applications',
-            'Agentic AI Tools and Tool Use (Function Calling)',
-            'Accessing Databases: AI Querying SQL and Postgres Directly via MCP'
+            'MCP (Model Context Protocol): O Padrão Universal de Conectividade da Anthropic',
+            'Como Funciona o Claude Desktop + Acesso ao Sistema de Arquivos (Local MCP)',
+            'Integrando Claude ao Notion via MCP: A IA Lendo e Editando Seu Cérebro Digital',
+            'Conectores MCP Populares: GitHub, Slack, Google Drive e Suas Aplicações',
+            'Ferramentas de IA Agêntica e "Tool Use" (Function Calling)',
+            'Acessando Bancos de Dados: A IA Consultando SQL e Postgres via MCP Diretamente'
           ]
         },
         {
           nome: 'Vibe Coding, Autonomous Agents, and Terminal',
           topicos: [
-            'AI for Basic Programming: How to Request Code Without Knowing How to Program (Vibe Coding)',
-            'Basic Multi-Agent Systems: Splitting Complex Tasks Among AIs',
-            'AI-Powered IDEs: Workflows in Cursor and Windsurf',
-            'Claude Code and Terminal Agents: Giving the AI Control of the Command Line',
-            'AI Coding Assistants: How to Review, Test, and Validate Code Generated by the Machine',
-            'Advanced Autonomous Agents (Devin, AutoGPT, BabyAGI): What is Real vs Hype'
+            'IA para Programação Básica: Como Pedir Código Sem Saber Programar (Vibe Coding)',
+            'Sistemas Multi-Agente Básicos: Dividindo Tarefas Complexas Entre IAs',
+            'IDEs Impulsionadas por IA: O Fluxo de Trabalho no Cursor e Windsurf',
+            'Claude Code e Terminal Agents: Dando à IA o Controle da Linha de Comando',
+            'AI Coding Assistants: Como Revisar, Testar e Validar o Código que a Máquina Gerou',
+            'Agentes Autônomos Avançados (Devin, AutoGPT, BabyAGI): O Que é Real e o Que é Hype'
           ]
         }
       ]
@@ -98,21 +98,21 @@ Mandatory approach:
 - Building AI Agents to automate internal workflows.
 - Native AI products: what is and what is not a good idea.`,
       ementa: [
-        'The Solo Founder\'s AI Stack in 2026: A Complete Map',
-        'Advanced Prompt Engineering for Business Tasks',
-        'AI Agents with LangChain and CrewAI: Fundamental Concepts',
-        'Outreach and CRM Automation with AI (Clay, Apollo + GPT)',
-        'Building Products with the OpenAI and Anthropic APIs',
-        'RAG (Retrieval-Augmented Generation): Private Knowledge Bases',
-        'Vibe Coding: Using Cursor and GitHub Copilot to Be 10x Faster',
-        'AI for Customer Support: Zaps, n8n, and Smart Chatbots',
-        'Fine-tuning vs Prompting: When Each Approach Is Worth It',
-        'Automating Content Marketing with AI (Without Looking Like a Robot)',
-        'AI Tools for Financial Analysis and Churn Prediction',
-        'Data Privacy When Using Third-Party LLMs (LGPD + AI)',
-        'Make (Integromat) and n8n: No-Code Automations for Growth',
-        'Monitoring and Evaluating the Quality of Your AI Pipelines',
-        'The Augmented Founder: When to Delegate to AI vs to Humans'
+        'O Stack de IA do Founder Solo em 2026: Um Mapa Completo',
+        'Prompt Engineering Avançado para Tarefas de Negócios',
+        'AI Agents com LangChain e CrewAI: Conceitos Fundamentais',
+        'Automação de Outreach e CRM com IA (Clay, Apollo + GPT)',
+        'Construindo Produtos com a API da OpenAI e Anthropic',
+        'RAG (Retrieval-Augmented Generation): Bases de Conhecimento Privadas',
+        'Vibe Coding: Usando Cursor e GitHub Copilot para Ser 10x Mais Rápido',
+        'AI para Atendimento ao Cliente: Zaps, n8n e Chatbots Inteligentes',
+        'Fine-tuning vs Prompting: Quando Vale a Pena Cada Abordagem',
+        'Automatizando Marketing de Conteúdo com IA (sem parecer robô)',
+        'Ferramentas de IA para Análise Financeira e Previsão de Churn',
+        'Privacidade de Dados ao Usar LLMs de Terceiros (LGPD + IA)',
+        'Make (Integromat) e n8n: Automações Sem Código Para Crescimento',
+        'Monitorando e Avaliando a Qualidade das Suas Pipelines de IA',
+        'O Founder Aumentado: Quando Delegar para IA vs Para Humanos'
       ]
     },
     {
@@ -135,66 +135,66 @@ Mandatory approach:
         {
           nome: 'Why People Buy: Psychology and Decision Mechanisms',
           topicos: [
-            'Marketing vs Advertising vs Publicity: The Three Things Founders Mix Up All the Time',
-            'Jobs To Be Done (JTBD): The Customer Never Buys the Product — They Hire a Solution for a Progress',
-            'Kahneman\'s System 1 and System 2: How Decisions Happen Emotionally Before Being Rationalized',
-            'Psychology of Social Proof, Authority, and Reciprocity (Cialdini): The Underlying Neural Mechanism',
-            'Value Perception vs Real Price: Why Cheap Looks Suspicious and Expensive Looks Superior',
-            'The Paradox of Choice (Barry Schwartz): Fewer Options Sell More — The Science of Choice Overload',
-            'Anchoring, Decoy, and Framing: How Price Presentation Alters Value Perception',
-            'Halo Effect: How the First Impression of a Product Contaminates All Subsequent Perceptions',
-            'Neuromarketing: What the Real Data Says About Consumption (and What Is Salesman Myth)',
-            'Consumer Behavior in the Digital Era: Fragmented Attention, Short Decision Cycles, and the Doom Scroll'
+            'Marketing vs Publicidade vs Propaganda: As Três Coisas que Founders Confundem o Tempo Todo',
+            'Jobs To Be Done (JTBD): O Cliente Nunca Compra o Produto — Ele Contrata uma Solução para um Progresso',
+            'Sistema 1 e Sistema 2 de Kahneman: Como a Decisão Acontece Emocionalmente Antes de Ser Racionalizada',
+            'Psicologia da Prova Social, Autoridade e Reciprocidade (Cialdini): o Mecanismo Neural por Trás',
+            'Percepção de Valor vs Preço Real: Por que o Barato Parece Suspeito e o Caro Parece Superior',
+            'O Paradoxo da Escolha (Barry Schwartz): Menos Opções Vendem Mais — a Ciência da Decisão por Sobrecarga',
+            'Ancoragem, Decoy e Framing: Como a Apresentação do Preço Altera a Percepção do Valor',
+            'Efeito Halo: Como a Primeira Impressão de um Produto Contamina Todas as Percepções Seguintes',
+            'Neuromarketing: O Que o Dado Real Diz Sobre Consumo (e o Que é Mito de Vendedor)',
+            'Comportamento do Consumidor na Era Digital: Atenção Fragmentada, Ciclos de Decisão Curtos e o Doom Scroll'
           ]
         },
         {
           nome: 'Positioning, Branding, and Category Design',
           topicos: [
-            'Strategic Positioning: Occupying a Mental Category Before Competing on Price',
-            'Branding for Solo Founders: It\'s Not a Logo — It\'s Systematic Perception Management',
-            'The 4 Ps of Marketing: The Original Framework, Its Limitations, and What Replaced Each One',
-            'Blue Ocean Strategy (Kim & Mauborgne): How to Create Markets Without Direct Competition',
-            'Category Design: Inventing a Category vs Competing in an Existing One — When Each Makes Sense',
-            'Structural Storytelling for Founders: How Joseph Campbell and Donald Miller Apply to SaaS',
-            'Conversion Copywriting: Headlines, CTAs, and Landing Pages — Response Engineering, Not Pretty Writing',
-            'Copy Frameworks: PAS (Problem-Agitation-Solution), AIDA, and FAB — The Mechanism Behind Each One',
-            'Personal Branding as a Distribution Channel: You as Your Own Permanent Media',
-            'Image Crisis Management for Founders: What to Do When Twitter Decides You Made a Mistake',
-            'Solo Brand Architecture: When to Separate Personal Brand and Product Brand'
+            'Posicionamento Estratégico: Ocupar uma Categoria Mental Antes de Competir em Preço',
+            'Branding para Founders Solo: Não é Logotipo — é Gestão de Percepção Sistemática',
+            'Os 4 Ps do Marketing: O Framework Original, Suas Limitações e o Que Substituiu Cada Um',
+            'Estratégia de Oceano Azul (Kim & Mauborgne): Como Criar Mercados sem Concorrência Direta',
+            'Category Design: Inventar uma Categoria vs Competir em Uma Existente — Quando Cada Um Faz Sentido',
+            'Storytelling Estrutural para Founders: Como Joseph Campbell e Donald Miller Aplicam ao SaaS',
+            'Copywriting de Conversão: Headlines, CTAs e Landing Pages — Engenharia de Resposta, Não Escrita Bonita',
+            'Frameworks de Copy: PAS (Problema-Agitação-Solução), AIDA e FAB — O Mecanismo por Trás de Cada Um',
+            'Personal Branding como Canal de Distribuição: Você como Mídia Própria Permanente',
+            'Gestão de Crise de Imagem para Founders: O Que Fazer Quando o Twitter Decide que Você Errou',
+            'Arquitetura de Marca Solo: Quando Separar Marca Pessoal e Marca de Produto'
           ]
         },
         {
           nome: 'Organic Channels and Asynchronous Distribution',
           topicos: [
-            'Strategic Content Marketing: The Difference Between Having a Content Strategy and Producing Content',
-            'Technical and Content SEO for SaaS: How a Search Engine Works Before Talking About Keywords',
-            'Conversational SEO and AEO (Answer Engine Optimization) for Perplexity, ChatGPT, and Google AI Overviews',
-            'Building in Public: When Radical Transparency Becomes an Acquisition Channel — and When It Doesn\'t Work',
-            'Newsletter as a Distribution Asset: From Zero to 10k Readers Without Paying For It',
-            'Podcast as an Authority Channel: How to Start Without Radio Infrastructure',
-            'LinkedIn as a B2B Acquisition Channel: The Algorithm, the Format, and What Actually Engages',
-            'Twitter/X: Building a Technical Audience — The Difference Between Going Viral and Accumulating',
-            'YouTube and Long-form Video for SaaS: Video SEO and Content That Doesn\'t Age',
-            'Short-form Video (Reels, Shorts, TikTok): How to Adapt Technical Content for 60-Second Formats',
-            'UGC (User Generated Content): When the Customer Themselves Becomes a Creator and Distributor',
-            'Presence in Marketplaces: AppSumo, Capterra, G2, and Product Hunt — The Definitive 2026 Guide'
+            'Content Marketing Estratégico: A Diferença entre Ter uma Estratégia de Conteúdo e Produzir Conteúdo',
+            'SEO Técnico e de Conteúdo para SaaS: Como Funciona um Mecanismo de Busca Antes de Falar em Palavras-chave',
+            'SEO Conversacional e AEO (Answer Engine Optimization) para Perplexity, ChatGPT e Google AI Overviews',
+            'Building in Public: Quando Transparência Radical Vira Canal de Aquisição — e Quando Não Funciona',
+            'Newsletter as a Canal de Distribuição: Do Zero a 10k Leitores Sem Pagar por Isso',
+            'Podcast como Canal de Autoridade: Como Começar Sem Estrutura de Rádio',
+            'LinkedIn como Canal de Aquisição B2B: O Algoritmo, o Formato e o Que Engaja de Fato',
+            'Twitter/X: Construindo Audiência Técnica — A Diferença entre Viralizar e Acumular',
+            'YouTube e Vídeo Longo para SaaS: SEO em Vídeo e Conteúdo que Não Envelhece',
+            'Vídeo Curto (Reels, Shorts, TikTok): Como Adaptar Conteúdo Técnico para Formato de 60 Segundos',
+            'UGC (User Generated Content): Quando o Próprio Cliente Vira Criador e Distribuidor',
+            'Presença em Marketplaces: AppSumo, Capterra, G2 e Product Hunt — O Guia Definitivo 2026'
           ]
         },
         {
           nome: 'Growth, Viral Loops, and Organic Scale',
           topicos: [
-            'The Anatomy of an Acquisition Funnel for Solo Founders: AARRR Without Corporate Complexity',
-            'Growth Loops vs Linear Funnel: Why Loops Scale and Funnels Have a Ceiling',
-            'Product-Led Growth (PLG): Designing the Product to Be Its Own Acquisition Channel',
-            'Virality Loop and K-Factor: How to Calculate and Design Organic Growth Through Referrals',
-            'North Star Metric: Finding the Single Metric That Sums Up the Value Delivered by the Product',
-            'Cold Email with AI Personalization: What Still Works in 2026 and Why',
-            'Partnerships and Co-Marketing: How Two Solo Founders Multiply Each Other\'s Audience',
-            'Affiliate Marketing and Automated Referral Programs: Leveraging Influence with Incentive Alignment',
-            'Low-Cost Retargeting: Google and Meta with a Micro Budget for Those Without Growth Capital',
-            'Organic Press and PR: How to Get Media Coverage Without a PR Agency',
-            'Building Community (Discord, Circle, WhatsApp): When Community Is a Channel — and When It Is a Distraction',
-            'Marketing Analytics for Founders: How to Set Up an Acquisition Dashboard Without Getting Lost in Vanity Metrics'
+            'A Anatomia de um Funil de Aquisição para Founders Solo: AARRR sem Complexidade de Corporação',
+            'Growth Loops vs Funil Linear: Por que Loops Escalam e Funis Têm Teto',
+            'Product-Led Growth (PLG): Projetar o Produto Para Que Ele Seja o Próprio Canal de Aquisição',
+            'Virality Loop e Coeficiente K: Como Calcular e Projetar Crescimento Orgânico por Indicação',
+            'North Star Metric: Encontrar a Única Métrica que Resume o Valor Entregue pelo Produto',
+            'Cold Email com Personalização por IA: O Que Ainda Funciona em 2026 e Por Quê',
+            'Parcerias e Co-Marketing: Como Dois Founders Solo Multiplicam Audiência um do Outro',
+            'Affiliate Marketing e Programas de Referência Automatizados: Exercendo Influência com Alinhamento de Incentivos',
+            'Retargeting de Baixo Custo: Google e Meta com Orçamento Micro para Quem Não Tem Verba de Growth',
+            'Press e PR Orgânica: Como Conseguir Mídia Sem Assessoria de Imprensa',
+            'Construindo Comunidade (Discord, Circle, WhatsApp): Quando Comunidade é Canal — e Quando é Distração',
+            'Marketing Analytics para Founders: Como Montar um Dashboard de Aquisição Sem se Perder em Métricas de Vaidade'
           ]
         }
       ]
@@ -218,60 +218,60 @@ Mandatory approach:
         {
           nome: 'The First Sale: Validating That Someone Actually Pays',
           topicos: [
-            'The Mom Test (Rob Fitzpatrick): How to Ask Questions That Do Not Lie to You — the Most Underestimated Book in Startups',
-            'The Difference Between Interest, Purchase Intent, and Payment: How to Distinguish in Real-Time',
-            'Ideal Customer Profile (ICP): Who They Are, Who They Definitely Are Not, and Why Rejecting the Wrong Customer Saves the Business',
-            'How to Make the First Sale as a Founder — Without a Team, Without a Script, Sometimes Without a Finished Product',
-            'Demos That Convert: Product Demo Structure, What Never to Do, and How to End with a CTA',
-            'Copywriting for Landing Pages, Cold Emails, and Sales Proposals: Response Engineering Before Pretty Words',
-            'SaaS Conversion Funnel: From Visit to MRR — Where Founders Lose the Customer (and Why)',
-            'Handling Rejections: Reframing as Strategic Data, Not Personal Failure',
-            'Discovery Call: The Right Questions Before Presenting Anything — Diagnosis Before Prescription',
-            'Sales Proposals That Close: Structure, Language, and What Never to Include in the PDF'
+            'The Mom Test (Rob Fitzpatrick): Como Fazer Perguntas que Não Mentem para Você — o Livro mais Subestimado de Startups',
+            'A Diferença Entre Interesse, Intenção de Compra e Pagamento: Como Distinguir em Tempo Real',
+            'Perfil de Cliente Ideal (ICP): Quem É, Quem Definitivamente Não É, e Por Que Recusar Cliente Errado Salva o Negócio',
+            'Como Fazer a Primeira Venda Sendo Founder — Sem Equipe, Sem Script, Às Vezes Sem Produto Terminado',
+            'Demos que Convertem: Estrutura de Demonstração de Produto, o Que Nunca Fazer e Como Terminar com CTA',
+            'Copywriting para Landing Pages, Emails Frios e Propostas Comerciais: Engenharia de Resposta Antes de Palavra Bonita',
+            'Funil de Conversão de SaaS: Da Visita ao MRR — Onde os Founders Perdem o Cliente (e Por Quê)',
+            'Lidando com Rejeições: Reformulando como Dado Estratégico, Não como Fracasso Pessoal',
+            'Discovery Call: As Perguntas Certas Antes de Apresentar Qualquer Coisa — Diagnóstico Antes de Remédio',
+            'Proposta Comercial que Fecha: Estrutura, Linguagem e o Que Nunca Incluir no PDF'
           ]
         },
         {
           nome: 'Sales Methodology and Repeatable Pipeline',
           topicos: [
-            'SPIN Selling (Neil Rackham): Situation, Problem, Implication, and Need-payoff — The Logic Behind It',
-            'Lead Qualification: BANT (Budget, Authority, Need, Timeline) and MEDDIC for the Solo Context',
-            'Overcoming Objections: The 10 Most Common in SaaS and How to Break Each One Without Sounding Manipulative',
-            'Contract Negotiation: How Not to Give a Discount Without Losing the Customer — the Psychology of the Anchor and Silence',
-            'Value Proposition: How to Present ROI Without Sounding Like a Flea Market Salesman or a PowerPoint Consultant',
-            'Sales Pipeline with a Solo CRM: Notion, Free HubSpot, or Pipedrive — Which to Choose and How to Keep It Warm',
-            'Structured Follow-up: The Timing, Frequency, and Tone That Keeps the Lead Warm Without Being Annoying',
-            'Enterprise Sales as a Solo Founder: When and How to Go Upmarket Without Dying in the Process',
-            'Closing: Closing Techniques Without Abusive Pressure — Hard Close, Trial Close, and Next Step Close',
-            'Win/Loss Analysis: Why You Lost (or Won) and What This Data Says About Your Positioning and ICP'
+            'SPIN Selling (Neil Rackham): Situação, Problema, Implicação e Necessidade de Solução — a Lógica por Trás',
+            'Qualificação de Leads: BANT (Budget, Authority, Need, Timeline) e MEDDIC para o Contexto Solo',
+            'Contorno de Objeções: As 10 Mais Comuns em SaaS e Como Quebrar Cada Uma sem Soar Manipulador',
+            'Negociação de Contratos: Como Não Dar Desconto sem Perder o Cliente — a Psicologia do Ancor e do Silêncio',
+            'Proposta de Valor: Como Apresentar ROI sem Soar como Vendedor de Feirão ou Consultor de PowerPoint',
+            'Pipeline de Vendas com CRM Solo: Notion, HubSpot Free ou Pipedrive — Qual Escolher e Como Não Deixar Esfriar',
+            'Follow-up Estruturado: O Timing, a Frequência e o Tom que Mantém o Lead Quente sem Incomodar',
+            'Vendas Enterprise como Solo Founder: Quando e Como Entrar no Upmarket sem Morrer no Processo',
+            'Fechamento: Técnicas de Closing sem Pressão Abusiva — Hard Close, Trial Close e Next Step Close',
+            'Análise Win/Loss: Por Que Você Perdeu (ou Ganhou) e o Que Esse Dado Diz sobre Posicionamento e ICP'
           ]
         },
         {
           nome: 'Strategic Pricing and Revenue Models',
           topicos: [
-            'The Psychology of Pricing: Why the Number You Choose Communicates Before It Is Calculated',
-            'Value-Based Pricing: Charging for the Value Generated for the Customer, Not the Cost of Production',
-            'Freemium vs Trial vs Paid from Day 1: The Economic Logic Behind Each Model',
-            'Usage-Based Pricing: Charging for Usage Like AWS — When It Works and When It Destroys Predictability',
-            'Annual Plans: How to Convence the Customer to Pay Yearly (and the Impact on Cash Flow)',
-            'Pricing Pages That Convert: Plan Hierarchy, Value Anchoring, and the Decoy Effect in Practice',
-            'When and How to Increase Prices Without Losing Your Customer Base',
-            'PLG vs Sales-Led: When to Let the Product Sell and When You Need to Be the Salesperson',
-            'Bundling and Unbundling: The Art of Packaging Features to Maximize Perceived Value'
+            'A Psicologia do Preço: Por que o Número que Você Escolhe Comunica Antes de Ser Calculado',
+            'Value-Based Pricing: Cobrar pelo Valor Gerado pelo Cliente, Não pelo Custo de Produção',
+            'Freemium vs Trial vs Pago Desde o Dia 1: a Lógica Econômica por Trás de Cada Modelo',
+            'Usage-Based Pricing: Cobrar pelo Uso como AWS — Quando Funciona e Quando Destrói a Previsibilidade',
+            'Annual Plans: Como Convencer o Cliente a Pagar o Ano Todo (e o Impacto no Fluxo de Caixa)',
+            'Pricing Pages que Convertem: Hierarquia de Planos, Ancoragem de Valor e o Efeito Decoy na Prática',
+            'Quando e Como Aumentar o Preço Sem Perder a Base de Clientes',
+            'PLG vs Sales-Led: Quando Deixar o Produto Vender e Quando Você Precisa Ser o Vendedor',
+            'Bundling e Unbundling: A Arte de Empacotar Features para Maximizar Receita Percebida'
           ]
         },
         {
           nome: 'Recurring Revenue, Retention, and Expansion',
           topicos: [
-            'MRR, ARR, and the Real Math of SaaS: What Each Number Hides and Reveals',
-            'Churn Rate: Why Growing Without Retaining Is Like Filling a Leaky Bucket — and How to Calculate the Business Ceiling',
-            'Net Revenue Retention (NRR) Above 100%: The Only Metric That Truly Proves the Product Works',
-            'Upselling and Cross-selling: Expanding Revenue Without Acquisition Costs',
-            'Customer Success as Churn Prevention: The Difference Between Reactive Support and Proactive CS',
-            'Churn Recovery: How to Reactivate Customers Who Canceled — Win-Back Campaigns and Timing',
-            'Revenue Cohort Analysis: Reading Longitudinal Financial Health, Not Just the Month\'s MRR',
-            'Expansion to Enterprise: Annual Contracts, SLAs, and What Changes in the Sales Process',
-            'Referral Sales: The Channel That Doesn\'t Age and Has CAC Close to Zero',
-            'Building a Predictable Revenue Model: Combining PLG, Sales, and Expansion into a System'
+            'MRR, ARR e a Matemática Real do SaaS: O Que Cada Número Esconde e Revela',
+            'Churn Rate: Por Que Crescer Sem Reter é Encher um Balde Furado — e Como Calcular o Teto do Negócio',
+            'Net Revenue Retention (NRR) Acima de 100%: A Métrica que Prova que o Produto Funciona de Verdade',
+            'Upselling e Cross-selling: Expansão de Receita Sem Custo de Aquisição',
+            'Customer Success como Prevenção de Churn: A Diferença entre Suporte Reativo e CS Proativo',
+            'Recuperação de Churn: Como Reativar Clientes que Cancelaram — Win-Back Campaigns e Timing',
+            'Cohort Analysis de Receita: Lendo a Saúde Financeira Longitudinal, Não Só o MRR do Mês',
+            'Expansão para Enterprise: Contratos Anuais, SLAs e o Que Muda no Processo de Vendas',
+            'Vendas por Indicação (Referral): O Canal que Não Envelhece e Tem CAC Próximo de Zero',
+            'Construindo um Modelo de Receita Previsível: Combinando PLG, Sales e Expansão em Sistema'
           ]
         }
       ]
@@ -289,24 +289,24 @@ Mandatory approach:
 - BaaS (Supabase/Firebase) as a strength multiplier.
 - Vibe Coding and AI as a development copilot.`,
       ementa: [
-        'The Solo Founder\'s Architecture (Monoliths and BaaS)',
-        'Choosing the Tech Stack: Productivity vs Hype in 2026',
-        'CI/CD and Frictionless Continuous Deployment (GitHub Actions + Vercel)',
-        'Database Management and Simplified Migrations',
-        'Infrastructure Automation with Vercel, Railway, and Fly.io',
-        'Automated Testing: What Really Matters for 1 Dev',
-        'Dealing with Technical Debt When You Are the Only Dev',
-        'Supabase from Scratch to Advanced: Auth, RLS, Storage, and Edge Functions',
-        'Serverless and Edge Computing: When to Use and When to Avoid',
-        'Cheap Observability: Logs, Alerts, and Tracing for Solo SaaS',
-        'Application Security: The Non-Negotiable Minimum Checklist',
-        'API Design for Products That Will Scale (REST vs tRPC vs GraphQL)',
-        'WebSockets and Real-time: When the User Needs Live Feedback',
-        'Monorepos with Turborepo: Managing Multiple Solo Products',
-        'Feature Flags: Safe Launches and Immediate Rollbacks',
-        'Billing and Payments: Stripe from Scratch, Webhooks, and Subscription Management',
-        'Multi-tenancy: Architecture for SaaS Serving Multiple Customers',
-        'Smart Caching: Redis, CDN, and Strategies to Scale Without Cost'
+        'A Arquitetura do Solo Founder (Monolitos e BaaS)',
+        'Escolhendo o Tech Stack: Produtividade vs Hype em 2026',
+        'CI/CD e Deploy Contínuo Sem Fricção (GitHub Actions + Vercel)',
+        'Gestão de Banco de Dados e Migrations Simplificadas',
+        'Automação de Infraestrutura com Vercel, Railway e Fly.io',
+        'Testes Automatizados: O Que Realmente Importa para 1 Dev',
+        'Lidando com Débito Técnico Quando Você é o Único Dev',
+        'Supabase do Zero ao Avançado: Auth, RLS, Storage e Edge Functions',
+        'Serverless e Edge Computing: Quando Usar e Quando Evitar',
+        'Observabilidade Barata: Logs, Alertas e Tracing para SaaS Solo',
+        'Segurança de Aplicação: O Checklist Mínimo Não Negociável',
+        'API Design para Produtos que Vão Escalar (REST vs tRPC vs GraphQL)',
+        'WebSockets e Tempo Real: Quando o Usuário Precisa de Feedback Vivo',
+        'Monorepos com Turborepo: Gerenciando Múltiplos Produtos Solo',
+        'Feature Flags: Lançamentos Seguros e Rollbacks Imediatos',
+        'Billing e Pagamentos: Stripe do Zero, Webhooks e Gestão de Assinatura',
+        'Multi-tenancy: Arquitetura para SaaS que Atende Múltiplos Clientes',
+        'Cache Inteligente: Redis, CDN e Estratégias Para Escalar Sem Custo'
       ]
     },
     {
@@ -321,66 +321,98 @@ Mandatory approach:
         {
           nome: 'Phase 1 — Foundations: What Is Product and What Is the PM\'s Role',
           topicos: [
-            'The PM Role: The Bridge Between Engineering, UX, and Business — Without Formal Authority',
-            'What Is a Digital Product — The Difference Between Product, Feature, and Project',
-            'Product Discovery vs Product Delivery — Where Most Companies Make Mistakes',
-            'Jobs-to-be-Done (JTBD): Understanding What the User Actually "Hires" the Product to Do',
-            'User Interviews: How to Ask the Right Questions Without Contaminating the Answer',
-            'The Problem with Premature Solutions — Confirmation Bias in Product Management',
-            'Personas vs Jobs: When Each Model Helps and When It Gets in the Way',
-            'Product Life Cycle: Introduction, Growth, Maturity, and Decline',
-            'Platform Products vs End-User Products — Different Logic and Dynamics',
-            'The Product Vision Document (Simplified PRD): What It Needs to Have',
-            'Inception: How to Align the Entire Team at the Beginning of a Product',
-            'MVP: What It Is, What It Isn\'t, and Why Most Do It Wrong'
+            'O Papel do PM: a ponte entre Engenharia, UX e Negócios — sem autoridade formal',
+            'O que é um produto digital — diferença entre produto, feature e projeto',
+            'Product Discovery vs Product Delivery — onde a maioria das empresas erra',
+            'Jobs-to-be-Done (JTBD): entender o que o usuário realmente "contrata" o produto para fazer',
+            'Entrevistas de Usuário: como fazer as perguntas certas sem contaminar a resposta',
+            'O Problema com Soluções Prematuras — o viés de confirmação em Product Management',
+            'Personas vs Jobs: quando cada modelo ajuda e quando atrapalha',
+            'Ciclo de Vida do Produto: Introdução, Crescimento, Maturidade e Declínio',
+            'Platform Products vs End-User Products — lógica e dinâmicas diferentes',
+            'O Documento de Visão de Produto (PRD simplificado): o que precisa ter',
+            'Inception: como alinhar toda a equipe no começo de um produto',
+            'MVP: o que é, o que não é, e por que a maioria faz errado'
           ]
         },
         {
           nome: 'Phase 2 — Intermediate: Prioritization, Metrics, and the Product Cycle',
           topicos: [
-            'Prioritization Frameworks: RICE, Kano, MoSCoW — When to Use Each',
-            'Backlog Management: The Difference Between a Living Backlog and a Graveyard of Ideas',
-            'Strategic Roadmap: Now/Next/Later vs Date-Based Roadmap',
-            'North Star Metric: Finding the Single Metric That Sums Up the Value Delivered',
-            'AARRR (Pirate Metrics): Acquisition, Activation, Retention, Revenue, and Referral',
-            'Cohort Analysis and Churn: How to Read Real Product Health in Data',
-            'A/B Testing and Continuous Experimentation: Hypotheses, Samples, and Significance',
-            'Opportunity Solution Tree (Teresa Torres, 2021): Mapping Opportunities Without Bias',
-            'Continuous Discovery Habits: Weekly Research Routine with Real Users',
-            'OKRs for Product: Aspirational Goals vs Operational Tasks',
-            'Stakeholder Management: Aligning Leadership, Sales, and Engineering Without Wars',
-            'Go-to-Market of New Features: How to Launch Without Generating Confusion',
-            'Heatmaps and Session Recordings: Reading the User\'s Silent Behavior',
-            'Feedback Loops: NPS, CSAT, and CES — What Each Actually Measures',
-            'Quantitative + Qualitative Data: Why Neither Alone Solves the Problem',
-            'Unit Economics Applied to Product: CAC, LTV, and Payback Period'
+            'Frameworks de Priorização: RICE, Kano, MoSCoW — quando usar cada um',
+            'Gestão de Backlog: a diferença entre um backlog vivo e um cemitério de ideias',
+            'Roadmap Estratégico: Now/Next/Later vs Roadmap Baseado em Datas',
+            'North Star Metric: encontrando a única métrica que resume o valor entregue',
+            'AARRR (Pirate Metrics): Aquisição, Ativação, Retenção, Receita e Referência',
+            'Cohort Analysis e Churn: como ler a saúde real do produto nos dados',
+            'Testes A/B e Experimentação Contínua: hipóteses, amostras e significância',
+            'Opportunity Solution Tree (Teresa Torres, 2021): mapeando oportunidades sem viés',
+            'Continuous Discovery Habits: rotina de pesquisa semanal com usuários reais',
+            'OKRs para Produto: metas aspiracionais vs tarefas operacionais',
+            'Stakeholder Management: alinhando liderança, vendas e engenharia sem guerras',
+            'Go-to-Market de Novas Features: como lançar sem gerar confusão',
+            'Heatmaps e Session Recordings: lendo o comportamento silencioso do usuário',
+            'Feedback Loops: NPS, CSAT e CES — o que cada um mede de fato',
+            'Dados quantitativos + qualitativos: por que nenhum dos dois sozinho resolve',
+            'Unit Economics aplicados a produto: CAC, LTV e Payback Period'
           ]
         },
         {
           nome: 'Phase 3 — Advanced: UX, Design, and Product Strategy in 2026',
           topicos: [
-            'Product-Led Growth (PLG): Letting the Product Be the Main Acquisition Channel',
-            'Growth Loops: Building Sustainable Viral Cycles — Viral, Paid, and Content Loops',
-            'Pricing Strategy: Freemium, Usage-Based, Value-Based — The Logic of Each Model',
-            'Product Ops: Scaling the Product Function When the Team Grows',
-            'Wireframing and Rapid Prototypaging with Figma and v0.dev',
-            'Design Systems: Tokens, Components, and Visual Consistency as a Competitive Advantage',
-            'Nielsen\'s Heuristics: The 10 Principles Every PM Needs to Know How to Evaluate',
-            'Onboarding: Engineering the "Aha!" Moment — Reducing Friction in Activation',
-            'Micro-interactions and Feedback Animations: When UX Delights and When It Distracts',
-            'Accessibility (a11y and WCAG): The Non-Negotiable Minimum in Product Quality',
-            'Dark Patterns: What Never to Do and How to Identify in Competitors',
-            'The Art of Saying No: How to Reject Features Without Losing Allies',
-            'AI-First Product Management: Managing Non-deterministic AI Features',
-            'Evaluation-Driven PM: How to Measure Output Quality of Language Models',
-            'Agents as a Product: UX for Autonomous Systems and Interactions with AI Agents',
-            'Competitive Analysis: Frameworks to Map Competitors Without Bias',
-            'API as a Product: When Developers Are Your Main Customers',
-            'International Product: Localization, Cultural Adaptation, and i18n Traps',
-            'Ethical Product Design: PM Responsibility for Social Impact and Dark Patterns',
-            'Churn Analysis: Why Users Disappear and How to Anticipate Before Losing Them'
+            'Product-Led Growth (PLG): deixar o produto ser o principal canal de aquisição',
+            'Growth Loops: construindo ciclos virais sustentáveis — viral, paid e content loops',
+            'Pricing Strategy: Freemium, Usage-Based, Value-Based — a lógica de cada modelo',
+            'Product Ops: escalando a função de produto quando o time cresce',
+            'Wireframing e Prototipagem Rápida com Figma e v0.dev',
+            'Design Systems: tokens, componentes e consistência visual como vantagem competitiva',
+            'Heurísticas de Nielsen: os 10 princípios que todo PM precisa saber avaliar',
+            'Onboarding: engenharia do Momento "Aha!" — reduzindo fricção na ativação',
+            'Micro-interações e Animações de Feedback: quando UX encanta e quando distrai',
+            'Acessibilidade (a11y e WCAG): o mínimo não negociável em qualidade de produto',
+            'Dark Patterns: o que nunca fazer e como identificar na concorrência',
+            'A Arte de Dizer Não: como recusar features sem perder aliados',
+            'AI-First Product Management: gerenciando features de IA não-determinísticas',
+            'Evaluation-Driven PM: como medir qualidade de output de modelos de linguagem',
+            'Agentes como Produto: UX para sistemas autônomos e interações com AI Agents',
+            'Competitive Analysis: frameworks para mapear concorrentes sem viés',
+            'API as a Product: quando desenvolvedores são seus clientes principais',
+            'Produto Internacional: localização, adaptação cultural e armadilhas de i18n',
+            'Ethical Product Design: responsabilidade do PM sobre impacto social e Dark Patterns',
+            'Churn Analysis: por que usuários somem e como antecipar antes de perder'
           ]
         }
+      ]
+    },
+    {
+      slug: 'founder-vendas-monetizacao',
+      nome: 'Sales & Monetization',
+      emoji: '💰',
+      parent: 'founder-solo',
+      whyStart: 'If it doesn\'t generate revenue, it\'s a hobby. Charging from day 1 is essential to validate if you are solving a real problem.',
+      descricao: 'Pricing strategies, conversion funnels, and sales closing for the solo founder.',
+      contexto: `Focus: Real revenue. How to charge, how much to charge, and how to sell being introverted.
+Mandatory approach:
+- PLG (Product-Led Growth) vs Sales-Led.
+- Pricing modeling for digital products in 2026.`,
+      ementa: [
+        'Estratégias de Precificação: Freemium vs Trial vs Pago',
+        'Como Fazer a Primeira Venda (The Mom Test na Prática)',
+        'Copywriting de Conversão para Landing Pages de SaaS',
+        'Lidando com Rejeições Comerciais: Resiliência e Reframe',
+        'Demonstrações de Produto (Demos) que Convertem',
+        'Upselling e Cross-selling Automatizados',
+        'MRR, ARR, Churn: Entendendo a Saúde da Receita',
+        'PLG (Product-Led Growth): Deixando o Produto Vender por Você',
+        'Value-Based Pricing: Cobrar pelo Valor, Não pelo Custo',
+        'Annual Plans: Como Convencer o Cliente a Pagar o Ano Todo',
+        'Gestão de Objeções: As 10 Desculpas Mais Comuns e Como Quebrar',
+        'Sales CRM Solo: Notion, Linear e Pipedrive para Times de 1',
+        'Proposta Comercial que Fecha: Estrutura e Linguagem',
+        'O Funil de Conversão de SaaS: Da Visita ao MRR',
+        'Recuperação de Churn: Como Recuperar Clientes que Cancelaram',
+        'Expansão de Receita (Net Revenue Retention) Acima de 100%',
+        'Vendas Enterprise como Solo: Quando e Como Entrar no Upmarket',
+        'Contratos Anuais vs Mensais: Gestão de Risco e Previsibilidade'
       ]
     },
     {
@@ -395,23 +427,23 @@ Mandatory approach:
 - Unit Economics and Burn Rate.
 - The VC myth vs the Bootstrapping reality in 2026.`,
       ementa: [
-        'Bootstrapping vs Venture Capital (VC): Pros, Cons, and Trade-offs',
-        'Calculating Runway and Managing Burn Rate',
-        'Essential Unit Economics: CAC, LTV, and Payback Period',
-        'How to Prepare a Precise and Honest Pitch Deck',
-        'Equity Math and Dilution in Investment Rounds',
-        'Liquidity Pockets and Personal Risk Management for the Founder',
-        'Revenue-Based Financing',
-        'Grants and Non-Dilutive Funding for Startups',
-        'Accelerators: YC, Distrito, and Others — Is It Worth Applying?',
-        'Basic Financial Modeling: P&L, Cash Flow, and Projections',
-        'Taxes for Founders: Simples Nacional vs Lucro Presumido (Brazilian Tax Context)',
-        'Separating Personal and Business Finances (and Why It Is Critical)',
-        'Renegotiating Vendor Contracts in Times of Crisis',
-        'Pricing to Scale: When to Increase Prices and How to Do It',
-        'Crowdfunding and Pre-sales as Validation and Cash Strategies',
-        'SAFE and Convertible Notes: Modern Fundraising Instruments',
-        'Investor Due Diligence: What They Will Ask For and How to Prepare'
+        'Bootstrapping vs Capital de Risco (VC): Prós, Contras e Trade-offs',
+        'Calculando o Runway e Gerenciando o Burn Rate',
+        'Unit Economics Essenciais: CAC, LTV e Payback Period',
+        'Como Preparar um Pitch Deck Preciso e Honesto',
+        'A Matemática do Equity e Diluição em Rodadas de Captação',
+        'Bolsões de Liquidez e Gestão de Risco Pessoal do Founder',
+        'Financiamento Baseado em Receita (Revenue-Based Financing)',
+        'Grants e Editais para Startups: Dinheiro Sem Diluição',
+        'Aceleradoras: YC, Distrito e Outras — Vale a Pena Aplicar?',
+        'Modelagem Financeira Básica: P&L, Fluxo de Caixa e Projeções',
+        'Impostos para Founders: PJ Simples Nacional vs Lucro Presumido',
+        'Separando Finanças Pessoais e Empresariais (e Por Que é Crítico)',
+        'Renegociação de Contratos com Fornecedores em Momentos de Crise',
+        'Precificando para Escalar: Quando Aumentar o Preço e Como Fazer',
+        'Crowdfunding e Pré-venda como Estratégia de Validação e Caixa',
+        'SAFE e Notas Conversíveis: Instrumentos de Captação Moderna',
+        'Due Diligence do Investidor: O Que Ele Vai Pedir e Como Preparar'
       ]
     },
     {
@@ -430,43 +462,43 @@ Mandatory approach:
         {
           nome: 'Phase 1: Physical Foundations and Deep Focus',
           topicos: [
-            'Timeboxing and Deep Work in Practice',
-            'The Art of Merciless Prioritization: What Can Only You Do?',
-            'Context Switching: The Silent Enemy of Productivity',
-            'Sleep, Exercise, and Cognition: The Science Behind High Performance',
-            'Fast Decision-Making with Incomplete Data (Good Enough)'
+            'Timeboxing e Trabalho Profundo (Deep Work) na Prática',
+            'A Arte da Priorização Impiedosa: O que Só Você Pode Fazer?',
+            'Context Switching: O Inimigo Silencioso da Produtividade',
+            'Sono, Exercício e Cognição: A Ciência por Trás da Alta Performance',
+            'Tomada de Decisão Rápida com Dados Incompletos (Good Enough)'
           ]
         },
         {
           nome: 'Phase 2: Mental Health and Solo Survival',
           topicos: [
-            'Burnout Prevention: Non-Negotiable Routines and Healthy Boundaries',
-            'Dealing with Isolation and the Loneliness of the Solo Founder',
-            'Dopamine Detox and Sustainable Focus in a World of Notifications',
-            'Vanity Metrics vs Actionable Metrics: Where to Focus Energy'
+            'Prevenção de Burnout: Rotinas Não-Negociáveis e Limites Saudáveis',
+            'Lidando com o Isolamento e a Solidão do Solo Founder',
+            'Dopamine Detox e Foco Sustentável em Mundo de Notificações',
+            'Métricas de Vaidade vs Métricas de Ação: Onde Focar a Energia'
           ]
         },
         {
           nome: 'Phase 3: The Digital Brain (Personal Systems)',
           topicos: [
-            'The Founder\'s Note-Taking System: Obsidian, Notion, and Second Brain',
-            'Email Management and Asynchronous Communication to Avoid Slavery',
-            'Strategic Journaling for Founders: Mental Clarity and Direction'
+            'O Sistema de Notas do Founder: Obsidian, Notion e Second Brain',
+            'Gestão de E-mail e Comunicação Assíncrona para Não Ser Escravo',
+            'Journaling Estratégico para Founders: Clareza Mental e Direção'
           ]
         },
         {
-          nome: 'Phase 4: Rituais, Goals, and Tracking',
+          nome: 'Phase 4: Rituals, Goals, and Tracking',
           topicos: [
-            'The Founder\'s Ideal Week: How to Structure Time Blocks by Energy',
-            'Personal OKRs: How to Set and Track Quarterly Goals',
-            'Weekly and Monthly Review Process: High-Performance Rituals'
+            'Semana Ideal do Founder: Como Estruturar Blocos de Tempo por Energia',
+            'OKRs Pessoais: Como Definir e Acompanhar as Metas Trimestrais',
+            'Processo de Review Semanal e Mensal: Rituais de Alta Performance'
           ]
         },
         {
           nome: 'Phase 5: Extreme Delegation and Leverage with AI',
           topicos: [
-            'Low-Cost Delegation: Virtual Assistants, Freelancers, and AI',
-            'Outsourcing Tasks with High Cognitive Cost but Low Complexity to AI'
+            'Delegação de Baixo Custo: Assistentes Virtuais, Freelancers e IA',
+            'Terceirização de Tarefas de Alto Custo Cognitivo Baixo com IA'
           ]
         }
       ]
@@ -483,21 +515,21 @@ Mandatory approach:
 - LGPD/GDPR in practice for SaaS.
 - Terms of Use and Privacy Policies that protect the founder.`,
       ementa: [
-        'LGPD Basics for Developers and Founders',
-        'Waterproof Terms of Use and Privacy Policy',
-        'Trademark Registration and Intellectual Property: How and When to Do It',
-        'Contracts with Freelancers: Ensuring Rights Over the Work',
-        'Creating a Legal Entity: CNPJ, LLC, LDA, and Global Options',
-        'Receiving International Payments and Taxation',
-        'Basic Asset Protection for Founders',
-        'GDPR for Brazilian Founders with European Customers',
-        'Non-Disclosure Agreement (NDA): When to Require and How to Draft It',
-        'Cookie Management and Consent: Plugin vs Custom Solution',
-        'Intellectual Property in Employment and Freelance Contracts',
-        'Refund Policy and Chargeback: Prevention and Dispute Management',
-        'Open Source: Licenses, Risks, and How to Use Without Harm',
-        'Limited Liability and When the Corporate Veil Does Not Protect',
-        'Arbitration vs Litigation: Resolving Disputes Without Long Lawsuits'
+        'O Básico da LGPD para Desenvolvedores e Founders',
+        'Termos de Uso e Política de Privacidade Impermeáveis',
+        'Registro de Marcas e Propriedade Intelectual: Como e Quando Fazer',
+        'Contratos com Freelancers: Garantindo os Direitos sobre o Trabalho',
+        'Criação de Entidade Jurídica: CNPJ, LLC, LDA e Opções Globais',
+        'Recebimento de Pagamentos Internacionais e Tributação',
+        'Blindagem Patrimonial Básica para Founders',
+        'GDPR para Founders Brasileiros com Clientes Europeus',
+        'Acordo de Confidencialidade (NDA): Quando Exigir e Como Redigir',
+        'Gestão de Cookies e Consentimento: Plugin vs Solução Customizada',
+        'Propriedade Intelectual em Contratos de Trabalho e Freelance',
+        'Política de Reembolso e Chargeback: Prevenção e Gestão de Disputas',
+        'Open Source: Licenças, Riscos e Como Usar Sem Se Prejudicar',
+        'Responsabilidade Limitada e Quando o Véu Societário Não Protege',
+        'Arbitragem vs Judicial: Resolvendo Disputas Sem Processo Longo'
       ]
     },
     {
@@ -513,21 +545,21 @@ Mandatory approach:
 - Long-term thinking vs immediate gratification.
 - Learning from failure without destroying self-esteem.`,
       ementa: [
-        'Imposter Syndrome: Why Every Founder Feels It and How to Manage It',
-        'Growth Mindset in Daily Practice',
-        'Making Decisions with Cognitive Biases: How to Recognize and Mitigate',
-        'The Founder\'s Emotional Cycle: Euphoria, Valley of Death, and Recovery',
-        'Applied Stoicism to Entrepreneurship: Marcus Aurelius as a Mentor',
-        'Probabilistic Thinking: How Successful Founders Assess Risk',
-        'Identity and the Danger of Being Your Business (Identity Enmeshment)',
-        'How to Deal with Public Failure and Learn Without Shame',
-        'Calibrated Ambition: How to Dream Big and Act in the Real World',
-        'Comparison and FOMO: How to Not Destroy Yourself Watching Others\' Success',
-        'Perseverance vs Stubbornness: How to Know the Difference in Real-Time',
-        'Founder Communities: The Importance of Not Being Alone',
-        'Separating Work from Identity: Hobbies, Family, and Mental Health',
-        'Therapy and Coaching for Founders: Investment, Not Weakness',
-        'The Role of Ego in Entrepreneurship: Fuel or Saboteur?'
+        'Síndrome do Impostor: Por Que Todo Founder Sente e Como Gerenciar',
+        'Mentalidade de Crescimento (Growth Mindset) na Prática Diária',
+        'Tomando Decisões com Vieses Cognitivos: Como Reconhecer e Mitigar',
+        'O Ciclo Emocional do Founder: Euforia, Vale da Morte e Recuperação',
+        'Estoicismo Aplicado ao Empreendedorismo: Marcus Aurelius como Mentor',
+        'Pensamento Probabilístico: Como Founders de Sucesso Avaliam Risco',
+        'Identidade e o Perigo de Ser o Seu Negócio (Identity Enmeshment)',
+        'Como Lidar com Fracasso Público e Aprender Sem Vergonha',
+        'Ambição Calibrada: Como Sonhar Grande e Agir no Plano Real',
+        'Comparação e FOMO: Como Não Se Destruir Vendo o Sucesso Alheio',
+        'Perseverança vs Teimosia: Como Saber a Diferença em Tempo Real',
+        'Comunidades de Founders: A Importância de Não Estar Sozinho',
+        'Separando o Trabalho da Identidade: Hobbies, Família e Saúde Mental',
+        'Terapia e Coaching para Founders: Investimento, Não Fraqueza',
+        'O Papel do Ego no Empreendedorismo: Combustível ou Sabotador?'
       ]
     },
     {
@@ -541,36 +573,36 @@ Mandatory approach:
       descricao: 'Hierarchy, typography, gestalt, and user-centered design — from perceptual foundations to AI-native design.',
       contexto: 'Focus: structural design principles — hierarchy, gestalt, visual perception. Mandatory approach: explain the perceptual or cognitive principle behind each design decision. Only then: ask the student to critique a real design.',
       ementa: [
-        'Gestalt Laws Applied to Interfaces',
-        'Color Theory and Contrast',
-        'Typography and Typographical Scale',
-        'Spacing and Visual Hierarchy',
-        'UI vs UX: The User Experience',
-        'Nielsen\'s Heuristics',
-        'Design Systems: Tokens, Components, and Documentation',
-        'Prototyping: From Sketch to Interactive Figma',
-        'Usability Testing: Methods and Analysis',
-        'Responsive and Mobile-First Design',
-        'Accessibility (WCAG): Design for Everyone',
-        'Micro-interactions and Feedback Animations',
-        'Dark Patterns: What Never to Do',
-        'Onboarding Design: Reducing Friction',
-        'Motion Design: Movement with Purpose',
-        'Design for AI: Conversational and Probabilistic Interfaces',
-        'Machine Experience (MX): Optimizing for Humans and Agents',
-        'Explainable UX: Transparency in AI Decisions',
-        'Adaptive UI: Interfaces That Adjust to the User\'s Context',
-        'Multimodal Design: Voice, Gesture, and Touch Integrated',
-        'Calm Design: Reducing Cognitive Overload',
-        'Emotional Design: Microcopies That Build Connection',
-        'UX Writing: Writing for Interfaces',
-        'Information Architecture: Organizing Complex Content',
-        'Design Sprint: Prototyping in 5 Days (Google Ventures)',
-        'Atomic Design: Atoms, Molecules, and Organisms',
-        'Cognitive Psychology Applied to UX: Hick\'s, Fitts\'s, and Miller\'s Laws',
-        'Dashboard Design and Data Visualization',
-        'Form Design: Reducing Abandonment',
-        'Digital Sustainability: Eco-Conscious Design'
+        'Leis da Gestalt Aplicadas a Interfaces',
+        'Teoria das Cores e Contraste',
+        'Tipografia e Escala Tipográfica',
+        'Espaçamento e Hierarquia Visual',
+        'UI vs UX: A Experiência do Usuário',
+        'Heurísticas de Nielsen',
+        'Sistemas de Design: Tokens, Componentes e Documentação',
+        'Prototipagem: Do Sketch ao Figma Interativo',
+        'Testes de Usabilidade: Métodos e Análise',
+        'Design Responsivo e Mobile-First',
+        'Acessibilidade (WCAG): Design para Todos',
+        'Microinterações e Animações de Feedback',
+        'Dark Patterns: O que Nunca Fazer',
+        'Design de Onboarding: Reduzindo Fricção',
+        'Motion Design: Movimento com Propósito',
+        'Design para IA: Interfaces Conversacionais e Probabilísticas',
+        'Machine Experience (MX): Otimizando para Humanos e Agentes',
+        'Explainable UX: Transparência em Decisões de IA',
+        'Adaptive UI: Interfaces que se Ajustam ao Contexto do Usuário',
+        'Design Multimodal: Voz, Gesto e Toque Integrados',
+        'Calm Design: Reduzindo Sobrecarga Cognitiva',
+        'Design Emocional: Microcopies que Geram Conexão',
+        'UX Writing: Escrevendo para Interfaces',
+        'Information Architecture: Organizando Conteúdo Complexo',
+        'Design Sprint: Prototando em 5 Dias (Google Ventures)',
+        'Atomic Design: Átomos, Moléculas e Organismos',
+        'Psicologia Cognitiva Aplicada a UX: Hick, Fitts e Miller',
+        'Design de Dashboards e Visualização de Dados',
+        'Design de Formulários: Reduzindo Abandono',
+        'Sustentabilidade Digital: Design Eco-Consciente'
       ]
     },
     {
@@ -590,39 +622,39 @@ Mandatory approach:
         {
           nome: 'The Mechanism of the Purchase Decision',
           topicos: [
-            'Marketing vs Advertising vs Publicity: Distinctions That Matter for Founders',
-            'Jobs To Be Done (JTBD): The Customer Buys Progress, Not the Product',
-            'Consumer Psychology: The Neural Triggers That Precede Purchase',
-            'Kahneman\'s System 1 and System 2: How Decisions Happen Before Reason',
-            'Value Perception vs Price: Why Cheap Looks Suspicious',
-            'The Paradox of Choice: Fewer Options Sell More (Barry Schwartz)',
-            'Behavioral Economics Applied to Pricing: Anchoring, Decoy, and Framing',
-            'The Psychology of Social Proof and Authority (Cialdini)'
+            'Marketing vs Publicidade vs Propaganda: Distinções que Importam para Founders',
+            'Jobs To Be Done (JTBD): O Cliente Compra Progresso, Não Produto',
+            'Psicologia do Consumidor: Os Gatilhos Neurais que Antecedem a Compra',
+            'Sistema 1 e Sistema 2 de Kahneman: Como a Decisão Acontece Antes da Razão',
+            'Percepção de Valor vs Preço: Por que o Barato Parece Suspeito',
+            'O Paradoxo da Escolha: Menos Opções Vendem Mais (Barry Schwartz)',
+            'Economia Comportamental Aplicada a Preços: Ancoragem, Decoy e Framing',
+            'A Psicologia da Prova Social e da Autoridade (Cialdini)'
           ]
         },
         {
           nome: 'Positioning and Brand Building',
           topicos: [
-            'Market Positioning: Differentiation and Occupying a Mental Category',
-            'Branding: Positioning, Identity, and Perception Management',
-            'Blue Ocean Strategy: Creating Markets Without Competition (Kim & Mauborgne)',
-            'The 4 Ps of Marketing: The Original Framework, Its Limitations, and What Comes After',
-            'Structural Storytelling: Why Stories Sell More Than Logical Arguments',
-            'The Halo Effect: How the First Impression Contaminates All the Rest',
-            'Neuromarketing: The Neuroscience Behind Consumption (What the Data Actually Says)',
-            'Image Crisis Management for Founders: What to Do When Everything Goes Wrong'
+            'Posicionamento de Mercado: Diferenciação e Ocupação de Categoria Mental',
+            'Branding: Posicionamento, Identidade e Gestão de Percepção',
+            'Estratégia de Oceano Azul: Criando Mercados Sem Competição (Kim & Mauborgne)',
+            'Os 4 Ps do Marketing: O Framework Original, Suas Limitações e o que Vem Depois',
+            'Storytelling Estrutural: Por que Histórias Vendem Mais que Argumentos Lógicos',
+            'O Efeito Halo: Como a Primeira Impressão Contamina Todo o Resto',
+            'Neuromarketing: A Neurociência Por Trás do Consumo (o que o dado diz de verdade)',
+            'Gestão de Crise de Imagem para Founders: O Que Fazer Quando Tudo Dá Errado'
           ]
         },
         {
           nome: 'Distribution and Growth for Founders',
           topicos: [
-            'The Anatomy of an Acquisition Funnel for Solo Founders',
-            'Product-Led Growth (PLG): Letting the Product Be the Main Channel',
-            'North Star Metric: The Single Metric That Sums Up the Value Delivered',
-            'Organic Channels: SEO, Content, and Audience as Accumulable Assets',
-            'Building in Public: Transparency as a Distribution Strategy',
-            'Cold Email with AI Personalization: What Works in 2026',
-            'Consumer Behavior in the Digital Era: Fragmented Attention and Short Cycles'
+            'A Anatomia de um Funil de Aquisição para Founders Solo',
+            'Product-Led Growth (PLG): Deixando o Produto Ser o Principal Canal',
+            'North Star Metric: A Única Métrica que Resume o Valor Entregue',
+            'Canais Orgânicos: SEO, Conteúdo e Audiência como Ativos Acumuláveis',
+            'Building in Public: Transparência como Estratégia de Distribuição',
+            'Cold Email com Personalização por IA: O Que Funciona em 2026',
+            'Comportamento do Consumidor na Era Digital: Atenção Fragmentada e Ciclos Curtos'
           ]
         }
       ]
@@ -644,38 +676,38 @@ Mandatory approach:
         {
           nome: 'The First Sale: Validating That Someone Pays',
           topicos: [
-            'The Mom Test (Rob Fitzpatrick): How to Ask Questions That Do Not Lie to You',
-            'The Difference Between Interest and Purchase Intent: How to Distinguish in Real-Time',
-            'Ideal Customer Profile (ICP): Who They Are and Who They Definitely Are Not',
-            'How to Make the First Sale as a Founder (Without a Team, Without a Script)',
-            'Product Demos That Convert: Structure and What Never to Do',
-            'Conversion Copywriting for Landing Pages and Founder Emails',
-            'Handling Rejections: Reframing as Data, Not as Defeat'
+            'The Mom Test (Rob Fitzpatrick): Como Fazer Perguntas que Não Mentem para Você',
+            'A Diferença Entre Interesse e Intenção de Compra: Como Distinguir em Tempo Real',
+            'Perfil de Cliente Ideal (ICP): Quem É e Quem Definitivamente Não É',
+            'Como Fazer a Primeira Venda Sendo Founder (Sem Equipe, Sem Script)',
+            'Demonstrações de Produto que Convertem: Estrutura e o Que Nunca Fazer',
+            'Copywriting de Conversão para Landing Pages e Emails de Founder',
+            'Lidando com Rejeições: Reformulando como Dado, Não como Derrota'
           ]
         },
         {
           nome: 'Sales Process and Methodology',
           topicos: [
-            'SPIN Selling: Situation, Problem, Implication, and Need-payoff',
-            'Lead Qualification: BANT and MEDDIC in Solo Founder Practice',
-            'The Discovery Process: Asking the Right Questions Before Presenting Anything',
-            'Overcoming Objections: The 8 Most Common and How to Break Each One',
-            'Contract Negotiation: How to Avoid Discounts and Still Close',
-            'Value Proposition: How to Present ROI Without Looking Like a Flea Market Salesman',
-            'Sales Pipeline with a Solo CRM: Notion, Linear, and Pipedrive for 1-Person Teams'
+            'SPIN Selling: Situação, Problema, Implicação e Necessidade de Solução',
+            'Qualificação de Leads: BANT e MEDDIC na Prática de Solo Founders',
+            'O Processo de Discovery: Fazendo as Perguntas Certas Antes de Apresentar Qualquer Coisa',
+            'Contorno de Objeções: As 8 Mais Comuns e Como Quebrar Cada Uma',
+            'Negociação de Contratos: Como Não Dar Desconto e Fechar Igualmente',
+            'Proposta de Valor: Como Apresentar o ROI Sem Soar como Vendedor de Feirão',
+            'Pipeline de Vendas com CRM Solo: Notion, Linear ou Pipedrive para Times de 1'
           ]
         },
         {
           nome: 'Scale and Recurring Revenue',
           topicos: [
-            'PLG vs Sales-Led: When to Let the Product Sell and When You Need to Sell',
-            'Value-Based Pricing: Charging for the Value Generated, Not the Cost',
-            'Annual Plans: How to Convence the Customer to Pay Yearly',
-            'Upselling and Cross-selling: Revenue Without Additional Effort',
-            'MRR, ARR, and Churn: Understanding the Real Health of Revenue',
-            'Net Revenue Retention Above 100%: The Metric That Proves the Product Works',
-            'Churn Recovery: How to Reactivate Customers Who Canceled',
-            'Win/Loss Analysis: Why You Lost and What to Do with That Data'
+            'PLG vs Sales-Led: Quando Deixar o Produto Vender e Quando Você Precisa Vender',
+            'Value-Based Pricing: Cobrar pelo Valor Gerado, Não pelo Custo',
+            'Annual Plans: Como Convencer o Cliente a Pagar o Ano Todo',
+            'Upselling e Cross-selling: Receita sem Esforço Adicional',
+            'MRR, ARR e Churn: Entendendo a Saúde Real da Receita',
+            'Net Revenue Retention Acima de 100%: A Métrica que Prova que o Produto Funciona',
+            'Recuperação de Churn: Como Reativar Clientes que Cancelaram',
+            'Análise Win/Loss: Por Que Você Perdeu e O Que Fazer Com Esse Dado'
           ]
         }
       ]
@@ -699,44 +731,44 @@ Mandatory approach:
         {
           nome: 'Why Innovation Is Different From Improvement',
           topicos: [
-            'The Fundamental Distinction: Incremental Innovation vs Category Innovation (Zero to One)',
-            'Why Competition Is for Losers: Peter Thiel\'s Central Argument',
-            'First-Principles Thinking: How Elon Musk Dismantles Accepted Truths',
-            'The Paradigm of Disruptive Innovation: Clayton Christensen and Jobs-to-be-Done Theory',
-            'Secrets and Counterintuitive Truths: What Do You Know That Nobody Else Does?',
-            'The Problem with Incremental Growth: McKinsey\'s Horizon 1, 2, and 3',
-            'Confirmation Bias in Strategy: Why Market Leaders Ignore Obvious Threats',
-            'The Difference Between Being a Pioneer and Being a Category Founder'
+            'A Distinção Fundamental: Inovação Incremental vs Inovação de Categoria (Zero to One)',
+            'Por que Competição é para Perdedores: O Argumento Central de Peter Thiel',
+            'Pensamento de Primeiros Princípios: Como Elon Musk Desmonta Verdades Aceitas',
+            'O Paradigma da Inovação Disruptiva: Clayton Christensen e a Teoria dos Jobs-to-be-Done',
+            'Segredos e Verdades Contraintuitivas: O Que Você Sabe que Ninguém Mais Sabe?',
+            'O Problema do Crescimento Incremental: Horizonte 1, 2 e 3 de McKinsey',
+            'Viés de Confirmação na Estratégia: Por que Líderes de Mercado Ignoram Ameaças Óbvias',
+            'A Diferença entre Ser Pioneiro e Ser Fundador de Categoria'
           ]
         },
         {
           nome: 'Building Unfair Advantages',
           topicos: [
-            'Network Effects and Metcalfe\'s Law: Value Grows Exponentially with Users',
-            'Types of Moats: Competitive Advantages That Money Cannot Easily Buy',
-            'Zero Marginal Cost: Why Software, Media, and AI Are Unique Businesses in History',
-            'Leveraging Code and Media: Scaling Without Marginal Replication Cost (Naval)',
-            'Amazon\'s Growth Flywheel: The Logic of Systems That Feed Themselves',
-            'Permissionless Innovation: How Decentralized Technologies Redistribute Power',
-            'The Engineering of Timing: Why "Too Early" Kills Just as Much as "Too Late"',
-            'De Facto Monopolies: How Google, Meta, and Stripe Build Unreachable Positions',
-            'Wealth vs Status: The Positive-Sum vs Zero-Sum Game (Naval Ravikant)',
-            'The Success Paradox: How What Got You Here Can Stop You From Moving Forward'
+            'Efeitos de Rede (Network Effects) e a Lei de Metcalfe: Valor Cresce Exponencialmente com Usuários',
+            'Tipos de Moats: Vantagens Competitivas que o Dinheiro Não Compra Facilmente',
+            'Custo Marginal Zero: Por que Software, Mídia e IA são Negócios Únicos na História',
+            'Alavancagem de Código e Mídia: Escalando sem Custo Marginal de Replicação (Naval)',
+            'O Volante de Crescimento da Amazon (Flywheel): A Lógica dos Sistemas que se Alimentam',
+            'Inovação Permissionless: Como Tecnologias Descentralizadas Redistribuem o Poder',
+            'A Engenharia do Timing: Por que "Muito Cedo" Mata Tanto quanto "Muito Tarde"',
+            'Monopólios de Fato: Como Google, Meta e Stripe Constroem Posições Inalcançáveis',
+            'Riqueza vs Status: O Jogo de Soma Positiva vs Soma Zero (Naval Ravikant)',
+            'O Paradoxo do Sucesso: Como o Que Te Trouxe Aqui Pode Te Impedir de Avançar'
           ]
         },
         {
           nome: 'Frontier Thinking and the AI Era',
           topicos: [
-            'Asymptotic Thinking: Seeing the Theoretical Limit and Working Backward',
-            'Second-Order Thinking: Consequences of the Consequences of Your Decisions',
-            'Business Antifragility: Building Organizations That Gain from Chaos (Taleb)',
-            'AI as an Infinite Scale Lever: The New Paradigm of Under-Resourced Founders',
-            'Defensibility in an AI-First World: What Is Not Copyable When AI Commoditizes Everything',
-            'Category Design: The Art of Creating a Market Instead of Competing in One',
-            'The Logic of Technological Monopoly: When Dominating a Niche Is the Right Strategy',
-            'Geopolitics and Macro Theses: How Global Structural Changes Create Windows of Opportunity',
-            'Building the 1-Person Company with the Impact of 100: The AI-Augmented Founder',
-            'Synthesis: Mapping Your Innovation Thesis — What Are You Betting On and Why'
+            'Pensamento Assintótico: Enxergando o Limite Teórico e Trabalhando de Trás Pra Frente',
+            'Second-Order Thinking: Consequências das Consequências das Suas Decisões',
+            'Antifragilidade Empresarial: Construindo Organizações que Ganham com o Caos (Taleb)',
+            'IA como Alavanca de Escala Infinita: O Novo Paradigma de Fundadores com Poucos Recursos',
+            'Defensibilidade no Mundo AI-First: O Que Não é Copiável Quando IA Comoditiza Tudo',
+            'Categoria Design: A Arte de Criar um Mercado em vez de Competir em Um',
+            'A Lógica do Monopólio Tecnológico: Quando Dominar um Nicho é a Estratégia Correta',
+            'Geopolítica e Teses Macro: Como Mudanças Estruturais Globais Criam Janelas de Oportunidade',
+            'Construindo a Empresa de 1 Pessoa com Impacto de 100: O Founder Aumentado por IA',
+            'Síntese: Mapeando Sua Tese de Inovação — O Que Você Está Apostando e Por Quê'
           ]
         }
       ]
@@ -755,20 +787,20 @@ Mandatory approach:
 - Base it on the practices of high-performance companies (Netflix, Stripe, SpaceX).
 - No generic people management theory. Focus on difficult decisions and real trade-offs.`,
       ementa: [
-        'The Real Cost of a Bad Hire (Exponential Impact)',
-        'A-Players vs B-Players: The Difference Is Not Linear, It Is Exponential',
-        'Steve Jobs\' Principle: A-Players Hire A-Players, B-Players Hire C-Players',
-        'Structured Interviews vs "Feeling" Interviews (What Science Says)',
-        'Work Samples and Case Studies: Testing Real Performance, Not Rhetoric',
-        'Reference Checks That Work: The Questions Nobody Asks',
-        'Hire Slow, Fire Fast: The Cost of Hesitating at Both Ends',
-        'The "Bar Raiser" Concept (Amazon): Never Lowering the Standard',
-        'Culture Fit vs Culture Add: The Danger of Homogeneity',
-        'Talent Retention: Autonomy, Mastery, Purpose (Daniel Pink)',
-        'Compensation Philosophy: Paying Above Market vs Equity',
-        'The Termination Conversation: How to Do It with Respect and Dignity',
-        'Continuous Performance Management vs Useless Annual Review',
-        'The Talent Pipeline: Recruiting Before You Need To'
+        'O Custo Real de Uma Contratação Errada (Impacto Exponencial)',
+        'A-Players vs B-Players: A Diferença Não É Linear, É Exponencial',
+        'O Princípio de Steve Jobs: A-Players Contratam A-Players, B-Players Contratam C-Players',
+        'Entrevistas Estruturadas vs Entrevistas de "Feeling" (O Que a Ciência Diz)',
+        'Work Samples e Case Studies: Testar Performance Real, Não Retórica',
+        'Reference Checks Que Funcionam: As Perguntas Que Ninguém Faz',
+        'Hire Slow, Fire Fast: O Custo de Hesitar nas Duas Pontas',
+        'O Conceito de "Bar Raiser" (Amazon): Nunca Baixar o Padrão',
+        'Culture Fit vs Culture Add: O Perigo da Homogeneidade',
+        'Retenção de Talentos: Autonomia, Maestria, Propósito (Daniel Pink)',
+        'Compensation Philosophy: Pagar Acima do Mercado vs Equity',
+        'A Conversa de Demissão: Como Fazer Com Respeito e Dignidade',
+        'Gestão de Performance Contínua vs Avaliação Anual Inútil',
+        'O Pipeline de Talentos: Recrutar Antes de Precisar'
       ]
     },
     {
@@ -785,21 +817,21 @@ Mandatory approach:
 - Each concept must have a real application scenario ("you have a dev who delivers late, what do you do?").
 - No empty motivational theory. Focus on decisions, trade-offs, and consequences.`,
       ementa: [
-        'Effective Delegation: What to Delegate, How to Delegate, When Not to Delegate',
-        'The Micro-management Problem: Signs That You Are Doing It',
-        'Accountability vs Blame: Accountability Without a Culture of Fear',
-        'One-on-Ones That Work: Ideal Structure and Frequency',
-        'Radical Candor (Kim Scott): Caring Personally + Challenging Directly',
-        'The Skill vs Will Matrix: 4 Types of Superordinates, 4 Approaches',
-        'Situational Leadership (Hersey-Blanchard): Adapting Style to Context',
-        'Group Decision Making: Consensus vs Command vs Consultative',
-        'The Concept of "Disagree and Commit" (Bezos): Disagreeing and Executing',
-        'Conflict Management: Confronting Tension Before It Explodes',
-        'OKRs in Practice: What Works and What Fails (Real Lessons)',
-        'Managing Up: How to Manage Your Boss',
-        'Team Rituals: Stand-ups, Retrospectives, and Town Halls That Are Not a Waste of Time',
-        'Remote Leadership: Trust, Asynchrony, and Distributed Culture',
-        'Leader Burnout: Recognizing and Preventing Before Breaking'
+        'Delegação Efetiva: O Que Delegar, Como Delegar, Quando Não Delegar',
+        'O Problema do Microgerenciamento: Sinais de Que Você Está Fazendo',
+        'Accountability vs Blame: Responsabilização Sem Cultura de Medo',
+        'One-on-Ones Que Funcionam: Estrutura e Frequência Ideal',
+        'Feedback Radical (Kim Scott): Caring Personally + Challenging Directly',
+        'A Matriz de Skill vs Will: 4 Tipos de Liderados, 4 Abordagens',
+        'Liderança Situacional (Hersey-Blanchard): Adaptar o Estilo ao Contexto',
+        'Tomada de Decisão em Grupo: Consenso vs Comando vs Consultivo',
+        'O Conceito de "Disagree and Commit" (Bezos): Discordar e Executar',
+        'Gestão de Conflitos: Confrontar a Tensão Antes Que Ela Exploda',
+        'OKRs na Prática: O Que Dá Certo e O Que Dá Errado (Lições Reais)',
+        'Comunicação Para Cima (Managing Up): Como Gerenciar Seu Chefe',
+        'Rituais de Time: Stand-ups, Retrospectivas e Town Halls Que Não São Perda de Tempo',
+        'Liderança Remota: Confiança, Assincronicidade e Cultura Distribuída',
+        'Burnout do Líder: Reconhecer e Prevenir Antes de Quebrar'
       ]
     },
     {
@@ -816,21 +848,21 @@ Mandatory approach:
 - Real use cases (Netflix Culture Deck, Valve Handbook, Spotify Model).
 - Show the trade-offs of each cultural model. There is no perfect culture.`,
       ementa: [
-        'What Culture Really Is: Declared Values vs Practiced Values',
-        'The Netflix Culture Deck: Freedom and Responsibility (With Trade-offs)',
-        'High-Performance Culture vs Toxic High-Performance Culture',
-        'Amazon\'s Leadership Principles: The 16 Commandments (And What Works)',
-        'Psychological Safety (Amy Edmondson): The #1 Factor of High-Performance Teams',
-        'The Paradox of Transparency: Radical Transparency (Bridgewater) and Its Limits',
-        'Flat vs Hierarchical Organizations: When Each Works',
-        'Decision Speed vs Decision Quality: The Central Trade-off',
-        'Onboarding as an Initiation Ritual: The First 90 Days',
-        'Documentation vs Oral Tradition: How to Scale Tacit Knowledge',
-        'Signs of Cultural Decay: Bureaucracy, Politics, and Performance Theater',
-        'Conway\'s Law: Your Software Architecture Mirrors Your Organization',
-        'Scaling Culture: What Changes When You Go from 10 to 100 People',
-        'Corporate Rites of Passage: Promotion, Dismissal, and Celebration',
-        'Cultural Anti-patterns: What Never to Do (With Real Examples)'
+        'O Que É Cultura Realmente: Valores Declarados vs Valores Praticados',
+        'O Netflix Culture Deck: Liberdade e Responsabilidade (Com Trade-offs)',
+        'Cultura de Alta Performance vs Cultura Tóxica de Alta Performance',
+        'Princípios de Liderança da Amazon: Os 16 Mandamentos (E o Que Funciona)',
+        'Segurança Psicológica (Amy Edmondson): O Fator #1 de Times de Alta Performance',
+        'O Paradoxo da Transparência: Radical Transparency (Bridgewater) e Seus Limites',
+        'Organizações Planas vs Hierárquicas: Quando Cada Uma Funciona',
+        'Velocidade de Decisão vs Qualidade de Decisão: O Trade-off Central',
+        'Onboarding Como Ritual de Iniciação: Os Primeiros 90 Dias',
+        'Documentação vs Tradição Oral: Como Escalar Conhecimento Tácito',
+        'Sinais de Decadência Cultural: Burocracia, Política e Teatro de Performance',
+        'A Lei de Conway: Sua Arquitetura de Software Espelha Sua Organização',
+        'Scaling Culture: O Que Muda Quando Você Vai de 10 para 100 Pessoas',
+        'Ritos de Passagem Corporativos: Promoção, Demissão e Celebração',
+        'Antipadrões Culturais: O Que Nunca Fazer (Com Exemplos Reais)'
       ]
     }
   ]
