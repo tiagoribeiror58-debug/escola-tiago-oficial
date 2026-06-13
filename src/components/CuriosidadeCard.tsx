@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Lightbulb, RefreshCw, Bookmark, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -13,7 +13,8 @@ interface CuriosidadeData {
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { useTodosEstadosFlat } from '@/hooks/useSessoes';
+import { MATERIAS } from '@/lib/materias';
+import { MateriaConfig } from '@/types';
 import { ChevronsUpDown, Check } from 'lucide-react';
 
 const STORAGE_KEY = '@escola-tiago:curiosidade-dia';
@@ -24,8 +25,20 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
   const [isSaving, setIsSaving] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedMateria, setSelectedMateria] = useState<string>('all');
-  const { estados } = useTodosEstadosFlat();
-  const availableMaterias = estados.map(e => e.config);
+  
+  const allMateriasFlat = useMemo(() => {
+    const flatten = (list: MateriaConfig[]): MateriaConfig[] => {
+      let result: MateriaConfig[] = [];
+      for (const m of list) {
+        result.push(m);
+        if (m.children) {
+          result.push(...flatten(m.children));
+        }
+      }
+      return result;
+    };
+    return flatten(MATERIAS);
+  }, []);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -49,7 +62,7 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
 
     setIsLoading(true);
     try {
-      const temaEspecifico = selectedMateria === 'all' ? undefined : availableMaterias.find(m => m.slug === selectedMateria)?.nome;
+      const temaEspecifico = selectedMateria === 'all' ? undefined : allMateriasFlat.find(m => m.slug === selectedMateria)?.nome;
       const { data, error } = await supabase.functions.invoke('curiosidade-dia', {
         body: { materiasAtuais, temaEspecifico }
       });
@@ -145,7 +158,7 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
                   <span className="truncate mr-2">
                     {selectedMateria === 'all' 
                       ? "Qualquer assunto" 
-                      : availableMaterias.find((m) => m.slug === selectedMateria)?.nome || "Selecionar..."}
+                      : allMateriasFlat.find((m) => m.slug === selectedMateria)?.nome || "Selecionar..."}
                   </span>
                   <ChevronsUpDown className="h-3 w-3 shrink-0 opacity-50" />
                 </button>
@@ -172,7 +185,7 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
                         />
                         Qualquer assunto
                       </CommandItem>
-                      {availableMaterias.map(m => (
+                      {allMateriasFlat.map(m => (
                         <CommandItem
                           key={m.slug}
                           value={m.nome}
