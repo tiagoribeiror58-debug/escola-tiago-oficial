@@ -2,19 +2,19 @@ import { MateriaConfig } from '@/types';
 
 export const produtoHub: MateriaConfig = {
   slug: 'produto-inovacao',
-  nome: 'Produto & Inovação Digital',
+  nome: 'Product & Digital Innovation',
   emoji: '📦',
   isCategory: true,
-  descricao: 'Código rodando e IA prevendo o futuro não servem de nada se não resolvem dores humanas reais. Aqui você une engenharia e pessoas.',
+  descricao: 'Code running and AI predicting the future are useless if they do not solve real human pain. Here you unite engineering and people.',
   children: [
     {
       slug: 'web3-cripto',
-      nome: 'Cripto & Web3',
+      nome: 'Crypto & Web3',
       emoji: '⛓️',
       parent: 'produto-inovacao',
-      whyStart: 'A fronteira da descentralização. Foco no mecanismo — não na especulação.',
-      descricao: 'Criptografia, Blockchain, DeFi e contratos inteligentes.',
-      contexto: `Foco: os fundamentos técnicos da descentralização. Evite o viés de investimento e especulação.`,
+      whyStart: 'The frontier of decentralization. Focus on the mechanism — not on speculation.',
+      descricao: 'Cryptography, Blockchain, DeFi, and smart contracts.',
+      contexto: `Focus: the technical fundamentals of decentralization. Avoid investment and speculation bias.`,
       ementa: [
         // === EXISTENTES ===
         'O Problema do Gasto Duplo e o Bitcoin',

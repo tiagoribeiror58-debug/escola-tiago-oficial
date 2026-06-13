@@ -2,31 +2,31 @@ import { MateriaConfig } from '@/types';
 
 export const fundamentosAcademicos: MateriaConfig = {
   slug: 'fundamentos',
-  nome: 'Ciências & Humanidades',
+  nome: 'Sciences & Humanities',
   emoji: '🏛️',
   isCategory: true,
-  descricao: 'As ciências exatas, naturais, humanas e as artes. A base do modelo de mundo.',
+  descricao: 'Exact, natural, human sciences and the arts. The basis of the world model.',
   children: [
     {
       slug: 'ciencias-exatas',
-      nome: 'Exatas & Naturais',
+      nome: 'Exact & Natural Sciences',
       emoji: '📐',
       isCategory: true,
       parent: 'fundamentos',
-      descricao: 'O estudo rigoroso dos números, do espaço e do mundo físico.',
+      descricao: 'The rigorous study of numbers, space, and the physical world.',
       children: [
         {
           slug: 'matematica',
-          nome: 'Matemática',
+          nome: 'Mathematics',
           emoji: '∑',
           parent: 'ciencias-exatas',
-          descricao: 'O estudo dos padrões, do raciocínio lógico-quantitativo e geometria.',
-          contexto: `Foco: raciocínio matemático real — padrões, estrutura, modelagem.
+          descricao: 'The study of patterns, logical-quantitative reasoning, and geometry.',
+          contexto: `Focus: real mathematical reasoning — patterns, structure, modeling.
 
-Abordagem obrigatória:
-- Explique o princípio matemático antes de apresentar o problema.
-- Para resolução de problemas: exija que o aluno justifique cada passo.
-- Nunca apresente fórmula sem explicar o que ela representa estruturalmente.`,
+Mandatory approach:
+- Explain the mathematical principle before presenting the problem.
+- For problem solving: require the student to justify each step.
+- Never present a formula without explaining what it represents structurally.`,
           ementa: [
             'A Lógica por trás das Frações e Proporções',
             'A Matemática do Comércio (Porcentagem)',
@@ -53,14 +53,14 @@ Abordagem obrigatória:
         },
         {
           slug: 'fisica',
-          nome: 'Física',
+          nome: 'Physics',
           emoji: 'λ',
           parent: 'ciencias-exatas',
-          descricao: 'Compreensão das leis que regem o universo, energia e matéria.',
-          contexto: `Foco: intuição física real — fenômenos, forças, conservação.
+          descricao: 'Understanding the laws that govern the universe, energy, and matter.',
+          contexto: `Focus: real physical intuition — phenomena, forces, conservation.
 
-Abordagem obrigatória:
-- Comece pelo fenômeno físico descrito em palavras. A fórmula é a última etapa.`,
+Mandatory approach:
+- Start with the physical phenomenon described in words. The formula is the last step.`,
           ementa: [
             'Cinemática: O Estudo do Movimento',
             'As 3 Leis de Newton',
@@ -76,7 +76,7 @@ Abordagem obrigatória:
             'Circuitos Elétricos (Lei de Ohm)',
             'Magnetismo e Indução Eletromagnética',
             'Física Moderna: Relatividade Especial',
-            'Física Quântica: O Princípio da Incerteza',
+            'Física Quântica: O Principio da Incerteza',
             'Física Nuclear e Radioatividade',
             'Astrofísica: Estrelas, Buracos Negros e Cosmologia',
             'Física de Partículas: O Modelo Padrão',
@@ -86,11 +86,11 @@ Abordagem obrigatória:
         },
         {
           slug: 'quimica',
-          nome: 'Química',
+          nome: 'Chemistry',
           emoji: '⚗',
           parent: 'ciencias-exatas',
-          descricao: 'O estudo das transformações moleculares e atômicas.',
-          contexto: `Foco: mecanismos químicos reais — estrutura atômica, ligações, reações.`,
+          descricao: 'The study of molecular and atomic transformations.',
+          contexto: `Focus: real chemical mechanisms — atomic structure, bonds, reactions.`,
           ementa: [
             'A Estrutura do Átomo',
             'A Tabela Periódica (Leitura de Propriedades)',
@@ -113,11 +113,11 @@ Abordagem obrigatória:
         },
         {
           slug: 'biologia',
-          nome: 'Biologia',
+          nome: 'Biology',
           emoji: '🧬',
           parent: 'ciencias-exatas',
-          descricao: 'O estudo da vida, da célula aos ecossistemas complexos.',
-          contexto: `Foco: mecanismos biológicos reais. Use a teoria da evolução como lente principal.`,
+          descricao: 'The study of life, from the cell to complex ecosystems.',
+          contexto: `Focus: real biological mechanisms. Use the theory of evolution as the main lens.`,
           ementa: [
             'A Célula: A Fábrica da Vida',
             'Genética e DNA',
@@ -142,13 +142,13 @@ Abordagem obrigatória:
         },
         {
           slug: 'estatistica',
-          nome: 'Estatística & Dados',
+          nome: 'Statistics & Data',
           emoji: '📊',
           parent: 'ciencias-exatas',
           layout: 'split',
           widget: 'EconGraph',
-          descricao: 'A linguagem da incerteza. Interpretar dados, viés e pensamento probabilístico.',
-          contexto: `Foco: raciocínio probabilístico. O aluno deve entender a intuição por trás da estatística.`,
+          descricao: 'The language of uncertainty. Interpreting data, bias, and probabilistic thinking.',
+          contexto: `Focus: probabilistic reasoning. The student must understand the intuition behind statistics.`,
           ementa: [
             'Média, Mediana e Moda',
             'Distribuição Normal e Desvio',
@@ -174,19 +174,19 @@ Abordagem obrigatória:
     },
     {
       slug: 'humanidades',
-      nome: 'Humanidades & Letras',
+      nome: 'Humanities & Letters',
       emoji: '📜',
       isCategory: true,
       parent: 'fundamentos',
-      descricao: 'Compreensão histórica, social e filosófica da experiência humana.',
+      descricao: 'Historical, social, and philosophical understanding of the human experience.',
       children: [
         {
           slug: 'historia',
-          nome: 'História',
+          nome: 'History',
           emoji: '⏳',
           parent: 'humanidades',
-          descricao: 'Compreensão causal de eventos humanos e ciclos de civilizações.',
-          contexto: `Foco: causalidade histórica real. Nunca comece por datas ou nomes isolados.`,
+          descricao: 'Causal understanding of human events and cycles of civilizations.',
+          contexto: `Focus: real historical causality. Never start with dates or isolated names.`,
           ementa: [
             'Revolução Agrícola e Cidades',
             'Império Romano: Ascensão e Queda',
@@ -212,11 +212,11 @@ Abordagem obrigatória:
         },
         {
           slug: 'filosofia',
-          nome: 'Filosofia',
+          nome: 'Philosophy',
           emoji: '∞',
           parent: 'humanidades',
-          descricao: 'A busca rigorosa por princípios fundamentais e dilemas éticos.',
-          contexto: `Foco: argumentação filosófica. Antes de apresentar a posição de um filósofo, explique o problema que ele tentava resolver.`,
+          descricao: 'The rigorous search for fundamental principles and ethical dilemmas.',
+          contexto: `Focus: philosophical argumentation. Before presenting a philosopher's position, explain the problem they were trying to solve.`,
           ementa: [
             'O Método Socrático e a Maiêutica',
             'O Mito da Caverna (Platão)',
@@ -243,11 +243,11 @@ Abordagem obrigatória:
         },
         {
           slug: 'geografia',
-          nome: 'Geografia',
+          nome: 'Geography',
           emoji: '🌍',
           parent: 'humanidades',
-          descricao: 'As relações dinâmicas entre as sociedades e o espaço físico.',
-          contexto: `Foco: relações causais entre espaço físico, clima, economia e geopolítica.`,
+          descricao: 'The dynamic relationships between societies and physical space.',
+          contexto: `Focus: causal relationships between physical space, climate, economy, and geopolitics.`,
           ementa: [
             'Formação Geológica',
             'Clima e Biomas',
@@ -271,16 +271,16 @@ Abordagem obrigatória:
         },
         {
           slug: 'economia',
-          nome: 'Economia',
+          nome: 'Economics',
           emoji: '💹',
           parent: 'humanidades',
           layout: 'split',
           widget: 'EconGraph',
-          descricao: 'Entenda como o mundo gira: de micro decisões individuais até a macroeconomia das nações.',
-          contexto: 'Economia é a ciência da escassez e da escolha. O aluno é autodidata e busca compreensão conceitual profunda com foco em leitura de mundo, modelos mentais, mercados e políticas, sem a sobrecarga pesada do cálculo exigido em pós-graduação acadêmica.',
+          descricao: 'Understand how the world turns: from individual micro-decisions to the macroeconomics of nations.',
+          contexto: 'Economics is the science of scarcity and choice. The student is self-taught and seeks deep conceptual understanding focused on reading the world, mental models, markets, and policies, without the heavy calculation load required in academic graduate school.',
           fases: [
             {
-              nome: 'Fase 1 - Fundamentos',
+              nome: 'Phase 1 - Foundations',
               topicos: [
                 'O que é economia - escassez, escolha e custo de oportunidade',
                 'Vantagem comparativa e ganhos de troca - por que as pessoas e países comercializam',
@@ -295,7 +295,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 2 - Intermediário',
+              nome: 'Phase 2 - Intermediate',
               topicos: [
                 'Micro: Comportamento do consumidor - utilidade e preferências',
                 'Micro: Restrição orçamentária e a matemática das escolhas',
@@ -313,7 +313,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 3 - Avançado e Aplicações',
+              nome: 'Phase 3 - Advanced and Applications',
               topicos: [
                 'História do pensamento econômico - Clássicos, Marx, Keynes, Escola Austríaca',
                 'Teoria dos Jogos e Estratégia - Dilema do Prisioneiro e Equilíbrio de Nash',
@@ -329,11 +329,11 @@ Abordagem obrigatória:
         },
         {
           slug: 'literatura',
-          nome: 'Literatura',
+          nome: 'Literature',
           emoji: '📖',
           parent: 'humanidades',
-          descricao: 'Interpretação profunda através do texto narrativo e poético.',
-          contexto: `Foco: mecanismos literários reais. Explique o recurso e o efeito que ele produz antes de identificá-lo em textos.`,
+          descricao: 'Deep interpretation through narrative and poetic text.',
+          contexto: `Focus: real literary mechanisms. Explain the device and the effect it produces before identifying it in texts.`,
           ementa: [
             'O Poder do Mito e Epopéias',
             'Trovadorismo e Romantismo',
@@ -359,8 +359,8 @@ Abordagem obrigatória:
           nome: 'Sociologia',
           emoji: '👥',
           parent: 'humanidades',
-          descricao: 'O estudo das estruturas, normas e dinâmicas da sociedade.',
-          contexto: `Foco: Como estruturas invisíveis de poder, cultura e capital moldam as ações individuais.`,
+          descricao: 'The study of structures, norms, and dynamics of society.',
+          contexto: `Focus: How invisible structures of power, culture, and capital shape individual actions.`,
           ementa: [
             'Fato Social e Coesão (Durkheim)',
             'Classes e Conflito (Marx)',
@@ -386,19 +386,19 @@ Abordagem obrigatória:
     },
     {
       slug: 'musica',
-      nome: 'Música & Artes',
+      nome: 'Music & Arts',
       emoji: '♪',
       isCategory: true,
       parent: 'fundamentos',
-      descricao: 'Treinamento de percepção auditiva, harmonia e expressão artística.',
+      descricao: 'Ear training, harmony, and artistic expression.',
       children: [
         {
           slug: 'violao',
-          nome: 'Violão Prático',
+          nome: 'Practical Guitar',
           emoji: '🎸',
           parent: 'musica',
-          descricao: 'Fundamentos de cordas, cifras e levadas rítmicas aplicadas.',
-          contexto: `Foco: mecanismos técnicos reais — postura, tensão muscular, transição de acordes.`,
+          descricao: 'Fundamentals of strings, chords, and applied rhythmic patterns.',
+          contexto: `Focus: real technical mechanisms — posture, muscle tension, chord transition.`,
           ementa: [
             'Postura e Mão Esquerda',
             'Acordes Menores (Am, Em)',
@@ -419,11 +419,11 @@ Abordagem obrigatória:
         },
         {
           slug: 'piano',
-          nome: 'Teclas & Harmonia',
+          nome: 'Keys & Harmony',
           emoji: '🎹',
           parent: 'musica',
-          descricao: 'Arranjos harmônicos, tríades, leitura e independência motora.',
-          contexto: `Foco: harmonia aplicada e independência motora. Uma mão de cada vez, com compreensão do papel de cada uma.`,
+          descricao: 'Harmonic arrangements, triads, reading, and motor independence.',
+          contexto: `Focus: applied harmony and motor independence. One hand at a time, with an understanding of the role of each.`,
           ementa: [
             'Postura e Numeração',
             'Acordes Naturais (Tríades)',
@@ -444,11 +444,11 @@ Abordagem obrigatória:
         },
         {
           slug: 'teoria-musical',
-          nome: 'Teoria Musical Aplicada',
+          nome: 'Applied Music Theory',
           emoji: '🎵',
           parent: 'musica',
-          descricao: 'A matemática da música: escalas, percepção e formação de acordes.',
-          contexto: `Foco: estrutura musical real — escalas, intervalos, campos harmônicos.`,
+          descricao: 'The mathematics of music: scales, perception, and chord formation.',
+          contexto: `Focus: real musical structure — scales, intervals, harmonic fields.`,
           ementa: [
             'Escalas Maiores e Menores',
             'Formação de Tríades',
@@ -469,11 +469,11 @@ Abordagem obrigatória:
         },
         {
           slug: 'historia-arte',
-          nome: 'História da Arte',
+          nome: 'Art History',
           emoji: '🎨',
           parent: 'musica',
-          descricao: 'A evolução visual da humanidade e análise de movimentos artísticos.',
-          contexto: `Foco: Como as correntes artísticas respondem aos avanços tecnológicos e crises sociais. Ensine a ler uma pintura antes de decorá-la.`,
+          descricao: 'The visual evolution of humanity and analysis of artistic movements.',
+          contexto: `Focus: How artistic movements respond to technological advances and social crises. Teach how to read a painting before memorizing it.`,
           ementa: [
             'Renascimento (A Perspectiva)',
             'Barroco (O Drama e a Luz)',

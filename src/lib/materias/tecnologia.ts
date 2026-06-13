@@ -2,20 +2,20 @@ import { MateriaConfig } from '@/types';
 
 export const tecnologiaHub: MateriaConfig = {
   slug: 'tecnologia-hub',
-  nome: 'Computação & Arquitetura',
+  nome: 'Computing & Architecture',
   emoji: '💻',
   isCategory: true,
-  descricao: 'A ciência de construir o futuro. Da sintaxe básica da programação até a arquitetura de sistemas escaláveis.',
+  descricao: 'The science of building the future. From the basic syntax of programming to the architecture of scalable systems.',
   children: [
     {
       slug: 'programacao-basica',
-      nome: 'Programação Básica',
+      nome: 'Basic Programming',
       emoji: '⌨️',
       parent: 'tecnologia-hub',
-      whyStart: 'Antes de entender como um computador pensa matematicamente, você precisa aprender a falar o idioma dele. Sem isso, você não codifica.',
-      descricao: 'Lógica, variáveis, loops e funções. O "Hello World" do seu futuro tecnológico.',
-      contexto: `Foco: Fundamentos práticos da escrita de código.
-O aluno é iniciante, ele precisa dominar a sintaxe básica de uma linguagem de programação (ex: JavaScript, Python) antes de se aprofundar na Ciência da Computação pesada.`,
+      whyStart: 'Before understanding how a computer thinks mathematically, you need to learn to speak its language. Without that, you do not code.',
+      descricao: 'Logic, variables, loops, and functions. The "Hello World" of your technological future.',
+      contexto: `Focus: Practical fundamentals of writing code.
+O student is a beginner, they need to master the basic syntax of a programming language (e.g., JavaScript, Python) before diving deep into heavy Computer Science.`,
       ementa: [
         // === EXISTENTES ===
         'O que é um Algoritmo: A Lógica da Vida Real',
@@ -51,12 +51,12 @@ O aluno é iniciante, ele precisa dominar a sintaxe básica de uma linguagem de 
     },
     {
       slug: 'ciencia-computacao',
-      nome: 'Ciência da Computação',
+      nome: 'Computer Science',
       emoji: '🧮',
       parent: 'tecnologia-hub',
-      whyStart: 'Agora que você sabe programar, precisa aprender como os sistemas resolvem problemas matematicamente. Essa é a física da computação.',
-      descricao: 'Matemática discreta, algoritmos de busca e estruturas de dados profundas.',
-      contexto: `Foco: raciocínio computacional avançado e teoria.
+      whyStart: 'Now that you know how to program, you need to learn how systems solve problems mathematically. This is the physics of computing.',
+      descricao: 'Discrete mathematics, search algorithms, and deep data structures.',
+      contexto: `Focus: advanced computational reasoning and theory.
 O aluno já sabe programar o básico, agora ele precisa aprender otimização, Big O notation e resolver problemas algorítmicos difíceis.`,
       ementa: [
         // === EXISTENTES ===
@@ -92,12 +92,12 @@ O aluno já sabe programar o básico, agora ele precisa aprender otimização, B
     },
     {
       slug: 'engenharia-software',
-      nome: 'Engenharia de Software',
+      nome: 'Software Engineering',
       emoji: '⚙️',
       parent: 'tecnologia-hub',
-      whyStart: 'A teoria se torna inútil se você não consegue construir projetos reais de forma confiável e com outras pessoas.',
-      descricao: 'Projetos reais, testes automatizados, Git, Clean Code e CI/CD.',
-      contexto: `Foco: construção de software escalável, seguro e sustentável.
+      whyStart: 'Theory becomes useless if you cannot build real projects reliably and with other people.',
+      descricao: 'Real projects, automated tests, Git, Clean Code, and CI/CD.',
+      contexto: `Focus: building scalable, secure, and sustainable software.
 O aluno sai da teoria isolada (CS) e entra no mercado de trabalho (Engenharia). O código precisa ser testado e legível para terceiros.`,
       ementa: [
         // === EXISTENTES ===
@@ -143,12 +143,12 @@ O aluno sai da teoria isolada (CS) e entra no mercado de trabalho (Engenharia). 
     },
     {
       slug: 'arquitetura-software',
-      nome: 'Arquitetura de Software',
+      nome: 'Software Architecture',
       emoji: '🏛️',
       parent: 'tecnologia-hub',
-      whyStart: 'Quando o sistema precisa atender a 1 milhão de usuários simultâneos, o código limpo não é suficiente. Você precisa desenhar como os sistemas conversam.',
-      descricao: 'System Design, microsserviços, Cloud Computing e decisões de trade-offs.',
-      contexto: `Foco: decisões macroestruturais de sistemas.
+      whyStart: 'When the system needs to serve 1 million concurrent users, clean code is not enough. You need to design how systems talk.',
+      descricao: 'System Design, microservices, Cloud Computing, and trade-off decisions.',
+      contexto: `Focus: macro-structural decisions of systems.
 O aluno atua como Arquiteto ou Staff Engineer. O foco não é codar a regra de negócio, mas montar a infraestrutura que não cai.`,
       ementa: [
         // === EXISTENTES ===

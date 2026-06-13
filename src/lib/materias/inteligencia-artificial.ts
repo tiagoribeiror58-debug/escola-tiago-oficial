@@ -2,20 +2,20 @@ import { MateriaConfig } from '@/types';
 
 export const iaHub: MateriaConfig = {
   slug: 'ia-hub',
-  nome: 'Inteligência Artificial',
+  nome: 'Artificial Intelligence',
   emoji: '🤖',
   isCategory: true,
-  descricao: 'Com a base computacional sólida, você avança para a fronteira algorítmica. Aqui você deixa de apenas codar regras para ensinar sistemas a aprenderem.',
+  descricao: 'With a solid computational foundation, you advance to the algorithmic frontier. Here you stop just coding rules to teach systems to learn.',
   children: [
 
     {
       slug: 'ciencia-dados-preditiva',
-      nome: 'Machine Learning Clássico & Preditivo',
+      nome: 'Classical & Predictive Machine Learning',
       emoji: '📈',
       parent: 'ia-hub',
-      whyStart: 'LLMs são só uma fatia da IA. Dados tabulares, regressões e árvores de decisão ainda resolvem 80% dos problemas reais de negócio.',
-      descricao: 'Análise de dados estatística, regressões, clusterização e árvores de decisão.',
-      contexto: `Foco: extração de valor estatístico de dados tabulares. Nem tudo precisa de um LLM.`,
+      whyStart: 'LLMs are only a slice of AI. Tabular data, regressions, and decision trees still solve 80% of real business problems.',
+      descricao: 'Statistical data analysis, regressions, clustering, and decision trees.',
+      contexto: `Focus: extracting statistical value from tabular data. Not everything needs an LLM.`,
       ementa: [
         // === EXISTENTES ===
         'Limpeza de Dados e Feature Engineering',
@@ -53,12 +53,12 @@ export const iaHub: MateriaConfig = {
     },
     {
       slug: 'deep-learning',
-      nome: 'Deep Learning & Redes Neurais',
+      nome: 'Deep Learning & Neural Networks',
       emoji: '🧠',
       parent: 'ia-hub',
-      whyStart: 'Depois de dominar ML clássico, você precisa entender as redes neurais profundas que tornaram possíveis LLMs, visão computacional e geração de imagens.',
-      descricao: 'Redes neurais convolucionais, recorrentes, Transformers e os fundamentos matemáticos da IA moderna.',
-      contexto: `Foco: fundamentos de deep learning para quem quer entender o que há por baixo dos LLMs.
+      whyStart: 'After mastering classical ML, you need to understand the deep neural networks that made LLMs, computer vision, and image generation possible.',
+      descricao: 'Convolutional neural networks, recurrent networks, Transformers, and the mathematical foundations of modern AI.',
+      contexto: `Focus: deep learning foundations for those who want to understand what lies beneath LLMs.
 O aluno precisa de álgebra linear e cálculo básico. Explique gradientes de forma visual antes de fórmulas.`,
       ementa: [
         'Neurônio Artificial e Função de Ativação',
@@ -86,12 +86,12 @@ O aluno precisa de álgebra linear e cálculo básico. Explique gradientes de fo
     },
     {
       slug: 'arquitetura-solucoes-ia',
-      nome: 'Arquitetura de Sistemas Híbridos (RAG/LLM)',
+      nome: 'Hybrid Systems Architecture (RAG/LLM)',
       emoji: '🏗️',
       parent: 'ia-hub',
       whyStart: 'Modelos base são úteis, mas sistemas arquitetados com contexto (RAG) são transformacionais.',
       descricao: 'Design de sistemas distribuídos, RAG, Bancos Vetoriais e Fine-Tuning.',
-      contexto: `Foco: fundamentos da engenharia de software aplicada a Modelos Fundacionais.
+      contexto: `Focus: software engineering foundations applied to Foundational Models.
 O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI Engineer.`,
       ementa: [
         // === EXISTENTES ===
@@ -114,7 +114,6 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
         'Memória de Longo Prazo para Agentes',
         'Multi-Agent Systems: Crews e Swarms',
         'Computer Use: Agentes que Controlam Interfaces',
-        'Guardrails: Como Conter Agentes Autônomos',
         // === NOVOS ===
         'GraphRAG: Combinando Grafos de Conhecimento com Vetores',
         'Agentic RAG: Retrieval Ativo e Adaptativo',
@@ -140,12 +139,12 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
     },
     {
       slug: 'mlops-engenharia-modelos',
-      nome: 'MLOps & Engenharia de Modelos',
+      nome: 'MLOps & Model Engineering',
       emoji: '⚙️',
       parent: 'ia-hub',
       whyStart: 'Saber treinar um modelo não é suficiente — você precisa colocá-lo em produção de forma confiável e escalável.',
-      descricao: 'Treinamento, Fine-Tuning, Deploy escalável e monitoramento de modelos em produção.',
-      contexto: `Foco: infraestrutura e engenharia pesada de Machine Learning.`,
+      descricao: 'Training, Fine-Tuning, scalable deployment, and monitoring of models in production.',
+      contexto: `Focus: infrastructure and heavy Machine Learning engineering.`,
       ementa: [
         // === EXISTENTES ===
         'Pipelines de Dados para Treinamento',
@@ -183,12 +182,12 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
     },
     {
       slug: 'ia-multimodal',
-      nome: 'IA Generativa Multimodal',
+      nome: 'Generative Multimodal AI',
       emoji: '🎨',
       parent: 'ia-hub',
-      whyStart: 'Com as fundações teóricas prontas, explore a fronteira da geração visual, auditiva e 3D.',
-      descricao: 'Domínio sobre geração de Imagem, Áudio, Vídeo e 3D usando modelos fundacionais.',
-      contexto: `Foco: a fronteira criativa e sensorial da inteligência artificial.`,
+      whyStart: 'With the theoretical foundations ready, explore the frontier of visual, auditory, and 3D generation.',
+      descricao: 'Mastery over Image, Audio, Video, and 3D generation using foundational models.',
+      contexto: `Focus: the creative and sensory frontier of artificial intelligence.`,
       ementa: [
         // === EXISTENTES ===
         'Como funcionam os Modelos de Difusão',
@@ -219,12 +218,12 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
     },
     {
       slug: 'ia-para-founders',
-      nome: 'Estratégia Corporativa de IA',
+      nome: 'Corporate AI Strategy',
       emoji: '♟️',
       parent: 'ia-hub',
-      whyStart: 'Saber como funciona é diferente de saber quando usar. Aqui você foca em ROI, defesa competitiva e alinhamento do negócio com a IA.',
-      descricao: 'Estratégia corporativa, ROI de IA e liderança de times AI-first.',
-      contexto: `Foco: visão estratégica e econômica da IA. O aluno é um founder, executivo ou líder.`,
+      whyStart: 'Knowing how it works is different from knowing when to use it. Here you focus on ROI, competitive defense, and aligning business with IA.',
+      descricao: 'Corporate strategy, AI ROI, and leading AI-first teams.',
+      contexto: `Focus: vision estratégica e econômica da IA. O aluno é um founder, executivo ou líder.`,
       ementa: [
         // === EXISTENTES ===
         'O Paradigma da Empresa AI-First',
@@ -258,12 +257,12 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
     },
     {
       slug: 'etica-seguranca-ia',
-      nome: 'Segurança, Ética & Alinhamento',
+      nome: 'Security, Ethics & Alignment',
       emoji: '🛡️',
       parent: 'ia-hub',
-      whyStart: 'A fronteira final. Construir inteligência traz responsabilidade cibernética e ética extrema.',
-      descricao: 'AI Safety, regulamentação, mitigação de viés e defesa contra ataques adversariais.',
-      contexto: `Foco: as grades de proteção da inteligência artificial.`,
+      whyStart: 'The final frontier. Building intelligence brings cyber responsibility and extreme ethics.',
+      descricao: 'AI Safety, regulation, bias mitigation, and defense against adversarial attacks.',
+      contexto: `Focus: as grades de proteção da inteligência artificial.`,
       ementa: [
         // === EXISTENTES ===
         'Prompt Injection e Jailbreaks',
