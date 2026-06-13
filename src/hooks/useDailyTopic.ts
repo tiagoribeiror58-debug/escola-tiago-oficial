@@ -71,9 +71,19 @@ export function useDailyTopic(filterMateriaSlug?: string) {
     }
 
     if (filteredUncompleted.length > 0) {
-      // Pega um tópico aleatório de qualquer matéria
-      const randomIndex = Math.floor(Math.random() * filteredUncompleted.length);
-      setDailyTopic(filteredUncompleted[randomIndex]);
+      // Pega apenas o PRIMEIRO tópico não concluído de cada matéria (ordem progressiva)
+      const nextTopicsByMateria = new Map<string, DailyTopic>();
+      for (const t of filteredUncompleted) {
+        if (!nextTopicsByMateria.has(t.materiaSlug)) {
+          nextTopicsByMateria.set(t.materiaSlug, t);
+        }
+      }
+      
+      const nextTopicsArray = Array.from(nextTopicsByMateria.values());
+      
+      // Usa o refreshCount para ciclar entre as matérias
+      const index = refreshCount % nextTopicsArray.length;
+      setDailyTopic(nextTopicsArray[index]);
     } else {
       setDailyTopic(null);
     }
