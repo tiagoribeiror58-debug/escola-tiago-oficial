@@ -259,23 +259,34 @@ export default function Index() {
     return dataB - dataA;
   });
 
-  // Itens filtrados por tipo — aplicado ANTES de qualquer paginação
-  const focusedHubs = displayedFoco.filter(e => e.config.isCategory);
-  const focusedMaterias = displayedFoco.filter(e => !e.config.isCategory);
+  // ---- Filtro de busca dentro da Mesa de Estudos (foco) ----
+  const filterByQuery = (e: MateriaEstado) => {
+    if (!normalizedQuery) return true;
+    const nome = e.config.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const desc = e.config.descricao?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') ?? '';
+    if (nome.includes(normalizedQuery) || desc.includes(normalizedQuery)) return true;
+    if (e.config.ementa?.some(t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedQuery))) return true;
+    if (e.config.fases?.some(f => f.topicos.some(t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedQuery)))) return true;
+    return false;
+  };
 
-  // Quais itens aparecem em cada seção dado o filtro ativo
+  // Itens filtrados por tipo E por query — aplicado ANTES de qualquer paginação
+  const focusedHubs = displayedFoco.filter(e => e.config.isCategory).filter(filterByQuery);
+  const focusedMaterias = displayedFoco.filter(e => !e.config.isCategory).filter(filterByQuery);
+
+  // Quando há busca ativa, mostrar todos os resultados sem limite
   const visibleHubsFoco = (focoFilterType === 'all' || focoFilterType === 'hubs')
-    ? focusedHubs.slice(0, visibleLimitFocoHubs)
+    ? (normalizedQuery ? focusedHubs : focusedHubs.slice(0, visibleLimitFocoHubs))
     : [];
   const visibleMateriasFoco = (focoFilterType === 'all' || focoFilterType === 'materias')
-    ? focusedMaterias.slice(0, visibleLimitFocoMaterias)
+    ? (normalizedQuery ? focusedMaterias : focusedMaterias.slice(0, visibleLimitFocoMaterias))
     : [];
 
   // Totais para os botões "ver mais"
   const filteredFocoHubsTotal = focusedHubs.length;
   const filteredFocoMateriasTotal = focusedMaterias.length;
-  const showVerMaisHubs = (focoFilterType === 'all' || focoFilterType === 'hubs') && filteredFocoHubsTotal > visibleLimitFocoHubs;
-  const showVerMaisMaterias = (focoFilterType === 'all' || focoFilterType === 'materias') && filteredFocoMateriasTotal > visibleLimitFocoMaterias;
+  const showVerMaisHubs = !normalizedQuery && (focoFilterType === 'all' || focoFilterType === 'hubs') && filteredFocoHubsTotal > visibleLimitFocoHubs;
+  const showVerMaisMaterias = !normalizedQuery && (focoFilterType === 'all' || focoFilterType === 'materias') && filteredFocoMateriasTotal > visibleLimitFocoMaterias;
 
   const handleDragEndFoco = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -521,21 +532,25 @@ export default function Index() {
           </div>
         )}
 
-        {/* Barra de Pesquisa Contextual */}
-        {currentTab !== 'foco' && (
-          <div className="mb-8 relative">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-muted-foreground" />
-            </div>
-            <input
-              type="text"
-              placeholder={currentTab === 'materias' ? "Pesquisar todas as matérias..." : "Pesquisar hubs e categorias..."}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-card border border-border/50 rounded-2xl text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all shadow-sm"
-            />
+        {/* Barra de Pesquisa Contextual — aparece em todas as abas */}
+        <div className="mb-8 relative">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-muted-foreground" />
           </div>
-        )}
+          <input
+            type="text"
+            placeholder={
+              currentTab === 'foco'
+                ? "Pesquisar na mesa de estudos..."
+                : currentTab === 'materias'
+                ? "Pesquisar todas as matérias..."
+                : "Pesquisar hubs e categorias..."
+            }
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-4 py-4 bg-card border border-border/50 rounded-2xl text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all shadow-sm"
+          />
+        </div>
 
         {/* Recomendação na Mesa de Estudos */}
         {currentTab === 'foco' && foco.length > 0 && recomendacao.estado && !searchQuery && (
