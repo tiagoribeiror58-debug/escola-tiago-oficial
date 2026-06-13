@@ -2,19 +2,19 @@ import { MateriaConfig } from '@/types';
 
 export const elonMuskHub: MateriaConfig = {
   slug: 'elon-musk-engineering',
-  nome: 'Engenharia Elon Musk',
+  nome: 'Elon Musk Engineering',
   emoji: '🚀',
   isCategory: true,
-  descricao: 'Estudo aprofundado dos processos mentais, gestão radical, e primeiros princípios que impulsionam o homem mais produtivo do mundo.',
+  descricao: 'In-depth study of the mental processes, radical management, and first principles that drive the most productive man in the world.',
   children: [
     {
       slug: 'musk-primeiros-principios',
       nome: 'First Principles Thinking',
       emoji: '🧠',
       parent: 'elon-musk-engineering',
-      whyStart: 'A fundação intelectual de Musk. Sem isso, você está apenas iterando sobre o passado.',
-      descricao: 'Desconstrução da realidade até suas verdades fundamentais.',
-      contexto: `Foco: A metodologia mental de Musk para inovação disruptiva. Evite clichês de autoajuda. Aborde física, lógica e quebra de paradigmas de mercado.`,
+      whyStart: 'The intellectual foundation of Musk. Without this, you are just iterating on the past.',
+      descricao: 'Deconstruction of reality down to its fundamental truths.',
+      contexto: `Focus: Musk's mental methodology for disruptive innovation. Avoid self-help clichés. Address physics, logic, and market paradigm shifts.`,
       ementa: [
         'O que é o Raciocínio por Primeiros Princípios (First Principles)',
         'Raciocínio por Analogia vs. Primeiros Princípios',
@@ -31,12 +31,12 @@ export const elonMuskHub: MateriaConfig = {
     },
     {
       slug: 'musk-hardcore-management',
-      nome: 'Gestão Radical e Hardcore',
+      nome: 'Radical & Hardcore Management',
       emoji: '⚔️',
       parent: 'elon-musk-engineering',
-      whyStart: 'Como liderar times pequenos para construir empresas de trilhões de dólares.',
-      descricao: 'Microgerenciamento cirúrgico, eliminação de burocracia e ritmo insano.',
-      contexto: `Foco: A abordagem de Musk para liderança e execução empresarial. Foco no pragmatismo extremo, reuniões inúteis e cultura de urgência.`,
+      whyStart: 'How to lead small teams to build trillion-dollar companies.',
+      descricao: 'Surgical micromanagement, elimination of bureaucracy, and insane pacing.',
+      contexto: `Focus: Musk's approach to leadership and business execution. Focus on extreme pragmatism, useless meetings, and a culture of urgency.`,
       ementa: [
         'A Regra de Ouro das Reuniões: Saia se não estiver agregando valor',
         'Hierarquia Achatada e Comunicação Direta (Zero Cadeia de Comando)',
@@ -52,12 +52,12 @@ export const elonMuskHub: MateriaConfig = {
     },
     {
       slug: 'musk-risco-alocacao',
-      nome: 'Risco, Capital e Sobrevivência',
+      nome: 'Risk, Capital & Survival',
       emoji: '💰',
       parent: 'elon-musk-engineering',
-      whyStart: 'Musk quase quebrou várias vezes. Como ele gerencia o risco da ruína?',
-      descricao: 'Apostando a empresa inteira, levantamento de capital e sobrevivência no limite.',
-      contexto: `Foco: A psicologia do risco extremo de Musk, como ele sobrevive a "near-death experiences" corporativas e financia o impossível.`,
+      whyStart: 'Musk almost went broke several times. How does he manage the risk of ruin?',
+      descricao: 'Betting the whole company, fundraising, and survival on the edge.',
+      contexto: `Focus: Musk's extreme risk psychology, how he survives corporate near-death experiences, and funds the impossible.`,
       ementa: [
         'Apostando Tudo: O Natal de 2008 (Tesla e SpaceX à beira da falência)',
         'A Ilusão do Risco Pessoal: Por que não ter medo de voltar à estaca zero',

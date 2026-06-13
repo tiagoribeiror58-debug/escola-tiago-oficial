@@ -2,20 +2,20 @@ import { MateriaConfig } from '@/types';
 
 export const geopoliticaHub: MateriaConfig = {
   slug: 'geopolitica-hub',
-  nome: 'Geopolítica & Macro-História',
+  nome: 'Geopolitics & Macro-History',
   emoji: '🌍',
   isCategory: true,
-  descricao: 'Compreensão das engrenagens do mundo. Dinâmicas de poder, recursos, geografia e ascensão e queda de impérios.',
+  descricao: 'Understanding the gears of the world. Power dynamics, resources, geography, and the rise and fall of empires.',
   children: [
     {
       slug: 'geopolitica-estrategica',
-      nome: 'Geopolítica de Recursos e Poder',
+      nome: 'Geopolitics of Resources & Power',
       emoji: '🗺️',
       isCategory: false,
       parent: 'geopolitica-hub',
-      whyStart: 'Você não entende o noticiário porque ignora a geografia e a energia. Países não têm amigos, têm interesses.',
-      descricao: 'Teoria do Heartland, rotas marítimas, dependência energética e hegemonia global.',
-      contexto: 'Análise fria baseada em geografia, energia e demografia. Nada de ideologia ou viés partidário. Foco em Ray Dalio e Peter Zeihan.',
+      whyStart: 'You do not understand the news because you ignore geography and energy. Countries do not have friends, they have interests.',
+      descricao: 'Heartland theory, maritime routes, energy dependence, and global hegemony.',
+      contexto: 'Cold analysis based on geography, energy, and demographics. No ideology or partisan bias. Focus on Ray Dalio and Peter Zeihan.',
       ementa: [
         'O Determinismo Geográfico e as Fronteiras Naturais Insuperáveis',
         'A Teoria do Heartland (Halford Mackinder) e o Controle da Ilha Mundial',
@@ -51,13 +51,13 @@ export const geopoliticaHub: MateriaConfig = {
     },
     {
       slug: 'macro-historia',
-      nome: 'Ascensão e Queda de Impérios',
+      nome: 'Rise & Fall of Empires',
       emoji: '🏛️',
       isCategory: false,
       parent: 'geopolitica-hub',
-      whyStart: 'A história não se repete, mas ela rima. Entender os ciclos longos previne surpresas catastróficas.',
-      descricao: 'Ciclos de dívida, ordem mundial e revoluções estruturais.',
-      contexto: 'Foco na obra "Changing World Order" de Ray Dalio. Explique os ciclos de dívida de longo prazo e a transição de hegemonia.',
+      whyStart: 'History does not repeat itself, but it rhymes. Understanding long cycles prevents catastrophic surprises.',
+      descricao: 'Debt cycles, world order, and structural revolutions.',
+      contexto: 'Focus on Ray Dalio\'s "Changing World Order". Explain long-term debt cycles and hegemony transition.',
       ementa: [
         'O Grande Ciclo de Ray Dalio: Arquitetura da Ascensão, Topo e Declínio de Impérios',
         'A Relação entre Educação, Inovação Tecnológica e Competitividade Comercial',

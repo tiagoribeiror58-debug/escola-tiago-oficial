@@ -2,20 +2,20 @@ import { MateriaConfig } from '@/types';
 
 export const riquezaHub: MateriaConfig = {
   slug: 'riqueza-hub',
-  nome: 'Alocação & Defesa de Capital',
+  nome: 'Capital Allocation & Defense',
   emoji: '🏦',
   isCategory: true,
-  descricao: 'A mecânica de reter, multiplicar e proteger recursos. Compreensão estrutural de dinheiro como energia matemática.',
+  descricao: 'The mechanics of retaining, multiplying, and protecting resources. Structural understanding of money as mathematical energy.',
   children: [
     {
       slug: 'macroeconomia',
-      nome: 'Macroeconomia Aplicada',
+      nome: 'Applied Macroeconomics',
       emoji: '📉',
       isCategory: false,
       parent: 'riqueza-hub',
-      whyStart: 'Você não pode jogar o jogo se não entender as regras do tabuleiro em que a inflação e os juros operam.',
-      descricao: 'Ciclos de mercado, políticas monetárias e leitura de cenário global.',
-      contexto: 'Foco técnico e não ideológico. Entenda como Bancos Centrais movem o dinheiro e como isso afeta ativos reais.',
+      whyStart: 'You cannot play the game if you do not understand the rules of the board on which inflation and interest operate.',
+      descricao: 'Market cycles, monetary policies, and reading global scenarios.',
+      contexto: 'Technical and non-ideological focus. Understand how Central Banks move money and how this affects real assets.',
       ementa: [
         'A Transição do Padrão-Ouro para a Hegemonia Fiduciária (Choque de Nixon de 1971)',
         'O Efeito Cantillon e a Distribuição Assimétrica da Inflação',
@@ -42,13 +42,13 @@ export const riquezaHub: MateriaConfig = {
     },
     {
       slug: 'engenharia-financeira',
-      nome: 'Engenharia Financeira & Assimetria',
+      nome: 'Financial Engineering & Asymmetry',
       emoji: '⚖️',
       isCategory: false,
       parent: 'riqueza-hub',
-      whyStart: 'Ganhar dinheiro é diferente de protegê-lo. A verdadeira riqueza está em expor-se a riscos assimétricos positivos.',
-      descricao: 'Opções, Hedge, estruturação de portfólio antifrágil e proteção patrimonial.',
-      contexto: 'Foco em mitigação de ruína (Nassim Taleb). Como estruturar um portfólio para sobreviver ao caos.',
+      whyStart: 'Making money is different from protecting it. True wealth lies in exposing oneself to positive asymmetric risks.',
+      descricao: 'Options, Hedge, antifragile portfolio structuring, and asset protection.',
+      contexto: 'Focus on mitigation of ruin (Nassim Taleb). How to structure a portfolio to survive chaos.',
       ementa: [
         'Esperança Matemática (EV) e Probabilidade de Ruína (Ergodicidade)',
         'O Paradoxo de São Petersburgo e a Teoria da Utilidade Esperada',
