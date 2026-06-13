@@ -118,6 +118,7 @@ function getGreeting(): string {
 export default function Index() {
   const { estados, isLoading } = useTodosEstadosFlat();
   const { foco, toggleFoco, isFocado } = useMateriasFoco();
+  const { focoPrincipal, toggleFocoPrincipal, isFocoPrincipal } = useMateriaFocoPrincipal();
   const { data: sessoes } = useSessoes();
   const recomendacao = useProximoPassoRecomendado();
   const { data: metricasRevisao } = useMetricasRevisao();
