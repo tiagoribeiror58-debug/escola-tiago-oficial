@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { useTodosEstadosFlat, useSessoes, useEmentaConcluida, useMetricasRevisao } from '@/hooks/useSessoes';
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import { useMateriasFixadas } from '@/hooks/useMateriasFixadas';
+import { useMateriaFocoPrincipal } from '@/hooks/useMateriaFocoPrincipal';
 import MateriaCard from '@/components/MateriaCard';
+import { CuriosidadeCard } from '@/components/CuriosidadeCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookOpen, Library, Flame, Play, ChevronRight, ChevronDown, Pin } from 'lucide-react';
 import { MateriaEstado } from '@/types';
@@ -49,7 +51,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-function SortableItem({ id, estado, onClick, isPinned, onTogglePin }: any) {
+function SortableItem({ id, estado, onClick, isPinned, onTogglePin, isFocoPrincipal, onToggleFocoPrincipal }: any) {
   const {
     attributes,
     listeners,
@@ -72,6 +74,8 @@ function SortableItem({ id, estado, onClick, isPinned, onTogglePin }: any) {
         onClick={onClick}
         isPinned={isPinned}
         onTogglePin={onTogglePin}
+        isFocoPrincipal={isFocoPrincipal}
+        onToggleFocoPrincipal={onToggleFocoPrincipal}
         isDragging={isDragging}
         dragListeners={listeners}
       />
@@ -331,6 +335,13 @@ export default function Index() {
     });
   };
 
+  const handleToggleFocoPrincipal = (slug: string) => {
+    if (focoPrincipal !== slug && !isFocado(slug)) {
+      toggleFoco(slug);
+    }
+    toggleFocoPrincipal(slug);
+  };
+
   // ---- Filtro Aba "Explorar Matérias" ----
   const todasMateriasIsoladas = estados.filter(e => !e.config.isCategory);
   const searchResultsMaterias = normalizedQuery.length > 0
@@ -554,10 +565,46 @@ export default function Index() {
 
         {/* Recomendação na Mesa de Estudos */}
         {currentTab === 'foco' && foco.length > 0 && recomendacao.estado && !searchQuery && (
-          <RecomendacaoCard 
-            recomendacao={recomendacao} 
-            onClick={() => handleCardClick(recomendacao.estado!)} 
-          />
+          <div className="mb-6">
+            <RecomendacaoCard 
+              recomendacao={recomendacao} 
+              onClick={() => handleCardClick(recomendacao.estado!)} 
+            />
+          </div>
+        )}
+
+        {/* Curiosidade do Dia */}
+        {currentTab === 'foco' && !searchQuery && (
+          <div className="mb-8">
+            <CuriosidadeCard materiasAtuais={displayedFoco.map(e => e.config.nome)} />
+          </div>
+        )}
+
+        {/* Foco Principal Isolado */}
+        {currentTab === 'foco' && !searchQuery && focoPrincipal && (
+          <div className="mb-8">
+            <h4 className="text-sm font-bold mb-4 text-amber-500 uppercase tracking-widest flex items-center gap-2">
+              <Star className="w-4 h-4" />
+              Objetivo Principal
+            </h4>
+            {displayedFoco.filter(e => e.config.slug === focoPrincipal).map(estado => (
+              <MateriaCard
+                key={estado.config.slug}
+                estado={estado}
+                onClick={() => handleCardClick(estado)}
+                isPinned={isFixada(estado.config.slug)}
+                onTogglePin={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  toggleFixada(estado.config.slug);
+                }}
+                isFocoPrincipal={true}
+                onToggleFocoPrincipal={(e: React.MouseEvent) => {
+                  e.stopPropagation();
+                  handleToggleFocoPrincipal(estado.config.slug);
+                }}
+              />
+            ))}
+          </div>
         )}
 
         {isLoading ? (
@@ -628,7 +675,7 @@ export default function Index() {
                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
                             <SortableContext items={visibleHubsFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
-                              {visibleHubsFoco.map(estado => (
+                              {visibleHubsFoco.filter(e => e.config.slug !== focoPrincipal).map(estado => (
                                 <SortableItem
                                   key={estado.config.slug}
                                   id={estado.config.slug}
@@ -638,6 +685,11 @@ export default function Index() {
                                   onTogglePin={(e: React.MouseEvent) => {
                                     e.stopPropagation();
                                     toggleFixada(estado.config.slug);
+                                  }}
+                                  isFocoPrincipal={isFocoPrincipal(estado.config.slug)}
+                                  onToggleFocoPrincipal={(e: React.MouseEvent) => {
+                                    e.stopPropagation();
+                                    toggleFocoPrincipal(estado.config.slug);
                                   }}
                                 />
                               ))}
@@ -660,7 +712,7 @@ export default function Index() {
                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
                             <SortableContext items={visibleMateriasFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
-                              {visibleMateriasFoco.map(estado => (
+                              {visibleMateriasFoco.filter(e => e.config.slug !== focoPrincipal).map(estado => (
                                 <SortableItem
                                   key={estado.config.slug}
                                   id={estado.config.slug}
@@ -670,6 +722,11 @@ export default function Index() {
                                   onTogglePin={(e: React.MouseEvent) => {
                                     e.stopPropagation();
                                     toggleFixada(estado.config.slug);
+                                  }}
+                                  isFocoPrincipal={isFocoPrincipal(estado.config.slug)}
+                                  onToggleFocoPrincipal={(e: React.MouseEvent) => {
+                                    e.stopPropagation();
+                                    toggleFocoPrincipal(estado.config.slug);
                                   }}
                                 />
                               ))}
@@ -711,6 +768,11 @@ export default function Index() {
                                 e.stopPropagation();
                                 toggleFoco(result.estado.config.slug);
                               }}
+                              isFocoPrincipal={isFocoPrincipal(result.estado.config.slug)}
+                              onToggleFocoPrincipal={(e: React.MouseEvent) => {
+                                e.stopPropagation();
+                                handleToggleFocoPrincipal(result.estado.config.slug);
+                              }}
                             />
                             {result.matchedTopics.length > 0 && (
                               <div className="ml-2 pl-2 border-l-2 border-border text-[11px] text-muted-foreground mt-1 space-y-1">
@@ -748,6 +810,11 @@ export default function Index() {
                           onTogglePin={(e: React.MouseEvent) => {
                             e.stopPropagation();
                             toggleFoco(estado.config.slug);
+                          }}
+                          isFocoPrincipal={isFocoPrincipal(estado.config.slug)}
+                          onToggleFocoPrincipal={(e: React.MouseEvent) => {
+                            e.stopPropagation();
+                            handleToggleFocoPrincipal(estado.config.slug);
                           }}
                         />
                       ))}

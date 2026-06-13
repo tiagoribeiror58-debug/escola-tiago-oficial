@@ -1,7 +1,7 @@
 import { MateriaEstado } from '@/types';
 import { urgencia } from '@/lib/materias';
 import { cn } from '@/lib/utils';
-import { ChevronRight, Pin, PinOff, GripVertical } from 'lucide-react';
+import { ChevronRight, Pin, GripVertical, Star } from 'lucide-react';
 
 interface Props {
   estado: MateriaEstado;
@@ -11,9 +11,11 @@ interface Props {
   onTogglePin?: (e: React.MouseEvent) => void;
   isDragging?: boolean;
   dragListeners?: Record<string, any>;
+  isFocoPrincipal?: boolean;
+  onToggleFocoPrincipal?: (e: React.MouseEvent) => void;
 }
 
-export default function MateriaCard({ estado, onClick, ordem, isPinned, onTogglePin, isDragging, dragListeners }: Props) {
+export default function MateriaCard({ estado, onClick, ordem, isPinned, onTogglePin, isDragging, dragListeners, isFocoPrincipal, onToggleFocoPrincipal }: Props) {
   const { config, ultimaSessao, diasParada } = estado;
   const urg = urgencia(diasParada);
 
@@ -61,6 +63,7 @@ export default function MateriaCard({ estado, onClick, ordem, isPinned, onToggle
         'hover:shadow-md hover:border-foreground/10 hover:-translate-y-0.5',
         'text-left w-full',
         urgenciaBorder[urg],
+        isFocoPrincipal && 'border-amber-400 ring-2 ring-amber-400/50 bg-amber-400/5 shadow-md',
         isDragging && 'opacity-50 scale-95 shadow-xl border-primary ring-2 ring-primary ring-offset-2'
       )}
     >
@@ -95,6 +98,18 @@ export default function MateriaCard({ estado, onClick, ordem, isPinned, onToggle
           <span className="text-sm font-medium text-foreground">{config.nome}</span>
         </div>
         <div className="ml-auto flex items-center gap-2 pointer-events-auto">
+          {onToggleFocoPrincipal && (
+            <button
+              onClick={onToggleFocoPrincipal}
+              className={cn(
+                "p-1.5 rounded-full transition-colors hover:bg-muted/80 text-muted-foreground",
+                isFocoPrincipal && "text-amber-500 bg-amber-500/10 hover:bg-amber-500/20"
+              )}
+              title={isFocoPrincipal ? "Remover Foco Principal" : "Definir como Foco Principal"}
+            >
+              <Star className={cn("w-3.5 h-3.5", isFocoPrincipal && "fill-amber-500")} />
+            </button>
+          )}
           {onTogglePin && (
             <button
               onClick={onTogglePin}
