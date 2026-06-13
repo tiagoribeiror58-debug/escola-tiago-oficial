@@ -259,6 +259,9 @@ export default function Index() {
     return dataB - dataA;
   });
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const normalizedQuery = searchQuery.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
   // ---- Filtro de busca dentro da Mesa de Estudos (foco) ----
   const filterByQuery = (e: MateriaEstado) => {
     if (!normalizedQuery) return true;
@@ -266,7 +269,7 @@ export default function Index() {
     const desc = e.config.descricao?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') ?? '';
     if (nome.includes(normalizedQuery) || desc.includes(normalizedQuery)) return true;
     if (e.config.ementa?.some(t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedQuery))) return true;
-    if (e.config.fases?.some(f => f.topicos.some(t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedQuery)))) return true;
+    if (e.config.fases?.some(f => f.topicos?.some(t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedQuery)))) return true;
     return false;
   };
 
@@ -327,9 +330,6 @@ export default function Index() {
       return prev;
     });
   };
-
-  const [searchQuery, setSearchQuery] = useState('');
-  const normalizedQuery = searchQuery.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
   // ---- Filtro Aba "Explorar Matérias" ----
   const todasMateriasIsoladas = estados.filter(e => !e.config.isCategory);
