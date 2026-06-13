@@ -2,20 +2,20 @@ import { MateriaConfig } from '@/types';
 
 export const comportamentoHub: MateriaConfig = {
   slug: 'comportamento-hub',
-  nome: 'Engenharia Comportamental & Massas',
+  nome: 'Behavioral Engineering & Crowds',
   emoji: '🧠',
   isCategory: true,
-  descricao: 'Como o cérebro humano falha, como as multidões são guiadas e a ciência da tomada de decisão sob incerteza.',
+  descricao: 'How the human brain fails, how crowds are guided, and the science of decision-making under uncertainty.',
   children: [
     {
       slug: 'economia-comportamental',
-      nome: 'Economia Comportamental',
+      nome: 'Behavioral Economics',
       emoji: '🎰',
       isCategory: false,
       parent: 'comportamento-hub',
-      whyStart: 'Nossas decisões parecem lógicas, mas são guiadas por falhas evolutivas do nosso cérebro. Domine seus vieses antes de prever o dos outros.',
-      descricao: 'Vieses cognitivos, heurísticas e arquitetura de escolhas.',
-      contexto: 'Foco no trabalho de Kahneman e Tversky. Rápido e Devagar. Não seja óbvio, desafie o senso comum lógico do aluno.',
+      whyStart: 'Our decisions seem logical, but they are guided by evolutionary flaws of our brain. Master your biases before predicting those of others.',
+      descricao: 'Cognitive biases, heuristics, and choice architecture.',
+      contexto: 'Focus on the work of Kahneman and Tversky. Thinking, Fast and Slow. Do not be obvious, challenge the student\'s logical common sense.',
       ementa: [
         'A Arquitetura do Sistema 1 (Automático) vs. Sistema 2 (Deliberativo) de Kahneman',
         'Viés de Confirmação e a Fisiologia da Redução da Dissonância Cognitiva',
@@ -32,7 +32,7 @@ export const comportamentoHub: MateriaConfig = {
         'Preferência Pelo Status Quo e o Custo Friccional da Mudança',
         'O Paradoxo da Escolha, Fadiga de Decisão e Paralisia por Análise',
         'A Ciência do Nudge (Empurrãozinho): Guiando Comportamentos sem Restrição Direta',
-        'O Poder do Design Padrão (Defaults) em Contratos e Inscrições',
+        'O Poder do Design Padrão (Defaults) in Contratos e Inscrições',
         'Normas Descritivas vs Normas Injuntivas: Utilizando Prova Social Invisível',
         'Gatilhos de Salience: Destacando a Informação Correta no Momento da Decisão',
         'A Ilusão de Controle e como Superestimamos Nossa Agência em Sistemas Caóticos',
@@ -49,13 +49,13 @@ export const comportamentoHub: MateriaConfig = {
     },
     {
       slug: 'psicologia-das-massas',
-      nome: 'Psicologia das Multidões & PR',
+      nome: 'Crowd Psychology & PR',
       emoji: '📣',
       isCategory: false,
       parent: 'comportamento-hub',
-      whyStart: 'Indivíduos são espertos, multidões são burras e controláveis. Entenda como a opinião pública é fabricada.',
-      descricao: 'Relações públicas, propaganda estrutural e engenharia de consentimento.',
-      contexto: 'Base em Edward Bernays e Gustave Le Bon. Mostre a engenharia fria por trás da criação de modas e crenças sociais.',
+      whyStart: 'Individuals are smart, crowds are dumb and controllable. Understand how public opinion is manufactured.',
+      descricao: 'Public relations, structural propaganda, and engineering of consent.',
+      contexto: 'Based on Edward Bernays and Gustave Le Bon. Show the cold engineering behind the creation of social fads and beliefs.',
       ementa: [
         'Gustave Le Bon e os Fundamentos Neurológicos do Contágio Mental em Massas',
         'A Desindividualização e o Rebaixamento Crítico do Quociente Intelectual em Grupo',

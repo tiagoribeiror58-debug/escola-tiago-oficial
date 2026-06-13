@@ -5,28 +5,28 @@ export const marketingHub: MateriaConfig = {
   nome: 'Marketing',
   emoji: '🎯',
   isCategory: true,
-  descricao: 'Do conceito ao canal. Marketing é a disciplina que conecta o que você criou com quem precisa disso.',
+  descricao: 'From concept to channel. Marketing is the discipline that connects what you created with who needs it.',
   whyStart:
-    'Marketing é o que faz o mundo saber que você existe. Não é sobre anúncios ou seguidores — é sobre entender como as pessoas tomam decisões e como você posiciona sua solução no caminho delas. Sem isso, o melhor produto do mundo morre na prateleira.',
+    'Marketing is what makes the world know you exist. It is not about ads or followers — it is about understanding how people make decisions and how you position your solution in their path. Without this, the best product in the world dies on the shelf.',
   children: [
     // ─────────────────────────────────────────────────────────────
     // 1. MARKETING TÉCNICO
     // ─────────────────────────────────────────────────────────────
     {
       slug: 'marketing-tecnico',
-      nome: 'Marketing Técnico',
+      nome: 'Technical Marketing',
       emoji: '⚙️',
       parent: 'marketing-hub',
       whyStart:
-        'Marketing sem dados é achismo. Aqui você aprende a operar as ferramentas que transformam intuição em decisão baseada em evidência: rastreamento, anúncios, automação e a leitura correta dos números.',
-      descricao: 'SEO, mídia paga, rastreamento, automação e as ferramentas que fazem a máquina de aquisição funcionar.',
-      contexto: `Foco: a mecânica técnica por trás dos canais digitais. Ensine o mecanismo antes da interface.
+        'Marketing without data is guesswork. Here you learn to operate the tools that turn intuition into evidence-based decisions: tracking, ads, automation, and the correct reading of numbers.',
+      descricao: 'SEO, paid media, tracking, automation, and the tools that make the acquisition engine work.',
+      contexto: `Focus: the technical mechanics behind digital channels. Teach the mechanism before the interface.
 
-Abordagem obrigatória:
-- Para SEO: explique como um mecanismo de busca funciona antes de falar de palavras-chave.
-- Para Ads: explique o leilão e o Quality Score antes de criar campanhas.
-- Para Analytics: explique o modelo de dados (evento, sessão, usuário) antes de ler métricas.
-- Nunca ensine "clique aqui" sem explicar o que acontece por baixo.`,
+Mandatory approach:
+- For SEO: explain how a search engine works before talking about keywords.
+- For Ads: explain the auction and Quality Score before creating campaigns.
+- For Analytics: explain the data model (event, session, user) before reading metrics.
+- Never teach "click here" without explaining what happens underneath.`,
       ementa: [
         'Tráfego Pago vs Orgânico (Custo e Escala)',
         'SEO e Mecanismos de Busca',
@@ -48,7 +48,7 @@ Abordagem obrigatória:
         'Estratégia de Lances (Bidding Strategies) em Plataformas de Ads',
         'Auditoria Técnica de Sites: Encontrando Gargalos de Conversão',
         'Web Scraping para Inteligência Competitiva de Marketing'
-      ],
+      ]
     },
 
     // ─────────────────────────────────────────────────────────────
@@ -56,19 +56,19 @@ Abordagem obrigatória:
     // ─────────────────────────────────────────────────────────────
     {
       slug: 'marketing-conteudo',
-      nome: 'Conteúdo & Influência',
+      nome: 'Content & Influence',
       emoji: '✍️',
       parent: 'marketing-hub',
       whyStart:
-        'Anúncios param quando o dinheiro acaba. Conteúdo e comunidade são ativos que se acumulam. Esta disciplina ensina como construir mídia própria, parceria com criadores e a linguagem que converte — escrita e falada.',
-      descricao: 'Copywriting, Content Marketing, Creator Economy e a arte de construir audiências que compram.',
-      contexto: `Foco: a construção de ativos de mídia e a linguagem que converte. Ensine craft antes de volume.
+        'Ads stop when the money runs out. Content and community are assets that accumulate. This subject teaches how to build own media, partnership with creators, and the language that converts — written and spoken.',
+      descricao: 'Copywriting, Content Marketing, Creator Economy, and the art of building audiences that buy.',
+      contexto: `Focus: building media assets and the language that converts. Teach craft before volume.
 
-Abordagem obrigatória:
-- Copywriting não é "escrever bonito" — é engenharia de resposta. Explique o mecanismo psicológico de cada técnica.
-- Content Marketing: diferencie estratégia de conteúdo (o mapa) de produção de conteúdo (a execução).
-- Creator Economy: ensine os modelos de negócio por trás, não só o "como fazer vídeo".
-- Storytelling: estrutura narrativa antes de aplicação à marca.`,
+Mandatory approach:
+- Copywriting is not "pretty writing" — it is response engineering. Explain the psychological mechanism of each technique.
+- Content Marketing: differentiate content strategy (the map) from content production (the execution).
+- Creator Economy: teach the business models behind it, not just "how to make a video".
+- Storytelling: narrative structure before brand application.`,
       ementa: [
         'Content Marketing e a Estratégia de Conteúdo',
         'Copywriting para Conversão: Headlines, CTAs e Landing Pages',
@@ -88,7 +88,7 @@ Abordagem obrigatória:
         'O Funil de Conteúdo: Topo (Atenção), Meio (Educação) e Fundo (Conversão)',
         'Copywriting B2B: Vendendo para Empresas vs Pessoas Físicas',
         'Reciclagem de Conteúdo: Multiplicando um Ativo em Vários Formatos'
-      ],
+      ]
     },
 
     // ─────────────────────────────────────────────────────────────
@@ -100,15 +100,15 @@ Abordagem obrigatória:
       emoji: '🚀',
       parent: 'marketing-hub',
       whyStart:
-        'Growth não é um cargo — é uma mentalidade de experimentação sistemática. Aqui você aprende a montar o motor de crescimento: a North Star Metric, os loops virais, o funil de ativação e os experimentos que transformam achismo em escala.',
-      descricao: 'Funis de conversão, Growth Hacking, PLG, experimentação e as métricas que realmente importam para crescer.',
-      contexto: `Foco: a engenharia de crescimento — estrutura de funil, métricas e experimentos. Ensine a lógica de causa-e-efeito antes das táticas.
+        'Growth is not a job title — it is a mindset of systematic experimentation. Here you learn to assemble the growth engine: the North Star Metric, viral loops, the activation funnel, and the experiments that turn guesswork into scale.',
+      descricao: 'Conversion funnels, Growth Hacking, PLG, experimentation, and the metrics that really matter for growth.',
+      contexto: `Focus: growth engineering — funnel structure, metrics, and experiments. Teach cause-and-effect logic before tactics.
 
-Abordagem obrigatória:
-- Funil não é só "topo, meio e fundo" — explique o comportamento do usuário em cada etapa.
-- Growth Hacking: desmistifique o termo. É experimentação barata e rápida — explique o método.
-- PLG: explique por que o produto é o canal, e qual a implicação de design que isso exige.
-- Métricas: para cada KPI, explique o que ele mede e o que pode esconder.`,
+Mandatory approach:
+- Funnel is not just "top, middle, and bottom" — explain user behavior in each stage.
+- Growth Hacking: demystify the term. It is cheap and fast experimentation — explain the method.
+- PLG: explain why the product is the channel, and what design implication that requires.
+- Metrics: for each KPI, explain what it measures and what it can hide.`,
       ementa: [
         'A Anatomia de um Funil de Vendas',
         'Canais de Aquisição (Go-To-Market)',
@@ -129,27 +129,27 @@ Abordagem obrigatória:
         'Cohort Analysis: Entendendo o Comportamento do Usuário no Tempo',
         'Growth B2B: Account-Based Marketing (ABM) e Outbound',
         'O Loop de Retenção: Criando Hábitos no Usuário'
-      ],
+      ]
     },
 
     // ─────────────────────────────────────────────────────────────
-    // 5. AI MARKETING & AUTOMAÇÃO AVANÇADA (Novo para 2026)
+    // 5. AI MARKETING & AUTOMAÇÃO AVANÇADA
     // ─────────────────────────────────────────────────────────────
     {
       slug: 'marketing-ia',
-      nome: 'AI Marketing & Automação Avançada',
+      nome: 'AI Marketing & Advanced Automation',
       emoji: '🤖',
       parent: 'marketing-hub',
       whyStart:
-        'O marketing em 2026 não é sobre quem escreve mais rápido usando ChatGPT, mas sobre quem orquestra agentes autônomos, otimiza para motores de resposta (AEO) e usa dados primários para prever o comportamento do usuário.',
-      descricao: 'Agentes autônomos, AEO (Answer Engine Optimization), hiperpersonalização e o estado da arte do marketing moderno.',
-      contexto: `Foco: A infraestrutura e a estratégia do marketing guiado por IA. O aluno deve entender como a IA desloca o trabalho operacional para que o humano foque na estratégia.
+        'Marketing in 2026 is not about who writes faster using ChatGPT, but about who orchestrates autonomous agents, optimizes for answer engines (AEO), and uses first-party data to predict user behavior.',
+      descricao: 'Autonomous agents, AEO (Answer Engine Optimization), hyperpersonalization, and the state of the art of modern marketing.',
+      contexto: `Focus: The infrastructure and strategy of AI-driven marketing. The student must understand how AI shifts operational work so that humans focus on strategy.
 
-Abordagem obrigatória:
-- Diferencie uso raso de IA (geração de texto genérico) de uso estrutural (agentes, predição, automação).
-- Explique como treinar IAs com First-Party Data (os dados do próprio negócio) para evitar respostas genéricas.
-- AEO (Answer Engine Optimization): Explique por que otimizar para Perplexity e Google AI Overviews é diferente de SEO tradicional.
-- Ética e transparência são inegociáveis.`,
+Mandatory approach:
+- Differentiate shallow use of AI (generic text generation) from structural use (agents, prediction, automation).
+- Explain how to train AIs with First-Party Data (the business's own data) to avoid generic answers.
+- AEO (Answer Engine Optimization): Explain why optimizing for Perplexity and Google AI Overviews is different from traditional SEO.
+- Ethics and transparency are non-negotiable.`,
       ementa: [
         'A Transição do SEO para o AEO (Answer Engine Optimization)',
         'Otimizando Conteúdo para Perplexity, ChatGPT Search e AI Overviews',
@@ -167,7 +167,7 @@ Abordagem obrigatória:
         'Automatizando Fluxos de Trabalho com n8n, Make e Zapier Avançado',
         'Prompt Engineering para Marketers: Indo Além do Básico',
         'Proteção de Marca e Direitos Autorais na Era da Geração de Conteúdo AI'
-      ],
+      ]
     }
-  ],
+  ]
 };

@@ -2,40 +2,40 @@ import { MateriaConfig } from '@/types';
 
 export const comunicacaoInfluencia: MateriaConfig = {
   slug: 'dinamicas-comunicacao',
-  nome: 'Comunicação & Linguagem',
+  nome: 'Communication & Language',
   emoji: '🍷',
   isCategory: true,
-  descricao: 'Persuadir, escrever, falar e pensar com clareza. O domínio da linguagem é o maior multiplicador de influência humana.',
+  descricao: 'Persuade, write, speak, and think clearly. Mastering language is the greatest multiplier of human influence.',
   children: [
     // ── SUB-HUB 1: INFLUÊNCIA & PERSUASÃO ──────────────────────────────
     {
       slug: 'influencia-persuasao',
-      nome: 'Influência & Persuasão',
+      nome: 'Influence & Persuasion',
       emoji: '🎭',
       isCategory: true,
       parent: 'dinamicas-comunicacao',
-      whyStart: 'Todo o resto — escrita, idiomas, oratória — é amplificado ou anulado pela sua capacidade de influenciar ao vivo. Comece pelo motor.',
-      descricao: 'Retórica, negociação, oratória e dinâmicas sociais de alto impacto.',
+      whyStart: 'Everything else — writing, languages, public speaking — is amplified or canceled by your ability to influence live. Start with the engine.',
+      descricao: 'Rhetoric, negotiation, public speaking, and high-impact social dynamics.',
       children: [
         {
           slug: 'retorica',
-          nome: 'Retórica & Argumentação',
+          nome: 'Rhetoric & Argumentation',
           emoji: '⚖️',
           parent: 'influencia-persuasao',
           layout: 'split',
           widget: 'ArgumentMap',
-          whyStart: 'A gramática de todo discurso persuasivo. Antes de negociar, seduzir ou falar em público, você precisa entender como argumentos são construídos e desmontados.',
-          descricao: 'A arte de construir, desconstruir e defender argumentos com rigor e impacto.',
-          contexto: `Foco: estrutura argumentativa real — premissas, conclusões, pressupostos ocultos e persuasão.
+          whyStart: 'The grammar of all persuasive discourse. Before negotiating, seducing, or speaking in public, you need to understand how arguments are constructed and dismantled.',
+          descricao: 'The art of constructing, deconstructing, and defending arguments with rigor and impact.',
+          contexto: `Focus: real argumentative structure — premises, conclusions, hidden assumptions, and persuasion.
 
-Abordagem obrigatória:
-- Explique a estrutura lógica de cada tipo de argumento antes de analisar exemplos reais.
-- Para falácias retóricas: explique o mecanismo pelo qual enganam antes de pedir identificação.
-- Diferencie claramente retórica (persuasão) de lógica formal (validade).
-- Cada técnica deve ser mostrada com exemplo real: discurso famoso, debate público ou negociação.`,
+Mandatory approach:
+- Explain the logical structure of each type of argument before analyzing real examples.
+- For rhetorical fallacies: explain the mechanism by which they deceive before asking for identification.
+- Clearly differentiate rhetoric (persuasion) from formal logic (validity).
+- Each technique must be shown with a real example: a famous speech, public debate, or negotiation.`,
           fases: [
             {
-              nome: 'Fase 1: Fundamentos — A Anatomia do Argumento',
+              nome: 'Phase 1: Foundations — The Anatomy of the Argument',
               topicos: [
                 'Anatomia de um Argumento: Premissa, Conclusão e Inferência',
                 'O Triângulo de Aristóteles: Ethos, Pathos e Logos',
@@ -50,7 +50,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 2: Falácias e Armadilhas Lógicas',
+              nome: 'Phase 2: Fallacies and Logical Traps',
               topicos: [
                 'Ad Hominem: Atacar a Pessoa em Vez do Argumento',
                 'Hombre de Paja (Straw Man): Distorcer Para Destruir Mais Fácil',
@@ -65,7 +65,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 3: Persuasão Aplicada e Framing',
+              nome: 'Phase 3: Applied Persuasion and Framing',
               topicos: [
                 'Framing: O Mesmo Fato, Duas Histórias Completamente Diferentes',
                 'Priming: Como a Exposição Anterior Altera o Julgamento',
@@ -80,7 +80,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 4: Retórica Avançada e Debate',
+              nome: 'Phase 4: Advanced Rhetoric and Debate',
               topicos: [
                 'Retórica Socrática: Perguntar Até o Outro Se Contradizer',
                 'A Arte da Pergunta: Tipos, Timing e Intenção',
@@ -98,22 +98,22 @@ Abordagem obrigatória:
         },
         {
           slug: 'negociacao',
-          nome: 'Negociação',
+          nome: 'Negotiation',
           emoji: '🤝',
           parent: 'influencia-persuasao',
           layout: 'split',
           widget: 'NegotiationBoard',
-          whyStart: 'Com a retórica como base, você aplica persuasão onde há conflito de interesse real.',
-          descricao: 'Princípios e táticas de negociação baseados em Harvard, FBI e teoria dos jogos.',
-          contexto: `Foco: mecanismos de influência mútua — o que gera acordo, o que gera impasse, e por quê.
+          whyStart: 'With rhetoric as a base, you apply persuasion where there is a real conflict of interest.',
+          descricao: 'Principles and tactics of negotiation based on Harvard, FBI, and game theory.',
+          contexto: `Focus: mechanisms of mutual influence — what generates agreement, what generates deadlock, and why.
 
-Abordagem obrigatória:
-- Explique o princípio estrutural antes de qualquer tática.
-- Para BATNA e zona de acordo: ensine a mecânica de poder antes de aplicar em cenários.
-- Diferencie negociação distributiva de integrativa pelo mecanismo.`,
+Mandatory approach:
+- Explain the structural principle before any tactic.
+- For BATNA and agreement zone: teach the mechanics of power before applying to scenarios.
+- Differentiate distributive from integrative negotiation by mechanism.`,
           fases: [
             {
-              nome: 'Fase 1: Fundamentos da Negociação',
+              nome: 'Phase 1: Foundations of Negotiation',
               topicos: [
                 'O Framework de Harvard (Fisher & Ury): 4 Princípios',
                 'BATNA: Sua Alternativa Determina Seu Poder Real na Mesa',
@@ -128,7 +128,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 2: Táticas e Psicologia',
+              nome: 'Phase 2: Tactics and Psychology',
               topicos: [
                 'A Psicologia das Concessões: Quando e Como Ceder',
                 'Tática do "Homem Mau": Dividir a Autoridade Para Ganhar Espaço',
@@ -143,7 +143,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 3: Negociação Aplicada por Cenário',
+              nome: 'Phase 3: Applied Negotiation by Scenario',
               topicos: [
                 'Negociação Salarial: Script Completo e Psicologia do Recrutador',
                 'Negociação de Contratos de Serviço (B2B e Freelance)',
@@ -161,22 +161,22 @@ Abordagem obrigatória:
         },
         {
           slug: 'oratoria',
-          nome: 'Oratória & Apresentação',
+          nome: 'Public Speaking & Presentation',
           emoji: '🎤',
           parent: 'influencia-persuasao',
-          whyStart: 'Você já sabe construir argumentos e negociar. Agora escale isso para uma audiência. Oratória é persuasão em performance.',
-          descricao: 'Gatilhos de atenção, storytelling, presença de palco e comunicação em vídeo.',
-          contexto: `Foco: mecanismos de atenção e persuasão oral — estrutura, ritmo, presença.
+          whyStart: 'You already know how to build arguments and negotiate. Now scale that to an audience. Public speaking is persuasion in performance.',
+          descricao: 'Attention triggers, storytelling, stage presence, and video communication.',
+          contexto: `Focus: mechanisms of attention and oral persuasion — structure, rhythm, presence.
 
-Abordagem obrigatória:
-- Explique por que determinada técnica funciona antes de pedir que o aluno aplique.
-- Para estrutura narrativa: explique o mecanismo de atenção que ela sustenta.`,
+Mandatory approach:
+- Explain why a certain technique works before asking the student to apply it.
+- For narrative structure: explain the attention mechanism it sustains.`,
           fases: [
             {
-              nome: 'Fase 1: Fundamentos Fisiológicos e Mentais',
+              nome: 'Phase 1: Physiological and Mental Foundations',
               topicos: [
                 'A Neurociência do Medo de Falar em Público (Cortisol vs Testosterona)',
-                'Regulação Fisiológica do Nervosismo: Respiração, Postura e Voz',
+                'Regulação Fisiológica do Nervosinmo: Respiração, Postura e Voz',
                 'Presença: O Que É e Como Se Constrói (Amy Cuddy e Além)',
                 'Contato Visual: Duração, Distribuição e Intenção',
                 'Modulação de Voz: Ritmo, Pausas, Volume e Tonalidade',
@@ -188,7 +188,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 2: Estrutura Narrativa e Conteúdo',
+              nome: 'Phase 2: Narrative Structure and Content',
               topicos: [
                 'A Jornada do Herói Aplicada a Apresentações',
                 'O Método TED: 18 Minutos e Uma Ideia Vale Espalhando',
@@ -203,7 +203,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 3: Formatos Digitais e Avançados',
+              nome: 'Phase 3: Digital and Advanced Formats',
               topicos: [
                 'Apresentações Virtuais: Câmera, Luz, Energia e Engajamento Online',
                 'Podcast: Estrutura, Ritmo e Como Manter a Voz por Horas',
@@ -225,29 +225,29 @@ Abordagem obrigatória:
     // ── SUB-HUB 2: ESCRITA & PENSAMENTO ──────────────────────────────────
     {
       slug: 'escrita-pensamento',
-      nome: 'Escrita & Pensamento Estruturado',
+      nome: 'Writing & Structured Thinking',
       emoji: '✍️',
       isCategory: true,
       parent: 'dinamicas-comunicacao',
-      whyStart: 'Escrever bem é pensar bem externalizado. A escrita e os frameworks mentais são as ferramentas mais subestimadas de quem produz ideias.',
-      descricao: 'Escrita profissional, clareza argumentativa e frameworks de pensamento de alto impacto.',
+      whyStart: 'Writing well is thinking well externalized. Writing and mental frameworks are the most underestimated tools of those who produce ideas.',
+      descricao: 'Professional writing, argumentative clarity, and high-impact thinking frameworks.',
       children: [
         {
           slug: 'escrita-clara',
-          nome: 'Escrita Clara & Persuasiva',
+          nome: 'Clear & Persuasive Writing',
           emoji: '📝',
           parent: 'escrita-pensamento',
-          whyStart: 'Se você não consegue explicar algo por escrito de forma simples, você não entende de verdade. Escrita é o teste de estresse do pensamento.',
-          descricao: 'Princípios de clareza, concisão e impacto na escrita profissional e persuasiva.',
-          contexto: `Foco: escrita como ferramenta de pensamento e influência — emails, documentos, threads, propostas, copy.
+          whyStart: 'If you cannot explain something in writing simply, you do not really understand it. Writing is the stress test of thinking.',
+          descricao: 'Principles of clarity, conciseness, and impact in professional and persuasive writing.',
+          contexto: `Focus: writing as a tool of thought and influence — emails, documents, threads, proposals, copy.
 
-Abordagem obrigatória:
-- Cada conceito precisa de um exemplo antes/depois (frase ruim vs frase reescrita).
-- Não ensine gramática escolar. Ensine princípios de clareza usados por escritores profissionais.
-- Referências: William Zinsser (On Writing Well), George Orwell (Politics and the English Language), Steven Pinker (The Sense of Style).`,
+Mandatory approach:
+- Each concept needs a before/after example (bad phrase vs re-written phrase).
+- Do not teach school grammar. Teach principles of clarity used by professional writers.
+- References: William Zinsser (On Writing Well), George Orwell (Politics and the English Language), Steven Pinker (The Sense of Style).`,
           fases: [
             {
-              nome: 'Fase 1: Fundamentos da Clareza',
+              nome: 'Phase 1: Foundations of Clarity',
               topicos: [
                 'A Maldição do Conhecimento: Por Que Especialistas Escrevem Mal',
                 'A Regra de Ouro de Orwell: 6 Princípios Para Nunca Escrever Mal',
@@ -262,7 +262,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 2: Estrutura e Arquitetura de Texto',
+              nome: 'Phase 2: Structure and Text Architecture',
               topicos: [
                 'A Pirâmide de Minto: BLUF — Conclusão Primeiro, Sempre',
                 'Lead & Hook: Como Prender o Leitor na Primeira Frase',
@@ -277,7 +277,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 3: Escrita Persuasiva e Copywriting',
+              nome: 'Phase 3: Persuasive Writing and Copywriting',
               topicos: [
                 'Escrita Persuasiva AIDA: Atenção, Interesse, Desejo, Ação',
                 'Copywriting vs Escrita Informativa: Quando Vender e Quando Educar',
@@ -292,7 +292,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 4: Escrita na Era Digital e IA',
+              nome: 'Phase 4: Writing in the Digital Era and AI',
               topicos: [
                 'Escrita Para SEO: Estrutura, Palavras-Chave e Intenção de Busca',
                 'Roteiro Para Vídeo e Podcast: Diferenças do Texto para Fala',
@@ -310,19 +310,19 @@ Abordagem obrigatória:
         },
         {
           slug: 'pensamento-estruturado',
-          nome: 'Frameworks de Pensamento',
+          nome: 'Thinking Frameworks',
           emoji: '🧩',
           parent: 'escrita-pensamento',
-          whyStart: 'Você tem informação demais e estrutura de menos. Frameworks transformam caos mental em clareza operacional — e determinam a qualidade do que você escreve e decide.',
-          descricao: 'Modelos mentais e frameworks para organizar pensamento, tomar decisões e resolver problemas complexos.',
-          contexto: `Foco: modelos mentais práticos que um profissional aplica no dia a dia para pensar com mais rigor.
+          whyStart: 'You have too much information and too little structure. Frameworks transform mental chaos into operational clarity — and determine the quality of what you write and decide.',
+          descricao: 'Mental models and frameworks to organize thought, make decisions, and solve complex problems.',
+          contexto: `Focus: practical mental models that a professional applies day-to-day to think with more rigor.
 
-Abordagem obrigatória:
-- Cada framework precisa de um cenário real de aplicação (negócios, carreira, vida pessoal).
-- Não liste modelos mentais como catálogo. Ensine quando e por que usar cada um.`,
+Mandatory approach:
+- Each framework needs a real application scenario (business, career, personal life).
+- Do not list mental models as a catalog. Teach when and why to use each one.`,
           fases: [
             {
-              nome: 'Fase 1: Pensamento de Primeira Ordem',
+              nome: 'Phase 1: First-Order Thinking',
               topicos: [
                 'First Principles Thinking: Desmontar Até o Fundamento Irredutível',
                 'Inversão (Charlie Munger): Pensar Pelo Avesso Para Evitar Erros',
@@ -337,7 +337,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 2: Pensamento de Segunda Ordem e Sistemas',
+              nome: 'Phase 2: Second-Order and Systems Thinking',
               topicos: [
                 'Pensamento de Segunda Ordem: "E Depois Disso, O Que Acontece?"',
                 'Loops de Feedback: Reforço Positivo e Negativo em Sistemas Complexos',
@@ -352,7 +352,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 3: Frameworks de Decisão e Stakeholders',
+              nome: 'Phase 3: Decision Frameworks and Stakeholders',
               topicos: [
                 'Mapa de Stakeholders: Quem Ganha, Quem Perde, Quem Decide',
                 'Análise SWOT com Rigor: Além do Quadrantinho da Faculdade',
@@ -367,13 +367,13 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 4: Pensamento Criativo e Síntese',
+              nome: 'Phase 4: Creative Thinking and Synthesis',
               topicos: [
                 'Design Thinking: Empatia → Definição → Ideação → Prototipagem → Teste',
                 'Brainstorming Com Rigor: Técnicas Para Gerar Ideias Não-Óbvias',
                 'SCAMPER: 7 Operações Para Inovar a Partir do Existente',
                 'Mapas Mentais: Quando Usar e Quando São Enrolação Visual',
-                'Síntese: A Habilidade de Juntar Peças em Uma Narrativa Coerente',
+                'Vídeo de Resumo: A Habilidade de Juntar Peças em Uma Narrativa Coerente',
                 'Aprendizado Acelerado (Ultralearning): Princípios de Scott Young',
                 'A Mente do Iniciante (Shoshin): Desinicializar Para Enxergar Mais',
                 'Pensamento Lateral de De Bono: Os 6 Chapéus do Pensamento',
@@ -389,32 +389,32 @@ Abordagem obrigatória:
     // ── SUB-HUB 3: IDIOMAS ────────────────────────────────────────────────
     {
       slug: 'idiomas-escrita',
-      nome: 'Idiomas',
+      nome: 'Languages',
       emoji: '🌐',
       isCategory: true,
       parent: 'dinamicas-comunicacao',
-      whyStart: 'Idiomas são portais. Cada língua que você domina multiplica o universo de ideias, pessoas e mercados que você pode acessar.',
-      descricao: 'Inglês, Espanhol e Francês com imersão progressiva por fases de fluência real.',
+      whyStart: 'Languages are portals. Each language you master multiplies the universe of ideas, people, and markets you can access.',
+      descricao: 'English, Spanish, and French with progressive immersion by real fluency phases.',
       children: [
         {
           slug: 'ingles',
-          nome: 'Inglês',
+          nome: 'English',
           emoji: 'EN',
           parent: 'idiomas-escrita',
           layout: 'split',
           widget: 'FlashcardDeck',
-          whyStart: 'O idioma global obrigatório. Inglês não é opcional — é o passaporte para 90% do conhecimento técnico e oportunidades digitais.',
-          descricao: 'Do A1 ao C2: imersão progressiva com foco em produção real de linguagem.',
-          contexto: `Toda a dinâmica será uma simulação de comunicação real por texto. 
+          whyStart: 'The mandatory global language. English is not optional — it is the passport to 90% of technical knowledge and digital opportunities.',
+          descricao: 'From A1 to C2: progressive immersion with a focus on real language production.',
+          contexto: `All dynamics will be a simulation of real communication by text.
 
 Abordagem obrigatória:
-- NÃO ensine regras gramaticais.
-- Simule um diálogo imersivo com o aluno, como se estivessem conversando no dia a dia.
-- Corrija erros sutilmente reformulando a frase de forma correta, sem aulas de gramática.
-- O idioma nativo do aluno é portugues BR.`,
+- Do NOT teach grammar rules.
+- Simulate an immersive dialogue with the student, as if chatting day-to-day.
+- Correct mistakes subtly by rephrasing the sentence correctly, without grammar classes.
+- The student's native language is portugues BR.`,
           fases: [
             {
-              nome: 'Fase 1 — Nível A1: Bases Absolutas',
+              nome: 'Phase 1 — A1 Level: Absolute Bases',
               topicos: [
                 'Greetings & Introductions: Me, Myself and I',
                 'O Verbo To Be: Além do "Sou/Estou" (Identidade, Descrição, Localização)',
@@ -429,7 +429,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 2 — Nível A2: Comunicação Funcional',
+              nome: 'Phase 2 — A2 Level: Functional Communication',
               topicos: [
                 'Present Continuous: Ações Acontecendo Agora Mesmo',
                 'Past Simple: Contar Histórias e Falar de Experiências Passadas',
@@ -444,7 +444,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 3 — Nível B1: Fluência Progressiva',
+              nome: 'Phase 3 — B1 Level: Progressive Fluency',
               topicos: [
                 'Present Perfect: O Passado que Conecta ao Presente',
                 'Present Perfect vs Past Simple: A Distinção Que Separa o B1',
@@ -459,7 +459,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 4 — Nível B2: Independência Comunicativa',
+              nome: 'Phase 4 — B2 Level: Communicative Independence',
               topicos: [
                 'Third Conditional: Arrependimentos e Situações no Passado Hipotético',
                 'Mixed Conditionals: O Passado Afetando o Presente e Vice-Versa',
@@ -474,7 +474,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 5 — Nível C1/C2: Domínio e Nuance',
+              nome: 'Phase 5 — C1/C2 Level: Mastery and Nuance',
               topicos: [
                 'Expressões Idiomáticas (Idioms) Essenciais: Top 50 de Alta Frequência',
                 'Gírias Nativas (Slangs): Registro e Contexto Cultural (EUA vs UK vs AUS)',
@@ -494,13 +494,13 @@ Abordagem obrigatória:
         },
         {
           slug: 'espanhol',
-          nome: 'Espanhol',
+          nome: 'Spanish',
           emoji: 'ES',
           parent: 'idiomas-escrita',
           layout: 'split',
           widget: 'FlashcardDeck',
-          whyStart: 'O segundo maior idioma das Américas — e o mais próximo do português. Abre mercados na América Latina e na Europa.',
-          descricao: 'Imersão progressiva do A1 ao B2, com foco em produção oral e escrita natural.',
+          whyStart: 'The second largest language in the Americas — and the closest to Portuguese. It opens markets in Latin America and Europe.',
+          descricao: 'Progressive immersion from A1 to B2, focusing on natural oral and written production.',
           contexto: `Toda a dinâmica será uma simulação de comunicação real por texto.
 
 Abordagem obrigatória:
@@ -509,7 +509,7 @@ Abordagem obrigatória:
 - Conduza partes crescentes da sessão diretamente em espanhol conforme o aluno avança, focando na fluência natural e não na teoria.`,
           fases: [
             {
-              nome: 'Fase 1 — Nível A1: Bases e Cotidiano',
+              nome: 'Phase 1 — A1 Level: Bases and Daily Life',
               topicos: [
                 'Pronomes e Primeiras Apresentações',
                 'Ser vs Estar: A Distinção Fundamental (Identidade vs Estado)',
@@ -524,7 +524,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 2 — Nível A2/B1: Comunicação Progressiva',
+              nome: 'Phase 2 — A2/B1 Level: Progressive Communication',
               topicos: [
                 'Pretérito Perfecto: Experiências Recentes e Hoje',
                 'Pretérito Indefinido: Passado Completo com Data Definida',
@@ -539,7 +539,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 3 — Nível B1/B2: Independência e Expressão',
+              nome: 'Phase 3 — B1/B2 Level: Independence and Expression',
               topicos: [
                 'Subjuntivo Presente: Expressar Desejo, Dúvida e Emoção',
                 'Subjuntivo Imperfecto: Hipóteses e Situações no Passado',
@@ -557,13 +557,13 @@ Abordagem obrigatória:
         },
         {
           slug: 'frances',
-          nome: 'Francês',
+          nome: 'French',
           emoji: 'FR',
           parent: 'idiomas-escrita',
           layout: 'split',
           widget: 'FlashcardDeck',
-          whyStart: 'O idioma da diplomacia, da alta cultura e de 29 países. A fonética é o maior desafio — e começa aqui.',
-          descricao: 'Do A1 ao B1: fonética, estrutura e imersão progressiva no idioma de Molière.',
+          whyStart: 'The language of diplomacy, high culture, and 29 countries. Phonetics is the biggest challenge — and it starts here.',
+          descricao: 'From A1 to B1: phonetics, structure, and progressive immersion in the language of Molière.',
           contexto: `Toda a dinâmica será uma simulação de comunicação real por texto.
 
 Abordagem obrigatória:
@@ -572,7 +572,7 @@ Abordagem obrigatória:
 - Ensine fonética indiretamente por meio da correção sutil da escrita e uso prático no diálogo.`,
           fases: [
             {
-              nome: 'Fase 1 — Nível A1: Fonética e Primeiros Passos',
+              nome: 'Phase 1 — A1 Level: Phonetics and First Steps',
               topicos: [
                 'A Fonética Francesa: Vogais Nasais (an, en, in, on, un)',
                 'Liaison e Enchaînement: A Música Conectada do Francês',
@@ -587,7 +587,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 2 — Nível A2: Estrutura e Cotidiano',
+              nome: 'Phase 2 — A2 Level: Structure and Daily Life',
               topicos: [
                 'Verbos Irregulares Essenciais: Aller, Faire, Vouloir, Pouvoir, Savoir',
                 'Passé Composé: Formação com Avoir e Être',
@@ -602,7 +602,7 @@ Abordagem obrigatória:
               ]
             },
             {
-              nome: 'Fase 3 — Nível B1: Fluência e Expressão Pessoal',
+              nome: 'Phase 3 — B1 Level: Fluency and Personal Expression',
               topicos: [
                 'Futur Simple: Previsões e Comprometimentos Formais',
                 'Conditionnel Présent: Hipóteses e Educação Formal (Je voudrais)',
