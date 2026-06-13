@@ -93,18 +93,19 @@ serve(async (req) => {
     // --- 0. INSTRUÇÕES VISUAIS (MERMAID & UNSPLASH) ---
     finalSystemPrompt += `
 
-[INSTRUÇÃO VISUAL CRÍTICA]:
-Você deve gerar RECURSOS VISUAIS para o aluno usando Diagramas lógicos.
-1. DIAGRAMAS LÓGICOS (Mermaid): SEMPRE que você estiver explicando um processo passo a passo, um fluxo de dados, uma hierarquia, um ciclo mental, arquitetura de sistemas ou qualquer relação de causa e efeito complexa, crie um diagrama usando blocos \`mermaid\`. (Regra sintaxe: Use aspas duplas nos textos dos nós: A["texto longo"]).
+[CRITICAL VISUAL INSTRUCTION]:
+You must generate VISUAL RESOURCES for the student using logical diagrams.
+1. LOGICAL DIAGRAMS (Mermaid): WHENEVER you are explaining a step-by-step process, a data flow, a hierarchy, a mental cycle, systems architecture, or any complex cause-and-effect relationship, create a diagram using \`mermaid\` blocks. (Syntax rule: Use double quotes in node texts: A["long text"]).
 
-[REGRA DE OURO]:
-Absolutamente TODA MENSAGEM SUA, sem exceção, DEVE terminar isoladamente com a tag <chips>Sugestão 1|Sugestão 2</chips>. Omitir essa tag quebra a interface do sistema!
+[GOLDEN RULE AND NAVIGATION]:
+Absolutely EVERY MESSAGE of yours, without exception, MUST end isolated with the tag <chips>Suggestion 1|Suggestion 2</chips>. Omitting this tag breaks the system interface!
+VERY IMPORTANT: One of the suggestions inside the chip MUST ALWAYS be a variation of "Continuar", "Avançar", or "Próximo" so the user doesn't need to type to go to the next step. Example: <chips>Continuar|Explicar melhor</chips>.
 
-[INSTRUÇÃO DE TAMANHO E DIRETIVAS (MUITO IMPORTANTE)]:
-Você DEVE ser conciso. Vá direto ao ponto e não cuspa blocos de texto maçantes!
-Ensine o conceito de forma clara, dividindo em tópicos ou parágrafos curtos.
-PROIBIDO terminar suas respostas com perguntas ou pedindo permissão para continuar (ex: "Entendeu?", "Vamos avançar?", "Posso continuar?"). Apenas explique o conceito e encerre a mensagem. O sistema de chips já cuidará de dar opções ao usuário.
-NUNCA ultrapasse 3 ou 4 parágrafos curtos por mensagem.
+[LANGUAGE AND DIRECTIVES INSTRUCTION (VERY IMPORTANT)]:
+CRITICAL: You MUST ALWAYS reply in PORTUGUESE (pt-BR). Under no circumstances should you reply in English to the user.
+Deliver the essence of the concept clearly, using short paragraphs. 
+FORBIDDEN: Do not end your responses with questions or by asking for permission to continue (e.g., "Entendeu?", "Vamos avançar?"). The chips system will take care of giving options to the user.
+Be direct and straight to the point, avoiding massive walls of text.
 `;
 
     // Cria um stream customizado para emitir eventos antes da IA principal
@@ -286,7 +287,7 @@ NUNCA ultrapasse 3 ou 4 parágrafos curtos por mensagem.
               url = "https://api.deepseek.com/chat/completions";
               headers["Authorization"] = `Bearer ${DEEPSEEK_API_KEY}`;
               body.model = modelDef.id;
-              body.max_tokens = 600;
+              body.max_tokens = 1500;
               body.messages = [
                 { role: "system", content: finalSystemPrompt },
                 ...messages
@@ -298,7 +299,7 @@ NUNCA ultrapasse 3 ou 4 parágrafos curtos por mensagem.
               body.model = modelDef.id;
               body.system = finalSystemPrompt;
               body.messages = messages;
-              body.max_tokens = 600;
+              body.max_tokens = 1500;
             }
 
             const response = await fetch(url, {
