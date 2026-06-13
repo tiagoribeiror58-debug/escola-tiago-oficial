@@ -2,256 +2,256 @@ import { MateriaConfig } from '@/types';
 
 export const filosofiaHub: MateriaConfig = {
   slug: 'filosofia-hub',
-  nome: 'Filosofia & Epistemologia Aplicada',
+  nome: 'Philosophy & Applied Epistemology',
   emoji: '🦉',
   isCategory: true,
-  descricao: 'Como você sabe o que sabe? Ferramentas para pensar com rigor, detectar falácias e não ser enganado por argumentos bonitos.',
+  descricao: 'How do you know what you know? Tools to think rigorously, detect fallacies, and avoid being fooled by pretty arguments.',
   children: [
     {
       slug: 'epistemologia-aplicada',
-      nome: 'Epistemologia & Teoria do Conhecimento',
+      nome: 'Epistemology & Theory of Knowledge',
       emoji: '🔍',
       isCategory: false,
       parent: 'filosofia-hub',
-      whyStart: 'Antes de aprender qualquer coisa, você precisa saber como o conhecimento funciona. Senão você só acumula crenças disfarçadas de fatos.',
-      descricao: 'Como distinguir conhecimento real de opinião, crença e ilusão.',
-      contexto: `Foco: epistemologia prática — como avaliar se algo é verdade antes de agir com base nisso.
+      whyStart: 'Before learning anything, you need to understand how knowledge works. Otherwise you just accumulate beliefs disguised as facts.',
+      descricao: 'How to distinguish real knowledge from opinion, belief, and illusion.',
+      contexto: `Focus: practical epistemology — how to evaluate whether something is true before acting on it.
 
-Abordagem obrigatória:
-- Sempre ancore em exemplos do dia a dia, não em abstrações filosóficas puras.
-- Conecte cada conceito a uma decisão real que alguém tomaria melhor sabendo isso.
-- Sem jargão acadêmico desnecessário. Filosofia é ferramenta, não decoração.`,
+Mandatory approach:
+- Always anchor in everyday examples, not pure philosophical abstractions.
+- Connect each concept to a real decision someone would make better by knowing this.
+- No unnecessary academic jargon. Philosophy is a tool, not decoration.`,
       fases: [
         {
-          nome: 'NÍVEL 1 — FUNDAMENTOS',
+          nome: 'LEVEL 1 — FUNDAMENTALS',
           topicos: [
-            'O que é Epistemologia',
-            'A diferença entre crença, opinião e conhecimento',
-            'Fontes do conhecimento: sentidos, razão, intuição, autoridade',
-            'O problema do ceticismo (posso estar errado sobre tudo?)',
-            'Ceticismo Pirrônico: Suspender o Julgamento Quando a Evidência é Fraca',
-            'Verdade: o que significa algo ser verdadeiro',
-            'O Problema do Conhecimento Tácito (Michael Polanyi)',
-            'O Mapa Não é o Território (Korzybski e a Semântica Geral)'
+            'What is Epistemology',
+            'The difference between belief, opinion, and knowledge',
+            'Sources of knowledge: senses, reason, intuition, authority',
+            'The problem of skepticism (can I be wrong about everything?)',
+            'Pyrrhonian Skepticism: Suspending Judgment When Evidence is Weak',
+            'Truth: what it means for something to be true',
+            'The Problem of Tacit Knowledge (Michael Polanyi)',
+            'The Map is Not the Territory (Korzybski and General Semantics)'
           ]
         },
         {
-          nome: 'NÍVEL 2 — CORRENTES CLÁSSICAS',
+          nome: 'LEVEL 2 — CLASSICAL CURRENTS',
           topicos: [
-            'Racionalismo — Descartes, Leibniz, Spinoza',
-            'Empirismo — Locke, Hume, Berkeley',
-            'Empirismo vs Racionalismo: De Onde Vem o Que Você Sabe?',
-            'Kant — a síntese entre razão e experiência',
-            'O problema da indução (Hume) - Por Que o Passado Não Garante o Futuro',
-            'Ceticismo clássico vs. ceticismo moderno'
+            'Rationalism — Descartes, Leibniz, Spinoza',
+            'Empiricism — Locke, Hume, Berkeley',
+            'Empiricism vs Rationalism: Where Does What You Know Come From?',
+            'Kant — the synthesis between reason and experience',
+            'The problem of induction (Hume) - Why the Past Does Not Guarantee the Future',
+            'Classical skepticism vs. modern skepticism'
           ]
         },
         {
-          nome: 'NÍVEL 3 — EPISTEMOLOGIA CONTEMPORÂNEA',
+          nome: 'LEVEL 3 — CONTEMPORARY EPISTEMOLOGY',
           topicos: [
-            'O que é Conhecimento? (Crença Verdadeira Justificada e o Problema de Gettier)',
-            'Fundacionalismo vs. Coerentismo vs. Confiabilismo',
-            'Epistemologia social — conhecimento coletivo e testemunho',
-            'Epistemologia do Testemunho: Quando Acreditar nos Outros',
-            'Epistemologia Reformada (Plantinga)',
-            'Naturalismo epistemológico (Quine)'
+            'What is Knowledge? (Justified True Belief and the Gettier Problem)',
+            'Foundationalism vs. Coherentism vs. Reliabilism',
+            'Social epistemology — collective knowledge and testimony',
+            'Epistemology of Testimony: When to Believe Others',
+            'Reformed Epistemology (Plantinga)',
+            'Epistemological naturalism (Quine)'
           ]
         },
         {
-          nome: 'NÍVEL 4 — FILOSOFIA DA CIÊNCIA',
+          nome: 'LEVEL 4 — PHILOSOPHY OF SCIENCE',
           topicos: [
-            'O método científico e seus limites',
-            'O Problema da Demarcação: Ciência vs Pseudociência',
-            'Falsificacionismo (Popper): O Que Faz Uma Ideia Ser Científica',
-            'Paradigmas e Revoluções Científicas (Thomas Kuhn)',
-            'Programa de pesquisa — Lakatos',
-            'Anarquismo epistemológico — Feyerabend',
-            'Realismo vs. Antirrealismo científico',
-            'Navalha de Ockham: A Explicação Mais Simples é Provavelmente a Certa',
-            'A Diferença entre Correlação e Causalidade (na Prática)'
+            'The scientific method and its limits',
+            'The Demarcation Problem: Science vs Pseudoscience',
+            'Falsificationism (Popper): What Makes an Idea Scientific',
+            'Paradigms and Scientific Revolutions (Thomas Kuhn)',
+            'Research programme — Lakatos',
+            'Epistemological anarchism — Feyerabend',
+            'Scientific Realism vs. Anti-Realism',
+            "Ockham's Razor: The Simplest Explanation is Probably the Right One",
+            'The Difference Between Correlation and Causation (in Practice)'
           ]
         },
         {
-          nome: 'NÍVEL 5 — AVANÇADO E APLICAÇÕES PRÁTICAS',
+          nome: 'LEVEL 5 — ADVANCED AND PRACTICAL APPLICATIONS',
           topicos: [
-            'Epistemologia Virtue (Sosa, Zagzebski)',
-            'Conhecimento a priori vs. a posteriori — debates atuais',
-            'Epistemologia feminista e standpoint theory',
-            'Fake news, desinformação e epistemologia aplicada',
-            'Argumento de Autoridade: Quando Confiar e Quando Desconfiar',
-            'Viés de Confirmação Epistêmico: Você Só Vê o Que Já Acredita',
-            'O Efeito Dunning-Kruger e a Cegueira do Especialista',
-            'Metacognição Epistêmica: Saber o Que Você Não Sabe',
-            'Heurísticas de Julgamento (Kahneman): Atalhos Que Enganam',
-            'Bayesianismo: Atualizar Crenças com Nova Evidência',
-            'IA e conhecimento — máquinas podem saber?',
-            'Metaepistemologia — podemos conhecer os limites do conhecimento?'
+            'Virtue Epistemology (Sosa, Zagzebski)',
+            'A priori vs. a posteriori knowledge — current debates',
+            'Feminist epistemology and standpoint theory',
+            'Fake news, disinformation, and applied epistemology',
+            'Argument from Authority: When to Trust and When to Doubt',
+            'Epistemic Confirmation Bias: You Only See What You Already Believe',
+            'The Dunning-Kruger Effect and Expert Blindness',
+            'Epistemic Metacognition: Knowing What You Do Not Know',
+            'Judgment Heuristics (Kahneman): Shortcuts That Deceive',
+            'Bayesianism: Updating Beliefs with New Evidence',
+            'AI and knowledge — can machines know?',
+            'Meta-epistemology — can we know the limits of knowledge?'
           ]
         }
       ]
     },
     {
       slug: 'falacias-argumentacao',
-      nome: 'Catálogo de Falácias & Vieses',
+      nome: 'Fallacy & Bias Catalogue',
       emoji: '🎭',
       isCategory: false,
       parent: 'filosofia-hub',
-      whyStart: 'Você está sendo manipulado todos os dias por argumentos que parecem lógicos, mas não são. Aprenda a se defender.',
-      descricao: 'Detecção de falácias e vieses de argumentação no mundo real.',
-      contexto: `Foco: detecção de falácias na prática.
+      whyStart: 'You are being manipulated every day by arguments that seem logical but are not. Learn to defend yourself.',
+      descricao: 'Detection of fallacies and argumentation biases in the real world.',
+      contexto: `Focus: detecting fallacies in practice.
       
-Abordagem obrigatória:
-- Apresente um exemplo real (política, vendas, debates na internet) onde a falácia é usada.
-- Ensine a pessoa a responder ou desmontar essa falácia de forma elegante e lógica.`,
+Mandatory approach:
+- Present a real example (politics, sales, internet debates) where the fallacy is used.
+- Teach the person how to respond to or dismantle that fallacy in an elegant and logical way.`,
       fases: [
         {
-          nome: 'NÍVEL 1 — AS MAIS COMUNS (ATAQUES E EMOÇÕES)',
+          nome: 'LEVEL 1 — THE MOST COMMON (ATTACKS AND EMOTIONS)',
           topicos: [
-            'O que são Falácias Formais e Informais',
-            'Falácia do Espantalho: Atacar Uma Versão Distorcida do Argumento',
-            'Falácia Ad Hominem: Atacar a Pessoa em Vez da Ideia',
-            'Falácia de Apelo à Autoridade',
-            'Apelo à Emoção: Quando o Sentimento Substitui a Evidência',
-            'Tu Quoque: "Você Também Faz" Não É Defesa'
+            'What are Formal and Informal Fallacies',
+            'Straw Man Fallacy: Attacking a Distorted Version of the Argument',
+            'Ad Hominem Fallacy: Attacking the Person Instead of the Idea',
+            'Appeal to Authority Fallacy',
+            'Appeal to Emotion: When Feeling Replaces Evidence',
+            'Tu Quoque: "You Do It Too" Is Not a Defense'
           ]
         },
         {
-          nome: 'NÍVEL 2 — DISTORÇÕES LÓGICAS E PROBABILÍSTICAS',
+          nome: 'LEVEL 2 — LOGICAL AND PROBABILISTIC DISTORTIONS',
           topicos: [
-            'Falso Dilema: Criar Duas Opções Quando Existem Mais',
-            'Ladeira Escorregadia (Slippery Slope): Prever Catástrofe Sem Justificativa',
-            'Falácia da Composição e da Divisão: Parte ≠ Todo',
-            'Petição de Princípio (Raciocínio Circular): Concluir o Que Pressupôs',
-            "Falácia do Jogador (Gambler's Fallacy): Probabilidades Não Têm Memória",
-            'Argumento da Incredulidade Pessoal: "Não Consigo Imaginar, Logo é Falso"'
+            'False Dilemma: Creating Two Options When More Exist',
+            'Slippery Slope: Predicting Catastrophe Without Justification',
+            'Fallacy of Composition and Division: Part ≠ Whole',
+            'Begging the Question (Circular Reasoning): Concluding What Was Presupposed',
+            "Gambler's Fallacy: Probabilities Have No Memory",
+            "Argument from Personal Incredulity: \"I Can't Imagine It, Therefore It's False\""
           ]
         },
         {
-          nome: 'NÍVEL 3 — VIESES E SELEÇÃO DE DADOS',
+          nome: 'LEVEL 3 — BIASES AND DATA SELECTION',
           topicos: [
-            'Falácia do Custo Irrecuperável: Insistir Porque Já Investiu',
-            'Apelo à Natureza: "Se é Natural, é Bom" (Não é)',
-            'Cherry Picking: Selecionar Só os Dados Que Confirmam',
-            'Viés de Sobrevivência e Causalidade vs Correlação',
-            'Viés Narrativo: Quando Histórias Enganam a Lógica'
+            'Sunk Cost Fallacy: Persisting Because You Already Invested',
+            "Appeal to Nature: \"If It's Natural, It's Good\" (It's Not)",
+            'Cherry Picking: Selecting Only the Data That Confirms',
+            'Survivorship Bias and Causation vs Correlation',
+            'Narrative Bias: When Stories Deceive Logic'
           ]
         }
       ]
     },
     {
       slug: 'logica-argumentacao',
-      nome: 'Lógica & Raciocínio Estruturado',
+      nome: 'Logic & Structured Reasoning',
       emoji: '⚖️',
       isCategory: false,
       parent: 'filosofia-hub',
-      whyStart: 'Se você não entende as regras do raciocínio, não consegue modelar a realidade corretamente. A lógica é a base da matemática, programação e argumentação válida.',
-      descricao: 'Lógica clássica, predicados, e raciocínio matemático-estrutural.',
-      contexto: `Foco: estrutura lógica de argumentos e raciocínio.
+      whyStart: 'If you do not understand the rules of reasoning, you cannot model reality correctly. Logic is the foundation of mathematics, programming, and valid argumentation.',
+      descricao: 'Classical logic, predicates, and mathematical-structural reasoning.',
+      contexto: `Focus: logical structure of arguments and reasoning.
       
-Abordagem obrigatória:
-- Explique a estrutura formal do conceito.
-- Não ensine lógica apenas como matemática abstrata. Ensine como modelagem de problemas.`,
+Mandatory approach:
+- Explain the formal structure of the concept.
+- Do not teach logic only as abstract mathematics. Teach it as problem modelling.`,
       fases: [
         {
-          nome: 'NÍVEL 1 — FUNDAMENTOS',
+          nome: 'LEVEL 1 — FUNDAMENTALS',
           topicos: [
-            'O que é Lógica e para que serve',
-            'Anatomia de um Argumento: Premissas, Conclusão e Validade vs Verdade',
-            'Dedução vs Indução vs Abdução: Três Formas de Raciocinar',
-            'Pensamento Crítico Básico'
+            'What is Logic and what it is for',
+            'Anatomy of an Argument: Premises, Conclusion, and Validity vs Truth',
+            'Deduction vs Induction vs Abduction: Three Ways of Reasoning',
+            'Basic Critical Thinking'
           ]
         },
         {
-          nome: 'NÍVEL 2 — LÓGICA CLÁSSICA',
+          nome: 'LEVEL 2 — CLASSICAL LOGIC',
           topicos: [
-            'Lógica Aristotélica — silogismos',
-            'Modus Ponens, Modus Tollens e Silogismos Básicos',
-            'Silogismos: Validade vs Solidez',
-            'Lógica Proposicional — conectivos (e, ou, não, se...então)',
-            'Proposições e Valores Verdade',
-            'Operadores Lógicos (E, OU, NÃO, SE)',
-            'Tabelas-Verdade: O Esqueleto da Lógica Proposicional',
-            'Equivalências lógicas',
-            'Argumentos válidos e inválidos formalmente'
+            'Aristotelian Logic — syllogisms',
+            'Modus Ponens, Modus Tollens, and Basic Syllogisms',
+            'Syllogisms: Validity vs Soundness',
+            'Propositional Logic — connectives (and, or, not, if...then)',
+            'Propositions and Truth Values',
+            'Logical Operators (AND, OR, NOT, IF)',
+            'Truth Tables: The Skeleton of Propositional Logic',
+            'Logical equivalences',
+            'Formally valid and invalid arguments'
           ]
         },
         {
-          nome: 'NÍVEL 3 — LÓGICA DE PREDICADOS',
+          nome: 'LEVEL 3 — PREDICATE LOGIC',
           topicos: [
-            'Lógica de Predicados: Quantificadores (Todo, Algum, Nenhum)',
-            'Predicados e variáveis',
-            'Formalização de argumentos do cotidiano',
-            'Introdução às provas formais'
+            'Predicate Logic: Quantifiers (All, Some, None)',
+            'Predicates and variables',
+            'Formalising everyday arguments',
+            'Introduction to formal proofs'
           ]
         },
         {
-          nome: 'NÍVEL 4 — LÓGICAS NÃO-CLÁSSICAS',
+          nome: 'LEVEL 4 — NON-CLASSICAL LOGICS',
           topicos: [
-            'Lógica Modal Básica: Necessidade vs Possibilidade',
-            'Lógica Deôntica — obrigação e permissão',
-            'Lógica Paraconsistente — contradições sem explosão',
-            'Lógica Fuzzy — verdades graduais (nem 0 nem 1)',
-            'Lógica Temporal'
+            'Basic Modal Logic: Necessity vs Possibility',
+            'Deontic Logic — obligation and permission',
+            'Paraconsistent Logic — contradictions without explosion',
+            'Fuzzy Logic — gradual truths (neither 0 nor 1)',
+            'Temporal Logic'
           ]
         },
         {
-          nome: 'NÍVEL 5 — LÓGICA MATEMÁTICA E METAMATEMÁTICA',
+          nome: 'LEVEL 5 — MATHEMATICAL LOGIC AND METAMATHEMATICS',
           topicos: [
-            'Teoria dos Conjuntos básica',
-            'Indução matemática',
-            'Limites do Raciocínio Formal: Teoremas de Completude e Incompletude (Gödel)',
-            'Decidibilidade e computabilidade — Turing',
-            'Lógica e linguagem formal'
+            'Basic Set Theory',
+            'Mathematical induction',
+            'Limits of Formal Reasoning: Completeness and Incompleteness Theorems (Gödel)',
+            'Decidability and computability — Turing',
+            'Logic and formal language'
           ]
         },
         {
-          nome: 'NÍVEL 6 — APLICAÇÕES AVANÇADAS',
+          nome: 'LEVEL 6 — ADVANCED APPLICATIONS',
           topicos: [
-            'Lógica e Inteligência Artificial',
-            'Lógica Jurídica e argumentação',
-            'Lógica e Linguística — semântica formal',
-            'Lógica Epistêmica — raciocínio sobre conhecimento',
-            'Paradoxos Clássicos (Mentiroso, Sorites, Russell) e o que Eles Ensinam',
-            'Modelagem de Problemas Complexos',
-            'Pensamento Sistêmico e Feedback Loops',
-            'Teoria dos Jogos: Decisões Interdependentes',
-            'Análise de Custo-Benefício e Decisão Racional',
-            'Raciocínio Contrafactual (E Se?)',
-            'Lógica Bayesiana: Atualizando Crenças com Evidências',
-            'Argumentação Probabilística vs Determinística'
+            'Logic and Artificial Intelligence',
+            'Legal Logic and argumentation',
+            'Logic and Linguistics — formal semantics',
+            'Epistemic Logic — reasoning about knowledge',
+            'Classical Paradoxes (Liar, Sorites, Russell) and What They Teach',
+            'Modelling Complex Problems',
+            'Systems Thinking and Feedback Loops',
+            'Game Theory: Interdependent Decisions',
+            'Cost-Benefit Analysis and Rational Decision-Making',
+            'Counterfactual Reasoning (What If?)',
+            'Bayesian Logic: Updating Beliefs with Evidence',
+            'Probabilistic vs Deterministic Argumentation'
           ]
         }
       ]
     },
     {
       slug: 'etica-dilemas',
-      nome: 'Ética & Tomada de Decisão Moral',
+      nome: 'Ethics & Moral Decision-Making',
       emoji: '🧭',
       isCategory: false,
       parent: 'filosofia-hub',
-      whyStart: 'Toda decisão importante é uma decisão ética disfarçada. Se você não tem framework, vai decidir por impulso e se arrepender.',
-      descricao: 'Frameworks éticos práticos para decisões difíceis no mundo real.',
-      contexto: `Foco: ética aplicada a decisões reais — negócios, tecnologia, relacionamentos.
+      whyStart: 'Every important decision is a disguised ethical decision. If you have no framework, you will decide by impulse and regret it.',
+      descricao: 'Practical ethical frameworks for difficult decisions in the real world.',
+      contexto: `Focus: applied ethics to real decisions — business, technology, relationships.
 
-Abordagem obrigatória:
-- Cada framework ético deve ser apresentado com um dilema real onde ele seria aplicado.
-- Nunca diga qual é a resposta "certa". Mostre os trade-offs de cada framework.`,
+Mandatory approach:
+- Each ethical framework must be presented with a real dilemma where it would be applied.
+- Never say which answer is the "right" one. Show the trade-offs of each framework.`,
       ementa: [
-        'Utilitarismo de Bentham: O Maior Bem Para o Maior Número',
-        'O Problema do Bonde (Trolley Problem) e Suas Variações',
-        'Ética Deontológica de Kant: Regras Absolutas vs Consequências',
-        'O Imperativo Categórico: "E Se Todo Mundo Fizesse Isso?"',
-        'Ética das Virtudes de Aristóteles: Ser Bom vs Fazer o Bem',
-        'Contratualismo (Rawls): O Véu da Ignorância na Hora de Decidir',
-        'Ética de Nietzsche: Moral dos Senhores vs Moral dos Escravos',
-        'Dilemas Éticos em IA: Viés Algorítmico e Responsabilidade',
-        'Ética nos Negócios: Lucro vs Responsabilidade Social (Friedman vs Stakeholder)',
-        'O Paradoxo da Tolerância (Karl Popper): Quando Tolerar a Intolerância?',
-        'Ética da Informação: Privacidade, Vigilância e Direito ao Esquecimento',
-        'Falácia Naturalista na Moral: "Sempre Foi Assim" Não Justifica Nada',
-        'Consequências de Segunda e Terceira Ordem: Efeitos Não Intencionais',
-        'O Problema do Free Rider e a Tragédia dos Comuns',
-        'Ética Estoica Aplicada: O Que Está Sob Seu Controle?'
+        "Bentham's Utilitarianism: The Greatest Good for the Greatest Number",
+        'The Trolley Problem and Its Variations',
+        "Kant's Deontological Ethics: Absolute Rules vs Consequences",
+        'The Categorical Imperative: "What If Everyone Did This?"',
+        "Aristotle's Virtue Ethics: Being Good vs Doing Good",
+        "Contractualism (Rawls): The Veil of Ignorance When Making Decisions",
+        "Nietzsche's Ethics: Master Morality vs Slave Morality",
+        'Ethical Dilemmas in AI: Algorithmic Bias and Responsibility',
+        'Business Ethics: Profit vs Social Responsibility (Friedman vs Stakeholder)',
+        'The Paradox of Tolerance (Karl Popper): When to Tolerate Intolerance?',
+        'Information Ethics: Privacy, Surveillance, and the Right to be Forgotten',
+        'The Naturalistic Fallacy in Morality: "It Has Always Been This Way" Justifies Nothing',
+        'Second and Third-Order Consequences: Unintended Effects',
+        'The Free Rider Problem and the Tragedy of the Commons',
+        'Applied Stoic Ethics: What Is Under Your Control?'
       ]
     }
   ]
