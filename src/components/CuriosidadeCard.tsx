@@ -18,6 +18,21 @@ import { MateriaConfig } from '@/types';
 import { ChevronsUpDown, Check } from 'lucide-react';
 
 const STORAGE_KEY = '@escola-tiago:curiosidade-dia';
+const HISTORY_KEY = '@escola-tiago:curiosidade-history';
+const MAX_HISTORY = 15;
+
+function getHistory(): string[] {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function saveToHistory(tema: string) {
+  const history = getHistory();
+  const updated = [tema, ...history.filter(t => t !== tema)].slice(0, MAX_HISTORY);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+}
 
 export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: string[] }) {
   const [curiosidade, setCuriosidade] = useState<CuriosidadeData | null>(null);
@@ -64,8 +79,9 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
     try {
       const temaEspecifico = selectedMateria === 'all' ? undefined : allMateriasFlat.find(m => m.slug === selectedMateria)?.nome;
       const todasMaterias = allMateriasFlat.map(m => m.nome);
+      const temasRecentes = getHistory();
       const { data, error } = await supabase.functions.invoke('curiosidade-dia', {
-        body: { materiasAtuais, temaEspecifico, todasMaterias }
+        body: { materiasAtuais, temaEspecifico, todasMaterias, temasRecentes }
       });
 
       if (error) throw error;
@@ -77,6 +93,7 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
       };
 
       setCuriosidade(newCuriosidade);
+      saveToHistory(newCuriosidade.tema);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newCuriosidade));
     } catch (e) {
       console.error("Falha ao buscar curiosidade", e);
