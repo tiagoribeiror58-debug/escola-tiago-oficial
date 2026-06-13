@@ -11,19 +11,28 @@ interface CuriosidadeData {
   dateStr: string;
 }
 
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { useTodosEstadosFlat } from '@/hooks/useSessoes';
+import { ChevronsUpDown, Check } from 'lucide-react';
+
 const STORAGE_KEY = '@escola-tiago:curiosidade-dia';
 
 export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: string[] }) {
   const [curiosidade, setCuriosidade] = useState<CuriosidadeData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedMateria, setSelectedMateria] = useState<string>('all');
+  const { estados } = useTodosEstadosFlat();
+  const availableMaterias = estados.map(e => e.config);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const loadCuriosidade = async (forceRefresh = false) => {
     const todayStr = new Date().toDateString();
     
-    if (!forceRefresh) {
+    if (!forceRefresh && selectedMateria === 'all') {
       try {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
@@ -40,8 +49,9 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
 
     setIsLoading(true);
     try {
+      const temaEspecifico = selectedMateria === 'all' ? undefined : availableMaterias.find(m => m.slug === selectedMateria)?.nome;
       const { data, error } = await supabase.functions.invoke('curiosidade-dia', {
-        body: { materiasAtuais }
+        body: { materiasAtuais, temaEspecifico }
       });
 
       if (error) throw error;
@@ -67,8 +77,8 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
   };
 
   useEffect(() => {
-    loadCuriosidade();
-  }, []);
+    loadCuriosidade(selectedMateria !== 'all');
+  }, [selectedMateria]);
 
   const handleSave = async () => {
     if (!curiosidade) return;
@@ -102,7 +112,7 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
     }
   };
 
-  if (!curiosidade && !isLoading) return null;
+  // if (!curiosidade && !isLoading) return null; // Remover isso para a UI sempre ficar visível pra poder trocar o dropdown
 
   return (
     <div className="relative overflow-hidden bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent border border-indigo-500/20 rounded-[2rem] p-6 shadow-sm">
@@ -124,14 +134,78 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
             </div>
           </div>
           
-          <button 
-            onClick={() => loadCuriosidade(true)}
-            disabled={isLoading}
-            className="p-2 hover:bg-muted/50 rounded-full transition-colors text-muted-foreground hover:text-foreground disabled:opacity-50"
-            title="Gerar nova curiosidade"
-          >
-            <RefreshCw className={cn("w-4 h-4", isLoading && "animate-spin")} />
-          </button>
+          <div className="flex items-center gap-2">
+            <Popover open={open} onOpenChange={setOpen} modal={true}>
+              <PopoverTrigger asChild>
+                <button
+                  role="combobox"
+                  aria-expanded={open}
+                  className="h-8 bg-background/50 border-border/50 text-xs rounded-lg px-2.5 text-foreground hover:bg-muted transition-colors border shadow-sm flex items-center justify-between min-w-[140px] max-w-[180px]"
+                >
+                  <span className="truncate mr-2">
+                    {selectedMateria === 'all' 
+                      ? "Qualquer assunto" 
+                      : availableMaterias.find((m) => m.slug === selectedMateria)?.nome || "Selecionar..."}
+                  </span>
+                  <ChevronsUpDown className="h-3 w-3 shrink-0 opacity-50" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[200px] p-0" align="end">
+                <Command>
+                  <CommandInput placeholder="Buscar matéria..." className="h-9 text-xs" />
+                  <CommandList>
+                    <CommandEmpty>Nenhuma encontrada.</CommandEmpty>
+                    <CommandGroup>
+                      <CommandItem
+                        value="all"
+                        onSelect={() => {
+                          setSelectedMateria('all');
+                          setOpen(false);
+                        }}
+                        className="text-xs"
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-3 w-3",
+                            selectedMateria === 'all' ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        Qualquer assunto
+                      </CommandItem>
+                      {availableMaterias.map(m => (
+                        <CommandItem
+                          key={m.slug}
+                          value={m.nome}
+                          onSelect={() => {
+                            setSelectedMateria(m.slug);
+                            setOpen(false);
+                          }}
+                          className="text-xs"
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-3 w-3",
+                              selectedMateria === m.slug ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          {m.nome}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+
+            <button 
+              onClick={() => loadCuriosidade(true)}
+              disabled={isLoading}
+              className="p-2 hover:bg-muted/50 rounded-full transition-colors text-muted-foreground hover:text-foreground disabled:opacity-50"
+              title="Gerar nova curiosidade"
+            >
+              <RefreshCw className={cn("w-4 h-4", isLoading && "animate-spin")} />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 min-h-[4rem] flex items-center mb-6">
