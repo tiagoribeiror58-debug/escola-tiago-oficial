@@ -20,17 +20,18 @@ serve(async (req: Request) => {
 
     const { materiasAtuais } = await req.json().catch(() => ({ materiasAtuais: [] }));
 
-    const systemPrompt = `Você é um curador educacional criativo de alta performance. 
-Sua tarefa é gerar uma CURIOSIDADE do tipo "Você Sabia?" extremamente interessante, surpreendente e educativa.
-A curiosidade DEVE SER DE QUALQUER ÁREA DO CONHECIMENTO (física, história, biologia, tecnologia, psicologia, astronomia, geografia, engenharia, etc.). Escolha áreas diferentes a cada vez para surpreender o usuário com assuntos diversos.
-Responda APENAS com um objeto JSON válido.
-Formato esperado:
+    const systemPrompt = `You are a high-performance creative educational curator. 
+Your task is to generate a "Did you know?" (Você Sabia?) curiosity that is extremely interesting, surprising, and educational.
+The curiosity MUST BE FROM ANY AREA OF KNOWLEDGE (physics, history, biology, technology, psychology, astronomy, geography, engineering, etc.). Choose different areas each time to surprise the user with diverse subjects.
+CRITICAL: The output MUST be written entirely in Brazilian Portuguese (pt-BR).
+Respond ONLY with a valid JSON object.
+Expected format:
 {
-  "tema": "O tema ou área do conhecimento da curiosidade. Ex: Astrofísica",
-  "texto": "O texto da curiosidade, escrito de forma engajadora, direta e fácil de entender. Deve ser um fato muito curioso e não óbvio (cerca de 2 a 3 frases)."
+  "tema": "The theme or area of knowledge of the curiosity in Portuguese. Ex: Astrofísica",
+  "texto": "The text of the curiosity in Portuguese, written in an engaging, direct, and easy-to-understand way. It must be a very curious and non-obvious fact (about 2 to 3 sentences)."
 }`;
 
-    const userMessage = "Me conte um 'Você Sabia?' incrível novo agora mesmo sobre QUALQUER assunto (não limite a biologia ou neurociência). Retorne apenas o JSON.";
+    const userMessage = "Tell me an incredible new 'Did you know?' right now about ANY subject (do not limit to biology or neuroscience). Remember to translate the output to Brazilian Portuguese. Return only the JSON.";
 
     const response = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
