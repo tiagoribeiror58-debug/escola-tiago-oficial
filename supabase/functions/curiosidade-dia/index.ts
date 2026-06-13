@@ -22,7 +22,7 @@ serve(async (req: Request) => {
 
     const systemPrompt = `Você é um curador educacional criativo de alta performance. 
 Sua tarefa é gerar uma CURIOSIDADE do tipo "Você Sabia?" extremamente interessante, surpreendente e educativa.
-Pode ser sobre um mecanismo, fato histórico ou conceito incrível, preferencialmente ligada a essas áreas que o usuário estuda: ${materiasAtuais?.join(", ") || 'Ciências, História, Tecnologia, Biologia'}.
+A curiosidade DEVE SER DE QUALQUER ÁREA DO CONHECIMENTO (física, história, biologia, tecnologia, psicologia, astronomia, geografia, engenharia, etc.). Escolha áreas diferentes a cada vez para surpreender o usuário com assuntos diversos.
 Responda APENAS com um objeto JSON válido.
 Formato esperado:
 {
@@ -30,7 +30,7 @@ Formato esperado:
   "texto": "O texto da curiosidade, escrito de forma engajadora, direta e fácil de entender. Deve ser um fato muito curioso e não óbvio (cerca de 2 a 3 frases)."
 }`;
 
-    const userMessage = "Me conte um 'Você Sabia?' incrível novo agora mesmo. Retorne apenas o JSON.";
+    const userMessage = "Me conte um 'Você Sabia?' incrível novo agora mesmo sobre QUALQUER assunto (não limite a biologia ou neurociência). Retorne apenas o JSON.";
 
     const response = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
@@ -39,8 +39,8 @@ Formato esperado:
         "Authorization": `Bearer ${geminiKey}`,
       },
       body: JSON.stringify({
-        model: "deepseek-v4-flash",
-        temperature: 0.8, // maior criatividade
+        model: "deepseek-chat",
+        temperature: 1.1, // maior criatividade e aleatoriedade
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userMessage }
