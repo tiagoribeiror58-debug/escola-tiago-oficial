@@ -39,7 +39,7 @@ Formato esperado:
         "Authorization": `Bearer ${geminiKey}`,
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
+        model: "deepseek-v4-flash",
         temperature: 1.1, // maior criatividade e aleatoriedade
         messages: [
           { role: "system", content: systemPrompt },
