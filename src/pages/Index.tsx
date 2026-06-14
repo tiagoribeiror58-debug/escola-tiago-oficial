@@ -118,7 +118,7 @@ function getGreeting(): string {
 export default function Index() {
   const { estados, isLoading } = useTodosEstadosFlat();
   const { foco, toggleFoco, isFocado } = useMateriasFoco();
-  const { focoPrincipal, toggleFocoPrincipal, isFocoPrincipal } = useMateriaFocoPrincipal();
+  const { focoPrincipal, focosPrincipais, toggleFocoPrincipal, isFocoPrincipal } = useMateriaFocoPrincipal();
   const { data: sessoes } = useSessoes();
   const recomendacao = useProximoPassoRecomendado();
   const { data: metricasRevisao } = useMetricasRevisao();
@@ -267,6 +267,12 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = useState('');
   const normalizedQuery = searchQuery.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
+  // Buscas inline específicas por seção (dentro da aba Mesa de Estudos)
+  const [hubInlineSearch, setHubInlineSearch] = useState('');
+  const [materiaInlineSearch, setMateriaInlineSearch] = useState('');
+  const normalizedHubInline = hubInlineSearch.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const normalizedMateriaInline = materiaInlineSearch.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
   // ---- Filtro de busca dentro da Mesa de Estudos (foco) ----
   const filterByQuery = (e: MateriaEstado) => {
     if (!normalizedQuery) return true;
@@ -337,7 +343,8 @@ export default function Index() {
   };
 
   const handleToggleFocoPrincipal = (slug: string) => {
-    if (focoPrincipal !== slug && !isFocado(slug)) {
+    // Se ainda não está no foco manual, adiciona automaticamente
+    if (!isFocoPrincipal(slug) && !isFocado(slug)) {
       toggleFoco(slug);
     }
     toggleFocoPrincipal(slug);
@@ -581,30 +588,32 @@ export default function Index() {
           </div>
         )}
 
-        {/* Foco Principal Isolado */}
-        {currentTab === 'foco' && !searchQuery && focoPrincipal && (
+        {/* Focos Principais Isolados — agora suporta múltiplos */}
+        {currentTab === 'foco' && !searchQuery && focosPrincipais.length > 0 && (
           <div className="mb-8">
             <h4 className="text-sm font-bold mb-4 text-amber-500 uppercase tracking-widest flex items-center gap-2">
               <Star className="w-4 h-4" />
               Objetivo Principal
             </h4>
-            {displayedFoco.filter(e => e.config.slug === focoPrincipal).map(estado => (
-              <MateriaCard
-                key={estado.config.slug}
-                estado={estado}
-                onClick={() => handleCardClick(estado)}
-                isPinned={isFixada(estado.config.slug)}
-                onTogglePin={(e: React.MouseEvent) => {
-                  e.stopPropagation();
-                  toggleFixada(estado.config.slug);
-                }}
-                isFocoPrincipal={true}
-                onToggleFocoPrincipal={(e: React.MouseEvent) => {
-                  e.stopPropagation();
-                  handleToggleFocoPrincipal(estado.config.slug);
-                }}
-              />
-            ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {displayedFoco.filter(e => focosPrincipais.includes(e.config.slug)).map(estado => (
+                <MateriaCard
+                  key={estado.config.slug}
+                  estado={estado}
+                  onClick={() => handleCardClick(estado)}
+                  isPinned={isFixada(estado.config.slug)}
+                  onTogglePin={(e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    toggleFixada(estado.config.slug);
+                  }}
+                  isFocoPrincipal={true}
+                  onToggleFocoPrincipal={(e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    handleToggleFocoPrincipal(estado.config.slug);
+                  }}
+                />
+              ))}
+            </div>
           </div>
         )}
 
@@ -672,11 +681,27 @@ export default function Index() {
                     )}
                     {visibleHubsFoco.length > 0 && (
                       <div>
-                        <h4 className="text-sm font-medium mb-3 text-muted-foreground">Hubs em Foco</h4>
+                        <div className="flex items-center gap-2 mb-3">
+                          <h4 className="text-sm font-medium text-muted-foreground flex-1">Hubs em Foco</h4>
+                          <div className="relative">
+                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+                            <input
+                              type="text"
+                              value={hubInlineSearch}
+                              onChange={e => setHubInlineSearch(e.target.value)}
+                              placeholder="Buscar hub..."
+                              className="pl-8 pr-3 py-1.5 text-xs bg-muted/40 border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20 transition-all w-36"
+                            />
+                          </div>
+                        </div>
                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
                             <SortableContext items={visibleHubsFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
-                              {visibleHubsFoco.filter(e => e.config.slug !== focoPrincipal).map(estado => (
+                              {visibleHubsFoco.filter(e => !focosPrincipais.includes(e.config.slug)).filter(e => {
+                                if (!normalizedHubInline) return true;
+                                const nome = e.config.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                                return nome.includes(normalizedHubInline);
+                              }).map(estado => (
                                 <SortableItem
                                   key={estado.config.slug}
                                   id={estado.config.slug}
@@ -709,11 +734,27 @@ export default function Index() {
                     )}
                     {visibleMateriasFoco.length > 0 && (
                       <div>
-                        <h4 className="text-sm font-medium mb-3 text-muted-foreground">Matérias em Foco</h4>
+                        <div className="flex items-center gap-2 mb-3">
+                          <h4 className="text-sm font-medium text-muted-foreground flex-1">Matérias em Foco</h4>
+                          <div className="relative">
+                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+                            <input
+                              type="text"
+                              value={materiaInlineSearch}
+                              onChange={e => setMateriaInlineSearch(e.target.value)}
+                              placeholder="Buscar matéria..."
+                              className="pl-8 pr-3 py-1.5 text-xs bg-muted/40 border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20 transition-all w-36"
+                            />
+                          </div>
+                        </div>
                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
                             <SortableContext items={visibleMateriasFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
-                              {visibleMateriasFoco.filter(e => e.config.slug !== focoPrincipal).map(estado => (
+                              {visibleMateriasFoco.filter(e => !focosPrincipais.includes(e.config.slug)).filter(e => {
+                                if (!normalizedMateriaInline) return true;
+                                const nome = e.config.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                                return nome.includes(normalizedMateriaInline);
+                              }).map(estado => (
                                 <SortableItem
                                   key={estado.config.slug}
                                   id={estado.config.slug}
