@@ -1,4 +1,4 @@
-import { useMateriasEstado } from '@/hooks/useSessoes';
+import { useMateriasEstado, useTodasEmentasConcluidas } from '@/hooks/useSessoes';
 import { useWeakSpots } from '@/hooks/useWeakSpots';
 import { getMateriaBySlug } from '@/lib/materias';
 import { MateriaEstado } from '@/types';
@@ -10,10 +10,15 @@ import { cn } from '@/lib/utils';
 export default function Avaliacoes() {
   const { estados, isLoading } = useMateriasEstado();
   const { data: weakSpots, isLoading: isLoadingWeak } = useWeakSpots();
+  const { data: concluidosGlobais } = useTodasEmentasConcluidas();
   const navigate = useNavigate();
 
   const desafiosPendentes: MateriaEstado[] = estados.filter(
     (e) => !e.config.isCategory && e.provasPendentes > 0
+  );
+
+  const materiasParaPraticar: MateriaEstado[] = estados.filter(
+    (e) => !e.config.isCategory && concluidosGlobais?.some(c => c.materia === e.config.slug)
   );
 
   return (
@@ -155,6 +160,45 @@ export default function Avaliacoes() {
                   estado={estado}
                   onStart={() => navigate(`/sessao/${estado.config.slug}?modo=avaliacao`)}
                 />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <div className="border-t border-border my-10" />
+
+        {/* ── SEÇÃO: PRATICAR POR MATÉRIA (LIVRE) ── */}
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <Zap className="w-4 h-4 text-foreground" />
+            <h2 className="text-sm font-semibold text-foreground uppercase tracking-widest">Praticar por Matéria</h2>
+          </div>
+
+          {!materiasParaPraticar || materiasParaPraticar.length === 0 ? (
+            <div className="py-10 text-center border border-dashed border-border rounded-xl">
+              <p className="text-muted-foreground text-sm">
+                Complete tópicos em alguma matéria para desbloquear a prática livre.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {materiasParaPraticar.map((estado) => (
+                <div key={`pratica-${estado.config.slug}`} className="flex items-center justify-between gap-4 px-5 py-4 rounded-xl border border-border bg-card hover:border-foreground/20 transition-colors">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="text-xl shrink-0">{estado.config.emoji}</span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">
+                        {estado.config.nome}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => navigate(`/sessao/${estado.config.slug}?modo=avaliacao`)}
+                    className="shrink-0 px-3 py-1.5 text-xs font-semibold rounded-lg border border-border bg-transparent hover:bg-muted text-foreground transition-all"
+                  >
+                    Praticar
+                  </button>
+                </div>
               ))}
             </div>
           )}

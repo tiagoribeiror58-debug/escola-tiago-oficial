@@ -6,7 +6,7 @@ import { useMateriaFocoPrincipal } from '@/hooks/useMateriaFocoPrincipal';
 import MateriaCard from '@/components/MateriaCard';
 import { CuriosidadeCard } from '@/components/CuriosidadeCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen, Library, Flame, Play, ChevronRight, ChevronDown, Pin } from 'lucide-react';
+import { BookOpen, Library, Flame, Play, ChevronRight, ChevronDown, Pin, Star } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
