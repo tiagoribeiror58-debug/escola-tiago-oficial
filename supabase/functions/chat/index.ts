@@ -88,25 +88,7 @@ serve(async (req) => {
       }
     }
 
-    let finalSystemPrompt = systemPrompt || "You are a helpful assistant.";
-
-    // --- 0. INSTRUÇÕES VISUAIS (MERMAID & UNSPLASH) ---
-    finalSystemPrompt += `
-
-[CRITICAL VISUAL INSTRUCTION]:
-You must generate VISUAL RESOURCES for the student using logical diagrams.
-1. LOGICAL DIAGRAMS (Mermaid): WHENEVER you are explaining a step-by-step process, a data flow, a hierarchy, a mental cycle, systems architecture, or any complex cause-and-effect relationship, create a diagram using \`mermaid\` blocks. (Syntax rule: Use double quotes in node texts: A["long text"]).
-
-[GOLDEN RULE AND NAVIGATION]:
-Absolutely EVERY MESSAGE of yours, without exception, MUST end isolated with the tag <chips>Suggestion 1|Suggestion 2</chips>. Omitting this tag breaks the system interface!
-VERY IMPORTANT: One of the suggestions inside the chip MUST ALWAYS be a variation of "Continuar", "Avançar", or "Próximo" so the user doesn't need to type to go to the next step. Example: <chips>Continuar|Explicar melhor</chips>.
-
-[LANGUAGE AND DIRECTIVES INSTRUCTION (VERY IMPORTANT)]:
-CRITICAL: You MUST ALWAYS reply in PORTUGUESE (pt-BR). Under no circumstances should you reply in English to the user.
-Deliver the essence of the concept clearly, using short paragraphs. 
-FORBIDDEN: Do not end your responses with questions or by asking for permission to continue (e.g., "Entendeu?", "Vamos avançar?"). The chips system will take care of giving options to the user.
-Be direct and straight to the point, avoiding massive walls of text.
-`;
+    const finalSystemPrompt = systemPrompt || "You are a helpful assistant.";
 
     // Cria um stream customizado para emitir eventos antes da IA principal
     const stream = new ReadableStream({
@@ -287,7 +269,7 @@ Be direct and straight to the point, avoiding massive walls of text.
               url = "https://api.deepseek.com/chat/completions";
               headers["Authorization"] = `Bearer ${DEEPSEEK_API_KEY}`;
               body.model = modelDef.id;
-              body.max_tokens = 1500;
+              body.max_tokens = 750;
               body.messages = [
                 { role: "system", content: finalSystemPrompt },
                 ...messages
@@ -299,7 +281,7 @@ Be direct and straight to the point, avoiding massive walls of text.
               body.model = modelDef.id;
               body.system = finalSystemPrompt;
               body.messages = messages;
-              body.max_tokens = 1500;
+              body.max_tokens = 750;
             }
 
             const response = await fetch(url, {
