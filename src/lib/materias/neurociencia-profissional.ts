@@ -872,67 +872,99 @@ Mandatory approach:
       whyStart: 'Your brain runs on a biological server. If the server falters, your intellect doesn\'t matter.',
       descricao: 'Sleep optimization, circadian rhythms, and metabolic pathways (mTOR, AMPK).',
       contexto: 'Pure scientific focus (Huberman, Peter Attia). No pseudoscience. Explain the metabolic pathway before talking about what to do.',
-      ementa: [
-        'O Sistema Glinfático e a Lavagem Cerebral Noturna',
-        'Arquitetura do Sono: Transição N1, N2, N3 e REM',
-        'A Pressão Homestática de Adenosina',
-        'A Glândula Pineal e a Secreção de Melatonina Endógena',
-        'O Efeito da Luz Azul Suprimindo a Melatonina',
-        'Cronotipos Genéticos (Ursos, Lobos, Leões, Golfinhos)',
-        'Jet Lag Social e a Desincronização Circadiana',
-        'Micro-despertares (Arousals) e Apneia Oculta',
-        'Métricas de Polissonografia (HRV durante o sono)',
-        'O Papel do Magnésio (Treonato/Bisglicinato) e Apigenina',
-        'O que é a Via mTOR e o paradoxo do Crescimento Celular',
-        'AMPK: O Interruptor de Energia e Sobrevivência',
-        'Autofagia e Senescência Celular (Células Zumbi)',
-        'Sensibilidade à Insulina vs Resistência Periférica',
-        'Flexibilidade Metabólica: Queimando Glicose vs Cetona',
-        'Biogênese Mitocondrial: Aumentando o motor da célula',
-        'NAD+ e as Sirtuínas (O gene da longevidade)',
-        'A Matemática da Zona 2 de Cardio (Ácido Lático Baseline)',
-        'VO2 Max como o maior preditor de expectativa de vida',
-        'Telômeros e a Enzima Telomerase',
-        'Biodisponibilidade vs Densidade Nutricional',
-        'O Eixo Intestino-Cérebro e o Nervo Vago',
-        'O Microbioma e a Produção de Serotonina Intestinal',
-        'Equilíbrio Sódio-Potássio na Bomba Celular',
-        'Ômega-3 (EPA/DHA) e a Fluidez da Membrana Neural',
-        'Carb Cycling Estratégico para Picos de Glicogênio',
-        'Dieta Cetogênica e Produção de Beta-Hidroxibutirato',
-        'Fatores Antinutricionais (Fitatos, Oxalatos, Lectinas)',
-        'A Fisiologia do Jejum Intermitente Prolongado (48h+)',
-        'Hormesis: A dose certa de estresse biológico',
-        'Exposição Ativa ao Frio (Crioterapia) e Vasoconstrição',
-        'Ativação do Tecido Adiposo Marrom (Gordura Marrom)',
-        'Liberação de Noradrenalina Induzida pelo Frio',
-        'Terapia de Choque Térmico (Sauna) e Proteínas Heat Shock (HSP)',
-        'O Sistema Linfático e a Eliminação de Metabólitos',
-        'Terapia de Luz Vermelha (Fotobiomodulação) em ATP',
-        'Aterramento (Earthing) e Transferência de Elétrons',
-        'Exercícios Isométricos de Super-compensação',
-        'Engenharia da Longevidade: Protocolos de Reversão Biológica',
-        'Nutrição Baseada em Biomarcadores em Tempo Real',
-        'Biohacking de Terceira Geração: Senolíticos e Reprogramação Celular',
-        'Ritmo Circadiano e Luz Solar Matinal',
-        'Arquitetura do Sono (REM e Deep Sleep)',
-        'Termogênese e Cold Exposure',
-        'Janela Alimentar e Otimização Metabólica',
-        'Neurotransmissores e Nutrição (Dopamina Base)',
-        'Protocolos de Luz: Manhã, Tarde e Noite',
-        'Sauna e Heat Shock Proteins',
-        'Suplementos com Evidência: Creatina, Magnésio, Vitamina D',
-        'HRV (Heart Rate Variability) como Marcador de Recuperação',
-        'Zonas de Treino Aeróbico para Longevidade',
-        'Modulação de Cortisol ao Longo do Dia',
-        'Jejum Prolongado: Benefícios e Riscos Estruturais',
-        'Técnicas de Respiração (Wim Hof, Box Breathing)',
-        'Monitoring Wearables: O Que Vale Medir',
-        'Longevidade: O Protocolo de Bryan Johnson',
-        'Terapia de Luz Vermelha (Fotobiomodulação)',
-        'Grounding (Earthing): Evidências e Limitações',
-        'CGM (Continuous Glucose Monitor): Monitorando Glicose em Tempo Real',
-        'Peptídeos e Hormesis: Fronteiras da Otimização'
+      fases: [
+        {
+          nome: 'Phase 0: Fundamentos — O Hardware da Vida',
+          topicos: [
+            'Ritmo Circadiano e Luz Solar Matinal',
+            'O Sistema Glinfático e a Lavagem Cerebral Noturna',
+            'Arquitetura do Sono: Transição N1, N2, N3 e REM',
+            'A Pressão Homeostática de Adenosina',
+            'A Glândula Pineal e a Secreção de Melatonina Endógena',
+            'Cronotipos Genéticos (Ursos, Lobos, Leões, Golfinhos)',
+            'Jet Lag Social e a Desincronização Circadiana',
+            'O Efeito da Luz Azul Suprimindo a Melatonina',
+            'Sensibilidade à Insulina vs Resistência Periférica',
+            'Equilíbrio Sódio-Potássio na Bomba Celular'
+          ]
+        },
+        {
+          nome: 'Phase 1: Bioquímica da Performance — Os Motores Celulares',
+          topicos: [
+            'O que é a Via mTOR e o Paradoxo do Crescimento Celular',
+            'AMPK: O Interruptor de Energia e Sobrevivência',
+            'Autofagia e Senescência Celular (Células Zumbi)',
+            'Flexibilidade Metabólica: Queimando Glicose vs Cetona',
+            'Biogênese Mitocondrial: Aumentando o Motor da Célula',
+            'NAD+ e as Sirtuínas (O Gene da Longevidade)',
+            'Telômeros e a Enzima Telomerase',
+            'Biodisponibilidade vs Densidade Nutricional',
+            'Fatores Antinutricionais (Fitatos, Oxalatos, Lectinas)',
+            'Micro-despertares (Arousals) e Apneia Oculta'
+          ]
+        },
+        {
+          nome: 'Phase 2: Nutrição de Precisão — Combustível para o Sistema',
+          topicos: [
+            'Neurotransmissores e Nutrição (Dopamina Base)',
+            'Ômega-3 (EPA/DHA) e a Fluidez da Membrana Neural',
+            'O Eixo Intestino-Cérebro e o Nervo Vago',
+            'O Microbioma e a Produção de Serotonina Intestinal',
+            'O Papel do Magnésio (Treonato/Bisglicinato) e Apigenina',
+            'Suplementos com Evidência: Creatina, Magnésio, Vitamina D',
+            'Dieta Cetogênica e Produção de Beta-Hidroxibutirato',
+            'Carb Cycling Estratégico para Picos de Glicogênio',
+            'Janela Alimentar e Otimização Metabólica',
+            'A Fisiologia do Jejum Intermitente Prolongado (48h+)'
+          ]
+        },
+        {
+          nome: 'Phase 3: Estresse Hormético — Estímulos que Fortalecem',
+          topicos: [
+            'Hormesis: A Dose Certa de Estresse Biológico',
+            'Exposição Ativa ao Frio (Crioterapia) e Vasoconstrição',
+            'Ativação do Tecido Adiposo Marrom (Gordura Marrom)',
+            'Liberação de Noradrenalina Induzida pelo Frio',
+            'Termogênese e Cold Exposure',
+            'Terapia de Choque Térmico (Sauna) e Proteínas Heat Shock (HSP)',
+            'Protocolos de Luz: Manhã, Tarde e Noite',
+            'Terapia de Luz Vermelha (Fotobiomodulação) em ATP',
+            'Aterramento (Earthing) e Transferência de Elétrons',
+            'Técnicas de Respiração (Wim Hof, Box Breathing)'
+          ]
+        },
+        {
+          nome: 'Phase 4: Movimento e Longevidade — Treino como Medicina',
+          topicos: [
+            'A Matemática da Zona 2 de Cardio (Ácido Lático Baseline)',
+            'Zonas de Treino Aeróbico para Longevidade',
+            'VO2 Max como o Maior Preditor de Expectativa de Vida',
+            'Exercícios Isométricos de Super-compensação',
+            'Modulação de Cortisol ao Longo do Dia',
+            'O Sistema Linfático e a Eliminação de Metabólitos',
+            'Métricas de Polissonografia (HRV durante o Sono)'
+          ]
+        },
+        {
+          nome: 'Phase 5: Monitoramento e Biofeedback — Medindo para Otimizar',
+          topicos: [
+            'HRV (Heart Rate Variability) como Marcador de Recuperação',
+            'CGM (Continuous Glucose Monitor): Monitorando Glicose em Tempo Real',
+            'Monitoring Wearables: O Que Vale Medir',
+            'Jejum Prolongado: Benefícios e Riscos Estruturais'
+          ]
+        },
+        {
+          nome: 'Phase 6: Fronteira da Longevidade — Protocolos Avançados',
+          topicos: [
+            'Engenharia da Longevidade: Protocolos de Reversão Biológica',
+            'Nutrição Baseada em Biomarcadores em Tempo Real',
+            'Biohacking de Terceira Geração: Senolíticos e Reprogramação Celular',
+            'Longevidade: O Protocolo de Bryan Johnson',
+            'Peptídeos e Hormesis: Fronteiras da Otimização',
+            'Grounding (Earthing): Evidências e Limitações'
+          ]
+        }
       ]
     },
     {
