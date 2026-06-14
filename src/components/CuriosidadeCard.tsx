@@ -58,7 +58,8 @@ export function CuriosidadeCard({ materiasAtuais = [] }: { materiasAtuais?: stri
   const queryClient = useQueryClient();
 
   const loadCuriosidade = async (forceRefresh = false) => {
-    const todayStr = new Date().toDateString();
+    const now = new Date();
+    const todayStr = `${now.toDateString()} ${now.getHours()}h`;
     
     if (!forceRefresh && selectedMateria === 'all') {
       try {
