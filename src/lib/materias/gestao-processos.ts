@@ -9,134 +9,45 @@ export const gestaoSistemasHub: MateriaConfig = {
   children: [
     {
       slug: 'sistemas-fundamentos',
-      nome: 'Systems Thinking (Pensamento Sistêmico)',
+      nome: 'Fundamentos de Sistemas & Gestão',
       emoji: '🔄',
       parent: 'gestao-sistemas',
       whyStart: 'Se você foca em metas, você ganha uma vez. Se você foca em sistemas, você ganha para sempre.',
-      descricao: 'A diferença entre esforço bruto e alavancagem através de sistemas.',
-      contexto: `Foco: Ensinar o aluno a enxergar tudo como um sistema (Inputs, Processos, Outputs e Feedback Loops). Ignore as ferramentas (Notion, ClickUp) e foque na física de como o trabalho flui.`,
+      descricao: 'O canivete suíço de operações: processos, dados, projetos e automações em um único fluxo de aprendizado.',
+      contexto: `Foco: Ensinar o aluno a enxergar tudo como um sistema, mapear fluxos, organizar dados e criar automações sólidas.`,
       fases: [
         {
-          nome: 'Fase 1 — Fundamentos: A Anatomia dos Sistemas',
+          nome: 'Fase 1 — O Motor Lógico (Systems Thinking & Projetos)',
           topicos: [
-            'Sistemas vs. Metas: A filosofia de James Clear aplicada à gestão',
-            'Inputs, Outputs e Feedback Loops: A anatomia de qualquer processo'
+            'Sistemas vs. Metas: A filosofia aplicada à gestão',
+            'Inputs, Outputs e Feedback Loops: A anatomia de qualquer processo',
+            'Projetos vs. Processos (Operações contínuas vs. Esforço temporário)',
+            'A Tríplice Restrição: Escopo, Tempo e Custo',
+            'Quebra de Escopo (WBS/EAP): Como fatiar o elefante',
+            'Scrum na Prática: Papéis, Cerimônias e Artefatos',
+            'Gestão de Sprints e Daily Stand-ups'
           ]
         },
         {
-          nome: 'Fase 2 — Intermediário: Encontrando e Resolvendo Gargalos',
+          nome: 'Fase 2 — A Engrenagem (Processos e Automação)',
           topicos: [
-            'A Teoria das Restrições (Gargalos): Onde a velocidade real é definida',
-            'Fricção: A física de como os hábitos e processos morrem',
+            'SOPs (Standard Operating Procedures) e o Manifesto do Checklist',
+            'A Teoria das Restrições (Gargalos) e a Lei de Parkinson',
+            'Kanban Avançado: Limitando WIP e Métricas de Fluxo',
+            'APIs para Leigos: Como os softwares conversam na internet',
+            'Gatilhos, Ações e Webhooks na Automação (Make/Zapier)',
             'Design de Sistemas à prova de falhas humanas (Poka-Yoke)'
           ]
         },
         {
-          nome: 'Fase 3 — Avançado: Alavancagem e Sustentabilidade',
+          nome: 'Fase 3 — O Cérebro (Dados e Gestão do Conhecimento)',
           topicos: [
-            'Alavancagem (Leverage): Esforço linear vs. Resultados exponenciais',
-            'Manutenção de Sistemas: A entropia natural de qualquer organização'
-          ]
-        }
-      ]
-    },
-    {
-      slug: 'processos-operacionais',
-      nome: 'Processos e Fluxos de Trabalho',
-      emoji: '📋',
-      parent: 'gestao-sistemas',
-      whyStart: 'Processos ruins quebram boas pessoas. Você precisa saber desenhar caminhos óbvios.',
-      descricao: 'Como mapear o trabalho, criar procedimentos padrão e eliminar gargalos.',
-      contexto: `Foco: O design de processos empresariais e pessoais. Não fale de botões de software. Fale sobre como a informação viaja, como responsabilidades são passadas adiante e como evitar retrabalho.`,
-      fases: [
-        {
-          nome: 'Fase 1 — Fundamentos: Mapeando e Documentando',
-          topicos: [
-            'SOPs (Standard Operating Procedures): Como documentar o óbvio',
-            'O Manifesto do Checklist: Reduzindo erros catastróficos',
-            'Mapeamento de Fluxo de Valor (Value Stream Mapping)'
-          ]
-        },
-        {
-          nome: 'Fase 2 — Intermediário: Fluxo e Controle de Trabalho',
-          topicos: [
-            'Kanban Pessoal e Empresarial: Limitando o Work in Progress (WIP)',
-            'Push vs. Pull: Como o trabalho deve ser distribuído',
-            'A Lei de Parkinson no trabalho: Tempo e Escopo'
-          ]
-        },
-        {
-          nome: 'Fase 3 — Avançado: Comunicação e Tomada de Decisão',
-          topicos: [
-            'Comunicação Assíncrona vs. Síncrona: Quando usar cada uma',
-            'Triagem: A diferença vital entre Urgente, Importante e Ruído'
-          ]
-        }
-      ]
-    },
-    {
-      slug: 'arquitetura-informacao',
-      nome: 'Arquitetura de Dados & Ferramentas',
-      emoji: '🗄️',
-      parent: 'gestao-sistemas',
-      whyStart: 'Planilhas, Notion ou ClickUp são apenas bancos de dados disfarçados. Entenda a lógica por trás.',
-      descricao: 'A teoria dos bancos de dados relacionais aplicada à produtividade e gestão.',
-      contexto: `Foco: Fundamentos de bancos de dados relacionais para leigos. Ensine o conceito de tabelas, relações e views, para que o aluno consiga montar sua gestão no Excel, Notion, Coda ou num pedaço de papel.`,
-      fases: [
-        {
-          nome: 'Fase 1 — Fundamentos: A Lógica dos Dados Relacionais',
-          topicos: [
-            'Listas Planas vs. Bancos de Dados Relacionais',
-            'Tipos de Dados Essenciais: Strings, Datas, Status e Relações'
-          ]
-        },
-        {
-          nome: 'Fase 2 — Intermediário: Estrutura e Normalização',
-          topicos: [
+            'Bancos de Dados Relacionais vs. Listas Planas',
             'A Regra de Ouro da Normalização: Uma informação, um único lugar',
-            'Rollups e Lookups: Como fazer bancos de dados conversarem',
-            'A Separação entre Dados e Visualização (Tabelas vs. Boards/Views)'
-          ]
-        },
-        {
-          nome: 'Fase 3 — Avançado: Manutenção e Single Source of Truth',
-          topicos: [
-            'Taxonomias e Nomenclatura: Como não perder arquivos na nuvem',
-            'Estado Mestre: O conceito de "Single Source of Truth"',
-            'Por que a maioria dos sistemas de Notion viram cemitérios de dados'
-          ]
-        }
-      ]
-    },
-    {
-      slug: 'gestao-conhecimento',
-      nome: 'Gestão do Conhecimento (Second Brain)',
-      emoji: '🧠',
-      parent: 'gestao-sistemas',
-      whyStart: 'Sua mente foi feita para ter ideias, não para guardá-las.',
-      descricao: 'Como capturar, organizar e recuperar informações usando princípios universais.',
-      contexto: `Foco: Metodologias agnósticas (PARA, Zettelkasten) para organizar o conhecimento. O foco é em 'Retrieval' (recuperação) e não apenas em acumular lixo digital.`,
-      fases: [
-        {
-          nome: 'Fase 1 — Fundamentos: Captura e Estruturação',
-          topicos: [
+            'Estado Mestre e o conceito de "Single Source of Truth"',
             'O Método P.A.R.A: Projetos, Áreas, Recursos e Arquivos',
-            'Captura Universal: O funil de entrada zero fricção',
-            'Organização Orientada à Ação: Pastas baseadas no "Quando" e não no "O Que"'
-          ]
-        },
-        {
-          nome: 'Fase 2 — Intermediário: Processamento e Conexão',
-          topicos: [
-            'A Regra do Destilamento (Progressive Summarization)',
-            'Zettelkasten: Interligando ideias como neurônios'
-          ]
-        },
-        {
-          nome: 'Fase 3 — Avançado: Manutenção e Realidade',
-          topicos: [
-            'O Mito da Organização Perfeita: Tolerância à bagunça produtiva',
-            'Revisão Semanal: A manutenção essencial do seu Second Brain'
+            'Progressive Summarization e Zettelkasten',
+            'Alavancagem (Leverage): Resultados exponenciais e Manutenção de Sistemas'
           ]
         }
       ]
@@ -196,82 +107,6 @@ export const gestaoSistemasHub: MateriaConfig = {
             'Indústria 4.0: IoT, gêmeos digitais, automação e o que muda na lógica de produção',
             'Sustentabilidade em Operações: logística reversa, economia circular e pressão ESG',
             'Estratégia de Operações: como decisões de produção criam (ou destroem) vantagem competitiva'
-          ]
-        }
-      ]
-    },
-    {
-      slug: 'gestao-projetos',
-      nome: 'Gestão Ágil de Projetos',
-      emoji: '🎯',
-      parent: 'gestao-sistemas',
-      whyStart: 'Processos dizem como a empresa funciona. Projetos dizem como mudar a empresa. Você precisa saber tirar as coisas do papel.',
-      descricao: 'Metodologias ágeis (Scrum, Kanban avançado, Sprints) para planejamento e execução de projetos complexos.',
-      contexto: 'Foco: Execução e entrega de valor. Como quebrar grandes objetivos em tarefas executáveis e como gerenciar o tempo e recursos em um projeto com início, meio e fim.',
-      fases: [
-        {
-          nome: 'Fase 1 — Fundamentos: O que é um Projeto',
-          topicos: [
-            'Projetos vs. Processos (Operações contínuas vs. Esforço temporário)',
-            'A Tríplice Restrição: Escopo, Tempo e Custo',
-            'O Manifesto Ágil: Por que o modelo tradicional (Waterfall) falha',
-            'Quebra de Escopo (WBS/EAP): Como fatiar o elefante'
-          ]
-        },
-        {
-          nome: 'Fase 2 — Intermediário: Frameworks de Execução',
-          topicos: [
-            'Scrum na Prática: Papéis, Cerimônias e Artefatos',
-            'Kanban Avançado: Classes de Serviço e Métricas de Fluxo (Lead Time/Cycle Time)',
-            'Estimativas Ágeis: Planning Poker e Pontos de História',
-            'Gestão de Sprints e Daily Stand-ups'
-          ]
-        },
-        {
-          nome: 'Fase 3 — Avançado: Liderança e Entrega',
-          topicos: [
-            'Gestão de Stakeholders: Comunicação e Expectativas',
-            'Gestão de Riscos: Matriz de Probabilidade x Impacto',
-            'O papel do Product Owner e do Scrum Master',
-            'Retrospectivas e Melhoria Contínua do Time'
-          ]
-        }
-      ]
-    },
-    {
-      slug: 'gestao-automacao',
-      nome: 'Automação de Sistemas (No-Code)',
-      emoji: '⚡',
-      parent: 'gestao-sistemas',
-      whyStart: 'Se um computador pode fazer, você não deveria estar fazendo. Liberte seu tempo.',
-      descricao: 'Como usar ferramentas no-code (Make, Zapier, n8n) para automatizar tarefas repetitivas e integrar sistemas.',
-      contexto: 'Foco: Lógica de programação aplicada visualmente. O aluno deve entender como APIs conversam, o que são Webhooks e como estruturar cenários de automação robustos.',
-      fases: [
-        {
-          nome: 'Fase 1 — Fundamentos: A Lógica da Automação',
-          topicos: [
-            'Gatilhos (Triggers) e Ações (Actions): A base de qualquer automação',
-            'APIs para Leigos: Como os softwares conversam na internet',
-            'Make vs. Zapier vs. n8n: Escolhendo a ferramenta certa',
-            'Webhooks: Escutando eventos em tempo real'
-          ]
-        },
-        {
-          nome: 'Fase 2 — Intermediário: Manipulação e Roteamento',
-          topicos: [
-            'Filtros e Roteadores (Routers): Criando caminhos lógicos (If/Else)',
-            'Mapeamento de Dados (Data Mapping): Passando variáveis entre módulos',
-            'Iterators e Aggregators: Trabalhando com listas e arrays de dados',
-            'Tratamento de Erros Básico: O que fazer quando uma API falha'
-          ]
-        },
-        {
-          nome: 'Fase 3 — Avançado: Arquitetura e IA',
-          topicos: [
-            'Automações Complexas: Cenários com múltiplos caminhos e lógicas',
-            'Integração de IA (OpenAI API) em Fluxos de Automação',
-            'Bancos de Dados como Motores de Estado (Airtable/Notion como backend)',
-            'Segurança e Limites de API (Rate Limiting e Custos)'
           ]
         }
       ]
