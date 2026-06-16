@@ -76,25 +76,40 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'With the internal state calibrated, it is time to act. This stage dismantles the fear of approaching by deconstructing the mechanics of the approach.',
       contexto: 'Focus on pure mechanics: approach angles, voice tonality, social calibration, and transitions.',
-      ementa: [
-        'Linguagem Corporal de Alto Status (Postura, Contato Visual)',
-        'A Regra dos 3 Segundos',
-        'Abridores Diretos vs. Indiretos: Quando usar cada um',
-        'O Falso Limite de Tempo (False Time Constraint)',
-        'Tonalidade de Voz: Ascendente vs. Descendente',
-        'Onde Abordar: Dia vs. Noite, Ambientes e Contextos',
-        'O Stack: Encadeando Observações para Manter a Conversa',
-        'Assumindo Familiaridade (Assume Rapport)',
-        'Transições Naturais: Saindo do Abridor para a Conversa',
-        'Calibração Social: Lendo Sinais de Interesse (IOIs)',
-        'Como Pedir o Contato de Forma Fluida',
-        'A Arte de Interromper e Voltar (False Exit)',
-        'Grupo Dinâmico: Abordando Quando Ela Não Está Sozinha',
-        'Lidando com Obstáculos (Cockblockers e Amigos)',
-        'Desenvolvendo uma Rotina Semanal de Abordagem',
-        'Field Reports: Como Analisar suas Saídas',
-        'Os 5 Estágios do Aprendizado de Cold Approach',
-        'Ambiente Day Game vs Night Game: Diferenças Táticas'
+      fases: [
+        {
+          nome: 'Fase 1 — Fundamentos: A Abertura',
+          topicos: [
+            'A Regra dos 3 Segundos',
+            'Linguagem Corporal de Alto Status (Postura, Contato Visual)',
+            'Abridores Diretos vs. Indiretos: Quando usar cada um',
+            'Tonalidade de Voz: Ascendente vs. Descendente',
+            'O Falso Limite de Tempo (False Time Constraint)'
+          ]
+        },
+        {
+          nome: 'Fase 2 — Intermediário: Transição e Calibração',
+          topicos: [
+            'O Stack: Encadeando Observações para Manter a Conversa',
+            'Transições Naturais: Saindo do Abridor para a Conversa',
+            'Assumindo Familiaridade (Assume Rapport)',
+            'Calibração Social: Lendo Sinais de Interesse (IOIs)',
+            'Como Pedir o Contato de Forma Fluida'
+          ]
+        },
+        {
+          nome: 'Fase 3 — Avançado: Dinâmicas e Rotina',
+          topicos: [
+            'A Arte de Interromper e Voltar (False Exit)',
+            'Grupo Dinâmico: Abordando Quando Ela Não Está Sozinha',
+            'Lidando com Obstáculos (Cockblockers e Amigos)',
+            'Onde Abordar: Dia vs. Noite, Ambientes e Contextos',
+            'Ambiente Day Game vs Night Game: Diferenças Táticas',
+            'Desenvolvendo uma Rotina Semanal de Abordagem',
+            'Field Reports: Como Analisar suas Saídas',
+            'Os 5 Estágios do Aprendizado de Cold Approach'
+          ]
+        }
       ]
     },
     {
@@ -105,24 +120,39 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'You already know how to open. Now you need to sustain it. Logical conversations kill interest — this stage teaches you to create emotional variation, tension, and mystery.',
       contexto: 'Focus on advanced conversation dynamics: Push/Pull, qualification, sexual tension, and storytelling.',
-      ementa: [
-        'Fuga da Entrevista Lógica: Como Evocar Emoções',
-        'A Mecânica do Push e Pull (Afastar e Puxar)',
-        'Quebra de Rapport vs. Busca de Rapport',
-        'Provocações e Teasing Calibrado',
-        'Misoginia vs. Playfulness: A Diferença Crítica',
-        'O Olhar e a Comunicação Não-Verbal',
-        'Criando Loops Abertos: O Interesse da Antecipação',
-        'Qualificação: O Jogo de Fazer a Pessoa Investir',
-        'Storytelling Magnético: Estrutura de Boas Histórias',
-        'Vulnerabilidade Forte: Conectando Níveis Profundos',
-        'Tensão Sexual: Escalação Verbal e Subtexto',
-        'Humor Como Ferramenta de Atração',
-        'Rapport Profundo: Encontrando Valores Comuns',
-        'A Transição do Flerte para a Conexão Real',
-        'Fluxo de Estado: Conversando sem Esforço',
-        'Improvisação Emocional: Reagindo, não Planejando',
-        'Calibração Avançada: Lendo Microexpressões'
+      fases: [
+        {
+          nome: 'Fase 1 — Fundamentos: Tensão e Puxa-Empurra',
+          topicos: [
+            'Fuga da Entrevista Lógica: Como Evocar Emoções',
+            'A Mecânica do Push e Pull (Afastar e Puxar)',
+            'Quebra de Rapport vs. Busca de Rapport',
+            'Provocações e Teasing Calibrado',
+            'Misoginia vs. Playfulness: A Diferença Crítica'
+          ]
+        },
+        {
+          nome: 'Fase 2 — Intermediário: Investimento e Conexão',
+          topicos: [
+            'Qualificação: O Jogo de Fazer a Pessoa Investir',
+            'O Olhar e a Comunicação Não-Verbal',
+            'Criando Loops Abertos: O Interesse da Antecipação',
+            'Storytelling Magnético: Estrutura de Boas Histórias',
+            'Humor Como Ferramenta de Atração'
+          ]
+        },
+        {
+          nome: 'Fase 3 — Avançado: Vulnerabilidade e Tensão Sexual',
+          topicos: [
+            'Tensão Sexual: Escalação Verbal e Subtexto',
+            'Vulnerabilidade Forte: Conectando Níveis Profundos',
+            'Rapport Profundo: Encontrando Valores Comuns',
+            'A Transição do Flerte para a Conexão Real',
+            'Fluxo de Estado: Conversando sem Esforço',
+            'Improvisação Emocional: Reagindo, não Planejando',
+            'Calibração Avançada: Lendo Microexpressões'
+          ]
+        }
       ]
     },
     {
@@ -133,21 +163,36 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'After the approach, the game goes to the phone. The goal is unique: book the date.',
       contexto: 'Focus on text utility: the goal of the text is to book the date, not to become friends via chat.',
-      ementa: [
-        'A Primeira Mensagem (O Callback Humorístico)',
-        'A Regra do Ouro do Texto: Objetivo é o Encontro',
-        'Proporção de Investimento (Quem escreve mais?)',
-        'Tempo de Resposta Estratégico (Pacing)',
-        'Tom e Calibração no Texto vs Ao Vivo',
-        'Emojis e Linguagem Informal: Quando usar',
-        'Como se Distinguir de 100 Outros Caras no Celular Dela',
-        'Shit Tests via Mensagem: Como Desarmar e Inverter',
-        'Uso de Áudios e Fotos para Gerar Proximidade',
-        'Reengajamento: Ressuscitando Contatos Frios (Ping Texts)',
-        'Fechamento Sólido: Extraindo o Sim para o Date',
-        'Instagram como Canal de Aquecimento',
-        'Quando e Como Ligar (Phone Game)',
-        'Gestão de Múltiplas Conversas sem Perder o Fio'
+      fases: [
+        {
+          nome: 'Fase 1 — Fundamentos: A Lógica do Texto',
+          topicos: [
+            'A Regra do Ouro do Texto: Objetivo é o Encontro',
+            'A Primeira Mensagem (O Callback Humorístico)',
+            'Proporção de Investimento (Quem escreve mais?)',
+            'Tempo de Resposta Estratégico (Pacing)',
+            'Tom e Calibração no Texto vs Ao Vivo'
+          ]
+        },
+        {
+          nome: 'Fase 2 — Intermediário: Diferenciação e Testes',
+          topicos: [
+            'Como se Distinguir de 100 Outros Caras no Celular Dela',
+            'Emojis e Linguagem Informal: Quando usar',
+            'Shit Tests via Mensagem: Como Desarmar e Inverter',
+            'Uso de Áudios e Fotos para Gerar Proximidade',
+            'Instagram como Canal de Aquecimento'
+          ]
+        },
+        {
+          nome: 'Fase 3 — Avançado: Fechamento e Recuperação',
+          topicos: [
+            'Fechamento Sólido: Extraindo o Sim para o Date',
+            'Reengajamento: Ressuscitando Contatos Frios (Ping Texts)',
+            'Quando e Como Ligar (Phone Game)',
+            'Gestão de Múltiplas Conversas sem Perder o Fio'
+          ]
+        }
       ]
     },
     {
@@ -158,21 +203,36 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'Up to here you learned to play the game. Now you change the board.',
       contexto: 'Focus on social value, pre-selection, and creating events/communities where the student is the center (Hub).',
-      ementa: [
-        'O Paradigma do Organizador (Seja o Conector)',
-        'Valor Social Pré-Comunicado (Pré-Seleção)',
-        'Efeito Halo: Grooming, Estilo e Primeira Impressão',
-        'Como Entrar em Círculos de Alto Valor',
-        'Networking Estratégico: Conhecendo as Pessoas Certas',
-        'O Estilo como Comunicação Não-Verbal',
-        'Fitness como Base de Atração and Confiança',
-        'Vitrine Digital: Otimização Rápida de Instagram',
-        'Wingman Dynamics: Como Agir em Dupla na Noite',
-        'Hospedando Eventos: O Jogo de Morar Sozinho',
-        'Transição de Status: De Conhecido a Convidado VIP',
-        'Construindo uma Vida que Atrai sem Esforço Consciente',
-        'Missão e Propósito como o Maior Afrodisíaco',
-        'Viagens e Experiências como Capital Social'
+      fases: [
+        {
+          nome: 'Fase 1 — Fundamentos: Valor Visual e Pessoal',
+          topicos: [
+            'Efeito Halo: Grooming, Estilo e Primeira Impressão',
+            'O Estilo como Comunicação Não-Verbal',
+            'Fitness como Base de Atração e Confiança',
+            'Vitrine Digital: Otimização Rápida de Instagram',
+            'Missão e Propósito como o Maior Afrodisíaco'
+          ]
+        },
+        {
+          nome: 'Fase 2 — Intermediário: Engenharia Social',
+          topicos: [
+            'Valor Social Pré-Comunicado (Pré-Seleção)',
+            'O Paradigma do Organizador (Seja o Conector)',
+            'Networking Estratégico: Conhecendo as Pessoas Certas',
+            'Como Entrar em Círculos de Alto Valor',
+            'Wingman Dynamics: Como Agir em Dupla na Noite'
+          ]
+        },
+        {
+          nome: 'Fase 3 — Avançado: Estilo de Vida e Status',
+          topicos: [
+            'Transição de Status: De Conhecido a Convidado VIP',
+            'Hospedando Eventos: O Jogo de Morar Sozinho',
+            'Viagens e Experiências como Capital Social',
+            'Construindo uma Vida que Atrai sem Esforço Consciente'
+          ]
+        }
       ]
     },
     {
@@ -183,24 +243,39 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'The final module. Everything you learned before was to get here. Long-term relationships require polarity, leadership, and tension maintenance.',
       contexto: 'Focus on pragmatic masculine leadership, date dynamics, and boundary setting.',
-      ementa: [
-        'A Arquitetura do Encontro Perfeito (Múltiplos Venues)',
-        'Liderança Decisiva: "Nós Vamos Ali" vs. "O Que Você Quer?"',
-        'Escalada Física (Kino): Fluidez e Consentimento',
-        'A Transição para a Logística Final (A Casa)',
-        'O Primeiro Date: Objetivos, Duração e Dinâmica',
-        'Como Recuperar um Date que Está Esfriando',
-        'Pagando a Conta: A Abordagem Estratégica',
-        'Estabelecimento de Limites (Boundaries) no Início',
-        'Polaridade Sexual: O Papel da Energia Masculina',
-        'Lidando com Testes de Congruência em Relacionamentos',
-        'Prevenção do Efeito Amigo: Como Manter a Tensão Ativa',
-        'Relacionamento Aberto vs. Exclusivo: A Conversa',
-        'Ciúme e Possessividade: Gestão Estrutural',
-        'Saindo de um Relacionamento sem Dramas',
-        'Integrando Tudo: Inner Game + Habilidades Sociais + Lifestyle',
-        'Saúde Mental em Relacionamentos Intensos',
-        'Quando Parar e Avaliar sua Vida Amorosa'
+      fases: [
+        {
+          nome: 'Fase 1 — Fundamentos: O Encontro (Date)',
+          topicos: [
+            'O Primeiro Date: Objetivos, Duração e Dinâmica',
+            'A Arquitetura do Encontro Perfeito (Múltiplos Venues)',
+            'Liderança Decisiva: "Nós Vamos Ali" vs. "O Que Você Quer?"',
+            'Pagando a Conta: A Abordagem Estratégica',
+            'Como Recuperar um Date que Está Esfriando'
+          ]
+        },
+        {
+          nome: 'Fase 2 — Intermediário: Escalada e Transição',
+          topicos: [
+            'Escalada Física (Kino): Fluidez e Consentimento',
+            'A Transição para a Logística Final (A Casa)',
+            'Estabelecimento de Limites (Boundaries) no Início',
+            'Polaridade Sexual: O Papel da Energia Masculina',
+            'Prevenção do Efeito Amigo: Como Manter a Tensão Ativa'
+          ]
+        },
+        {
+          nome: 'Fase 3 — Avançado: Relacionamento e Gestão',
+          topicos: [
+            'Lidando com Testes de Congruência em Relacionamentos',
+            'Relacionamento Aberto vs. Exclusivo: A Conversa',
+            'Ciúme e Possessividade: Gestão Estrutural',
+            'Saindo de um Relacionamento sem Dramas',
+            'Saúde Mental em Relacionamentos Intensos',
+            'Quando Parar e Avaliar sua Vida Amorosa',
+            'Integrando Tudo: Inner Game + Habilidades Sociais + Lifestyle'
+          ]
+        }
       ]
     },
     {
@@ -211,38 +286,86 @@ export const seducaoHub: MateriaConfig = {
       parent: 'seducao-hub',
       whyStart: 'This stage acts as an antidote to romantic illusions. It is essential for men to understand the power dynamics and not be held emotionally hostage by interactions.',
       contexto: 'Focus on the concepts discussed by Nessahan Alita and theorists of masculine praxeology. Explain the logic behind passion as weakness, emotional traps (tests and manipulations), and the pursuit of authenticity and inner strength, always maintaining technical rigor and avoiding cheap misogyny.',
-      ementa: [
-        'A Desconstrução do Mito do Amor Romântico',
-        'A Ilusão da Alma Gêmea e o Especialismo ("Ela é Diferente")',
-        'O Magnetismo da Frieza: Por que a indiferença atrai',
-        'O Paradoxo da Paixão: A paixão como fraqueza masculina',
-        'A Dinâmica do Desprezo: Invertendo a polaridade de poder',
-        'Testes de Congruência: Como e por que as mulheres testam os homens',
-        'O Teste da Fidelidade e a Provocação de Ciúmes',
-        'A Chantagem Emocional e a Manipulação Sutil',
-        'O Jogo da Culpa: Como evitar assumir responsabilidades que não são suas',
-        'O Ego Masculino como Ponto Cego e Alvo Fácil',
-        'A Síndrome do Cavaleiro Branco: O perigo de tentar "salvar" mulheres',
-        'Como a Ansiedade e a Carência Destroem a Atração Real',
-        'A Lógica Feminina vs. A Lógica Masculina',
-        'Lidando com as Flutuações de Humor e a Instabilidade Emocional',
-        'O Silêncio Estratégico: A arma contra as provocações e o drama',
-        'O Desapego Verdadeiro vs. O Desapego Falsificado (Atuação)',
-        'O Sofrimento Masculino e o Crescimento através da Ruptura',
-        'A Postura de Fortaleza: Lidando com a rejeição e a indiferença',
-        'Autocontrole Emocional: A Arte do Não Reagir (Non-reaction)',
-        'O Perigo da Validação Excessiva e da Bajulação',
-        'Compreensão Praxeológica: A Natureza Hipergâmica e a Segurança',
-        'A Dinâmica da Reclamação: Por que tentar resolver o problema dela costuma falhar',
-        'O Poder do "Não": Estabelecendo limites sem agressividade',
-        'Lidando com a "Rebeldia" Feminina sem Perder a Liderança',
-        'Como Lidar com a Competição Feminina e as "Amigas" Dela',
-        'A Ilusão da Amizade entre Homem e Mulher (Na visão pragmática)',
-        'Recuperando o Controle Após Ter Sido Subjugado Emocionalmente',
-        'A Necessidade de um Propósito Maior que a Relação',
-        'A Desmistificação da "Guerra dos Sexos": Sobrevivendo com inteligência'
+      fases: [
+        {
+          nome: 'Fase 1 — Fundamentos: A Queda das Ilusões',
+          topicos: [
+            'A Desconstrução do Mito do Amor Romântico',
+            'A Ilusão da Alma Gêmea e o Especialismo ("Ela é Diferente")',
+            'O Paradoxo da Paixão: A paixão como fraqueza masculina',
+            'A Lógica Feminina vs. A Lógica Masculina',
+            'A Síndrome do Cavaleiro Branco: O perigo de tentar "salvar" mulheres',
+            'Compreensão Praxeológica: A Natureza Hipergâmica e a Segurança'
+          ]
+        },
+        {
+          nome: 'Fase 2 — Intermediário: Dinâmicas e Testes',
+          topicos: [
+            'O Magnetismo da Frieza: Por que a indiferença atrai',
+            'A Dinâmica do Desprezo: Invertendo a polaridade de poder',
+            'Testes de Congruência: Como e por que as mulheres testam os homens',
+            'O Teste da Fidelidade e a Provocação de Ciúmes',
+            'A Chantagem Emocional e a Manipulação Sutil',
+            'O Jogo da Culpa: Como evitar assumir responsabilidades que não são suas',
+            'A Dinâmica da Reclamação: Por que tentar resolver o problema dela costuma falhar',
+            'Como Lidar com a Competição Feminina e as "Amigas" Dela'
+          ]
+        },
+        {
+          nome: 'Fase 3 — Avançado: Liderança e Estoicismo',
+          topicos: [
+            'O Silêncio Estratégico: A arma contra as provocações e o drama',
+            'Lidando com as Flutuações de Humor e a Instabilidade Emocional',
+            'O Desapego Verdadeiro vs. O Desapego Falsificado (Atuação)',
+            'Autocontrole Emocional: A Arte do Não Reagir (Non-reaction)',
+            'O Poder do "Não": Estabelecendo limites sem agressividade',
+            'Lidando com a "Rebeldia" Feminina sem Perder a Liderança',
+            'O Ego Masculino como Ponto Cego e Alvo Fácil',
+            'Recuperando o Controle Após Ter Sido Subjugado Emocionalmente',
+            'A Necessidade de um Propósito Maior que a Relação',
+            'A Desmistificação da "Guerra dos Sexos": Sobrevivendo com inteligência'
+          ]
+        }
       ],
       layout: 'narrative'
+    },
+    {
+      slug: 'seducao-humor',
+      nome: 'Humor Natural & Carisma',
+      emoji: '🎭',
+      descricao: 'A desconstrução mecânica de como ser divertido e magnético sem parecer um "palhaço" ou precisar forçar piadas prontas.',
+      parent: 'seducao-hub',
+      whyStart: 'Pessoas carismáticas têm uma vantagem injusta na vida. O humor abaixa as defesas, gera atração instantânea e quebra o gelo social em segundos.',
+      contexto: 'Foco em como o humor é uma habilidade treinável de quebra de expectativa e state control, e não um dom místico.',
+      fases: [
+        {
+          nome: 'Fase 1 — Fundamentos: A Mecânica do Riso',
+          topicos: [
+            'O Paradoxo do Humor: Por que tentar ser engraçado te faz sem graça',
+            'Tensão e Alívio: A fórmula matemática por trás de toda piada',
+            'O Estado de "Playfulness" (Lúdico): Humor não é texto, é intenção',
+            'Auto-Diversão (Amuse Yourself): O segredo para não precisar da validação alheia'
+          ]
+        },
+        {
+          nome: 'Fase 2 — Intermediário: Técnicas e Calibração',
+          topicos: [
+            'Misdirection (Falsa Expectativa): Como quebrar o padrão lógico',
+            'Exagero Absurdo e Sarcasmo Calibrado',
+            'O Call-back (Ressurgência): Como transformar piadas internas em conexão',
+            'Teasing (Provocação): Como rir das pessoas de forma magnética'
+          ]
+        },
+        {
+          nome: 'Fase 3 — Avançado: Carisma e Espontaneidade',
+          topicos: [
+            'Observational Humor: Encontrando o absurdo no ambiente em tempo real',
+            'O Risco Social e a Coragem de Ser Absurdo (Vulnerabilidade)',
+            'Carisma Físico: Linguagem corporal aberta, sorrisos e uso do silêncio',
+            'Como lidar com piadas que falham ("Bombing") com confiança absoluta'
+          ]
+        }
+      ]
     }
   ]
 };

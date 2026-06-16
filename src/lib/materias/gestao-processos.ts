@@ -199,6 +199,82 @@ export const gestaoSistemasHub: MateriaConfig = {
           ]
         }
       ]
+    },
+    {
+      slug: 'gestao-projetos',
+      nome: 'Gestão Ágil de Projetos',
+      emoji: '🎯',
+      parent: 'gestao-sistemas',
+      whyStart: 'Processos dizem como a empresa funciona. Projetos dizem como mudar a empresa. Você precisa saber tirar as coisas do papel.',
+      descricao: 'Metodologias ágeis (Scrum, Kanban avançado, Sprints) para planejamento e execução de projetos complexos.',
+      contexto: 'Foco: Execução e entrega de valor. Como quebrar grandes objetivos em tarefas executáveis e como gerenciar o tempo e recursos em um projeto com início, meio e fim.',
+      fases: [
+        {
+          nome: 'Fase 1 — Fundamentos: O que é um Projeto',
+          topicos: [
+            'Projetos vs. Processos (Operações contínuas vs. Esforço temporário)',
+            'A Tríplice Restrição: Escopo, Tempo e Custo',
+            'O Manifesto Ágil: Por que o modelo tradicional (Waterfall) falha',
+            'Quebra de Escopo (WBS/EAP): Como fatiar o elefante'
+          ]
+        },
+        {
+          nome: 'Fase 2 — Intermediário: Frameworks de Execução',
+          topicos: [
+            'Scrum na Prática: Papéis, Cerimônias e Artefatos',
+            'Kanban Avançado: Classes de Serviço e Métricas de Fluxo (Lead Time/Cycle Time)',
+            'Estimativas Ágeis: Planning Poker e Pontos de História',
+            'Gestão de Sprints e Daily Stand-ups'
+          ]
+        },
+        {
+          nome: 'Fase 3 — Avançado: Liderança e Entrega',
+          topicos: [
+            'Gestão de Stakeholders: Comunicação e Expectativas',
+            'Gestão de Riscos: Matriz de Probabilidade x Impacto',
+            'O papel do Product Owner e do Scrum Master',
+            'Retrospectivas e Melhoria Contínua do Time'
+          ]
+        }
+      ]
+    },
+    {
+      slug: 'gestao-automacao',
+      nome: 'Automação de Sistemas (No-Code)',
+      emoji: '⚡',
+      parent: 'gestao-sistemas',
+      whyStart: 'Se um computador pode fazer, você não deveria estar fazendo. Liberte seu tempo.',
+      descricao: 'Como usar ferramentas no-code (Make, Zapier, n8n) para automatizar tarefas repetitivas e integrar sistemas.',
+      contexto: 'Foco: Lógica de programação aplicada visualmente. O aluno deve entender como APIs conversam, o que são Webhooks e como estruturar cenários de automação robustos.',
+      fases: [
+        {
+          nome: 'Fase 1 — Fundamentos: A Lógica da Automação',
+          topicos: [
+            'Gatilhos (Triggers) e Ações (Actions): A base de qualquer automação',
+            'APIs para Leigos: Como os softwares conversam na internet',
+            'Make vs. Zapier vs. n8n: Escolhendo a ferramenta certa',
+            'Webhooks: Escutando eventos em tempo real'
+          ]
+        },
+        {
+          nome: 'Fase 2 — Intermediário: Manipulação e Roteamento',
+          topicos: [
+            'Filtros e Roteadores (Routers): Criando caminhos lógicos (If/Else)',
+            'Mapeamento de Dados (Data Mapping): Passando variáveis entre módulos',
+            'Iterators e Aggregators: Trabalhando com listas e arrays de dados',
+            'Tratamento de Erros Básico: O que fazer quando uma API falha'
+          ]
+        },
+        {
+          nome: 'Fase 3 — Avançado: Arquitetura e IA',
+          topicos: [
+            'Automações Complexas: Cenários com múltiplos caminhos e lógicas',
+            'Integração de IA (OpenAI API) em Fluxos de Automação',
+            'Bancos de Dados como Motores de Estado (Airtable/Notion como backend)',
+            'Segurança e Limites de API (Rate Limiting e Custos)'
+          ]
+        }
+      ]
     }
   ]
 };
