@@ -460,56 +460,69 @@ Mandatory approach:
 - AI as low-cost delegation.`,
       fases: [
         {
-          nome: 'Phase 1: Biohacking and Energy Management',
+          nome: 'Fase 1: Fundamentos Biológicos e Gestão de Energia (Neurociência)',
           topicos: [
-            'A Fisiologia da Produtividade: Gerir Tempo sem Gerir Energia é Inútil',
-            'Acúmulo de Adenosina: O Mecanismo do Cansaço e a Dinâmica da Cafeína',
-            'O Crash da Cafeína: Como Evitar o Colapso da Tarde Atrasando a Primeira Dose',
-            'Ciclos Ultradianos: A Regra dos 90/20 para Foco Máximo Sem Burnout',
-            'Dopamina Baseline: Como Hábitos de Alta Recompensa Destroem Sua Motivação',
-            'Ritmo Circadiano e Cronotipos: Sincronizando Tarefas com o Seu Relógio Genético',
-            'Sono, Nutrição e Cognição: A Infraestrutura Não-Negociável da Alta Performance'
+            'A Fisiologia da Produtividade: Por que Gerenciar Tempo sem Gerir Biologia é Inútil',
+            'O Ciclo da Adenosina: O Mecanismo Bioquímico do Cansaço e da Pressão de Sono',
+            'Farmacocinética da Cafeína: Como Bloquear Receptores de Adenosina Corretamente',
+            'O Protocolo de Atraso da Cafeína (90-120min): Como Evitar o Crash da Tarde',
+            'Arquitetura do Sono: Fase REM vs Deep Sleep (SWS) e a Limpeza Glifática do Cérebro',
+            'Ritmo Circadiano e Liberação de Cortisol Minal: A Ciência do Despertar Natural',
+            'Cronotipos Genéticos: Sincronizando Tarefas Difíceis (Deep Work) com Seu Pico de Energia'
           ]
         },
         {
-          nome: 'Phase 2: Deep Work and Impassive Prioritization',
+          nome: 'Fase 2: Neuroquímica do Foco, Motivação e Flow State',
           topicos: [
-            'Timeboxing e Trabalho Profundo (Deep Work) na Prática Diária',
-            'A Arte da Priorização Impiedosa: O que Só Você Pode Fazer?',
-            'Context Switching: O Inimigo Invisível que Drena sua Energia Cognitiva',
-            'Tomada de Decisão Rápida com Dados Incompletos (A Lógica do "Good Enough")'
+            'Dopamina Baseline: O Erro de Aumentar a Dopamina Antes de Tarefas de Alto Esforço',
+            'A Relação Prazer-Dor (Huberman): Como Hábitos de Alta Recompensa Destroem a Motivação',
+            'Dopamine Fasting na Prática: Como Resetar Receptores para Achar o Trabalho "Chato" Estimulante',
+            'Adrenalina e Acetilcolina: O Coquetel Químico do Foco e da Retenção de Memória',
+            'O Estado de Flow (Mihaly Csikszentmihalyi): Como Atingir Imersão Profunda Intencionalmente',
+            'Limites Cognitivos: Por Que Ninguém Consegue Fazer Mais de 4 Horas de Flow Genuíno por Dia'
           ]
         },
         {
-          nome: 'Phase 3: Mental Health and Solo Survival',
+          nome: 'Fase 3: Otimização de Performance, Dietas e Biohacking',
           topicos: [
-            'Prevenção de Burnout Estrutural: Rotinas Não-Negociáveis e Limites Claros',
-            'Lidando com o Isolamento e a Solidão Esmagadora do Solo Founder',
-            'Dopamine Detox e Foco Sustentável em um Mundo de Notificações',
-            'Métricas de Vaidade vs Métricas de Ação: Onde Não Desperdiçar Energia'
+            'O Eixo Intestino-Cérebro: Como a Alimentação Afeta Níveis de Foco e Ansiedade',
+            'Carb Coma: Resistência à Insulina, Glicemia e as Quedas de Energia Pós-Almoço',
+            'Jejum Intermitente e Cetose Leve Como Ferramentas de Clareza Mental Extrema',
+            'Termogênese e Cold Exposure: O Banho Frio Como Pico de Dopamina Duradoura',
+            'Terapia de Exposição Luminosa: O Impacto da Luz Solar nos Olhos na Primeira Hora Acordado',
+            'Introdução aos Nootrópicos e Suplementação Básica (Creatina, Omega-3, L-Teanina, Magnésio L-Treonato)'
           ]
         },
         {
-          nome: 'Phase 4: The Digital Brain (Personal Systems)',
+          nome: 'Fase 4: Gestão da Carga Cognitiva e Ciclos de Trabalho',
           topicos: [
-            'O Sistema de Notas do Founder: Obsidian, Notion e Construção do Second Brain',
-            'Gestão de E-mail e Comunicação Assíncrona para Não Ser Escravo da Caixa de Entrada',
-            'Journaling Estratégico para Founders: Esvaziando a Mente e Ganhando Direção'
+            'Ciclos Ultradianos: A Biologia dita que o Foco Funciona em Blocos de 90 Minutos',
+            'O Protocolo 90/20: Como Estruturar Blocos de Trabalho e Descanso Genuíno',
+            'Context Switching Residual (Attention Residue): O Custo Real de Checar o WhatsApp "Só por 1 Minuto"',
+            'Fadiga de Decisão (Decision Fatigue): Por Que Mark Zuckerberg Usa a Mesma Roupa Todo Dia',
+            'Gestão de Inputs: Restrição de Informação como a Principal Ferramenta de Sobrevivência Mental'
           ]
         },
         {
-          nome: 'Phase 5: Rituals, Goals, and Tracking',
+          nome: 'Fase 5: Priorização Impiedosa e Timeboxing Avançado',
           topicos: [
-            'Semana Ideal do Founder: Como Estruturar Blocos de Tempo pela Energia (Não Pelo Relógio)',
-            'OKRs Pessoais: Como Definir, Fatiar e Acompanhar as Metas Trimestrais',
-            'Processo de Review Semanal e Mensal: Rituais de Calibração e Alta Performance'
+            'O Princípio de Pareto (80/20) Levado ao Extremo (64/4): Onde Está o Verdadeiro Impacto',
+            'A Matriz de Eisenhower Adaptada para Founders Solo: Delegar, Deletar, Automatizar',
+            'Trabalho Profundo (Deep Work) vs Trabalho Superficial (Shallow Work)',
+            'Timeboxing Diário: Calendário como a Única Lista de Tarefas que Funciona',
+            'Batching de Tarefas: Agrupando Atividades Superficiais para Proteger a Energia do Deep Work',
+            'Lei de Parkinson: Como Encurtar Prazos Artificialmente Para Combater a Procrastinação'
           ]
         },
         {
-          nome: 'Phase 6: Extreme Delegation and Leverage with AI',
+          nome: 'Fase 6: O Cérebro Digital e Ferramentas de Alavancagem',
           topicos: [
-            'Delegação de Baixo Custo: Assistentes Virtuais, Freelancers e Contratos por Escopo',
-            'Terceirização de Tarefas de Custo Cognitivo com Agentes e Ferramentas de IA'
+            'Construindo um Second Brain (Tiago Forte): Método PARA (Projects, Areas, Resources, Archives)',
+            'Gestão de Conhecimento Pessoal (PKM): Zettelkasten e Obsidian para Organizar Ideias',
+            'Comunicação Assíncrona Total: Zerando a Caixa de Entrada (Inbox Zero) e Abolindo Reuniões Inúteis',
+            'Automações No-Code para Economia Cognitiva (Zapier/Make + LLMs)',
+            'Journaling Estratégico Diário: Esvaziando a RAM do Cérebro (Brain Dump) Antes de Dormir',
+            'Revisões Semanais (Weekly Review): O Único Hábito que Mantém o Sistema Funcionando'
           ]
         }
       ]
