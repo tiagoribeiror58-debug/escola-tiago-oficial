@@ -460,45 +460,56 @@ Mandatory approach:
 - AI as low-cost delegation.`,
       fases: [
         {
-          nome: 'Phase 1: Physical Foundations and Deep Focus',
+          nome: 'Phase 1: Biohacking and Energy Management',
           topicos: [
-            'Timeboxing e Trabalho Profundo (Deep Work) na Prática',
+            'A Fisiologia da Produtividade: Gerir Tempo sem Gerir Energia é Inútil',
+            'Acúmulo de Adenosina: O Mecanismo do Cansaço e a Dinâmica da Cafeína',
+            'O Crash da Cafeína: Como Evitar o Colapso da Tarde Atrasando a Primeira Dose',
+            'Ciclos Ultradianos: A Regra dos 90/20 para Foco Máximo Sem Burnout',
+            'Dopamina Baseline: Como Hábitos de Alta Recompensa Destroem Sua Motivação',
+            'Ritmo Circadiano e Cronotipos: Sincronizando Tarefas com o Seu Relógio Genético',
+            'Sono, Nutrição e Cognição: A Infraestrutura Não-Negociável da Alta Performance'
+          ]
+        },
+        {
+          nome: 'Phase 2: Deep Work and Impassive Prioritization',
+          topicos: [
+            'Timeboxing e Trabalho Profundo (Deep Work) na Prática Diária',
             'A Arte da Priorização Impiedosa: O que Só Você Pode Fazer?',
-            'Context Switching: O Inimigo Silencioso da Produtividade',
-            'Sono, Exercício e Cognição: A Ciência por Trás da Alta Performance',
-            'Tomada de Decisão Rápida com Dados Incompletos (Good Enough)'
+            'Context Switching: O Inimigo Invisível que Drena sua Energia Cognitiva',
+            'Tomada de Decisão Rápida com Dados Incompletos (A Lógica do "Good Enough")'
           ]
         },
         {
-          nome: 'Phase 2: Mental Health and Solo Survival',
+          nome: 'Phase 3: Mental Health and Solo Survival',
           topicos: [
-            'Prevenção de Burnout: Rotinas Não-Negociáveis e Limites Saudáveis',
-            'Lidando com o Isolamento e a Solidão do Solo Founder',
-            'Dopamine Detox e Foco Sustentável em Mundo de Notificações',
-            'Métricas de Vaidade vs Métricas de Ação: Onde Focar a Energia'
+            'Prevenção de Burnout Estrutural: Rotinas Não-Negociáveis e Limites Claros',
+            'Lidando com o Isolamento e a Solidão Esmagadora do Solo Founder',
+            'Dopamine Detox e Foco Sustentável em um Mundo de Notificações',
+            'Métricas de Vaidade vs Métricas de Ação: Onde Não Desperdiçar Energia'
           ]
         },
         {
-          nome: 'Phase 3: The Digital Brain (Personal Systems)',
+          nome: 'Phase 4: The Digital Brain (Personal Systems)',
           topicos: [
-            'O Sistema de Notas do Founder: Obsidian, Notion e Second Brain',
-            'Gestão de E-mail e Comunicação Assíncrona para Não Ser Escravo',
-            'Journaling Estratégico para Founders: Clareza Mental e Direção'
+            'O Sistema de Notas do Founder: Obsidian, Notion e Construção do Second Brain',
+            'Gestão de E-mail e Comunicação Assíncrona para Não Ser Escravo da Caixa de Entrada',
+            'Journaling Estratégico para Founders: Esvaziando a Mente e Ganhando Direção'
           ]
         },
         {
-          nome: 'Phase 4: Rituals, Goals, and Tracking',
+          nome: 'Phase 5: Rituals, Goals, and Tracking',
           topicos: [
-            'Semana Ideal do Founder: Como Estruturar Blocos de Tempo por Energia',
-            'OKRs Pessoais: Como Definir e Acompanhar as Metas Trimestrais',
-            'Processo de Review Semanal e Mensal: Rituais de Alta Performance'
+            'Semana Ideal do Founder: Como Estruturar Blocos de Tempo pela Energia (Não Pelo Relógio)',
+            'OKRs Pessoais: Como Definir, Fatiar e Acompanhar as Metas Trimestrais',
+            'Processo de Review Semanal e Mensal: Rituais de Calibração e Alta Performance'
           ]
         },
         {
-          nome: 'Phase 5: Extreme Delegation and Leverage with AI',
+          nome: 'Phase 6: Extreme Delegation and Leverage with AI',
           topicos: [
-            'Delegação de Baixo Custo: Assistentes Virtuais, Freelancers e IA',
-            'Terceirização de Tarefas de Alto Custo Cognitivo Baixo com IA'
+            'Delegação de Baixo Custo: Assistentes Virtuais, Freelancers e Contratos por Escopo',
+            'Terceirização de Tarefas de Custo Cognitivo com Agentes e Ferramentas de IA'
           ]
         }
       ]
