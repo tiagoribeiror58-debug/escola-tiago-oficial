@@ -17,37 +17,77 @@ export const gestaoSistemasHub: MateriaConfig = {
       contexto: `Foco: Ensinar o aluno a enxergar tudo como um sistema, mapear fluxos, organizar dados e criar automações sólidas.`,
       fases: [
         {
-          nome: 'Fase 1 — O Motor Lógico (Systems Thinking & Projetos)',
+          nome: 'Fase 1 — O Motor Lógico (Systems Thinking & Modelos Mentais)',
           topicos: [
-            'Sistemas vs. Metas: A filosofia aplicada à gestão',
-            'Inputs, Outputs e Feedback Loops: A anatomia de qualquer processo',
-            'Projetos vs. Processos (Operações contínuas vs. Esforço temporário)',
-            'A Tríplice Restrição: Escopo, Tempo e Custo',
-            'Quebra de Escopo (WBS/EAP): Como fatiar o elefante',
-            'Scrum na Prática: Papéis, Cerimônias e Artefatos',
-            'Gestão de Sprints e Daily Stand-ups'
+            'Sistemas vs. Metas: A filosofia estrutural aplicada à gestão',
+            'Inputs, Processamento, Outputs e Feedback Loops: A anatomia de qualquer sistema',
+            'Pensamento Sistêmico (Systems Thinking) na Prática: Enxergando o todo antes das partes',
+            'A Dinâmica de Sistemas (System Dynamics) e o Efeito Cascata',
+            'Alavancagem (Leverage Points): Como pequenas mudanças estruturais geram resultados exponenciais',
+            'A Lei das Consequências Não Intencionais (Second-order Thinking)',
+            'Sistemas Fechados vs Sistemas Abertos: Adaptação e Entropia Organizacional'
           ]
         },
         {
-          nome: 'Fase 2 — A Engrenagem (Processos e Automação)',
+          nome: 'Fase 2 — Gestão de Projetos e Execução',
           topicos: [
-            'SOPs (Standard Operating Procedures) e o Manifesto do Checklist',
-            'A Teoria das Restrições (Gargalos) e a Lei de Parkinson',
-            'Kanban Avançado: Limitando WIP e Métricas de Fluxo',
-            'APIs para Leigos: Como os softwares conversam na internet',
-            'Gatilhos, Ações e Webhooks na Automação (Make/Zapier)',
-            'Design de Sistemas à prova de falhas humanas (Poka-Yoke)'
+            'Projetos vs. Processos (Operações contínuas vs. Esforço temporário com fim claro)',
+            'A Tríplice Restrição do Gerenciamento de Projetos: Escopo, Tempo e Custo',
+            'Quebra de Escopo (WBS/EAP): Como fatiar o elefante em tarefas acionáveis',
+            'Gerenciamento Cascata (Waterfall) vs Metodologias Ágeis: Quando usar cada um',
+            'O Framework Scrum na Prática: Papéis (PO, SM, Dev), Cerimônias e Artefatos',
+            'Gestão de Sprints, Daily Stand-ups e Revisões de Entrega',
+            'Gestão de Risco em Projetos: Como antecipar o que vai dar errado (Pré-mortem)',
+            'Gestão de Stakeholders: Comunicação assíncrona vs síncrona em projetos complexos'
           ]
         },
         {
-          nome: 'Fase 3 — O Cérebro (Dados e Gestão do Conhecimento)',
+          nome: 'Fase 3 — Operações e Engenharia de Processos',
           topicos: [
-            'Bancos de Dados Relacionais vs. Listas Planas',
-            'A Regra de Ouro da Normalização: Uma informação, um único lugar',
-            'Estado Mestre e o conceito de "Single Source of Truth"',
-            'O Método P.A.R.A: Projetos, Áreas, Recursos e Arquivos',
-            'Progressive Summarization e Zettelkasten',
-            'Alavancagem (Leverage): Resultados exponenciais e Manutenção de Sistemas'
+            'BPMN (Business Process Model and Notation) para leigos: Desenhando fluxos',
+            'SOPs (Standard Operating Procedures) e o Manifesto do Checklist (Atul Gawande)',
+            'A Teoria das Restrições (Gargalos): Encontrando o ponto de estrangulamento (Goldratt)',
+            'A Lei de Parkinson: O trabalho se expande para preencher o tempo alocado',
+            'Kanban Avançado: Limitando o Trabalho em Progresso (WIP) e Tempo de Ciclo',
+            'Mapeamento de Fluxo de Valor (VSM): Identificando atividades que não agregam valor',
+            'Poka-Yoke e Design à Prova de Erros: Construindo processos que não dependem da atenção humana',
+            'Kaizen: A cultura da melhoria contínua e da iteração de processos'
+          ]
+        },
+        {
+          nome: 'Fase 4 — Automação e Integração de Sistemas',
+          topicos: [
+            'APIs para Leigos: Como os softwares conversam e trocam dados na internet',
+            'Lógica Booleana e Estruturas Condicionais (IF/THEN) aplicadas a negócios',
+            'Webhooks: O conceito de escuta ativa entre sistemas e eventos em tempo real',
+            'Plataformas de Automação No-Code: Make, Zapier e n8n — Visão Arquitetural',
+            'Tratamento de Erros e Rotinas de Fallback em Automações Críticas',
+            'RPA (Robotic Process Automation): Quando a API não existe e o robô clica na tela',
+            'Automação de Pipelines de Vendas, Onboarding de Clientes e Faturamento'
+          ]
+        },
+        {
+          nome: 'Fase 5 — Arquitetura de Dados e Lógica Relacional',
+          topicos: [
+            'Bancos de Dados Relacionais vs. Listas Planas (Por que o Excel tem limite)',
+            'Tipos de Dados: Strings, Booleans, Arrays e JSON de forma visual',
+            'Entidades e Relacionamentos: 1:1, 1:N (One-to-Many) e N:N (Many-to-Many)',
+            'A Regra de Ouro da Normalização: Uma informação, um único lugar no sistema',
+            'Estado Mestre (Master Data) e o conceito de "Single Source of Truth"',
+            'Chaves Primárias (PK) e Chaves Estrangeiras (FK): A cola dos sistemas de dados',
+            'Modelagem de Dados Aplicada a CRMs, ERPs e Sistemas de Gestão Internos'
+          ]
+        },
+        {
+          nome: 'Fase 6 — Gestão do Conhecimento e Second Brain',
+          topicos: [
+            'A Economia do Conhecimento: Por que não confiar na memória biológica',
+            'O Método P.A.R.A (Tiago Forte): Projetos, Áreas, Recursos e Arquivos',
+            'Progressive Summarization: Como consumir conteúdo e guardar o que importa',
+            'O Método Zettelkasten: Notas conectadas e a formação de ideias em rede',
+            'Knowledge Graphs (Grafos de Conhecimento): Visualizando conexões (Obsidian, Roam)',
+            'Ontologias e Taxonomias: Como classificar informações para o longo prazo',
+            'Sistemas de Busca vs Organização em Pastas: O Paradigma Moderno da Recuperação de Dados'
           ]
         }
       ]
