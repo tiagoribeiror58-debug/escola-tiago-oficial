@@ -19,6 +19,7 @@ import { marketingHub } from './materias/marketing';
 import { neurocienciaProfissional } from './materias/neurociencia-profissional';
 import { filosofiaHub } from './materias/filosofia';
 import { habilitacaoHub } from './materias/habilitacao';
+import { administrativoHub } from './materias/administrativo';
 
 const RAW_MATERIAS: MateriaConfig[] = [
   gestaoSistemasHub,
@@ -42,6 +43,7 @@ const RAW_MATERIAS: MateriaConfig[] = [
   neurocienciaProfissional,
   filosofiaHub,
   habilitacaoHub,
+  administrativoHub,
 ];
 
 function flattenSuperHubs(materias: MateriaConfig[]): MateriaConfig[] {
