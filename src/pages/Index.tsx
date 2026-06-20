@@ -6,7 +6,7 @@ import { useMateriaFocoPrincipal } from '@/hooks/useMateriaFocoPrincipal';
 import MateriaCard from '@/components/MateriaCard';
 import { CuriosidadeCard } from '@/components/CuriosidadeCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen, Library, Flame, Play, ChevronRight, ChevronDown, Pin, Star } from 'lucide-react';
+import { BookOpen, Library, Flame, Play, ChevronRight, ChevronDown, Pin, Star, Rocket } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -588,6 +588,30 @@ export default function Index() {
           </div>
         )}
 
+        {/* Missão Principal Permanente */}
+        {currentTab === 'foco' && !searchQuery && displayedFoco.some(e => e.config.slug === 'founder-solo-masterclass') && (
+          <div className="mb-8">
+            <h4 className="text-sm font-bold mb-4 text-orange-500 uppercase tracking-widest flex items-center gap-2">
+              <Rocket className="w-4 h-4" />
+              Missão Principal
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {displayedFoco.filter(e => e.config.slug === 'founder-solo-masterclass').map(estado => (
+                <MateriaCard
+                  key={estado.config.slug}
+                  estado={estado}
+                  onClick={() => handleCardClick(estado)}
+                  isPinned={true}
+                  onTogglePin={() => {}} // dummy para manter ícone
+                  isFocoPrincipal={true}
+                  onToggleFocoPrincipal={() => {}} // dummy para manter ícone
+                  isMissaoPrincipal={true}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Focos Principais Isolados — agora suporta múltiplos */}
         {currentTab === 'foco' && !searchQuery && focosPrincipais.length > 0 && (
           <div className="mb-8">
@@ -596,7 +620,7 @@ export default function Index() {
               Objetivo Principal
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {displayedFoco.filter(e => focosPrincipais.includes(e.config.slug)).map(estado => (
+              {displayedFoco.filter(e => focosPrincipais.includes(e.config.slug) && e.config.slug !== 'founder-solo-masterclass').map(estado => (
                 <MateriaCard
                   key={estado.config.slug}
                   estado={estado}

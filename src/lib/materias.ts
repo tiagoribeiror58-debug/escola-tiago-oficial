@@ -2,6 +2,7 @@ import { MateriaConfig } from '@/types';
 import { elonMuskHub } from './materias/elon-musk';
 import { gestaoSistemasHub } from './materias/gestao-processos';
 import { founderSolo } from './materias/founder-solo';
+import { founderSoloMasterclass } from './materias/founder-solo-masterclass';
 import { tecnologiaNegocios } from './materias/negocios';
 import { comunicacaoInfluencia } from './materias/comunicacao';
 import { fundamentosAcademicos } from './materias/fundamentos';
@@ -22,6 +23,7 @@ import { habilitacaoHub } from './materias/habilitacao';
 import { administrativoHub } from './materias/administrativo';
 
 const RAW_MATERIAS: MateriaConfig[] = [
+  founderSoloMasterclass, // 🦅 Missão Principal — sempre primeira
   gestaoSistemasHub,
   elonMuskHub,
   founderSolo,

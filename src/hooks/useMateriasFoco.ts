@@ -2,14 +2,19 @@ import { useState, useEffect } from 'react';
 
 const STORAGE_KEY = '@escola-tiago:materias-foco';
 
+// Slugs que SEMPRE aparecem na Mesa de Estudos, sem precisar de interação do usuário.
+const PINNED_FOREVER: string[] = ['founder-solo-masterclass'];
+
 export function useMateriasFoco() {
   const [foco, setFoco] = useState<string[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) return JSON.parse(stored);
-      return []; // Por padrão, vazio. Força o usuário a escolher.
+      const saved: string[] = stored ? JSON.parse(stored) : [];
+      // Garante que PINNED_FOREVER sempre esteja presente, mesmo que o usuário remova.
+      const merged = [...new Set([...PINNED_FOREVER, ...saved])];
+      return merged;
     } catch {
-      return [];
+      return [...PINNED_FOREVER];
     }
   });
 
@@ -35,9 +40,11 @@ export function useMateriasFoco() {
   }, []);
 
   const toggleFoco = (slug: string) => {
-    setFoco(prev => 
-      prev.includes(slug) 
-        ? prev.filter(s => s !== slug) 
+    // PINNED_FOREVER slugs não podem ser removidos da mesa.
+    if (PINNED_FOREVER.includes(slug)) return;
+    setFoco(prev =>
+      prev.includes(slug)
+        ? prev.filter(s => s !== slug)
         : [...prev, slug]
     );
   };

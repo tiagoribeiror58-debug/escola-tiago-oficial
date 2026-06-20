@@ -1,6 +1,6 @@
 # 🏗️ Ybernator — Arquitetura do Sistema
 
-> **Versão:** 2026.05 | **Status:** Em transição (Supabase Functions → BuildShip)
+> **Versão:** 2026.06 | **Status:** Definitivo (Backend de IA consolidado em Supabase Edge Functions)
 
 ---
 
@@ -8,7 +8,7 @@
 
 O Ybernator é uma **plataforma de estudos orientada por IA** para estudantes de medicina/concursos. O aluno interage com uma IA tutora que adapta o conteúdo ao seu ritmo, registra sessões e gera relatórios de progresso.
 
-A arquitetura é dividida em **3 camadas principais:**
+A arquitetura é dividida em **2 camadas principais integrada por serviços de nuvem:**
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -20,23 +20,21 @@ A arquitetura é dividida em **3 camadas principais:**
               ┌─────────────┴──────────────┐
               │                            │
               ▼                            ▼
-┌─────────────────────┐       ┌────────────────────────────────────┐
-│  CAMADA DE BACKEND  │       │       CAMADA DE DADOS              │
-│  BuildShip (novo)   │       │       Supabase (PostgreSQL)        │
-│  ─────────────────  │       │  ─────────────────────────────     │
-│  • Workflow: chat   │──────▶│  • sessoes                         │
-│  • Workflow: tts    │       │  • topicos_emergentes              │
-│  • Workflow: extract│       │  • ementa_concluida                │
-│                     │       │  • study_notes                     │
-│  [LEGADO] Supabase  │       │  • quiz_questions                  │
-│  Edge Functions:    │       │  • quiz_results                    │
-│  • /chat (ativo)    │       │  • users (auth.users)              │
-│  • /tts (ativo)     │       │                                    │
-│  • /extract         │       │  Auth: Supabase Auth (JWT)         │
-│  • /topic-preview   │       │  RLS: Row Level Security ativo     │
-│  • /quiz            │       └────────────────────────────────────┘
-│  • /review_note     │
-└─────────────────────┘
+┌─────────────────────────┐   ┌────────────────────────────────────┐
+│    CAMADA DE BACKEND    │   │       CAMADA DE DADOS & AUTH       │
+│ Supabase Edge Functions │   │       Supabase (PostgreSQL)        │
+│ ─────────────────────── │   │  ─────────────────────────────     │
+│ • /chat (IA tutora)     │──▶│  • sessoes                         │
+│ • /tts (Google TTS)     │   │  • topicos_emergentes              │
+│ • /extract (PDF extract)│   │  • ementa_concluida                │
+│ • /topic-preview        │   │  • study_notes                     │
+│ • /quiz (SM-2 generator)│   │  • quiz_questions                  │
+│ • /review_note          │   │  • quiz_results                    │
+│                         │   │  • users (auth.users)              │
+│ (Deno / TypeScript)     │   │                                    │
+│                         │   │  Auth: Supabase Auth (JWT)         │
+│                         │   │  RLS: Row Level Security ativo     │
+└─────────────────────────┘   └────────────────────────────────────┘
 ```
 
 ---
@@ -73,30 +71,16 @@ A arquitetura é dividida em **3 camadas principais:**
 
 ## 3. Backend — Camada de Inteligência
 
-### Estado Atual (Legado em Transição)
-
-O backend de IA vive nas **Supabase Edge Functions** (Deno/TypeScript):
+O backend de IA do Ybernator é totalmente construído sobre **Supabase Edge Functions** executadas em ambiente Deno com TypeScript. Esta arquitetura descentralizada elimina a necessidade de servidores dedicados de backend adicionais e garante baixa latência de execução.
 
 | Função | Endpoint | O que faz |
 |---|---|---|
-| `chat` | `/functions/v1/chat` | Chama Gemini, detecta tópicos, salva sessão |
-| `tts` | `/functions/v1/tts` | Converte texto para áudio (Google TTS) |
-| `extract` | `/functions/v1/extract` | Lê PDF/URL e extrai tópicos via IA |
-| `topic-preview` | `/functions/v1/topic-preview` | Gera prévia + links do YouTube para um tópico |
-| `quiz` | `/functions/v1/quiz` | Gera questões de múltipla escolha via IA |
-| `review_note` | `/functions/v1/review_note` | Analisa e enriquece uma nota salva |
-
-### Estado Futuro (BuildShip — Nova Cozinha)
-
-O BuildShip substitui as Edge Functions para os 3 fluxos principais, mantendo o Supabase **somente como banco de dados**:
-
-| Workflow BuildShip | Substitui | Benefício |
-|---|---|---|
-| `/chat` | `supabase/functions/chat` | Fallback Gemini→Claude, BYOK, logs visuais |
-| `/tts` | `supabase/functions/tts` | Google TTS Neural2, fácil trocar de voz |
-| `/extract` | `supabase/functions/extract` | MCP para PDFs, sem re-deploy |
-
-**A troca é cirúrgica:** apenas as variáveis de ambiente `VITE_BUILDSHIP_*` e 3 linhas de código no frontend.
+| `chat` | `/functions/v1/chat` | Orquestra a conversa com o LLM (Gemini), extrai tópicos emergentes e atualiza o histórico de sessões. |
+| `tts` | `/functions/v1/tts` | Realiza a síntese de voz (Google TTS) para permitir escuta de mensagens. |
+| `extract` | `/functions/v1/extract` | Lê arquivos PDFs/URLs fornecidos pelo usuário e extrai tópicos de estudo. |
+| `topic-preview` | `/functions/v1/topic-preview` | Gera a prévia inicial e busca links do YouTube correspondentes. |
+| `quiz` | `/functions/v1/quiz` | Gera as questões baseadas nas notas de estudo usando os pesos do algoritmo de repetição espaçada SM-2. |
+| `review_note` | `/functions/v1/review_note` | Analisa, enriquece e gera insights de fixação sobre as notas de estudo tomadas pelo usuário. |
 
 ---
 
@@ -156,6 +140,7 @@ ProtectedRoute verifica session Supabase Auth (JWT)
                                 ▼
                         Auth.tsx (Login/Signup)
                                 │
+                                ▼
                         Supabase retorna JWT
                                 │
                                 ▼
@@ -168,12 +153,8 @@ ProtectedRoute verifica session Supabase Auth (JWT)
 
 ```
 .env.local
-├── VITE_SUPABASE_URL              → Cliente Supabase (leitura/escrita de dados)
-├── VITE_SUPABASE_PUBLISHABLE_KEY  → Autenticação anônima do frontend (NUNCA a service key)
-├── VITE_BUILDSHIP_CHAT_URL        → [NOVO] Endpoint de chat com IA
-├── VITE_BUILDSHIP_TTS_URL         → [NOVO] Endpoint de áudio TTS
-├── VITE_BUILDSHIP_EXTRACT_URL     → [NOVO] Endpoint de extração de PDF
-└── VITE_BUILDSHIP_SECRET          → [NOVO] Token de segurança para o BuildShip
+├── VITE_SUPABASE_URL              → Cliente Supabase (Conexão e roteamento de Edge Functions)
+└── VITE_SUPABASE_PUBLISHABLE_KEY  → Autenticação anônima do frontend (NUNCA a service key no cliente)
 ```
 
 > ⚠️ O arquivo `.env.local` NUNCA deve ser commitado no Git. Verifique o `.gitignore`.
@@ -193,6 +174,5 @@ ProtectedRoute verifica session Supabase Auth (JWT)
 | Ícones | Lucide React | — |
 | Banco de Dados | Supabase (PostgreSQL) | — |
 | Auth | Supabase Auth | — |
-| Backend IA (legado) | Supabase Edge Functions (Deno) | — |
-| Backend IA (novo) | BuildShip | — |
+| Backend IA | Supabase Edge Functions (Deno / TypeScript) | Definitivo |
 | Deploy | Vercel / Netlify | — |

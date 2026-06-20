@@ -2,18 +2,21 @@ import { useState, useEffect } from 'react';
 
 const STORAGE_KEY = '@escola-tiago:materia-foco-principal';
 
+// Slugs fixados permanentemente na seção "Objetivo Principal" — sem ação do usuário.
+const PINNED_FOREVER: string[] = ['founder-solo-masterclass'];
+
 export function useMateriaFocoPrincipal() {
   const [focosPrincipais, setFocosPrincipais] = useState<string[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (!stored) return [];
+      if (!stored) return [...PINNED_FOREVER];
       const parsed = JSON.parse(stored);
       // Migração: se ainda era string única, converte para array
-      if (typeof parsed === 'string') return [parsed];
-      if (Array.isArray(parsed)) return parsed;
-      return [];
+      const saved: string[] = typeof parsed === 'string' ? [parsed] : Array.isArray(parsed) ? parsed : [];
+      // Garante que PINNED_FOREVER está sempre presente.
+      return [...new Set([...PINNED_FOREVER, ...saved])];
     } catch {
-      return [];
+      return [...PINNED_FOREVER];
     }
   });
 
@@ -42,6 +45,8 @@ export function useMateriaFocoPrincipal() {
   }, []);
 
   const toggleFocoPrincipal = (slug: string) => {
+    // PINNED_FOREVER não pode ser removido do Objetivo Principal.
+    if (PINNED_FOREVER.includes(slug)) return;
     setFocosPrincipais(prev =>
       prev.includes(slug) ? prev.filter(s => s !== slug) : [...prev, slug]
     );

@@ -13,9 +13,10 @@ interface Props {
   dragListeners?: Record<string, any>;
   isFocoPrincipal?: boolean;
   onToggleFocoPrincipal?: (e: React.MouseEvent) => void;
+  isMissaoPrincipal?: boolean;
 }
 
-export default function MateriaCard({ estado, onClick, ordem, isPinned, onTogglePin, isDragging, dragListeners, isFocoPrincipal, onToggleFocoPrincipal }: Props) {
+export default function MateriaCard({ estado, onClick, ordem, isPinned, onTogglePin, isDragging, dragListeners, isFocoPrincipal, onToggleFocoPrincipal, isMissaoPrincipal }: Props) {
   const { config, ultimaSessao, diasParada } = estado;
   const urg = urgencia(diasParada);
 
@@ -63,7 +64,8 @@ export default function MateriaCard({ estado, onClick, ordem, isPinned, onToggle
         'hover:shadow-md hover:border-foreground/10 hover:-translate-y-0.5',
         'text-left w-full',
         urgenciaBorder[urg],
-        isFocoPrincipal && 'border-amber-400 ring-2 ring-amber-400/50 bg-amber-400/5 shadow-md',
+        isFocoPrincipal && !isMissaoPrincipal && 'border-amber-400 ring-2 ring-amber-400/50 bg-amber-400/5 shadow-md',
+        isMissaoPrincipal && 'border-orange-500 ring-2 ring-orange-500/50 bg-orange-500/5 shadow-md',
         isDragging && 'opacity-50 scale-95 shadow-xl border-primary ring-2 ring-primary ring-offset-2'
       )}
     >
