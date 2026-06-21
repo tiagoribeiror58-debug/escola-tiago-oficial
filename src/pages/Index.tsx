@@ -20,9 +20,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { Switch } from '@/components/ui/switch';
 import { useOrdemMaterias, useOrdemHubs } from '@/hooks/useOrdemMaterias';
 import { DailyTopicCard } from '@/components/DailyTopicCard';
-import { RecomendacaoCard } from '@/components/RecomendacaoCard';
 import { MetaDiariaCard } from '@/components/MetaDiariaCard';
-import { useProximoPassoRecomendado } from '@/hooks/useRecomendacao';
 import { MATERIAS, getAllLeafSlugs } from '@/lib/materias';
 import {
   Dialog,
@@ -120,7 +118,6 @@ export default function Index() {
   const { foco, toggleFoco, isFocado } = useMateriasFoco();
   const { focoPrincipal, focosPrincipais, toggleFocoPrincipal, isFocoPrincipal } = useMateriaFocoPrincipal();
   const { data: sessoes } = useSessoes();
-  const recomendacao = useProximoPassoRecomendado();
   const { data: metricasRevisao } = useMetricasRevisao();
   const averageRetention = metricasRevisao && metricasRevisao.length > 0
     ? Math.round(metricasRevisao.reduce((acc, m) => acc + m.score, 0) / metricasRevisao.length)
@@ -570,16 +567,6 @@ export default function Index() {
             className="w-full pl-12 pr-4 py-4 bg-card border border-border/50 rounded-2xl text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all shadow-sm"
           />
         </div>
-
-        {/* Recomendação na Mesa de Estudos */}
-        {currentTab === 'foco' && foco.length > 0 && recomendacao.estado && !searchQuery && (
-          <div className="mb-6">
-            <RecomendacaoCard 
-              recomendacao={recomendacao} 
-              onClick={() => handleCardClick(recomendacao.estado!)} 
-            />
-          </div>
-        )}
 
         {/* Curiosidade do Dia */}
         {currentTab === 'foco' && !searchQuery && (

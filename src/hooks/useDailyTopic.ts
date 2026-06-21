@@ -81,9 +81,20 @@ export function useDailyTopic(filterMateriaSlug?: string) {
       
       const nextTopicsArray = Array.from(nextTopicsByMateria.values());
       
-      // Usa o refreshCount para ciclar entre as matérias
-      const index = refreshCount % nextTopicsArray.length;
-      setDailyTopic(nextTopicsArray[index]);
+      // Função simples de hash para pseudo-aleatoriedade estável (evita piscadas de StrictMode)
+      const pseudoRandom = (str: string, seed: number) => {
+        let h = seed;
+        for (let i = 0; i < str.length; i++) {
+          h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+        }
+        return h;
+      };
+
+      // Embaralha as matérias de forma pseudo-aleatória sem ordem predefinida
+      nextTopicsArray.sort((a, b) => pseudoRandom(a.materiaSlug, refreshCount) - pseudoRandom(b.materiaSlug, refreshCount));
+      
+      // Pegamos o primeiro item (que muda a cada refresh devido à mudança no seed)
+      setDailyTopic(nextTopicsArray[0]);
     } else {
       setDailyTopic(null);
     }
