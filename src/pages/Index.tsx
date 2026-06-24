@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTodosEstadosFlat, useSessoes, useEmentaConcluida, useMetricasRevisao } from '@/hooks/useSessoes';
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import { useMateriasFixadas } from '@/hooks/useMateriasFixadas';
-import { useMateriaFocoPrincipal } from '@/hooks/useMateriaFocoPrincipal';
+import { useMateriaFocoPrincipal, PINNED_FOREVER } from '@/hooks/useMateriaFocoPrincipal';
 import MateriaCard from '@/components/MateriaCard';
 import { CuriosidadeCard } from '@/components/CuriosidadeCard';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -575,11 +575,11 @@ export default function Index() {
           </div>
         )}
 
-        {/* Missão Principal Permanente */}
+        {/* Missão Principal Permanente — todos os PINNED_FOREVER */}
         {currentTab === 'foco' && !searchQuery && (
           (() => {
-            const missaoEstado = estados.find(e => e.config.slug === 'founder-solo-masterclass');
-            if (!missaoEstado) return null;
+            const missaoEstados = estados.filter(e => PINNED_FOREVER.includes(e.config.slug));
+            if (missaoEstados.length === 0) return null;
             return (
               <div className="mb-8">
                 <h4 className="text-sm font-bold mb-4 text-orange-500 uppercase tracking-widest flex items-center gap-2">
@@ -587,28 +587,29 @@ export default function Index() {
                   Missão Principal
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <MateriaCard
-                    key={missaoEstado.config.slug}
-                    estado={missaoEstado}
-                    onClick={() => handleCardClick(missaoEstado)}
-                    isPinned={true}
-                    onTogglePin={() => {}}
-                    isFocoPrincipal={true}
-                    onToggleFocoPrincipal={() => {}}
-                    isMissaoPrincipal={true}
-                  />
+                  {missaoEstados.map(estado => (
+                    <MateriaCard
+                      key={estado.config.slug}
+                      estado={estado}
+                      onClick={() => handleCardClick(estado)}
+                      isPinned={true}
+                      onTogglePin={() => {}}
+                      isFocoPrincipal={true}
+                      onToggleFocoPrincipal={() => {}}
+                      isMissaoPrincipal={true}
+                    />
+                  ))}
                 </div>
               </div>
             );
           })()
         )}
 
-        {/* Focos Principais Isolados — agora suporta múltiplos */}
+        {/* Focos Principais escolhidos pelo usuário — exclui todos os PINNED_FOREVER */}
         {currentTab === 'foco' && !searchQuery && focosPrincipais.length > 0 && (
           (() => {
-            // Busca de `estados` (completo), não de `displayedFoco`, para garantir que apareça mesmo sem sessões
             const principaisEstados = estados.filter(
-              e => focosPrincipais.includes(e.config.slug) && e.config.slug !== 'founder-solo-masterclass'
+              e => focosPrincipais.includes(e.config.slug) && !PINNED_FOREVER.includes(e.config.slug)
             );
             if (principaisEstados.length === 0) return null;
             return (

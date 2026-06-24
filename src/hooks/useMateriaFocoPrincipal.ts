@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 
 const STORAGE_KEY = '@escola-tiago:materia-foco-principal';
 
-// Slugs fixados permanentemente na seção "Objetivo Principal" — sem ação do usuário.
-const PINNED_FOREVER: string[] = ['founder-solo-masterclass', 'gestao-conhecimento'];
+// Slugs fixados permanentemente na seção "Missão Principal" — sem ação do usuário.
+export const PINNED_FOREVER: string[] = ['founder-solo-masterclass', 'gestao-conhecimento'];
 
 export function useMateriaFocoPrincipal() {
   const [focosPrincipais, setFocosPrincipais] = useState<string[]>(() => {
