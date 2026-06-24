@@ -78,18 +78,6 @@ export const gestaoSistemasHub: MateriaConfig = {
             'Modelagem de Dados Aplicada a CRMs, ERPs e Sistemas de Gestão Internos'
           ]
         },
-        {
-          nome: 'Fase 6 — Gestão do Conhecimento e Second Brain',
-          topicos: [
-            'A Economia do Conhecimento: Por que não confiar na memória biológica',
-            'O Método P.A.R.A (Tiago Forte): Projetos, Áreas, Recursos e Arquivos',
-            'Progressive Summarization: Como consumir conteúdo e guardar o que importa',
-            'O Método Zettelkasten: Notas conectadas e a formação de ideias em rede',
-            'Knowledge Graphs (Grafos de Conhecimento): Visualizando conexões (Obsidian, Roam)',
-            'Ontologias e Taxonomias: Como classificar informações para o longo prazo',
-            'Sistemas de Busca vs Organização em Pastas: O Paradigma Moderno da Recuperação de Dados'
-          ]
-        }
       ]
     },
     {
