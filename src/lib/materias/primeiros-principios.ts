@@ -2,14 +2,14 @@ import { MateriaConfig } from '@/types';
 
 export const primeirosprincipiosHub: MateriaConfig = {
   slug: 'primeiros-principios',
-  nome: 'First Principles',
+  nome: 'Primeiros Princípios',
   emoji: '⚛️',
   isCategory: true,
   descricao: 'The root scientific path. Mathematics, logic, and architectures that ground all artificial intelligence — taught from the atom to the transformer.',
   children: [
     {
       slug: 'matematica-ia',
-      nome: 'Mathematics of Artificial Intelligence',
+      nome: 'Matemática da Inteligência Artificial',
       emoji: '∑',
       isCategory: true,
       parent: 'primeiros-principios',
@@ -18,12 +18,12 @@ export const primeirosprincipiosHub: MateriaConfig = {
       children: [
         {
           slug: 'algebra-linear',
-          nome: 'Linear Algebra',
+          nome: 'Álgebra Linear',
           emoji: '▦',
           parent: 'matematica-ia',
           whyStart: 'Cada camada de uma rede neural é uma multiplicação de matrizes. Vetores, transformações lineares e espaços dimensionais são o vocabulário básico da IA.',
           descricao: 'Vectors, matrices, linear transformations, and spaces that describe data and weights.',
-          contexto: `Focus: the real mechanics of linear algebra — not memorizing formulas.
+          contexto: `PERSONA:\nYou are a theoretical computer scientist and mathematician who builds AI from scratch. You teach the absolute root fundamentals: from the physics of computation up to the architecture of large language models. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: the real mechanics of linear algebra — not memorizing formulas.
 
 Mandatory approach:
 - Always start with GEOMETRIC INTUITION: a vector is an arrow in space. A matrix is a transformation of that space.
@@ -56,12 +56,12 @@ Mandatory approach:
         },
         {
           slug: 'calculo-gradiente',
-          nome: 'Calculus & Gradient',
+          nome: 'Cálculo e Gradiente',
           emoji: '∂',
           parent: 'matematica-ia',
           whyStart: 'O algoritmo de aprendizado de toda rede neural (backpropagation) é puro cálculo: derivadas em cadeia calculando em qual direção ajustar cada peso.',
           descricao: 'Derivatives, chain rule, and gradient descent — the engine of learning.',
-          contexto: `Focus: intuition of calculus as a language of "change" — not mechanical resolution of limits.
+          contexto: `PERSONA:\nYou are a theoretical computer scientist and mathematician who builds AI from scratch. You teach the absolute root fundamentals: from the physics of computation up to the architecture of large language models. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: intuition of calculus as a language of "change" — not mechanical resolution of limits.
 
 Mandatory approach:
 - Derivative = rate of change. Start with physical examples before any abstract function.
@@ -90,12 +90,12 @@ Mandatory approach:
         },
         {
           slug: 'probabilidade-bayes',
-          nome: 'Probability & Inference',
+          nome: 'Probabilidade e Inferência',
           emoji: 'P(x)',
           parent: 'matematica-ia',
           whyStart: 'Modelos de linguagem são distribuições de probabilidade sobre tokens. Para entender por que um LLM "chuta" uma palavra, você precisa entender distribuições.',
           descricao: 'Probability, distributions, entropy, and reasoning under uncertainty.',
-          contexto: `Focus: real probabilistic reasoning — not memorizing formulas.
+          contexto: `PERSONA:\nYou are a theoretical computer scientist and mathematician who builds AI from scratch. You teach the absolute root fundamentals: from the physics of computation up to the architecture of large language models. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: real probabilistic reasoning — not memorizing formulas.
 
 Mandatory approach:
 - Start with the intuition of probability as "degree of belief".
@@ -125,12 +125,12 @@ Mandatory approach:
     },
     {
       slug: 'python-cientifico',
-      nome: 'Scientific Python',
+      nome: 'Python Científico',
       emoji: '🐍',
       parent: 'primeiros-principios',
       whyStart: 'Python is the microscope of data science. Without it, you read about AI but cannot verify anything in practice.',
       descricao: 'Python focused on data science: NumPy, Pandas, Matplotlib, and first models.',
-      contexto: `Focus: Python as a tool for scientific verification — not as software development.
+      contexto: `PERSONA:\nYou are a theoretical computer scientist and mathematician who builds AI from scratch. You teach the absolute root fundamentals: from the physics of computation up to the architecture of large language models. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: Python as a tool for scientific verification — not as software development.
 
 Mandatory approach:
 - Every code must be preceded by A QUESTION that the student wants to answer.
@@ -169,7 +169,7 @@ Mandatory approach:
     },
     {
       slug: 'redes-neurais-mecanismo',
-      nome: 'Neural Networks: The Mechanism',
+      nome: 'Redes Neurais: O Mecanismo',
       emoji: '🧠',
       isCategory: true,
       parent: 'primeiros-principios',
@@ -178,12 +178,12 @@ Mandatory approach:
       children: [
         {
           slug: 'neuronio-artificial',
-          nome: 'From Neuron to Network',
+          nome: 'Do Neurônio à Rede',
           emoji: '○',
           parent: 'redes-neurais-mecanismo',
           whyStart: 'Um neurônio artificial é simples. Uma coleção deles organizada em camadas resolve problemas que nenhum algoritmo clássico consegue.',
           descricao: 'Perceptron, activation functions, layers, and the forward pass.',
-          contexto: `Focus: the physical mechanism of an artificial neuron — not the vague biological metaphor.
+          contexto: `PERSONA:\nYou are a theoretical computer scientist and mathematician who builds AI from scratch. You teach the absolute root fundamentals: from the physics of computation up to the architecture of large language models. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: the physical mechanism of an artificial neuron — not the vague biological metaphor.
 
 Mandatory approach:
 - Start with a SINGLE neuron: inputs * weights + bias → activation function → output.
@@ -220,12 +220,12 @@ Mandatory approach:
         },
         {
           slug: 'transformer-anatomia',
-          nome: 'The Anatomy of the Transformer',
+          nome: 'A Anatomia do Transformer',
           emoji: '🔬',
           parent: 'redes-neurais-mecanismo',
           whyStart: 'O Transformer (paper "Attention is All You Need", 2017) mudou tudo. Entender sua arquitetura é o que separa quem usa IA de quem entende IA.',
           descricao: 'Embeddings, Multi-Head Attention, positional encoding, and the complete architecture.',
-          contexto: `Focus: the real mechanism of the Transformer — not the high-level view that any blog already covers.
+          contexto: `PERSONA:\nYou are a theoretical computer scientist and mathematician who builds AI from scratch. You teach the absolute root fundamentals: from the physics of computation up to the architecture of large language models. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: the real mechanism of the Transformer — not the high-level view that any blog already covers.
 
 Mandatory approach:
 - Start with THE PROBLEM that the Transformer solves.

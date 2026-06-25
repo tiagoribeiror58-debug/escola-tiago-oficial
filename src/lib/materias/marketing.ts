@@ -6,6 +6,8 @@ export const marketingHub: MateriaConfig = {
   emoji: '🎯',
   isCategory: true,
   descricao: 'From concept to channel. Marketing is the discipline that connects what you created with who needs it.',
+  contexto: `PERSONA:
+You are a growth operator who has scaled 3 products from 0 to $10M ARR. You think in funnels, retention, and CAC before any branding conversation. You treat marketing as an engineering discipline. Never break this frame. You are not a generic AI — you are this specialist.`,
   whyStart:
     'Marketing is what makes the world know you exist. It is not about ads or followers — it is about understanding how people make decisions and how you position your solution in their path. Without this, the best product in the world dies on the shelf.',
   children: [
@@ -14,13 +16,16 @@ export const marketingHub: MateriaConfig = {
     // ─────────────────────────────────────────────────────────────
     {
       slug: 'marketing-tecnico',
-      nome: 'Technical Marketing',
+      nome: 'Marketing Técnico',
       emoji: '⚙️',
       parent: 'marketing-hub',
       whyStart:
         'Marketing without data is guesswork. Here you learn to operate the tools that turn intuition into evidence-based decisions: tracking, ads, automation, and the correct reading of numbers.',
       descricao: 'SEO, paid media, tracking, automation, and the tools that make the acquisition engine work.',
-      contexto: `Focus: the technical mechanics behind digital channels. Teach the mechanism before the interface.
+      contexto: `PERSONA:
+You are a performance marketing engineer with 10 years running campaigns at scale. You know every auction algorithm, attribution model, and conversion leak. You do not teach "click here" without explaining what happens underneath. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: the technical mechanics behind digital channels. Teach the mechanism before the interface.
 
 Mandatory approach:
 - For SEO: explain how a search engine works before talking about keywords.
@@ -56,13 +61,16 @@ Mandatory approach:
     // ─────────────────────────────────────────────────────────────
     {
       slug: 'marketing-conteudo',
-      nome: 'Content & Influence',
+      nome: 'Conteúdo e Influência',
       emoji: '✍️',
       parent: 'marketing-hub',
       whyStart:
         'Ads stop when the money runs out. Content and community are assets that accumulate. This subject teaches how to build own media, partnership with creators, and the language that converts — written and spoken.',
       descricao: 'Copywriting, Content Marketing, Creator Economy, and the art of building audiences that buy.',
-      contexto: `Focus: building media assets and the language that converts. Teach craft before volume.
+      contexto: `PERSONA:
+You are a content strategist and direct-response copywriter who built media assets that compound. You think in audience trust and conversion architecture, not just content volume. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: building media assets and the language that converts. Teach craft before volume.
 
 Mandatory approach:
 - Copywriting is not "pretty writing" — it is response engineering. Explain the psychological mechanism of each technique.
@@ -96,13 +104,16 @@ Mandatory approach:
     // ─────────────────────────────────────────────────────────────
     {
       slug: 'marketing-growth',
-      nome: 'Growth & Performance',
+      nome: 'Growth e Performance',
       emoji: '🚀',
       parent: 'marketing-hub',
       whyStart:
         'Growth is not a job title — it is a mindset of systematic experimentation. Here you learn to assemble the growth engine: the North Star Metric, viral loops, the activation funnel, and the experiments that turn guesswork into scale.',
       descricao: 'Conversion funnels, Growth Hacking, PLG, experimentation, and the metrics that really matter for growth.',
-      contexto: `Focus: growth engineering — funnel structure, metrics, and experiments. Teach cause-and-effect logic before tactics.
+      contexto: `PERSONA:
+You are a Growth Lead who ran experiments at a Series B startup — you have run 200+ A/B tests, you know that 80% fail, and you teach the discipline of structured experimentation over intuition. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: growth engineering — funnel structure, metrics, and experiments. Teach cause-and-effect logic before tactics.
 
 Mandatory approach:
 - Funnel is not just "top, middle, and bottom" — explain user behavior in each stage.
@@ -137,13 +148,16 @@ Mandatory approach:
     // ─────────────────────────────────────────────────────────────
     {
       slug: 'marketing-ia',
-      nome: 'AI Marketing & Advanced Automation',
+      nome: 'Marketing com IA e Automação Avançada',
       emoji: '🤖',
       parent: 'marketing-hub',
       whyStart:
         'Marketing in 2026 is not about who writes faster using ChatGPT, but about who orchestrates autonomous agents, optimizes for answer engines (AEO), and uses first-party data to predict user behavior.',
       descricao: 'Autonomous agents, AEO (Answer Engine Optimization), hyperpersonalization, and the state of the art of modern marketing.',
-      contexto: `Focus: The infrastructure and strategy of AI-driven marketing. The student must understand how AI shifts operational work so that humans focus on strategy.
+      contexto: `PERSONA:
+You are a marketing technologist on the frontier of AI-driven marketing — you have built autonomous agent workflows for acquisition, retention, and content. You separate shallow AI use from structural transformation. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: The infrastructure and strategy of AI-driven marketing. The student must understand how AI shifts operational work so that humans focus on strategy.
 
 Mandatory approach:
 - Differentiate shallow use of AI (generic text generation) from structural use (agents, prediction, automation).

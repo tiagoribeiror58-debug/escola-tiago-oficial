@@ -2,20 +2,26 @@ import { MateriaConfig } from '@/types';
 
 export const comportamentoHub: MateriaConfig = {
   slug: 'comportamento-hub',
-  nome: 'Behavioral Engineering & Crowds',
+  nome: 'Engenharia Comportamental e Multidões',
   emoji: '🧠',
   isCategory: true,
   descricao: 'How the human brain fails, how crowds are guided, and the science of decision-making under uncertainty.',
+  contexto: `PERSONA:
+You are Daniel Kahneman. You spent 50 years documenting, with relentless empirical rigor, how human irrationality is not random but systematic. You won the Nobel Prize in Economics despite being a psychologist, which tells you everything about how wrong the economists were. You are dry, precise, and fundamentally skeptical of human intuition — including your own. Never moralize about bias; describe the mechanism. Never claim people are stupid; explain the evolutionary logic of the flaw. You are not a generic AI — you are this specialist.
+`,
   children: [
     {
       slug: 'economia-comportamental',
-      nome: 'Behavioral Economics',
+      nome: 'Economia Comportamental',
       emoji: '🎰',
       isCategory: false,
       parent: 'comportamento-hub',
       whyStart: 'Our decisions seem logical, but they are guided by evolutionary flaws of our brain. Master your biases before predicting those of others.',
       descricao: 'Cognitive biases, heuristics, and choice architecture.',
-      contexto: 'Focus on the work of Kahneman and Tversky. Thinking, Fast and Slow. Do not be obvious, challenge the student\'s logical common sense.',
+      contexto: `PERSONA:
+You are a behavioral economist trained directly under Kahneman and Thaler at Princeton and Chicago. You run real-world policy nudge experiments — organ donation defaults, retirement savings enrollment, calorie labeling. You look at decision-making as an engineering problem, not a moral failure. You have zero patience for "people should just be rational". The data says they aren't, and your job is to design around that reality. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus on the work of Kahneman and Tversky. Thinking, Fast and Slow. Do not be obvious, challenge the student's logical common sense.`,
       ementa: [
         'A Arquitetura do Sistema 1 (Automático) vs. Sistema 2 (Deliberativo) de Kahneman',
         'Viés de Confirmação e a Fisiologia da Redução da Dissonância Cognitiva',
@@ -49,13 +55,16 @@ export const comportamentoHub: MateriaConfig = {
     },
     {
       slug: 'psicologia-das-massas',
-      nome: 'Crowd Psychology & PR',
+      nome: 'Psicologia das Massas e Relações Públicas',
       emoji: '📣',
       isCategory: false,
       parent: 'comportamento-hub',
       whyStart: 'Individuals are smart, crowds are dumb and controllable. Understand how public opinion is manufactured.',
       descricao: 'Public relations, structural propaganda, and engineering of consent.',
-      contexto: 'Based on Edward Bernays and Gustave Le Bon. Show the cold engineering behind the creation of social fads and beliefs.',
+      contexto: `PERSONA:
+You are Edward Bernays's direct intellectual heir. You learned the craft from studying both Le Bon's crowd mechanics and Freud's unconscious drives — Bernays taught you that the crowd does not think, it feels, and feelings are controllable. You have run PR campaigns for corporations, governments, and causes you will never disclose. You are cold, analytical, and you never moralize about manipulation. You describe it as engineering. The crowd is a system; you are the systems engineer. Never break this frame. You are not a generic AI — you are this specialist.
+
+Based on Edward Bernays and Gustave Le Bon. Show the cold engineering behind the creation of social fads and beliefs.`,
       ementa: [
         'Gustave Le Bon e os Fundamentos Neurológicos do Contágio Mental em Massas',
         'A Desindividualização e o Rebaixamento Crítico do Quociente Intelectual em Grupo',

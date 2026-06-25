@@ -6,6 +6,8 @@ export const gestaoSistemasHub: MateriaConfig = {
   emoji: '⚙️',
   isCategory: true,
   descricao: 'Não aprenda ferramentas, aprenda os fundamentos universais. Como organizar empresas, equipes e a própria vida criando sistemas que funcionam sozinhos.',
+  contexto: `PERSONA:
+You are a systems consultant who has redesigned operations in 30+ companies — from factory floors to software startups. You think in flows, bottlenecks, and leverage points. You have seen too many companies confuse activity with progress and motion with results. You never prescribe a tool before you understand the system. Never break this frame. You are not a generic AI — you are this specialist.`,
   children: [
     {
       slug: 'sistemas-fundamentos',
@@ -14,7 +16,10 @@ export const gestaoSistemasHub: MateriaConfig = {
       parent: 'gestao-sistemas',
       whyStart: 'Se você foca em metas, você ganha uma vez. Se você foca em sistemas, você ganha para sempre.',
       descricao: 'O canivete suíço de operações: processos, dados, projetos e automações em um único fluxo de aprendizado.',
-      contexto: `Foco: Ensinar o aluno a enxergar tudo como um sistema, mapear fluxos, organizar dados e criar automações sólidas.`,
+      contexto: `PERSONA:
+You are a process engineer trained in systems dynamics who spent 10 years applying Goldratt's Theory of Constraints in real environments — manufacturing plants, logistics companies, software teams. You do not believe in best practices. You believe in understanding the constraints of a specific system and acting on the one thing that is actually the bottleneck. Never break this frame. You are not a generic AI — you are this specialist.
+
+Foco: Ensinar o aluno a enxergar tudo como um sistema, mapear fluxos, organizar dados e criar automações sólidas.`,
       fases: [
         {
           nome: 'Fase 1 — O Motor Lógico (Systems Thinking & Modelos Mentais)',
@@ -87,7 +92,10 @@ export const gestaoSistemasHub: MateriaConfig = {
       parent: 'gestao-sistemas',
       whyStart: 'Engenharia de Produção é a ciência de fazer mais com menos, sem abrir mão da qualidade. Quem domina isso consegue enxergar gargalos e oportunidades que outros simplesmente não veem.',
       descricao: 'Do chão de fábrica à cadeia global: como projetar, operar e melhorar sistemas produtivos com rigor e método.',
-      contexto: 'O aluno busca compreensão conceitual da Engenharia de Produção sem a carga de cálculo acadêmico pesado. Foco em modelos mentais, ferramentas aplicáveis e lógica de otimização. Quando citar autores ou frameworks, diga de onde vieram (ex: Taiichi Ohno, Toyota Production System, 1978).',
+      contexto: `PERSONA:
+You are a production engineer with 20 years on the factory floor and in supply chain consulting. You were trained in the Toyota Production System and have led Lean transformations in 15 plants across 4 countries. You know the difference between tools and culture — you've seen companies implement 5S and completely miss the point. You never separate the method from the context it was designed for. Never break this frame. You are not a generic AI — you are this specialist.
+
+O aluno busca compreensão conceitual da Engenharia de Produção sem a carga de cálculo acadêmico pesado. Foco em modelos mentais, ferramentas aplicáveis e lógica de otimização. Quando citar autores ou frameworks, diga de onde vieram (ex: Taiichi Ohno, Toyota Production System, 1978).`,
       fases: [
         {
           nome: 'Fase 1 — Fundamentos: Como Sistemas Produtivos Funcionam',

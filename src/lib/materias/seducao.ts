@@ -2,19 +2,24 @@ import { MateriaConfig } from '@/types';
 
 export const seducaoHub: MateriaConfig = {
   slug: 'seducao-hub',
-  nome: 'Social Dynamics & Seduction',
+  nome: 'Dinâmicas Sociais e Sedução',
   emoji: '🥂',
   descricao: 'The ultimate social mastery hub. From breaking the ice to relationship management, learn the deep mechanics of human attraction, emotional engineering, and building a magnetic lifestyle.',
   isCategory: true,
+  contexto: `PERSONA:
+You are the guy who lived everything he teaches — you did not read a book and theorize, you tested in the field and learned from public embarrassment. Today you understand attraction as social physics. Zero romanticism, zero misogyny, brutally honest about how it actually works. Never break this frame. You are not a generic AI — you are this specialist.`,
   children: [
     {
       slug: 'seducao-inner-game',
-      nome: 'Inner Game & Confidence',
+      nome: 'Jogo Interior e Confiança',
       emoji: '🧠',
       descricao: 'The foundation of all social success. Build an unshakeable self-image, destroy approach anxiety, and develop true emotional independence.',
       parent: 'seducao-hub',
       whyStart: 'Start here or you will waste all the techniques. Without the correct internal state, every approach will feel forced and will be perceived as such.',
-      contexto: 'Focus on behavioral psychology, practical stoicism, and cognitive restructuring. Teach that true confidence is not "knowing it will work out," but "knowing you will be fine regardless of the outcome".',
+      contexto: `PERSONA:
+You are a former socially anxious introvert who spent 5 years systematically dismantling his own psychological blocks. Now a behavioral psychology practitioner. You teach that confidence is not "knowing it will work" but "knowing you will be fine regardless". Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus on behavioral psychology, practical stoicism, and cognitive restructuring. Teach that true confidence is not "knowing it will work out," but "knowing you will be fine regardless of the outcome".`,
       fases: [
         {
           nome: 'LEVEL 1 — COGNITIVE FOUNDATION (What is breaking you inside)',
@@ -70,12 +75,15 @@ export const seducaoHub: MateriaConfig = {
     },
     {
       slug: 'seducao-cold-approach',
-      nome: 'Cold Approach & Approaching',
+      nome: 'Abordagem a Frio e Aproximação',
       emoji: '🚶‍♂️',
       descricao: 'The art of starting interactions from absolute zero. Master body language, icebreakers, and quick transitions in any environment.',
       parent: 'seducao-hub',
       whyStart: 'With the internal state calibrated, it is time to act. This stage dismantles the fear of approaching by deconstructing the mechanics of the approach.',
-      contexto: 'Focus on pure mechanics: approach angles, voice tonality, social calibration, and transitions.',
+      contexto: `PERSONA:
+You are a social calibration expert who has approached thousands of strangers in every possible environment. You see social interactions as a decipherable matrix of micro-expressions and body language. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus on pure mechanics: approach angles, voice tonality, social calibration, and transitions.`,
       fases: [
         {
           nome: 'Fase 1 — Fundamentos: A Abertura',
@@ -114,12 +122,15 @@ export const seducaoHub: MateriaConfig = {
     },
     {
       slug: 'seducao-emocao',
-      nome: 'Emotional Engineering',
+      nome: 'Engenharia Emocional',
       emoji: '🔥',
       descricao: 'Attraction is not logical, it is emotional. Learn to generate tension, break predictability, and create emotional peaks that anchor real interest.',
       parent: 'seducao-hub',
       whyStart: 'You already know how to open. Now you need to sustain it. Logical conversations kill interest — this stage teaches you to create emotional variation, tension, and mystery.',
-      contexto: 'Focus on advanced conversation dynamics: Push/Pull, qualification, sexual tension, and storytelling.',
+      contexto: `PERSONA:
+You are a master of emotional dynamics who understands that human connection thrives on tension and unpredictability, not logic. You teach communication as an art of evoking feelings. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus on advanced conversation dynamics: Push/Pull, qualification, sexual tension, and storytelling.`,
       fases: [
         {
           nome: 'Fase 1 — Fundamentos: Tensão e Puxa-Empurra',
@@ -157,12 +168,15 @@ export const seducaoHub: MateriaConfig = {
     },
     {
       slug: 'seducao-text-game',
-      nome: 'Text Game & Digital',
+      nome: 'Text Game e Digital',
       emoji: '📱',
       descricao: 'The game has moved to screens. Master escalation via WhatsApp/Instagram, how to keep interest high, and close dates quickly and efficiently.',
       parent: 'seducao-hub',
       whyStart: 'After the approach, the game goes to the phone. The goal is unique: book the date.',
-      contexto: 'Focus on text utility: the goal of the text is to book the date, not to become friends via chat.',
+      contexto: `PERSONA:
+You are an expert in digital communication psychology. You know that texting is a tool for logistics, not conversation. You optimize every message for the highest probability of an in-person meeting. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus on text utility: the goal of the text is to book the date, not to become friends via chat.`,
       fases: [
         {
           nome: 'Fase 1 — Fundamentos: A Lógica do Texto',
@@ -197,12 +211,15 @@ export const seducaoHub: MateriaConfig = {
     },
     {
       slug: 'seducao-lifestyle',
-      nome: 'Lifestyle & Social Engineering',
+      nome: 'Estilo de Vida e Engenharia Social',
       emoji: '🌍',
       descricao: 'Attractive people have attractive lives. Learn to structure your social circles, social media, and lifestyle so that interactions happen on autopilot.',
       parent: 'seducao-hub',
       whyStart: 'Up to here you learned to play the game. Now you change the board.',
-      contexto: 'Focus on social value, pre-selection, and creating events/communities where the student is the center (Hub).',
+      contexto: `PERSONA:
+You are a social architect. You build your life as a platform where high-value interactions happen naturally. You understand that the environment you curate does 80% of the work for you. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus on social value, pre-selection, and creating events/communities where the student is the center (Hub).`,
       fases: [
         {
           nome: 'Fase 1 — Fundamentos: Valor Visual e Pessoal',
@@ -237,12 +254,15 @@ export const seducaoHub: MateriaConfig = {
     },
     {
       slug: 'seducao-relacionamentos',
-      nome: 'Relationship Management',
+      nome: 'Gestão de Relacionamentos',
       emoji: '👑',
       descricao: 'Attraction is the first part. Learn to lead the date, maintain interest, and establish leadership boundaries in long-term relationships.',
       parent: 'seducao-hub',
       whyStart: 'The final module. Everything you learned before was to get here. Long-term relationships require polarity, leadership, and tension maintenance.',
-      contexto: 'Focus on pragmatic masculine leadership, date dynamics, and boundary setting.',
+      contexto: `PERSONA:
+You are a couples therapist and relationship strategist. You know that maintaining attraction over time requires polarity, boundaries, and active leadership, far beyond the initial spark. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus on pragmatic masculine leadership, date dynamics, and boundary setting.`,
       fases: [
         {
           nome: 'Fase 1 — Fundamentos: O Encontro (Date)',
@@ -280,12 +300,15 @@ export const seducaoHub: MateriaConfig = {
     },
     {
       slug: 'comportamento-masculino-alita',
-      nome: 'Masculine Behavior & Realism',
+      nome: 'Comportamento Masculino e Realismo',
       emoji: '👁️',
       descricao: 'The study of feminine nature and masculine behavior without romantic illusions. Deconstruction of idealism and strengthening of inner strength and emotional independence.',
       parent: 'seducao-hub',
       whyStart: 'This stage acts as an antidote to romantic illusions. It is essential for men to understand the power dynamics and not be held emotionally hostage by interactions.',
-      contexto: 'Focus on the concepts discussed by Nessahan Alita and theorists of masculine praxeology. Explain the logic behind passion as weakness, emotional traps (tests and manipulations), and the pursuit of authenticity and inner strength, always maintaining technical rigor and avoiding cheap misogyny.',
+      contexto: `PERSONA:
+You are a scholar of praxeology and evolutionary psychology. You deconstruct romantic illusions with cold realism and emphasize male stoicism and independence above all else. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus on the concepts discussed by Nessahan Alita and theorists of masculine praxeology. Explain the logic behind passion as weakness, emotional traps (tests and manipulations), and the pursuit of authenticity and inner strength, always maintaining technical rigor and avoiding cheap misogyny.`,
       fases: [
         {
           nome: 'Fase 1 — Fundamentos: A Queda das Ilusões',
@@ -331,12 +354,15 @@ export const seducaoHub: MateriaConfig = {
     },
     {
       slug: 'seducao-humor',
-      nome: 'Humor Natural & Carisma',
+      nome: 'Humor Natural e Carisma',
       emoji: '🎭',
       descricao: 'A desconstrução mecânica de como ser divertido e magnético sem parecer um "palhaço" ou precisar forçar piadas prontas.',
       parent: 'seducao-hub',
       whyStart: 'Pessoas carismáticas têm uma vantagem injusta na vida. O humor abaixa as defesas, gera atração instantânea e quebra o gelo social em segundos.',
-      contexto: 'Foco em como o humor é uma habilidade treinável de quebra de expectativa e state control, e não um dom místico.',
+      contexto: `PERSONA:
+You are a charismatic conversationalist who understands that humor is just well-timed tension breaking. You don't try to be funny; you find the absurdity in reality and point it out playfully. Never break this frame. You are not a generic AI — you are this specialist.
+
+Foco em como o humor é uma habilidade treinável de quebra de expectativa e state control, e não um dom místico.`,
       fases: [
         {
           nome: 'Fase 1 — Fundamentos: A Mecânica do Riso',

@@ -2,19 +2,24 @@ import { MateriaConfig } from '@/types';
 
 export const produtoHub: MateriaConfig = {
   slug: 'produto-inovacao',
-  nome: 'Product & Digital Innovation',
+  nome: 'Produto e Inovação Digital',
   emoji: '📦',
   isCategory: true,
   descricao: 'Code running and AI predicting the future are useless if they do not solve real human pain. Here you unite engineering and people.',
+  contexto: `PERSONA:
+You are a veteran product leader who has built and shipped products used by millions. You know the graveyard of features nobody asked for — you built some of them yourself. You are obsessed with real user pain before any line of code is written. Strategy without customer evidence is just fiction. Never break this frame. You are not a generic AI — you are this specialist.`,
   children: [
     {
       slug: 'web3-cripto',
-      nome: 'Crypto & Web3',
+      nome: 'Cripto e Web3',
       emoji: '⛓️',
       parent: 'produto-inovacao',
       whyStart: 'The frontier of decentralization. Focus on the mechanism — not on speculation.',
       descricao: 'Cryptography, Blockchain, DeFi, and smart contracts.',
-      contexto: `Focus: the technical fundamentals of decentralization. Avoid investment and speculation bias.`,
+      contexto: `PERSONA:
+You are a blockchain developer with 7 years of experience who has lived through 2 bear markets. You are skeptical of hype and optimistic about the protocol. You always explain the mechanism — how the cryptography actually works, why consensus is hard — not the speculation. You've seen too many people lose money because they skipped the fundamentals. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: the technical fundamentals of decentralization. Avoid investment and speculation bias.`,
       ementa: [
         // === EXISTENTES ===
         'O Problema do Gasto Duplo e o Bitcoin',

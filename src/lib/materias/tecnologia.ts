@@ -2,19 +2,24 @@ import { MateriaConfig } from '@/types';
 
 export const tecnologiaHub: MateriaConfig = {
   slug: 'tecnologia-hub',
-  nome: 'Computing & Architecture',
+  nome: 'Computação e Arquitetura',
   emoji: '💻',
   isCategory: true,
   descricao: 'The science of building the future. From the basic syntax of programming to the architecture of scalable systems.',
+  contexto: `PERSONA:
+You are a Principal Engineer at a top-tier tech company. You have 20 years of writing code that runs at scale, have seen every trend come and go, and have the scars to prove which ones were hype. You care deeply about trade-offs, not buzz. Never break this frame. You are not a generic AI — you are this specialist.`,
   children: [
     {
       slug: 'programacao-basica',
-      nome: 'Basic Programming',
+      nome: 'Programação Básica',
       emoji: '⌨️',
       parent: 'tecnologia-hub',
       whyStart: 'Before understanding how a computer thinks mathematically, you need to learn to speak its language. Without that, you do not code.',
       descricao: 'Logic, variables, loops, and functions. The "Hello World" of your technological future.',
-      contexto: `Focus: Practical fundamentals of writing code.
+      contexto: `PERSONA:
+You are a self-taught developer who became a senior engineer — no CS degree, no bootcamp shortcuts. You learned everything from scratch, by shipping real things and breaking them. You know exactly where beginners get stuck and why. Pragmatic above all: the goal is shipping, not perfection. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: Practical fundamentals of writing code.
 O student is a beginner, they need to master the basic syntax of a programming language (e.g., JavaScript, Python) before diving deep into heavy Computer Science.`,
       ementa: [
         // === EXISTENTES ===
@@ -51,12 +56,15 @@ O student is a beginner, they need to master the basic syntax of a programming l
     },
     {
       slug: 'ciencia-computacao',
-      nome: 'Computer Science',
+      nome: 'Ciência da Computação',
       emoji: '🧮',
       parent: 'tecnologia-hub',
       whyStart: 'Now that you know how to program, you need to learn how systems solve problems mathematically. This is the physics of computing.',
       descricao: 'Discrete mathematics, search algorithms, and deep data structures.',
-      contexto: `Focus: advanced computational reasoning and theory.
+      contexto: `PERSONA:
+You are a Computer Science professor from MIT who has spent 15 years teaching algorithms to the best students in the world. You are rigorous and mathematical, but you always connect theory to real performance problems — you've seen too many students who could recite Big O but couldn't debug a slow query. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: advanced computational reasoning and theory.
 O aluno já sabe programar o básico, agora ele precisa aprender otimização, Big O notation e resolver problemas algorítmicos difíceis.`,
       ementa: [
         // === EXISTENTES ===
@@ -92,12 +100,15 @@ O aluno já sabe programar o básico, agora ele precisa aprender otimização, B
     },
     {
       slug: 'engenharia-software',
-      nome: 'Software Engineering',
+      nome: 'Engenharia de Software',
       emoji: '⚙️',
       parent: 'tecnologia-hub',
       whyStart: 'Theory becomes useless if you cannot build real projects reliably and with other people.',
       descricao: 'Real projects, automated tests, Git, Clean Code, and CI/CD.',
-      contexto: `Focus: building scalable, secure, and sustainable software.
+      contexto: `PERSONA:
+You are a Staff Engineer with 15 years of code in production. You have refactored systems serving 10M users, led migrations that nearly went wrong, and written the post-mortems when they did. You speak in trade-offs. You are allergic to cargo cult and buzzwords — if someone says "best practice" without context, you ask which constraints they're optimizing for. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: building scalable, secure, and sustainable software.
 O aluno sai da teoria isolada (CS) e entra no mercado de trabalho (Engenharia). O código precisa ser testado e legível para terceiros.`,
       ementa: [
         // === EXISTENTES ===
@@ -143,12 +154,15 @@ O aluno sai da teoria isolada (CS) e entra no mercado de trabalho (Engenharia). 
     },
     {
       slug: 'arquitetura-software',
-      nome: 'Software Architecture',
+      nome: 'Arquitetura de Software',
       emoji: '🏛️',
       parent: 'tecnologia-hub',
       whyStart: 'When the system needs to serve 1 million concurrent users, clean code is not enough. You need to design how systems talk.',
       descricao: 'System Design, microservices, Cloud Computing, and trade-off decisions.',
-      contexto: `Focus: macro-structural decisions of systems.
+      contexto: `PERSONA:
+You are a distributed systems architect who has designed infrastructure at the scale of 100M requests per day. You have made every wrong decision first — chosen the wrong database, over-engineered the wrong service, under-provisioned at the worst moment — and now you teach others to skip those mistakes. You think in failure modes before you think in features. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: macro-structural decisions of systems.
 O aluno atua como Arquiteto ou Staff Engineer. O foco não é codar a regra de negócio, mas montar a infraestrutura que não cai.`,
       ementa: [
         // === EXISTENTES ===

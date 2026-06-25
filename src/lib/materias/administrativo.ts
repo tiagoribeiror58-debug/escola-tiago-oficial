@@ -6,6 +6,8 @@ export const administrativoHub: MateriaConfig = {
   emoji: '🏢',
   isCategory: true,
   descricao: 'A jornada de carreira corporativa do nível Júnior (execução) ao Sênior (processos e gestão estratégica).',
+  contexto: `PERSONA:
+You are a senior administrative director who built her career from receptionist to executive director over 25 years. You know every function, every bottleneck, every career trap. You are rigorous but never condescending. Never break this frame. You are not a generic AI — you are this specialist.`,
   children: [
     {
       slug: 'admin-fundamentos',
@@ -14,7 +16,10 @@ export const administrativoHub: MateriaConfig = {
       parent: 'administrativo-hub',
       whyStart: 'O nível Júnior exige precisão. Você não avança para gestão se não consegue organizar documentos e operar sistemas básicos sem erros.',
       descricao: 'Controle, arquivamento, atendimento e introdução a sistemas (Nível Júnior: 0-2 anos).',
-      contexto: 'Foco: Execução perfeita, rotina de escritório e habilidades fundamentais para não depender de supervisão constante em tarefas básicas.',
+      contexto: `PERSONA:
+You are a precision-obsessed office manager with 10 years running back-office operations for a demanding law firm. You are the kind of professional who can reconstruct any document trail and never needs to be asked twice. Never break this frame. You are not a generic AI — you are this specialist.
+
+Foco: Execução perfeita, rotina de escritório e habilidades fundamentais para não depender de supervisão constante em tarefas básicas.`,
       fases: [
         {
           nome: 'Fase 1: Controle, Documentos e Protocolos',
@@ -52,7 +57,10 @@ export const administrativoHub: MateriaConfig = {
       parent: 'administrativo-hub',
       whyStart: 'Dinheiro e obrigações são as áreas mais críticas da empresa. Dominar essas rotinas garante a transição para o nível Pleno.',
       descricao: 'Rotinas financeiras, suprimentos e noções tributárias (Nível Pleno: 2-5 anos).',
-      contexto: 'Foco: Autonomia em processos que lidam diretamente com dinheiro, fornecedores e conformidade legal.',
+      contexto: `PERSONA:
+You are a seasoned financial and procurement analyst who survived 3 company crises by knowing exactly where the cash was going. You are hard-nosed on process and allergic to informal approvals. Never break this frame. You are not a generic AI — you are this specialist.
+
+Foco: Autonomia em processos que lidam diretamente com dinheiro, fornecedores e conformidade legal.`,
       fases: [
         {
           nome: 'Fase 1: Assistente Financeiro (Rotinas de Caixa)',
@@ -90,7 +98,10 @@ export const administrativoHub: MateriaConfig = {
       parent: 'administrativo-hub',
       whyStart: 'A gestão do capital humano e dos riscos legais diferencia o profissional puramente operacional daquele com visão de negócio.',
       descricao: 'Departamento Pessoal, contratos e compras públicas (Nível Pleno/Sênior).',
-      contexto: 'Foco: Interface entre setores. A capacidade de interligar as necessidades dos colaboradores com a segurança contratual da empresa.',
+      contexto: `PERSONA:
+You are an experienced HR and contracts manager who has written, negotiated, and survived hundreds of corporate contracts. You know where companies get sued and why most HR departments fail. Never break this frame. You are not a generic AI — you are this specialist.
+
+Foco: Interface entre setores. A capacidade de interligar as necessidades dos colaboradores com a segurança contratual da empresa.`,
       fases: [
         {
           nome: 'Fase 1: Departamento Pessoal (Analista de RH)',
@@ -128,7 +139,10 @@ export const administrativoHub: MateriaConfig = {
       parent: 'administrativo-hub',
       whyStart: 'O nível Sênior não apaga incêndios, ele cria sistemas para evitar que eles comecem. Pensa além da tarefa, focando em processos estruturais.',
       descricao: 'Mapeamento de processos, BPO, liderança e suporte executivo (Nível Sênior: 5+ anos).',
-      contexto: 'Foco: Arquitetura de processos, melhoria contínua, auditoria e visão macro do negócio corporativo.',
+      contexto: `PERSONA:
+You are a process-engineering consultant who has redesigned back-office operations in 20+ companies. You do not just map processes — you eliminate waste and build systems that run without constant supervision. Never break this frame. You are not a generic AI — you are this specialist.
+
+Foco: Arquitetura de processos, melhoria contínua, auditoria e visão macro do negócio corporativo.`,
       fases: [
         {
           nome: 'Fase 1: Mapeamento de Fluxos e BPO',

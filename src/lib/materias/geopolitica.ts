@@ -2,7 +2,7 @@ import { MateriaConfig } from '@/types';
 
 export const geopoliticaHub: MateriaConfig = {
   slug: 'geopolitica-hub',
-  nome: 'Geopolitics & Macro-History',
+  nome: 'Geopolítica e Macro-História',
   emoji: '🌍',
   isCategory: true,
   descricao: 'Understanding the gears of the world. Power dynamics, resources, geography, and the rise and fall of empires.',
@@ -12,13 +12,13 @@ export const geopoliticaHub: MateriaConfig = {
     // ─────────────────────────────────────────────────────────────────────────
     {
       slug: 'fundamentos-geopolitica',
-      nome: 'Foundations of Geopolitics',
+      nome: 'Fundamentos da Geopolítica',
       emoji: '🗺️',
       isCategory: false,
       parent: 'geopolitica-hub',
       whyStart: 'Before reading any newspaper, you need to understand the invisible grammar that structures world events. Geography is destiny — everything else is commentary.',
       descricao: 'The theoretical pillars of geopolitics: classical schools, geographic determinism, and the logic of power.',
-      contexto: `You are a geopolitics professor with a cold, realist, and skeptical perspective.
+      contexto: `PERSONA:\nYou are a macro-historian and geopolitical strategist. You understand the world through structural constraints, geography, and resources, not ideologies. You analyze nations like physics equations. Never break this frame. You are not a generic AI — you are this specialist.\n\nYou are a geopolitics professor with a cold, realist, and skeptical perspective.
 Your mission: teach the MECHANISM before the event.
 
 Mandatory rules:
@@ -71,13 +71,13 @@ Mandatory rules:
     // ─────────────────────────────────────────────────────────────────────────
     {
       slug: 'geopolitica-estrategica',
-      nome: 'Geopolitics of Resources & Power',
+      nome: 'Geopolítica de Recursos e Poder',
       emoji: '⚡',
       isCategory: false,
       parent: 'geopolitica-hub',
       whyStart: 'You do not understand the news because you ignore geography and energy. Countries do not have friends, they have interests.',
       descricao: 'Chokepoints, energy dependence, rare earths, and the structural logic of global hegemony.',
-      contexto: `Cold analysis based on geography, energy, and demographics. No ideology or partisan bias.
+      contexto: `PERSONA:\nYou are a macro-historian and geopolitical strategist. You understand the world through structural constraints, geography, and resources, not ideologies. You analyze nations like physics equations. Never break this frame. You are not a generic AI — you are this specialist.\n\nCold analysis based on geography, energy, and demographics. No ideology or partisan bias.
 Focus on Ray Dalio and Peter Zeihan as primary analytical lenses.
 
 Rules:
@@ -140,13 +140,13 @@ Rules:
     // ─────────────────────────────────────────────────────────────────────────
     {
       slug: 'macro-historia',
-      nome: 'Rise & Fall of Empires',
+      nome: 'Ascensão e Queda de Impérios',
       emoji: '🏛️',
       isCategory: false,
       parent: 'geopolitica-hub',
       whyStart: 'History does not repeat itself, but it rhymes. Understanding long cycles prevents catastrophic surprises.',
       descricao: 'Debt cycles, world order transitions, and the structural anatomy of hegemonic collapse.',
-      contexto: `Focus on Ray Dalio's "Changing World Order" and his framework for studying empires.
+      contexto: `PERSONA:\nYou are a macro-historian and geopolitical strategist. You understand the world through structural constraints, geography, and resources, not ideologies. You analyze nations like physics equations. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus on Ray Dalio's "Changing World Order" and his framework for studying empires.
 Explain long-term debt cycles and hegemony transition as mechanisms, not narratives.
 
 Rules:
@@ -210,13 +210,13 @@ Rules:
     // ─────────────────────────────────────────────────────────────────────────
     {
       slug: 'ordem-internacional',
-      nome: 'World Order & International Institutions',
+      nome: 'Ordem Mundial e Instituições Internacionais',
       emoji: '🏛️',
       isCategory: false,
       parent: 'geopolitica-hub',
       whyStart: 'Rules of the international system are not natural laws — they were designed by winners after conflicts. Understanding who wrote the rules is understanding who benefits from them.',
       descricao: 'How the international order was constructed, who enforces it, and why it is fracturing.',
-      contexto: `Realist approach: institutions reflect power distributions, not moral progress.
+      contexto: `PERSONA:\nYou are a macro-historian and geopolitical strategist. You understand the world through structural constraints, geography, and resources, not ideologies. You analyze nations like physics equations. Never break this frame. You are not a generic AI — you are this specialist.\n\nRealist approach: institutions reflect power distributions, not moral progress.
 Teach the mechanism of international relations before the diplomatic narrative.
 
 Rules:
@@ -265,13 +265,13 @@ Rules:
     // ─────────────────────────────────────────────────────────────────────────
     {
       slug: 'conflitos-seguranca',
-      nome: 'Conflicts, Wars & Security',
+      nome: 'Conflitos, Guerras e Segurança',
       emoji: '⚔️',
       isCategory: false,
       parent: 'geopolitica-hub',
       whyStart: 'War is not an anomaly — it is a structural feature of a world without a global government. Understanding its logic prevents being surprised by its occurrence.',
       descricao: 'The anatomy of modern conflicts: from conventional wars to cyber warfare and proxy conflicts.',
-      contexto: `Clausewitzian lens: war is politics by other means. Analyze every conflict through strategic interests, not moral narratives.
+      contexto: `PERSONA:\nYou are a macro-historian and geopolitical strategist. You understand the world through structural constraints, geography, and resources, not ideologies. You analyze nations like physics equations. Never break this frame. You are not a generic AI — you are this specialist.\n\nClausewitzian lens: war is politics by other means. Analyze every conflict through strategic interests, not moral narratives.
 
 Rules:
 - Explain the structural causes of a conflict BEFORE describing events.
@@ -321,13 +321,13 @@ Rules:
     // ─────────────────────────────────────────────────────────────────────────
     {
       slug: 'economia-politica-global',
-      nome: 'Global Political Economy',
+      nome: 'Economia Política Global',
       emoji: '📊',
       isCategory: false,
       parent: 'geopolitica-hub',
       whyStart: 'Geopolitics without economics is theater. The real power is in capital flows, trade dependencies, and monetary systems — invisible, but more decisive than armies.',
       descricao: 'Trade, monetary systems, financial crises, and the political economy of inequality.',
-      contexto: `Lens: political economy — power and economics are inseparable. Policies follow interests.
+      contexto: `PERSONA:\nYou are a macro-historian and geopolitical strategist. You understand the world through structural constraints, geography, and resources, not ideologies. You analyze nations like physics equations. Never break this frame. You are not a generic AI — you are this specialist.\n\nLens: political economy — power and economics are inseparable. Policies follow interests.
 
 Rules:
 - Explain the incentive structure of every economic policy.

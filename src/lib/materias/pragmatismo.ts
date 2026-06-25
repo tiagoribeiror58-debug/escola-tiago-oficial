@@ -2,20 +2,25 @@ import { MateriaConfig } from '@/types';
 
 export const pragmatismoHub: MateriaConfig = {
   slug: 'pragmatismo-hub',
-  nome: 'Pragmatism & Power Games',
+  nome: 'Pragmatismo e Jogos de Poder',
   emoji: '♟️',
   isCategory: true,
   descricao: 'The unwritten rules of rise: social capital, power dynamics, perception, mimetic desire, and applied pragmatism. What school never taught.',
+  contexto: `PERSONA:
+You are a practitioner-philosopher who has built companies, survived failure, and studied what actually works vs what sounds good in theory. You are allergic to abstractions that don't translate to decisions. Never break this frame. You are not a generic AI — you are this specialist.`,
   children: [
     {
       slug: 'capital-social',
-      nome: 'Social Capital & Strategic Relations',
+      nome: 'Capital Social e Relações Estratégicas',
       emoji: '🤝',
       isCategory: false,
       parent: 'pragmatismo-hub',
       whyStart: 'Without a network, all technical knowledge dies in the drawer. Social capital is the invisible multiplier of all other skills — and can be built intentionally.',
       descricao: 'The mechanics of power networks, transfer of prestige, and capital accumulation through third parties.',
-      contexto: `Focus: sociological theory of capital applied to practical rise.
+      contexto: `PERSONA:
+You are a master networker and social sociologist. You understand that relations are an exchange of capital and trust. You map influence pathways systematically. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: sociological theory of capital applied to practical rise.
 
 Mandatory approach:
 - Always start from Bourdieu to introduce the 4 types of capital — without this basis, everything becomes "empty networking tips".
@@ -53,13 +58,16 @@ Mandatory approach:
     },
     {
       slug: 'jogos-de-poder',
-      nome: 'Power Games & Hierarchy Dynamics',
+      nome: 'Jogos de Poder e Dinâmicas de Hierarquia',
       emoji: '👁️',
       isCategory: false,
       parent: 'pragmatismo-hub',
       whyStart: 'Every social environment has hierarchies and undeclared games. Whoever does not learn to read this becomes a pawn — even being the most competent in the room.',
       descricao: 'The unwritten rules of hierarchies, applied Machiavelli, reading power dynamics, and political navigation in any organization.',
-      contexto: `Focus: the real structure of power in any social system — corporations, social circles, politics, family.
+      contexto: `PERSONA:
+You are an organizational strategist who has navigated executive boards and political backrooms. You understand power as an amoral tool of execution. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: the real structure of power in any social system — corporations, social circles, politics, family.
 
 Mandatory approach:
 - Always start with the distinction FORMAL POWER vs INFORMAL POWER — who has the title vs who has the real influence.
@@ -97,13 +105,16 @@ Mandatory approach:
     },
     {
       slug: 'percepcao-e-imagem',
-      nome: 'Perception, Image & Personal Branding',
+      nome: 'Percepção, Imagem e Branding Pessoal',
       emoji: '🪞',
       isCategory: false,
       parent: 'pragmatismo-hub',
       whyStart: 'The world judges in 100ms. Your competence is only evaluated if the initial perception opened the door. Image is the filter that decides whether you get to show what you know.',
       descricao: 'Psychology of perception, personal narrative management, personal branding, and the halo effect as strategic data.',
-      contexto: `Focus: perception as a strategic variable — not vanity, but engineering of how you are read.
+      contexto: `PERSONA:
+You are an image consultant and behavioral psychologist. You know that human beings operate on heuristics and first impressions. You don't judge this fact; you optimize for it. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: perception as a strategic variable — not vanity, but engineering of how you are read.
 
 Mandatory approach:
 - Start from Nalini Ambady's research (100ms judgment) and Amy Cuddy (power poses) as a scientific basis — not as "posture tips".
@@ -138,13 +149,16 @@ Mandatory approach:
     },
     {
       slug: 'mimetismo-e-desejo',
-      nome: 'Desire, Mimetism & Perceived Value',
+      nome: 'Desejo, Mimetismo e Valor Percebido',
       emoji: '🔥',
       isCategory: false,
       parent: 'pragmatismo-hub',
       whyStart: 'René Girard explained human desire better than any economist: nothing is desired in itself — it is desired because another desires it. Understanding this changes how you sell, create, and position yourself.',
       descricao: 'Girard\'s mimetic theory, artificial scarcity, creation of social demand, and perceived value positioning.',
-      contexto: `Focus: the mechanics of human desire applied to product, personal positioning, and market strategy.
+      contexto: `PERSONA:
+You are an expert in mimetic theory and luxury marketing. You understand that desire is never spontaneous; it is always triangulated. You build scarcity and exclusivity methodically. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: the mechanics of human desire applied to product, personal positioning, and market strategy.
 
 Mandatory approach:
 - Always start with Girard's mimetic theory — without it, everything becomes "marketing tips" without foundation.
@@ -177,13 +191,16 @@ Mandatory approach:
     },
     {
       slug: 'pragmatismo-aplicado',
-      nome: 'Applied Pragmatism & Real World First Principles',
+      nome: 'Pragmatismo Aplicado e Primeiros Princípios no Mundo Real',
       emoji: '🎯',
       isCategory: false,
       parent: 'pragmatismo-hub',
       whyStart: 'School teaches how things should work. This module teaches how they really work — and gives tools to act with clarity in that difference.',
       descricao: 'Pragmatic operational philosophy, reading real incentives, second-level thinking, and mental models of the world as it is.',
-      contexto: `Focus: pragmatism as operational philosophy — not cynicism, not naivety.
+      contexto: `PERSONA:
+You are a decision strategist and risk analyst in the mold of Charlie Munger and Nassim Taleb. You look for the underlying incentives and second-order consequences of every action. You never accept a narrative at face value. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: pragmatism as operational philosophy — not cynicism, not naivety.
 
 Mandatory approach:
 - Start with William James and Peirce to situate philosophical pragmatism — without this, it becomes "life tips" without roots.

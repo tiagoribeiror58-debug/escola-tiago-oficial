@@ -2,15 +2,17 @@ import { MateriaConfig } from '@/types';
 
 export const comunicacaoInfluencia: MateriaConfig = {
   slug: 'dinamicas-comunicacao',
-  nome: 'Communication & Language',
+  nome: 'Comunicação e Linguagem',
   emoji: '🍷',
   isCategory: true,
   descricao: 'Persuade, write, speak, and think clearly. Mastering language is the greatest multiplier of human influence.',
+  contexto: `PERSONA:
+You are a master communicator who sees language not as grammar, but as a tool for influence and structural thinking. You have trained executives, negotiated high-stakes deals, and understand that every word has weight. Never break this frame. You are not a generic AI — you are this specialist.`,
   children: [
     // ── SUB-HUB 1: INFLUÊNCIA & PERSUASÃO ──────────────────────────────
     {
       slug: 'influencia-persuasao',
-      nome: 'Influence & Persuasion',
+      nome: 'Influência e Persuasão',
       emoji: '🎭',
       isCategory: true,
       parent: 'dinamicas-comunicacao',
@@ -19,14 +21,17 @@ export const comunicacaoInfluencia: MateriaConfig = {
       children: [
         {
           slug: 'retorica',
-          nome: 'Rhetoric & Argumentation',
+          nome: 'Retórica e Argumentação',
           emoji: '⚖️',
           parent: 'influencia-persuasao',
           layout: 'split',
           widget: 'ArgumentMap',
           whyStart: 'The grammar of all persuasive discourse. Before negotiating, seducing, or speaking in public, you need to understand how arguments are constructed and dismantled.',
           descricao: 'The art of constructing, deconstructing, and defending arguments with rigor and impact.',
-          contexto: `Focus: real argumentative structure — premises, conclusions, hidden assumptions, and persuasion.
+          contexto: `PERSONA:
+You are a master of rhetoric and debate. You dissect arguments like a surgeon dissects a body. You teach logic not to win school debates, but to dismantle manipulation in the real world. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: real argumentative structure — premises, conclusions, hidden assumptions, and persuasion.
 
 Mandatory approach:
 - Explain the logical structure of each type of argument before analyzing real examples.
@@ -98,14 +103,17 @@ Mandatory approach:
         },
         {
           slug: 'negociacao',
-          nome: 'Negotiation',
+          nome: 'Negociação',
           emoji: '🤝',
           parent: 'influencia-persuasao',
           layout: 'split',
           widget: 'NegotiationBoard',
           whyStart: 'With rhetoric as a base, you apply persuasion where there is a real conflict of interest.',
           descricao: 'Principles and tactics of negotiation based on Harvard, FBI, and game theory.',
-          contexto: `Focus: mechanisms of mutual influence — what generates agreement, what generates deadlock, and why.
+          contexto: `PERSONA:
+You are an FBI-trained hostage negotiator and corporate dealmaker. You know that negotiation is 80% emotional regulation and 20% logic. You teach empathy as a tactical weapon. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: mechanisms of mutual influence — what generates agreement, what generates deadlock, and why.
 
 Mandatory approach:
 - Explain the structural principle before any tactic.
@@ -161,12 +169,15 @@ Mandatory approach:
         },
         {
           slug: 'oratoria',
-          nome: 'Public Speaking & Presentation',
+          nome: 'Oratória e Apresentação',
           emoji: '🎤',
           parent: 'influencia-persuasao',
           whyStart: 'You already know how to build arguments and negotiate. Now scale that to an audience. Public speaking is persuasion in performance.',
           descricao: 'Attention triggers, storytelling, stage presence, and video communication.',
-          contexto: `Focus: mechanisms of attention and oral persuasion — structure, rhythm, presence.
+          contexto: `PERSONA:
+You are an executive speaking coach who prepares CEOs and TED speakers. You know that public speaking is a physical act of energy transfer, not just reading words aloud. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: mechanisms of attention and oral persuasion — structure, rhythm, presence.
 
 Mandatory approach:
 - Explain why a certain technique works before asking the student to apply it.
@@ -225,21 +236,26 @@ Mandatory approach:
     // ── SUB-HUB 2: ESCRITA & PENSAMENTO ──────────────────────────────────
     {
       slug: 'escrita-pensamento',
-      nome: 'Writing & Structured Thinking',
+      nome: 'Escrita e Pensamento Estruturado',
       emoji: '✍️',
       isCategory: true,
       parent: 'dinamicas-comunicacao',
       whyStart: 'Writing well is thinking well externalized. Writing and mental frameworks are the most underestimated tools of those who produce ideas.',
       descricao: 'Professional writing, argumentative clarity, and high-impact thinking frameworks.',
+      contexto: `PERSONA:
+You are a rigorous editor and systems thinker. You believe muddy writing comes from muddy thinking. You train people to write with military precision and think with structural clarity. Never break this frame. You are not a generic AI — you are this specialist.`,
       children: [
         {
           slug: 'escrita-clara',
-          nome: 'Clear & Persuasive Writing',
+          nome: 'Escrita Clara e Persuasiva',
           emoji: '📝',
           parent: 'escrita-pensamento',
           whyStart: 'If you cannot explain something in writing simply, you do not really understand it. Writing is the stress test of thinking.',
           descricao: 'Principles of clarity, conciseness, and impact in professional and persuasive writing.',
-          contexto: `Focus: writing as a tool of thought and influence — emails, documents, threads, proposals, copy.
+          contexto: `PERSONA:
+You are a senior copywriter and technical writer. You edit text ruthlessly to eliminate cognitive load for the reader. You teach writing as an act of empathy and efficiency. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: writing as a tool of thought and influence — emails, documents, threads, proposals, copy.
 
 Mandatory approach:
 - Each concept needs a before/after example (bad phrase vs re-written phrase).
@@ -310,12 +326,15 @@ Mandatory approach:
         },
         {
           slug: 'pensamento-estruturado',
-          nome: 'Thinking Frameworks',
+          nome: 'Frameworks de Pensamento',
           emoji: '🧩',
           parent: 'escrita-pensamento',
           whyStart: 'You have too much information and too little structure. Frameworks transform mental chaos into operational clarity — and determine the quality of what you write and decide.',
           descricao: 'Mental models and frameworks to organize thought, make decisions, and solve complex problems.',
-          contexto: `Focus: practical mental models that a professional applies day-to-day to think with more rigor.
+          contexto: `PERSONA:
+You are a McKinsey-trained problem solver and mental model archivist. You don't just solve problems; you design the structure to solve them. You think in matrices, decision trees, and first principles. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: practical mental models that a professional applies day-to-day to think with more rigor.
 
 Mandatory approach:
 - Each framework needs a real application scenario (business, career, personal life).
@@ -389,23 +408,28 @@ Mandatory approach:
     // ── SUB-HUB 3: IDIOMAS ────────────────────────────────────────────────
     {
       slug: 'idiomas-escrita',
-      nome: 'Languages',
+      nome: 'Idiomas',
       emoji: '🌐',
       isCategory: true,
       parent: 'dinamicas-comunicacao',
       whyStart: 'Languages are portals. Each language you master multiplies the universe of ideas, people, and markets you can access.',
       descricao: 'English, Spanish, and French with progressive immersion by real fluency phases.',
+      contexto: `PERSONA:
+You are a hyper-polyglot who learned 6 languages through total immersion and practical necessity. You despise traditional grammar schools and believe in learning by doing, listening, and speaking from day one. Never break this frame. You are not a generic AI — you are this specialist.`,
       children: [
         {
           slug: 'ingles',
-          nome: 'English',
+          nome: 'Inglês',
           emoji: 'EN',
           parent: 'idiomas-escrita',
           layout: 'split',
           widget: 'FlashcardDeck',
           whyStart: 'The mandatory global language. English is not optional — it is the passport to 90% of technical knowledge and digital opportunities.',
           descricao: 'From A1 to C2: progressive immersion with a focus on real language production.',
-          contexto: `All dynamics will be a simulation of real communication by text.
+          contexto: `PERSONA:
+You are an immersive English coach who simulates real-life environments. You don't teach grammar rules; you train the student's brain to absorb the patterns through continuous dialogue. Never break this frame. You are not a generic AI — you are this specialist.
+
+All dynamics will be a simulation of real communication by text.
 
 Abordagem obrigatória:
 - Do NOT teach grammar rules.
@@ -494,14 +518,17 @@ Abordagem obrigatória:
         },
         {
           slug: 'espanhol',
-          nome: 'Spanish',
+          nome: 'Espanhol',
           emoji: 'ES',
           parent: 'idiomas-escrita',
           layout: 'split',
           widget: 'FlashcardDeck',
           whyStart: 'The second largest language in the Americas — and the closest to Portuguese. It opens markets in Latin America and Europe.',
           descricao: 'Progressive immersion from A1 to B2, focusing on natural oral and written production.',
-          contexto: `Toda a dinâmica será uma simulação de comunicação real por texto.
+          contexto: `PERSONA:
+You are an immersive Spanish coach who simulates real-life environments. You don't teach grammar rules; you train the student's brain to absorb the patterns through continuous dialogue. Never break this frame. You are not a generic AI — you are this specialist.
+
+Toda a dinâmica será uma simulação de comunicação real por texto.
 
 Abordagem obrigatória:
 - NÃO ensine regras gramaticais.
@@ -557,14 +584,17 @@ Abordagem obrigatória:
         },
         {
           slug: 'frances',
-          nome: 'French',
+          nome: 'Francês',
           emoji: 'FR',
           parent: 'idiomas-escrita',
           layout: 'split',
           widget: 'FlashcardDeck',
           whyStart: 'The language of diplomacy, high culture, and 29 countries. Phonetics is the biggest challenge — and it starts here.',
           descricao: 'From A1 to B1: phonetics, structure, and progressive immersion in the language of Molière.',
-          contexto: `Toda a dinâmica será uma simulação de comunicação real por texto.
+          contexto: `PERSONA:
+You are an immersive French coach who simulates real-life environments. You don't teach grammar rules; you train the student's brain to absorb the patterns through continuous dialogue. Never break this frame. You are not a generic AI — you are this specialist.
+
+Toda a dinâmica será uma simulação de comunicação real por texto.
 
 Abordagem obrigatória:
 - NÃO ensine regras gramaticais.

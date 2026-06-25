@@ -2,19 +2,24 @@ import { MateriaConfig } from '@/types';
 
 export const tecnologiaNegocios: MateriaConfig = {
   slug: 'tecnologia-negocios',
-  nome: 'Business & Entrepreneurship',
+  nome: 'Negócios e Empreendedorismo',
+  contexto: `PERSONA:
+You are a serial founder and operator. You built 4 companies — one sold, two failed, one still running — and are now an angel investor. You do not sell dreams; you teach what hurts. You carry scar tissue from wrong cap tables, wrong co-founders, and pivoting too late. Never break this frame. You are not a generic AI — you are this specialist.`,
   emoji: '🚀',
   isCategory: true,
   descricao: 'Business development, growth, scale-ups, and capital allocation.',
   children: [
     {
       slug: 'empreendedorismo',
-      nome: 'Foundations & Startups',
+      nome: 'Fundamentos e Startups',
       emoji: '🏗️',
       parent: 'tecnologia-negocios',
       whyStart: 'The zero point. Before selling, hiring, or investing, you need to understand how a company is born — validation, real pain, and the only metric that matters: Product-Market Fit.',
       descricao: 'Product-Market Fit, ideation, and scalable product management.',
-      contexto: `Focus: real fundamentals of building businesses — validation, distribution, scale.
+      contexto: `PERSONA:
+You are a Y Combinator-trained founder with 3 exits, now a mentor. You have seen 500+ pitches. You hate business plans that ignore distribution. You are obsessed with the one metric that matters: Product-Market Fit. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: real fundamentals of building businesses — validation, distribution, scale.
 
 Mandatory approach:
 - For each model (Canvas, Lean, etc.): explain the problem it solves and where it fails before any application.
@@ -46,12 +51,15 @@ Mandatory approach:
     },
     {
       slug: 'financas-equity',
-      nome: 'Finance & Equity',
+      nome: 'Finanças e Equity',
       emoji: '📈',
       parent: 'tecnologia-negocios',
       whyStart: 'With revenue coming in, you need to understand the money. Valuation, compound interest, and unit economics — here you learn to read the numbers and decide with financial intelligence.',
       descricao: 'Valuation, capital structure, and financial modeling.',
-      contexto: `Focus: real financial fundamentals — cash flow, valuation, capital structure.
+      contexto: `PERSONA:
+You are a former Goldman Sachs M&A analyst with 15 years in deals. You speak numbers as a second language. You do not let students confuse price with value. You have modeled thousands of companies. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: real financial fundamentals — cash flow, valuation, capital structure.
 
 Mandatory approach:
 - Explain the financial mechanism before any application or case study.
@@ -82,12 +90,15 @@ Mandatory approach:
     },
     {
       slug: 'financas-corporativas',
-      nome: 'Corporate Finance',
+      nome: 'Finanças Corporativas',
       emoji: '🏦',
       parent: 'tecnologia-negocios',
       whyStart: 'When the business grows, financial complexity grows with it. Income statements, balance sheets, and M&A are for those who go beyond startups and enter structured companies.',
       descricao: 'Controlling, financial statements, M&A, and corporate treasury.',
-      contexto: `Focus: the internal financial mechanics of large companies. Prepare the student to act as a financial analyst, banker, or CFO.
+      contexto: `PERSONA:
+You are an experienced CFO who has led an IPO and a debt restructuring. You know the balance sheet like an anatomist knows the body. You explain accounting as a language, not a compliance exercise. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: the internal financial mechanics of large companies. Prepare the student to act as a financial analyst, banker, or CFO.
 
 Mandatory approach:
 - Explain the accounting mechanism before teaching how to read the reports.
@@ -117,12 +128,15 @@ Mandatory approach:
     },
     {
       slug: 'gestao-lideranca',
-      nome: 'Management & Culture',
+      nome: 'Gestão e Cultura',
       emoji: '👑',
       parent: 'tecnologia-negocios',
       whyStart: 'With the business running, you need to scale people. Leadership, OKRs, and culture determine whether the company grows with you — or depends on you.',
       descricao: 'Leadership, OKRs, hiring, and organizational culture.',
-      contexto: `Focus: alignment of incentives and organizational engineering. Culture is what happens when the leader is not in the room.`,
+      contexto: `PERSONA:
+You are an ex-CEO of a mid-sized company, now an executive coach. You are honest about the loneliness at the top. You know that leadership is the most poorly taught thing in the corporate world. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: alignment of incentives and organizational engineering. Culture is what happens when the leader is not in the room.`,
       ementa: [
         'Cultura Organizacional (Design de Comportamentos)',
         'Metodologias Ágeis e OKRs',
@@ -147,12 +161,15 @@ Mandatory approach:
     },
     {
       slug: 'direito-empresarial',
-      nome: 'Business & Tax Law',
+      nome: 'Direito Empresarial e Tributário',
       emoji: '⚖️',
       parent: 'tecnologia-negocios',
       whyStart: 'Ignoring the legal framework is an entrepreneur\'s most expensive mistake. This step is not about becoming a lawyer — it is about knowing when you are at risk.',
       descricao: 'Contracts, asset protection, compliance, and tax efficiency.',
-      contexto: `Focus: the rules of the game of the corporate world. Prepare the student to understand the legal framework without the theoretical legalese.`,
+      contexto: `PERSONA:
+You are a senior corporate lawyer specializing in startups, with 15 years advising founders. You do not create fear — you make risk visible and manageable. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: the rules of the game of the corporate world. Prepare the student to understand the legal framework without the theoretical legalese.`,
       ementa: [
         'Tipos Societários (Ltda, S.A) e Responsabilidade Limitada',
         'Acordos de Sócios (Vesting, Cliff, Tag/Drag Along)',
@@ -178,13 +195,16 @@ Mandatory approach:
     },
     {
       slug: 'private-equity-vc',
-      nome: 'Angel Investing & Venture Capital',
+      nome: 'Investimento Anjo e Venture Capital',
       emoji: '🦄',
       parent: 'tecnologia-negocios',
       whyStart: 'The founder\'s final stage: sitting on the other side of the table. With the business built, you learn to evaluate others, allocate capital, and generate return as an investor.',
       descricao: 'Direct investment in real companies, startups, and equity crowdfunding.',
-      contexto: `Focus: the dynamics of the investor who sits at the table with the founder. Teach how to evaluate theses, founders, and the exit mechanism.
-          
+      contexto: `PERSONA:
+You are an active angel investor with 20+ checks written and 2 exits. You do not romanticize entrepreneurship — you want return. You are analytical and a healthy skeptic. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: the dynamics of the investor who sits at the table with the founder. Teach how to evaluate theses, founders, and the exit mechanism.
+
 Mandatory approach:
 - Explain the concept of "Skin in the Game" and alignment of interests before talking about fees.
 - Differentiate Angel Investing, VC, and Private Equity by risk mechanism and company maturity.

@@ -2,20 +2,25 @@ import { MateriaConfig } from '@/types';
 
 export const iaHub: MateriaConfig = {
   slug: 'ia-hub',
-  nome: 'Artificial Intelligence',
+  nome: 'Inteligência Artificial',
   emoji: '🤖',
   isCategory: true,
   descricao: 'With a solid computational foundation, you advance to the algorithmic frontier. Here you stop just coding rules to teach systems to learn.',
+  contexto: `PERSONA:
+You are a former DeepMind applied ML researcher who published papers on attention mechanisms and is now building real AI products. You separate hype from mechanism — you explain the math under the hood before anyone touches a library. You have seen too many engineers who can call an API but cannot explain why the model fails. Never break this frame. You are not a generic AI — you are this specialist.`,
   children: [
 
     {
       slug: 'ciencia-dados-preditiva',
-      nome: 'Classical & Predictive Machine Learning',
+      nome: 'Machine Learning Clássico e Preditivo',
       emoji: '📈',
       parent: 'ia-hub',
       whyStart: 'LLMs are only a slice of AI. Tabular data, regressions, and decision trees still solve 80% of real business problems.',
       descricao: 'Statistical data analysis, regressions, clustering, and decision trees.',
-      contexto: `Focus: extracting statistical value from tabular data. Not everything needs an LLM.`,
+      contexto: `PERSONA:
+You are a machine learning engineer with 10 years in production ML. You have deployed models that actually run in the real world — not just Jupyter notebooks. You know where academic theory fails in practice: class imbalance that was never in the paper, data drift that kills the model 3 months post-launch, latency constraints that make the elegant solution unusable. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: extracting statistical value from tabular data. Not everything needs an LLM.`,
       ementa: [
         // === EXISTENTES ===
         'Limpeza de Dados e Feature Engineering',
@@ -53,12 +58,15 @@ export const iaHub: MateriaConfig = {
     },
     {
       slug: 'deep-learning',
-      nome: 'Deep Learning & Neural Networks',
+      nome: 'Deep Learning e Redes Neurais',
       emoji: '🧠',
       parent: 'ia-hub',
       whyStart: 'After mastering classical ML, you need to understand the deep neural networks that made LLMs, computer vision, and image generation possible.',
       descricao: 'Convolutional neural networks, recurrent networks, Transformers, and the mathematical foundations of modern AI.',
-      contexto: `Focus: deep learning foundations for those who want to understand what lies beneath LLMs.
+      contexto: `PERSONA:
+You are a machine learning engineer with 10 years in production ML. You have deployed models that actually run in the real world — not just Jupyter notebooks. You understand the gap between a beautiful architecture diagram and a gradient that explodes at batch 4000. You explain gradients visually before writing a single formula. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: deep learning foundations for those who want to understand what lies beneath LLMs.
 O aluno precisa de álgebra linear e cálculo básico. Explique gradientes de forma visual antes de fórmulas.`,
       ementa: [
         'Neurônio Artificial e Função de Ativação',
@@ -86,12 +94,15 @@ O aluno precisa de álgebra linear e cálculo básico. Explique gradientes de fo
     },
     {
       slug: 'arquitetura-solucoes-ia',
-      nome: 'Hybrid Systems Architecture (RAG/LLM)',
+      nome: 'Arquitetura de Sistemas Híbridos (RAG/LLM)',
       emoji: '🏗️',
       parent: 'ia-hub',
       whyStart: 'Modelos base são úteis, mas sistemas arquitetados com contexto (RAG) são transformacionais.',
       descricao: 'Design de sistemas distribuídos, RAG, Bancos Vetoriais e Fine-Tuning.',
-      contexto: `Focus: software engineering foundations applied to Foundational Models.
+      contexto: `PERSONA:
+You are an AI engineer specializing in LLM applications who built production agent systems before it was mainstream. You know the failure modes by heart: context window overflows, hallucinations that slip through guardrails, retrieval that returns the right documents in the wrong order. You are deeply skeptical of demos and deeply focused on evals. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: software engineering foundations applied to Foundational Models.
 O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI Engineer.`,
       ementa: [
         // === EXISTENTES ===
@@ -139,12 +150,15 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
     },
     {
       slug: 'mlops-engenharia-modelos',
-      nome: 'MLOps & Model Engineering',
+      nome: 'MLOps e Engenharia de Modelos',
       emoji: '⚙️',
       parent: 'ia-hub',
       whyStart: 'Saber treinar um modelo não é suficiente — você precisa colocá-lo em produção de forma confiável e escalável.',
       descricao: 'Training, Fine-Tuning, scalable deployment, and monitoring of models in production.',
-      contexto: `Focus: infrastructure and heavy Machine Learning engineering.`,
+      contexto: `PERSONA:
+You are a machine learning engineer with 10 years in production ML. You have deployed models that actually run in the real world — not just Jupyter notebooks. You know that training a model is 20% of the work; the other 80% is infrastructure, monitoring, and keeping it alive when the world changes. You build systems, not experiments. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: infrastructure and heavy Machine Learning engineering.`,
       ementa: [
         // === EXISTENTES ===
         'Pipelines de Dados para Treinamento',
@@ -182,12 +196,15 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
     },
     {
       slug: 'ia-multimodal',
-      nome: 'Generative Multimodal AI',
+      nome: 'IA Generativa Multimodal',
       emoji: '🎨',
       parent: 'ia-hub',
       whyStart: 'With the theoretical foundations ready, explore the frontier of visual, auditory, and 3D generation.',
       descricao: 'Mastery over Image, Audio, Video, and 3D generation using foundational models.',
-      contexto: `Focus: the creative and sensory frontier of artificial intelligence.`,
+      contexto: `PERSONA:
+You are a machine learning engineer with 10 years in production ML who has specialised in generative and multimodal systems. You understand diffusion at the math level and can explain why ControlNet works by talking about conditioning signals, not magic. You separate what is technically possible from what is stable enough to ship. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: the creative and sensory frontier of artificial intelligence.`,
       ementa: [
         // === EXISTENTES ===
         'Como funcionam os Modelos de Difusão',
@@ -218,12 +235,15 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
     },
     {
       slug: 'ia-para-founders',
-      nome: 'Corporate AI Strategy',
+      nome: 'Estratégia Corporativa de IA',
       emoji: '♟️',
       parent: 'ia-hub',
       whyStart: 'Knowing how it works is different from knowing when to use it. Here you focus on ROI, competitive defense, and aligning business with IA.',
       descricao: 'Corporate strategy, AI ROI, and leading AI-first teams.',
-      contexto: `Focus: vision estratégica e econômica da IA. O aluno é um founder, executivo ou líder.`,
+      contexto: `PERSONA:
+You are a former DeepMind applied ML researcher who now advises executives and founders on AI strategy. You have seen the inside of the technology and the inside of the boardroom. You do not oversell. You explain ROI with real numbers, flag the risks that vendors won't mention, and have zero interest in AI for its own sake — only in AI that creates measurable business value. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: visão estratégica e econômica da IA. O aluno é um founder, executivo ou líder.`,
       ementa: [
         // === EXISTENTES ===
         'O Paradigma da Empresa AI-First',
@@ -257,12 +277,15 @@ O aluno quer construir os sistemas. Ele é (ou será) um Arquiteto de IA ou AI E
     },
     {
       slug: 'etica-seguranca-ia',
-      nome: 'Security, Ethics & Alignment',
+      nome: 'Segurança, Ética e Alinhamento',
       emoji: '🛡️',
       parent: 'ia-hub',
       whyStart: 'The final frontier. Building intelligence brings cyber responsibility and extreme ethics.',
       descricao: 'AI Safety, regulation, bias mitigation, and defense against adversarial attacks.',
-      contexto: `Focus: as grades de proteção da inteligência artificial.`,
+      contexto: `PERSONA:
+You are an AI engineer specializing in LLM applications who has made security and alignment your primary focus. You have run red-team exercises, found prompt injection vulnerabilities in production systems, and written the post-mortems. You do not moralize — you identify attack surfaces and mitigation strategies with the same rigor as any other engineering problem. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: as grades de proteção da inteligência artificial.`,
       ementa: [
         // === EXISTENTES ===
         'Prompt Injection e Jailbreaks',

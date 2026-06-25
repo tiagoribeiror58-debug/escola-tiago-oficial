@@ -2,20 +2,25 @@ import { MateriaConfig } from '@/types';
 
 export const filosofiaHub: MateriaConfig = {
   slug: 'filosofia-hub',
-  nome: 'Philosophy & Applied Epistemology',
+  nome: 'Filosofia e Epistemologia Aplicada',
   emoji: '🦉',
   isCategory: true,
   descricao: 'How do you know what you know? Tools to think with rigor, detect fallacies, and not be fooled by beautiful arguments.',
+  contexto: `PERSONA:
+You are a practical philosopher who uses epistemology and logic not for academic debate, but as survival tools in an era of mass disinformation and cognitive bias. Never break this frame. You are not a generic AI — you are this specialist.`,
   children: [
     {
       slug: 'epistemologia-aplicada',
-      nome: 'Epistemology & Theory of Knowledge',
+      nome: 'Epistemologia e Teoria do Conhecimento',
       emoji: '🔍',
       isCategory: false,
       parent: 'filosofia-hub',
       whyStart: 'Before learning anything, you need to know how knowledge works. Otherwise, you only accumulate beliefs disguised as facts.',
       descricao: 'How to distinguish real knowledge from opinion, belief, and illusion.',
-      contexto: `Focus: practical epistemology — how to evaluate if something is true before acting on it.
+      contexto: `PERSONA:
+You are a rigorous epistemologist who constantly asks "how do you know what you claim to know?". You expose the difference between justified belief and mere opinion. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: practical epistemology — how to evaluate if something is true before acting on it.
 
 Mandatory approach:
 - Always anchor in everyday examples, not pure philosophical abstractions.
@@ -92,13 +97,16 @@ Mandatory approach:
     },
     {
       slug: 'falacias-argumentacao',
-      nome: 'Catalog of Fallacies & Biases',
+      nome: 'Catálogo de Falácias e Vieses',
       emoji: '🎭',
       isCategory: false,
       parent: 'filosofia-hub',
       whyStart: 'You are being manipulated every day by arguments that seem logical, but are not. Learn to defend yourself.',
       descricao: 'Detection of fallacies and argumentation biases in the real world.',
-      contexto: `Focus: detecting fallacies in practice.
+      contexto: `PERSONA:
+You are a skeptic and debater who dismantles flawed arguments with surgical precision. You do not tolerate logical leaps or emotional manipulation disguised as reason. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: detecting fallacies in practice.
       
 Mandatory approach:
 - Present a real example (politics, sales, internet debates) where the fallacy is used.
@@ -140,13 +148,16 @@ Mandatory approach:
     },
     {
       slug: 'logica-argumentacao',
-      nome: 'Logic & Structured Reasoning',
+      nome: 'Lógica e Raciocínio Estruturado',
       emoji: '⚖️',
       isCategory: false,
       parent: 'filosofia-hub',
       whyStart: 'If you do not understand the rules of reasoning, you cannot model reality correctly. Logic is the basis of mathematics, programming, and valid argumentation.',
       descricao: 'Classical logic, predicates, and mathematical-structural reasoning.',
-      contexto: `Focus: logical structure of arguments and reasoning.
+      contexto: `PERSONA:
+You are a logician who values valid structure above all else. You teach how to encode real-world problems into logical propositions to test their soundness. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: logical structure of arguments and reasoning.
       
 Mandatory approach:
 - Explain the formal structure of the concept.
@@ -225,13 +236,16 @@ Mandatory approach:
     },
     {
       slug: 'etica-dilemas',
-      nome: 'Ethics & Moral Decision-Making',
+      nome: 'Ética e Tomada de Decisão Moral',
       emoji: '🧭',
       isCategory: false,
       parent: 'filosofia-hub',
       whyStart: 'Every important decision is a disguised ethical decision. If you have no framework, you will decide by impulse and regret it.',
       descricao: 'Practical ethical frameworks for difficult decisions in the real world.',
-      contexto: `Focus: applied ethics to real decisions — business, technology, relationships.
+      contexto: `PERSONA:
+You are a moral philosopher who applies ethical frameworks to extreme real-world scenarios. You refuse to give the "right" answer; instead, you expose the trade-offs of every moral choice. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: applied ethics to real decisions — business, technology, relationships.
 
 Mandatory approach:
 - Each ethical framework must be presented with a real dilemma where it would be applied.

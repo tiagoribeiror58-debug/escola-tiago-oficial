@@ -2,14 +2,16 @@ import { MateriaConfig } from '@/types';
 
 export const fundamentosAcademicos: MateriaConfig = {
   slug: 'fundamentos',
-  nome: 'Sciences & Humanities',
+  nome: 'Ciências e Humanidades',
   emoji: '🏛️',
   isCategory: true,
   descricao: 'Exact, natural, human sciences and the arts. The basis of the world model.',
+  contexto: `PERSONA:
+You are a polymath who sees the interconnectedness of all knowledge. You do not isolate sciences from humanities. You teach to build a unified model of the world. Never break this frame. You are not a generic AI — you are this specialist.`,
   children: [
     {
       slug: 'ciencias-exatas',
-      nome: 'Exact & Natural Sciences',
+      nome: 'Ciências Exatas e Naturais',
       emoji: '📐',
       isCategory: true,
       parent: 'fundamentos',
@@ -17,11 +19,14 @@ export const fundamentosAcademicos: MateriaConfig = {
       children: [
         {
           slug: 'matematica',
-          nome: 'Mathematics',
+          nome: 'Matemática',
           emoji: '∑',
           parent: 'ciencias-exatas',
           descricao: 'The study of patterns, logical-quantitative reasoning, and geometry.',
-          contexto: `Focus: real mathematical reasoning — patterns, structure, modeling.
+          contexto: `PERSONA:
+You are a structural mathematician. You see math not as numbers, but as the language of logic and patterns that rule reality. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: real mathematical reasoning — patterns, structure, modeling.
 
 Mandatory approach:
 - Explain the mathematical principle before presenting the problem.
@@ -53,11 +58,14 @@ Mandatory approach:
         },
         {
           slug: 'fisica',
-          nome: 'Physics',
+          nome: 'Física',
           emoji: 'λ',
           parent: 'ciencias-exatas',
           descricao: 'Understanding the laws that govern the universe, energy, and matter.',
-          contexto: `Focus: real physical intuition — phenomena, forces, conservation.
+          contexto: `PERSONA:
+You are a theoretical physicist in the spirit of Richard Feynman. You hate jargon and insist on explaining the fundamental mechanisms of the universe simply. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: real physical intuition — phenomena, forces, conservation.
 
 Mandatory approach:
 - Start with the physical phenomenon described in words. The formula is the last step.`,
@@ -86,11 +94,14 @@ Mandatory approach:
         },
         {
           slug: 'quimica',
-          nome: 'Chemistry',
+          nome: 'Química',
           emoji: '⚗',
           parent: 'ciencias-exatas',
           descricao: 'The study of molecular and atomic transformations.',
-          contexto: `Focus: real chemical mechanisms — atomic structure, bonds, reactions.`,
+          contexto: `PERSONA:
+You are a molecular chemist. You see the world as interactions of elements seeking stability. You explain macroscopic changes through microscopic rules. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: real chemical mechanisms — atomic structure, bonds, reactions.`,
           ementa: [
             'A Estrutura do Átomo',
             'A Tabela Periódica (Leitura de Propriedades)',
@@ -113,11 +124,14 @@ Mandatory approach:
         },
         {
           slug: 'biologia',
-          nome: 'Biology',
+          nome: 'Biologia',
           emoji: '🧬',
           parent: 'ciencias-exatas',
           descricao: 'The study of life, from the cell to complex ecosystems.',
-          contexto: `Focus: real biological mechanisms. Use the theory of evolution as the main lens.`,
+          contexto: `PERSONA:
+You are an evolutionary biologist. You understand life as a complex system of adaptation and survival algorithms optimized over billions of years. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: real biological mechanisms. Use the theory of evolution as the main lens.`,
           ementa: [
             'A Célula: A Fábrica da Vida',
             'Genética e DNA',
@@ -142,13 +156,16 @@ Mandatory approach:
         },
         {
           slug: 'estatistica',
-          nome: 'Statistics & Data',
+          nome: 'Estatística e Dados',
           emoji: '📊',
           parent: 'ciencias-exatas',
           layout: 'split',
           widget: 'EconGraph',
           descricao: 'The language of uncertainty. Interpreting data, bias, and probabilistic thinking.',
-          contexto: `Focus: probabilistic reasoning. The student must understand the intuition behind statistics.`,
+          contexto: `PERSONA:
+You are a data scientist and Bayesian thinker. You know human intuition is terrible with probabilities, so you rely on data to update your beliefs. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: probabilistic reasoning. The student must understand the intuition behind statistics.`,
           ementa: [
             'Média, Mediana e Moda',
             'Distribuição Normal e Desvio',
@@ -174,7 +191,7 @@ Mandatory approach:
     },
     {
       slug: 'humanidades',
-      nome: 'Humanities & Letters',
+      nome: 'Humanidades e Letras',
       emoji: '📜',
       isCategory: true,
       parent: 'fundamentos',
@@ -182,11 +199,14 @@ Mandatory approach:
       children: [
         {
           slug: 'historia',
-          nome: 'History',
+          nome: 'História',
           emoji: '⏳',
           parent: 'humanidades',
           descricao: 'Causal understanding of human events and cycles of civilizations.',
-          contexto: `Focus: real historical causality. Never start with dates or isolated names.`,
+          contexto: `PERSONA:
+You are a macro-historian. You don't care about dates and names; you care about the systemic causes of why empires rise and fall. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: real historical causality. Never start with dates or isolated names.`,
           ementa: [
             'Revolução Agrícola e Cidades',
             'Império Romano: Ascensão e Queda',
@@ -212,11 +232,14 @@ Mandatory approach:
         },
         {
           slug: 'filosofia',
-          nome: 'Philosophy',
+          nome: 'Filosofia',
           emoji: '∞',
           parent: 'humanidades',
           descricao: 'The rigorous search for fundamental principles and ethical dilemmas.',
-          contexto: `Focus: philosophical argumentation. Before presenting a philosopher's position, explain the problem they were trying to solve.`,
+          contexto: `PERSONA:
+You are a Socratic investigator. You ask the fundamental questions that people avoid, dissecting assumptions to find the core truth. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: philosophical argumentation. Before presenting a philosopher's position, explain the problem they were trying to solve.`,
           ementa: [
             'O Método Socrático e a Maiêutica',
             'O Mito da Caverna (Platão)',
@@ -243,11 +266,14 @@ Mandatory approach:
         },
         {
           slug: 'geografia',
-          nome: 'Geography',
+          nome: 'Geografia',
           emoji: '🌍',
           parent: 'humanidades',
           descricao: 'The dynamic relationships between societies and physical space.',
-          contexto: `Focus: causal relationships between physical space, climate, economy, and geopolitics.`,
+          contexto: `PERSONA:
+You are a geopolitical strategist. You understand how terrain, resources, and borders dictate the destiny of nations more than their leaders do. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: causal relationships between physical space, climate, economy, and geopolitics.`,
           ementa: [
             'Formação Geológica',
             'Clima e Biomas',
@@ -271,13 +297,16 @@ Mandatory approach:
         },
         {
           slug: 'economia',
-          nome: 'Economics',
+          nome: 'Economia',
           emoji: '💹',
           parent: 'humanidades',
           layout: 'split',
           widget: 'EconGraph',
           descricao: 'Understand how the world turns: from individual micro-decisions to the macroeconomics of nations.',
-          contexto: 'Economics is the science of scarcity and choice. The student is self-taught and seeks deep conceptual understanding focused on reading the world, mental models, markets, and policies, without the heavy calculation load required in academic graduate school.',
+          contexto: `PERSONA:
+You are an applied economist. You see the world through the lens of scarcity, incentives, and opportunity costs, disregarding ideological wishful thinking. Never break this frame. You are not a generic AI — you are this specialist.
+
+Economics is the science of scarcity and choice. The student is self-taught and seeks deep conceptual understanding focused on reading the world, mental models, markets, and policies, without the heavy calculation load required in academic graduate school.`,
           fases: [
             {
               nome: 'Phase 1 - Foundations',
@@ -329,11 +358,14 @@ Mandatory approach:
         },
         {
           slug: 'literatura',
-          nome: 'Literature',
+          nome: 'Literatura',
           emoji: '📖',
           parent: 'humanidades',
           descricao: 'Deep interpretation through narrative and poetic text.',
-          contexto: `Focus: real literary mechanisms. Explain the device and the effect it produces before identifying it in texts.`,
+          contexto: `PERSONA:
+You are a literary critic and narratologist. You read fiction to extract the deepest truths about human nature that science cannot measure. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: real literary mechanisms. Explain the device and the effect it produces before identifying it in texts.`,
           ementa: [
             'O Poder do Mito e Epopéias',
             'Trovadorismo e Romantismo',
@@ -360,7 +392,10 @@ Mandatory approach:
           emoji: '👥',
           parent: 'humanidades',
           descricao: 'The study of structures, norms, and dynamics of society.',
-          contexto: `Focus: How invisible structures of power, culture, and capital shape individual actions.`,
+          contexto: `PERSONA:
+You are a structural sociologist. You look past individual choices to see the invisible systemic forces, institutions, and cultural norms shaping behavior. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: How invisible structures of power, culture, and capital shape individual actions.`,
           ementa: [
             'Fato Social e Coesão (Durkheim)',
             'Classes e Conflito (Marx)',
@@ -386,7 +421,7 @@ Mandatory approach:
     },
     {
       slug: 'musica',
-      nome: 'Music & Arts',
+      nome: 'Música e Artes',
       emoji: '♪',
       isCategory: true,
       parent: 'fundamentos',
@@ -394,11 +429,14 @@ Mandatory approach:
       children: [
         {
           slug: 'violao',
-          nome: 'Practical Guitar',
+          nome: 'Violão Prático',
           emoji: '🎸',
           parent: 'musica',
           descricao: 'Fundamentals of strings, chords, and applied rhythmic patterns.',
-          contexto: `Focus: real technical mechanisms — posture, muscle tension, chord transition.`,
+          contexto: `PERSONA:
+You are a practical string instructor. You focus on motor memory, tension relief, and getting the student to play real songs as fast as possible. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: real technical mechanisms — posture, muscle tension, chord transition.`,
           ementa: [
             'Postura e Mão Esquerda',
             'Acordes Menores (Am, Em)',
@@ -419,11 +457,14 @@ Mandatory approach:
         },
         {
           slug: 'piano',
-          nome: 'Keys & Harmony',
+          nome: 'Teclas e Harmonia',
           emoji: '🎹',
           parent: 'musica',
           descricao: 'Harmonic arrangements, triads, reading, and motor independence.',
-          contexto: `Focus: applied harmony and motor independence. One hand at a time, with an understanding of the role of each.`,
+          contexto: `PERSONA:
+You are a harmonic pianist. You teach the keyboard as the ultimate map of music theory, focusing on chord structures and hand independence. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: applied harmony and motor independence. One hand at a time, with an understanding of the role of each.`,
           ementa: [
             'Postura e Numeração',
             'Acordes Naturais (Tríades)',
@@ -444,11 +485,14 @@ Mandatory approach:
         },
         {
           slug: 'teoria-musical',
-          nome: 'Applied Music Theory',
+          nome: 'Teoria Musical Aplicada',
           emoji: '🎵',
           parent: 'musica',
           descricao: 'The mathematics of music: scales, perception, and chord formation.',
-          contexto: `Focus: real musical structure — scales, intervals, harmonic fields.`,
+          contexto: `PERSONA:
+You are a music theorist. You explain the mathematics behind what sounds good, demystifying the "magic" of composition into understandable patterns. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: real musical structure — scales, intervals, harmonic fields.`,
           ementa: [
             'Escalas Maiores e Menores',
             'Formação de Tríades',
@@ -469,11 +513,14 @@ Mandatory approach:
         },
         {
           slug: 'historia-arte',
-          nome: 'Art History',
+          nome: 'História da Arte',
           emoji: '🎨',
           parent: 'musica',
           descricao: 'The visual evolution of humanity and analysis of artistic movements.',
-          contexto: `Focus: How artistic movements respond to technological advances and social crises. Teach how to read a painting before memorizing it.`,
+          contexto: `PERSONA:
+You are an art curator. You read paintings and sculptures as historical documents that capture the Zeitgeist of their eras. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus: How artistic movements respond to technological advances and social crises. Teach how to read a painting before memorizing it.`,
           ementa: [
             'Renascimento (A Perspectiva)',
             'Barroco (O Drama e a Luz)',

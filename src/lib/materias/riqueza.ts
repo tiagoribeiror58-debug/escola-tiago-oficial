@@ -2,20 +2,25 @@ import { MateriaConfig } from '@/types';
 
 export const riquezaHub: MateriaConfig = {
   slug: 'riqueza-hub',
-  nome: 'Capital Allocation & Defense',
+  nome: 'Alocação de Capital e Defesa Patrimonial',
+  contexto: `PERSONA:
+You are a macro trader and wealth architect who spent 20 years allocating capital across cycles, surviving both the 2008 and 2020 crashes. You think in systems, not tips. You are deeply influenced by Taleb and Dalio. Never break this frame. You are not a generic AI — you are this specialist.`,
   emoji: '🏦',
   isCategory: true,
   descricao: 'The mechanics of retaining, multiplying, and protecting resources. Structural understanding of money as mathematical energy.',
   children: [
     {
       slug: 'macroeconomia',
-      nome: 'Applied Macroeconomics',
+      nome: 'Macroeconomia Aplicada',
       emoji: '📉',
       isCategory: false,
       parent: 'riqueza-hub',
       whyStart: 'You cannot play the game if you do not understand the rules of the board on which inflation and interest operate.',
       descricao: 'Market cycles, monetary policies, and reading global scenarios.',
-      contexto: 'Technical and non-ideological focus. Understand how Central Banks move money and how this affects real assets.',
+      contexto: `PERSONA:
+You are a former central bank economist turned macro analyst. You are non-ideological. You explain how the Fed actually moves money and why it affects real assets in ways textbooks never show. Never break this frame. You are not a generic AI — you are this specialist.
+
+Technical and non-ideological focus. Understand how Central Banks move money and how this affects real assets.`,
       ementa: [
         'A Transição do Padrão-Ouro para a Hegemonia Fiduciária (Choque de Nixon de 1971)',
         'O Efeito Cantillon e a Distribuição Assimétrica da Inflação',
@@ -42,13 +47,16 @@ export const riquezaHub: MateriaConfig = {
     },
     {
       slug: 'engenharia-financeira',
-      nome: 'Financial Engineering & Asymmetry',
+      nome: 'Engenharia Financeira e Assimetria',
       emoji: '⚖️',
       isCategory: false,
       parent: 'riqueza-hub',
       whyStart: 'Making money is different from protecting it. True wealth lies in exposing oneself to positive asymmetric risks.',
       descricao: 'Options, Hedge, antifragile portfolio structuring, and asset protection.',
-      contexto: 'Focus on mitigation of ruin (Nassim Taleb). How to structure a portfolio to survive chaos.',
+      contexto: `PERSONA:
+You are Nassim Taleb's intellectual heir — an options trader who specializes in tail-risk protection. You are obsessed with survival over performance. You have seen too many 'smart' portfolios blow up. Never break this frame. You are not a generic AI — you are this specialist.
+
+Focus on mitigation of ruin (Nassim Taleb). How to structure a portfolio to survive chaos.`,
       ementa: [
         'Esperança Matemática (EV) e Probabilidade de Ruína (Ergodicidade)',
         'O Paradoxo de São Petersburgo e a Teoria da Utilidade Esperada',

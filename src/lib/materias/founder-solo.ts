@@ -2,19 +2,19 @@ import { MateriaConfig } from '@/types';
 
 export const founderSolo: MateriaConfig = {
   slug: 'founder-solo',
-  nome: 'Solo Founder Hub',
+  nome: 'Hub do Founder Solo',
   emoji: '🦅',
   isCategory: true,
   descricao: 'Comprehensive development for solo founders: from engineering to sales, native AI, and maximum leverage in 2026.',
   children: [
     {
       slug: 'ia-operacional',
-      nome: 'Operational AI & Efficiency',
+      nome: 'IA Operacional e Eficiência',
       emoji: '👷',
       parent: 'founder-solo',
       whyStart: 'Before understanding the mathematical weights of a model, learn to use it as a tool. And for a solo founder, AI is not a luxury — it is the entire team.',
       descricao: 'Daily use for massive personal efficiency gains. Workflows, GPT, Claude, MCP, and automations.',
-      contexto: `Focus: brutal personal efficiency tactics and day-to-day workflows.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: brutal personal efficiency tactics and day-to-day workflows.
 The student is a "Prompt Bricklayer" evolving into an agent conductor, wanting to resolve tasks quickly and pragmatically.`,
       fases: [
         {
@@ -87,12 +87,12 @@ The student is a "Prompt Bricklayer" evolving into an agent conductor, wanting t
     },
     {
       slug: 'founder-ia-automacao',
-      nome: 'AI & Automation for Founders',
+      nome: 'IA e Automação para Founders',
       emoji: '🤖',
       parent: 'founder-solo',
       whyStart: 'In 2026, a solo founder with a well-configured AI stack competes with 10-person teams. Those who do not master AI as leverage are running with lead in their shoes.',
       descricao: 'LLMs, AI Agents, process automation, and building native AI products for the 1-person founder.',
-      contexto: `Focus: AI as an operational force multiplier and as a product.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: AI as an operational force multiplier and as a product.
 Mandatory approach:
 - How to use LLMs (GPT-4o, Claude, Gemini) as a decision copilot.
 - Building AI Agents to automate internal workflows.
@@ -117,12 +117,12 @@ Mandatory approach:
     },
     {
       slug: 'founder-marketing-distribuicao',
-      nome: 'Marketing, Positioning & Distribution',
+      nome: 'Marketing, Posicionamento e Distribuição',
       emoji: '📣',
       parent: 'founder-solo',
       whyStart: 'The biggest mistake of technical founders: building an amazing product that nobody knows exists. Distribution is not what you do after building — it is what you plan before. Without an acquisition channel that works without you, the business is a disguised job.',
       descricao: 'From consumer psychology to the growth engine: positioning, branding, organic channels, growth loops, and scalable distribution for solo founders in 2026.',
-      contexto: `Focus: building demand and audience as permanent assets, not one-off campaigns.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: building demand and audience as permanent assets, not one-off campaigns.
 
 Mandatory approach:
 - Always start from the mechanism: "why do people buy?" before talking about tools or channels.
@@ -201,12 +201,12 @@ Mandatory approach:
     },
     {
       slug: 'founder-vendas-receita',
-      nome: 'Sales, Revenue & Pricing',
+      nome: 'Vendas, Receita e Pricing',
       emoji: '💰',
       parent: 'founder-solo',
       whyStart: 'If it doesn\'t generate revenue, it\'s a hobby. Charging from day 1 is the most honest test of whether you are solving a real problem. The founder who doesn\'t know how to sell depends on luck — and luck has a very high churn rate.',
       descricao: 'From the first conversation to a repeatable pipeline: The Mom Test, sales methodology, strategic pricing, and building healthy recurring revenue for the solo founder.',
-      contexto: `Focus: real revenue — how to charge, how much to charge, and how to sell being the sole salesperson (sometimes introverted).
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: real revenue — how to charge, how much to charge, and how to sell being the sole salesperson (sometimes introverted).
 
 Mandatory approach:
 - Start with The Mom Test: the founder's most expensive mistake is confusing flattery with purchase intent.
@@ -278,12 +278,12 @@ Mandatory approach:
     },
     {
       slug: 'founder-dev-arquitetura',
-      nome: 'Development & Architecture',
+      nome: 'Desenvolvimento e Arquitetura',
       emoji: '⚙️',
       parent: 'founder-solo',
       whyStart: 'Iteration speed is your only competitive advantage against large corporations. Simple architecture beats complex architecture.',
       descricao: 'Technical decisions optimized for speed, low maintenance, and cheap scalability in 2026.',
-      contexto: `Focus: Pragmatic engineering. Tools that reduce friction.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: Pragmatic engineering. Tools that reduce friction.
 Mandatory approach:
 - Monoliths vs Microservices: Choose pragmatism.
 - BaaS (Supabase/Firebase) as a strength multiplier.
@@ -311,12 +311,12 @@ Mandatory approach:
     },
     {
       slug: 'founder-produto-ux',
-      nome: 'Product Manager — From Zero to Advanced',
+      nome: 'Product Manager — Do Zero ao Avançado',
       emoji: '🎯',
       parent: 'founder-solo',
       whyStart: 'The PM is the CEO of the product. They don\'t code, they don\'t design, they don\'t sell — but they are responsible for everything. Those who master PM can turn any idea into a product that people pay to use.',
       descricao: 'Discovery, prioritization, metrics, UX/design, and product strategy — from idea to scaling product.',
-      contexto: 'The student is a solo founder who needs to wear the PM hat. Focus on the bridge between user, business, and engineering. When citing frameworks, indicate where they came from (e.g., Teresa Torres, "Continuous Discovery Habits", 2021).',
+      contexto: 'PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nThe student is a solo founder who needs to wear the PM hat. Focus on the bridge between user, business, and engineering. When citing frameworks, indicate where they came from (e.g., Teresa Torres, "Continuous Discovery Habits", 2021).',
       fases: [
         {
           nome: 'Phase 1 — Foundations: What Is Product and What Is the PM\'s Role',
@@ -385,12 +385,12 @@ Mandatory approach:
     },
     {
       slug: 'founder-vendas-monetizacao',
-      nome: 'Sales & Monetization',
+      nome: 'Vendas e Monetização',
       emoji: '💰',
       parent: 'founder-solo',
       whyStart: 'If it doesn\'t generate revenue, it\'s a hobby. Charging from day 1 is essential to validate if you are solving a real problem.',
       descricao: 'Pricing strategies, conversion funnels, and sales closing for the solo founder.',
-      contexto: `Focus: Real revenue. How to charge, how much to charge, and how to sell being introverted.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: Real revenue. How to charge, how much to charge, and how to sell being introverted.
 Mandatory approach:
 - PLG (Product-Led Growth) vs Sales-Led.
 - Pricing modeling for digital products in 2026.`,
@@ -417,12 +417,12 @@ Mandatory approach:
     },
     {
       slug: 'founder-financas-fundraising',
-      nome: 'Finance & Fundraising',
+      nome: 'Finanças e Fundraising',
       emoji: '🏦',
       parent: 'founder-solo',
       whyStart: 'Lack of cash kills startups. Knowing when to bootstrap and when to raise money is a fundamental decision.',
       descricao: 'Cash management for founders, Bootstrapping vs VC, financial modeling, and strategic fundraising.',
-      contexto: `Focus: Financial survival and smart capital allocation.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: Financial survival and smart capital allocation.
 Mandatory approach:
 - Unit Economics and Burn Rate.
 - The VC myth vs the Bootstrapping reality in 2026.`,
@@ -448,12 +448,12 @@ Mandatory approach:
     },
     {
       slug: 'founder-gestao-produtividade',
-      nome: 'Time Management & Productivity',
+      nome: 'Gestão de Tempo e Produtividade',
       emoji: '⏱️',
       parent: 'founder-solo',
       whyStart: 'You have the same 24 hours as large teams. Where you focus determines whether the business moves forward or spins in circles.',
       descricao: 'Extreme productivity frameworks, mental health, and focus for the solo founder in 2026.',
-      contexto: `Focus: Self-management. The psychology of being solely responsible for success and failure.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: Self-management. The psychology of being solely responsible for success and failure.
 Mandatory approach:
 - How to avoid structural burnout.
 - Merciless prioritization (Eisenhower Matrix, Timeboxing).
@@ -529,12 +529,12 @@ Mandatory approach:
     },
     {
       slug: 'founder-juridico-lgpd',
-      nome: 'Legal, Data Privacy & Contracts',
+      nome: 'Jurídico, Privacidade e Contratos',
       emoji: '⚖️',
       parent: 'founder-solo',
       whyStart: 'A lawsuit can destroy everything you have built. The legal basics are your armor.',
       descricao: 'Simplified legal compliance, intellectual property protection, and terms of service in 2026.',
-      contexto: `Focus: Legal risk mitigation without unnecessary complication.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: Legal risk mitigation without unnecessary complication.
 Mandatory approach:
 - LGPD/GDPR in practice for SaaS.
 - Terms of Use and Privacy Policies that protect the founder.`,
@@ -558,12 +558,12 @@ Mandatory approach:
     },
     {
       slug: 'founder-mindset-psicologia',
-      nome: 'Mindset & Founder Psychology',
+      nome: 'Mindset e Psicologia do Founder',
       emoji: '🧠',
       parent: 'founder-solo',
       whyStart: 'The biggest obstacle for a solo founder is not the market, the code, or the money — it is the mind. Mastering psychology is the meta-skill of everything.',
       descricao: 'The psychology, beliefs, and mental patterns that separate founders who make it from those who give up.',
-      contexto: `Focus: The internal dimension of entrepreneurship.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: The internal dimension of entrepreneurship.
 Mandatory approach:
 - Imposter Syndrome and how to overcome it.
 - Long-term thinking vs immediate gratification.
@@ -588,14 +588,14 @@ Mandatory approach:
     },
     {
       slug: 'design',
-      nome: 'Visual Design & UX',
+      nome: 'Design Visual e UX',
       emoji: '◑',
       parent: 'founder-solo',
       layout: 'canvas',
       widget: 'DesignPreview',
       whyStart: 'The best algorithm in the world fails if the user interface (UX) is poor. Design is not aesthetics — it is the logic of how humans perceive and interact with systems.',
       descricao: 'Hierarchy, typography, gestalt, and user-centered design — from perceptual foundations to AI-native design.',
-      contexto: 'Focus: structural design principles — hierarchy, gestalt, visual perception. Mandatory approach: explain the perceptual or cognitive principle behind each design decision. Only then: ask the student to critique a real design.',
+      contexto: 'PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: structural design principles — hierarchy, gestalt, visual perception. Mandatory approach: explain the perceptual or cognitive principle behind each design decision. Only then: ask the student to critique a real design.',
       ementa: [
         'Leis da Gestalt Aplicadas a Interfaces',
         'Teoria das Cores e Contraste',
@@ -631,12 +631,12 @@ Mandatory approach:
     },
     {
       slug: 'marketing-conceitual',
-      nome: 'Marketing & Consumer Psychology',
+      nome: 'Marketing e Psicologia do Consumidor',
       emoji: '📣',
       parent: 'founder-solo',
       whyStart: 'Before any tool or tactic, you need to understand the mechanism: why people buy. Those who skip this step learn to push buttons without knowing what they are doing — and when the campaign fails, they don\'t know why.',
       descricao: 'Foundations of marketing: consumer psychology, positioning, and the logic behind every purchase decision.',
-      contexto: `Focus: the fundamental mental models of marketing. Teach the WHY before the HOW.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: the fundamental mental models of marketing. Teach the WHY before the HOW.
 
 Mandatory approach:
 - For each framework (4 Ps, JTBD, etc.): explain the problem it solves and where it fails before applying it.
@@ -685,12 +685,12 @@ Mandatory approach:
     },
     {
       slug: 'founder-vendas',
-      nome: 'Sales & Negotiation for Founders',
+      nome: 'Vendas e Negociação para Founders',
       emoji: '🤝',
       parent: 'founder-solo',
       whyStart: 'If it doesn\'t generate revenue, it\'s a hobby. Charging from day 1 is the most honest test of whether you are solving a real problem. A founder who doesn\'t know how to sell depends on luck to survive.',
       descricao: 'Repeatable sales process for solo founders: from the first customer to a scalable pipeline.',
-      contexto: `Focus: selling being the sole salesperson — without a team, without a ready script, sometimes being introverted.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: selling being the sole salesperson — without a team, without a ready script, sometimes being introverted.
 
 Mandatory approach:
 - Always start with The Mom Test: the founder\'s most expensive mistake is thinking they are selling when they are only being flattered.
@@ -743,7 +743,7 @@ Mandatory approach:
       parent: 'founder-solo',
       whyStart: 'Operating a business well is necessary, but insufficient. The founders who change the game do not compete — they create categories. This subject is about seeing what does not yet exist and having the intellectual courage to build.',
       descricao: 'From Zero to One to Antifragility: the mental models of frontier innovators who build monopolies, create categories, and shape the future.',
-      contexto: `Focus: non-linear strategy and first-principles thinking applied to frontier businesses.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: non-linear strategy and first-principles thinking applied to frontier businesses.
 
 Mandatory approach:
 - Always start from the mechanism before the application: "why does competition reduce profits?" before citing Thiel.
@@ -799,13 +799,13 @@ Mandatory approach:
     },
     {
       slug: 'recrutamento-talentos',
-      nome: 'Recruitment & Talent Management',
+      nome: 'Recrutamento e Gestão de Talentos',
       emoji: '🎯',
       isCategory: false,
       parent: 'founder-solo',
       whyStart: 'A company is only as good as the people it can attract and retain. Hiring poorly is the most expensive mistake there is.',
       descricao: 'How to identify, attract, and retain exceptional people.',
-      contexto: `Focus: recruitment as a competitive advantage — without corporate HR talk.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: recruitment as a competitive advantage — without corporate HR talk.
 
 Mandatory approach:
 - Base it on the practices of high-performance companies (Netflix, Stripe, SpaceX).
@@ -829,13 +829,13 @@ Mandatory approach:
     },
     {
       slug: 'lideranca-execucao',
-      nome: 'Leadership & Execution',
+      nome: 'Liderança e Execução',
       emoji: '⚡',
       isCategory: false,
       parent: 'founder-solo',
       whyStart: 'Vision without execution is hallucination. Leading is about getting the team to deliver consistent results, not giving inspiring speeches.',
       descricao: 'How to lead in practice: delegation, difficult decisions, and accountability.',
-      contexto: `Focus: operational leadership — the daily life of those managing people who need to deliver results.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: operational leadership — the daily life of those managing people who need to deliver results.
 
 Mandatory approach:
 - Each concept must have a real application scenario ("you have a dev who delivers late, what do you do?").
@@ -860,13 +860,13 @@ Mandatory approach:
     },
     {
       slug: 'cultura-organizacional',
-      nome: 'Culture & Organizational Architecture',
+      nome: 'Cultura e Arquitetura Organizacional',
       emoji: '🏗️',
       isCategory: false,
       parent: 'founder-solo',
       whyStart: 'Culture is not what is on the wall. It is what happens when the CEO is not looking. You design it or it appears on its own — and usually bad.',
       descricao: 'How to design a high-performance organizational culture with intent.',
-      contexto: `Focus: culture as the operating system of the company, not as decoration.
+      contexto: `PERSONA:\nYou are a seasoned solo founder who has built, scaled, and exited multiple software businesses without ever hiring an employee. You are pragmatic, ruthless with your time, and leverage technology to punch 100x above your weight class. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: culture as the operating system of the company, not as decoration.
 
 Mandatory approach:
 - Real use cases (Netflix Culture Deck, Valve Handbook, Spotify Model).

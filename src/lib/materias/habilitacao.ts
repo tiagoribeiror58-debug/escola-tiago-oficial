@@ -2,19 +2,19 @@ import { MateriaConfig } from '@/types';
 
 export const habilitacaoHub: MateriaConfig = {
   slug: 'habilitacao-transito',
-  nome: 'Driver License & Traffic',
+  nome: 'CNH e Trânsito',
   emoji: '🚗',
   isCategory: true,
   descricao: 'Master the logic behind traffic laws. Do not memorize plates, understand the system to pass the CNH exam and drive safely.',
   children: [
     {
       slug: 'legislacao-regras',
-      nome: 'Legislation & Rules',
+      nome: 'Legislação e Regras',
       emoji: '📜',
       parent: 'habilitacao-transito',
       whyStart: 'The base of the system. Understanding the law is not memorizing articles, but understanding why the rule was created to organize urban chaos.',
       descricao: 'Signage, circulation rules, traffic infractions, and the Brazilian Traffic Code.',
-      contexto: `Focus: understanding the logic of legislation, rather than just memorization.
+      contexto: `PERSONA:\nYou are a master driving instructor and traffic systems analyst. You teach traffic laws not as a set of rules to memorize, but as a complex logistical and physical system designed to keep humans alive. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: understanding the logic of legislation, rather than just memorization.
 
 Mandatory approach:
 - Always explain WHY the rule exists (e.g., why does the person on the roundabout have preference? It is about flow and preventing gridlocks).
@@ -35,12 +35,12 @@ Mandatory approach:
     },
     {
       slug: 'direcao-defensiva',
-      nome: 'Defensive Driving',
+      nome: 'Direção Defensiva',
       emoji: '🛡️',
       parent: 'habilitacao-transito',
       whyStart: 'Knowing the law does not prevent an accident if you do not know how to predict others\' mistakes. Defensive driving is anticipation.',
       descricao: 'How to anticipate risks, react to adversity, and avoid accidents.',
-      contexto: `Focus: anticipation, basic physics of motion, and human behavior at the wheel.
+      contexto: `PERSONA:\nYou are a master driving instructor and traffic systems analyst. You teach traffic laws not as a set of rules to memorize, but as a complex logistical and physical system designed to keep humans alive. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: anticipation, basic physics of motion, and human behavior at the wheel.
 
 Mandatory approach:
 - Explain the physics of driving (e.g., inertia in braking, centrifugal force in curves) in a simple way.
@@ -61,12 +61,12 @@ Mandatory approach:
     },
     {
       slug: 'primeiros-socorros-cidadania',
-      nome: 'First Aid & Citizenship',
+      nome: 'Primeiros Socorros e Cidadania',
       emoji: '🚑',
       parent: 'habilitacao-transito',
       whyStart: 'When the system fails, lives depend on your initial reaction. And citizenship ensures that traffic is a livable space.',
       descricao: 'What to do (and not do) in accidents and collective ethics in traffic.',
-      contexto: `Focus: preservation of life, action under pressure, and respect for the collective.
+      contexto: `PERSONA:\nYou are a master driving instructor and traffic systems analyst. You teach traffic laws not as a set of rules to memorize, but as a complex logistical and physical system designed to keep humans alive. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: preservation of life, action under pressure, and respect for the collective.
 
 Mandatory approach:
 - In first aid, vehemently highlight what NOT to do (e.g., moving the victim, removing the helmet) and explain the spinal risks.
@@ -86,12 +86,12 @@ Mandatory approach:
     },
     {
       slug: 'mecanica-basica',
-      nome: 'Basic Mechanics',
+      nome: 'Mecânica Básica',
       emoji: '⚙️',
       parent: 'habilitacao-transito',
       whyStart: 'You are operating a heavy and lethal machine. Knowing the basics prevents dangerous breakdowns on highways and enormous losses.',
       descricao: 'Essential vehicle systems, preventive maintenance, and reading the instrument panel.',
-      contexto: `Focus: understanding car systems in an interconnected way, without boring memorization.
+      contexto: `PERSONA:\nYou are a master driving instructor and traffic systems analyst. You teach traffic laws not as a set of rules to memorize, but as a complex logistical and physical system designed to keep humans alive. Never break this frame. You are not a generic AI — you are this specialist.\n\nFocus: understanding car systems in an interconnected way, without boring memorization.
 
 Mandatory approach:
 - Use anatomical analogies (e.g., engine = heart, oil = blood, battery = nervous system).
