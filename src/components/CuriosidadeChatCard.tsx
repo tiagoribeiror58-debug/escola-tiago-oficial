@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Lightbulb, Bookmark, Loader2, Send } from 'lucide-react';
+import { Lightbulb, Bookmark, Loader2, ArrowUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
@@ -47,7 +47,7 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
       const token = session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
       const systemPrompt = `O usuário acabou de ler a seguinte curiosidade sobre o tema "${curiosidade.tema}": "${curiosidade.texto}". 
-      Sua missão é responder de forma ultra-concisa (máx 1 ou 2 parágrafos) a qualquer pergunta ou comentário sobre essa curiosidade. Seja um especialista instigante.`;
+      Sua missão é responder de forma ultra-concisa (máx 1 ou 2 parágrafos) a qualquer pergunta ou comentário sobre essa curiosidade. Seja um especialista instigante. NUNCA RETORNE <chips>.`;
 
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`, {
         method: 'POST',
@@ -194,16 +194,20 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
         {/* Chat Area */}
         {messages.length > 0 && (
           <div className="bg-background/40 rounded-xl p-4 border border-border/50 max-h-[300px] overflow-y-auto space-y-4">
-            {messages.map((msg, i) => (
-              <div key={i} className={cn("text-xs sm:text-sm", msg.role === 'user' ? "text-right" : "text-left")}>
-                <div className={cn(
-                  "inline-block px-3 py-2 rounded-2xl max-w-[85%] text-left",
-                  msg.role === 'user' ? "bg-indigo-500 text-white rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm"
-                )}>
-                  <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none prose-p:my-0 prose-p:leading-snug">{msg.content}</ReactMarkdown>
+            {messages.map((msg, i) => {
+              const cleanContent = msg.content.replace(/<chips>[\s\S]*?(?:<\/chips>|$)/ig, '').trim();
+              if (!cleanContent) return null;
+              return (
+                <div key={i} className={cn("text-xs sm:text-sm", msg.role === 'user' ? "text-right" : "text-left")}>
+                  <div className={cn(
+                    "inline-block px-3 py-2 rounded-2xl max-w-[85%] text-left",
+                    msg.role === 'user' ? "bg-indigo-500 text-white rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm"
+                  )}>
+                    <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none prose-p:my-0 prose-p:leading-snug">{cleanContent}</ReactMarkdown>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
             {isLoading && (
               <div className="text-left">
                 <div className="inline-block px-3 py-2 rounded-2xl bg-muted text-muted-foreground rounded-bl-sm">
@@ -235,7 +239,7 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
             disabled={!input.trim() || isLoading}
             className="p-2.5 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 disabled:opacity-50 transition-colors shrink-0 h-[44px] w-[44px] flex items-center justify-center"
           >
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
           </button>
         </div>
 

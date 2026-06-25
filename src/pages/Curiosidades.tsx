@@ -45,13 +45,13 @@ export default function Curiosidades() {
 
   const loadInitial = async () => {
     setIsLoading(true);
-    await fetchCuriosidades(6);
+    await fetchCuriosidades(3);
     setIsLoading(false);
   };
 
   const loadMore = async () => {
     setIsLoadingMore(true);
-    await fetchCuriosidades(6);
+    await fetchCuriosidades(3);
     setIsLoadingMore(false);
   };
 
