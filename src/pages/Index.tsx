@@ -570,8 +570,14 @@ export default function Index() {
 
         {/* Curiosidade do Dia */}
         {currentTab === 'foco' && !searchQuery && (
-          <div className="mb-8">
+          <div className="mb-8 flex flex-col gap-3">
             <CuriosidadeCard materiasAtuais={displayedFoco.map(e => e.config.nome)} />
+            <Link 
+              to="/curiosidades" 
+              className="flex items-center justify-center gap-2 w-full py-3 bg-muted/30 hover:bg-muted/50 border border-border/50 rounded-2xl text-sm font-medium transition-all text-muted-foreground hover:text-foreground"
+            >
+              Explorar Feed de Curiosidades
+            </Link>
           </div>
         )}
 
