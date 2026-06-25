@@ -45,13 +45,13 @@ export default function Curiosidades() {
 
   const loadInitial = async () => {
     setIsLoading(true);
-    await fetchCuriosidades(3);
+    await fetchCuriosidades(6);
     setIsLoading(false);
   };
 
   const loadMore = async () => {
     setIsLoadingMore(true);
-    await fetchCuriosidades(3);
+    await fetchCuriosidades(6);
     setIsLoadingMore(false);
   };
 
@@ -77,12 +77,14 @@ export default function Curiosidades() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-2xl mx-auto w-full px-4 sm:px-6 py-8 flex flex-col gap-8">
-        {curiosidades.map((c, i) => (
-          <div key={i} className="animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: `${i * 100}ms` }}>
-            <CuriosidadeChatCard curiosidade={c} />
-          </div>
-        ))}
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8 flex flex-col gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {curiosidades.map((c, i) => (
+            <div key={i} className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-full" style={{ animationDelay: `${(i % 3) * 100}ms` }}>
+              <CuriosidadeChatCard curiosidade={c} />
+            </div>
+          ))}
+        </div>
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-12 text-muted-foreground/50 gap-4">
