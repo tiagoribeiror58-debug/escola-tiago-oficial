@@ -26,7 +26,7 @@ serve(async (req: Request) => {
     const historicoRecente = temasRecentes?.length > 0 ? `\nAVOID REPEATING these recently shown themes: ${temasRecentes.slice(0, 10).join(", ")}. Generate something DIFFERENT.` : '';
     
     const expectedFormat = isBatch
-      ? `[\n  {\n    "tema": "${isSpecific ? temaEspecifico : "Theme 1"}",\n    "texto": "Curiosity 1..."\n  },\n  {\n    "tema": "${isSpecific ? temaEspecifico : "Theme 2"}",\n    "texto": "Curiosity 2..."\n  }\n]`
+      ? `{\n  "curiosidades": [\n    {\n      "tema": "${isSpecific ? temaEspecifico : "Theme 1"}",\n      "texto": "Curiosity 1..."\n    },\n    {\n      "tema": "${isSpecific ? temaEspecifico : "Theme 2"}",\n      "texto": "Curiosity 2..."\n    }\n  ]\n}`
       : `{\n  "tema": "${isSpecific ? temaEspecifico : "Theme"}",\n  "texto": "The text..."\n}`;
 
     const systemPrompt = isSpecific 
@@ -35,7 +35,7 @@ Your task is to generate ${count} "Did you know?" (Você Sabia?) curiosit${count
 The curiosit${count > 1 ? 'ies' : 'y'} MUST BE STRICTLY RELATED TO THIS SPECIFIC SUBJECT: ${temaEspecifico}.
 DO NOT generate facts about any other subject.${historicoRecente}
 CRITICAL: The output MUST be written entirely in Brazilian Portuguese (pt-BR).
-Respond ONLY with a valid JSON ${isBatch ? 'array' : 'object'}.
+Respond ONLY with a valid JSON object${isBatch ? ', with the curiosities inside a "curiosidades" array' : ''}.
 Expected format:\n${expectedFormat}`
     : `You are a high-performance creative educational curator. 
 Your task is to generate ${count} "Did you know?" (Você Sabia?) curiosit${count > 1 ? 'ies' : 'y'} that ${count > 1 ? 'are' : 'is'} extremely interesting, surprising, and educational.
@@ -43,8 +43,8 @@ The curiosit${count > 1 ? 'ies' : 'y'} MUST BE STRICTLY RELATED TO ONE OF THESE 
 Pick ${count > 1 ? count + ' DIFFERENT SUBJECTS' : 'ONE subject'} randomly from the list. DO NOT generate facts about Astrophysics, Marine Biology, Astronomy, Astrology, Cosmology or any subject NOT in the list above.${historicoRecente}
 CRITICAL RULES:
 1. The output MUST be written entirely in Brazilian Portuguese (pt-BR).
-${count > 1 ? '2. EACH ITEM IN THE ARRAY MUST BE FROM A COMPLETELY DIFFERENT SUBJECT. NEVER REPEAT THE SAME SUBJECT TWICE. EXTREMELY IMPORTANT!' : ''}
-Respond ONLY with a valid JSON ${isBatch ? 'array' : 'object'}.
+${count > 1 ? '2. EACH ITEM IN THE "curiosidades" ARRAY MUST BE FROM A COMPLETELY DIFFERENT SUBJECT. NEVER REPEAT THE SAME SUBJECT TWICE. EXTREMELY IMPORTANT!' : ''}
+Respond ONLY with a valid JSON object${isBatch ? ', with the curiosities inside a "curiosidades" array' : ''}. You MUST generate exactly ${count} item${count > 1 ? 's' : ''}, never fewer.
 Expected format:\n${expectedFormat}`;
 
     const userMessage = isSpecific
@@ -86,9 +86,12 @@ Expected format:\n${expectedFormat}`;
     let parsed: any = {};
     try {
       parsed = JSON.parse(content);
+      if (isBatch) {
+        parsed = Array.isArray(parsed) ? parsed : (parsed.curiosidades || []);
+      }
     } catch (e) {
       console.error("Failed to parse JSON:", content);
-      const defaultFallback = { 
+      const defaultFallback = {
         tema: "Neurociência",
         texto: "Você sabia que o cérebro humano pode gerar energia elétrica suficiente para acender uma pequena lâmpada de LED? E isso acontece o tempo todo, mesmo quando você está dormindo!"
       };
