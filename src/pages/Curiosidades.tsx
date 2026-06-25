@@ -18,8 +18,13 @@ interface CuriosidadeData {
   texto: string;
 }
 
+function collectNomes(m: typeof MATERIAS[number]): string[] {
+  if (!m.children || m.children.length === 0) return [m.nome];
+  return m.children.flatMap(collectNomes);
+}
+
 const ALL_SUBJECTS = Array.from(new Set(
-  MATERIAS.flatMap(m => [m.nome, ...(m.subMaterias?.map(sm => sm.nome) || [])])
+  MATERIAS.flatMap(collectNomes)
 )).sort();
 
 export default function Curiosidades() {
