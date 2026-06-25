@@ -79,7 +79,7 @@ export default function Curiosidades() {
 
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 sm:px-6 py-8 flex flex-col gap-8">
         {curiosidades.map((c, i) => (
-          <div key={i} className="animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: \`\${i * 100}ms\` }}>
+          <div key={i} className="animate-in fade-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: `${i * 100}ms` }}>
             <CuriosidadeChatCard curiosidade={c} />
           </div>
         ))}
