@@ -1,14 +1,26 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Loader2, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Loader2, RefreshCw, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CuriosidadeChatCard } from '@/components/CuriosidadeChatCard';
 import { useToast } from '@/hooks/use-toast';
+import { MATERIAS } from '@/lib/materias';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface CuriosidadeData {
   tema: string;
   texto: string;
 }
+
+const ALL_SUBJECTS = Array.from(new Set(
+  MATERIAS.flatMap(m => [m.nome, ...(m.subMaterias?.map(sm => sm.nome) || [])])
+)).sort();
 
 export default function Curiosidades() {
   const navigate = useNavigate();
@@ -16,11 +28,19 @@ export default function Curiosidades() {
   const [curiosidades, setCuriosidades] = useState<CuriosidadeData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
 
-  const fetchCuriosidades = async (count: number = 3) => {
+  const fetchCuriosidades = async (count: number = 3, overrideTema?: string, currentList: CuriosidadeData[] = curiosidades) => {
     try {
+      const temaToSend = (overrideTema || temaEspecifico) === "todos" ? null : (overrideTema || temaEspecifico);
+      const temasRecentes = currentList.map(c => c.tema);
+      
       const { data, error } = await supabase.functions.invoke('curiosidade-dia', {
-        body: { count }
+        body: { 
+          count,
+          temaEspecifico: temaToSend,
+          temasRecentes
+        }
       });
 
       if (error) throw error;
@@ -45,7 +65,7 @@ export default function Curiosidades() {
 
   const loadInitial = async () => {
     setIsLoading(true);
-    await fetchCuriosidades(3);
+    await fetchCuriosidades(3, "todos", []);
     setIsLoading(false);
   };
 
@@ -53,6 +73,14 @@ export default function Curiosidades() {
     setIsLoadingMore(true);
     await fetchCuriosidades(3);
     setIsLoadingMore(false);
+  };
+
+  const handleTemaChange = async (val: string) => {
+    setTemaEspecifico(val);
+    setCuriosidades([]);
+    setIsLoading(true);
+    await fetchCuriosidades(3, val, []);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -63,17 +91,33 @@ export default function Curiosidades() {
   return (
     <div className="min-h-screen bg-background flex flex-col selection:bg-indigo-500/20">
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border/30">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <button
-            onClick={() => navigate(-1)}
-            className="p-2 -ml-2 rounded-full hover:bg-muted/50 transition-colors text-muted-foreground"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <h1 className="text-sm font-semibold tracking-wide text-foreground/90 flex items-center gap-2">
-            <span>Explorar Curiosidades</span>
-          </h1>
-          <div className="w-9" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 -ml-2 rounded-full hover:bg-muted/50 transition-colors text-muted-foreground shrink-0"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-sm font-semibold tracking-wide text-foreground/90 hidden sm:flex items-center gap-2">
+              Explorar Curiosidades
+            </h1>
+          </div>
+
+          <div className="flex items-center gap-2 max-w-[200px] sm:max-w-[300px] w-full">
+            <Filter className="w-4 h-4 text-muted-foreground shrink-0" />
+            <Select value={temaEspecifico} onValueChange={handleTemaChange}>
+              <SelectTrigger className="h-9 w-full bg-muted/30 border-border/50">
+                <SelectValue placeholder="Filtrar por tema..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todos">Todos os Temas</SelectItem>
+                {ALL_SUBJECTS.map(sub => (
+                  <SelectItem key={sub} value={sub}>{sub}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </header>
 
