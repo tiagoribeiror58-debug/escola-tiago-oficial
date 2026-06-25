@@ -8,7 +8,7 @@ import { CuriosidadeCard } from '@/components/CuriosidadeCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookOpen, Library, Flame, Play, ChevronRight, ChevronDown, Pin, Star, Rocket } from 'lucide-react';
 import { MateriaEstado } from '@/types';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import MateriaDetailModal from '@/components/MateriaDetailModal';
 import { PlanejarMateriaModal } from '@/components/PlanejarMateriaModal';
