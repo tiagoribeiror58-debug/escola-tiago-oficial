@@ -14,6 +14,7 @@ import {
   TopicDateFilter
 } from '@/hooks/useQuiz';
 import { supabase } from '@/integrations/supabase/client';
+import { getMateriaBySlug } from '@/lib/materias';
 import { toast } from 'sonner';
 
 type Phase = 'idle' | 'generating' | 'active' | 'evaluating' | 'finished';
@@ -45,24 +46,39 @@ export default function Quiz() {
   const [currentFeedback, setCurrentFeedback] = useState<{ status: string; feedback: string } | null>(null);
   const [giveUpUsed, setGiveUpUsed] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [historyFilter, setHistoryFilter] = useState<'today' | 'all'>('today');
+  const [questionLimit, setQuestionLimit] = useState(5);
   
   const { data: settings, isLoading: loadingSettings } = useUserSettings();
   const { data: topics, isLoading: loadingTopics } = useAllCompletedTopics(topicFilter);
   const { data: todayCount, isLoading: loadingCount } = useTodayQuizCount();
-  const { data: dbHistory, isLoading: loadingHistory } = useQuizHistory('today');
+  const { data: dbHistory, isLoading: loadingHistory } = useQuizHistory(historyFilter);
   const { data: wrongTopicsData } = useWrongTopics();
 
   const createSession = useCreateQuizSession();
   const saveAnswer = useSaveQuizAnswer();
   const completeSession = useCompleteQuizSession();
 
-  // Quantidade dinâmica baseada no número de tópicos do período selecionado
-  const filteredTopicsCount = topics?.length || 0;
-  let dynamicQuestionLimit = 5;
-  if (filteredTopicsCount > 10) dynamicQuestionLimit = 7;
-  if (filteredTopicsCount > 20) dynamicQuestionLimit = 10; // Max limit per session
+  // Obter as matérias únicas dos tópicos disponíveis
+  const uniqueMaterias = Array.from(new Set(topics?.map(t => t.materia_slug) || []));
+  const availableMaterias = uniqueMaterias.map(slug => ({
+    slug,
+    nome: getMateriaBySlug(slug)?.nome || slug
+  }));
+
+  // Quantidade de tópicos filtrados por matéria (se alguma for selecionada)
+  const filteredTopicsCount = selectedMateria 
+    ? (topics?.filter(t => t.materia_slug === selectedMateria).length || 0)
+    : (topics?.length || 0);
 
   const hasStartedRef = useRef(false);
+
+  useEffect(() => {
+    // Se o limite selecionado for maior que o número de tópicos, ajusta
+    if (questionLimit > filteredTopicsCount && filteredTopicsCount > 0) {
+      setQuestionLimit(filteredTopicsCount);
+    }
+  }, [filteredTopicsCount, questionLimit]);
 
   useEffect(() => {
     if (dbHistory) {
@@ -85,7 +101,7 @@ export default function Quiz() {
   const handleStart = async (selectedMateriaSlug?: string) => {
     try {
       setPhase('generating');
-      const limitForSession = dynamicQuestionLimit;
+      const limitForSession = questionLimit;
       
       const session = await createSession.mutateAsync(limitForSession);
       setSessionId(session.id);
@@ -285,26 +301,60 @@ export default function Quiz() {
                 </button>
               </div>
             ) : (
-              <div className="flex flex-col items-center bg-card/50 border border-primary/20 shadow-[0_0_30px_rgba(var(--primary),0.1)] p-8 rounded-3xl">
+              <div className="flex flex-col items-center bg-card/50 border border-primary/20 shadow-[0_0_30px_rgba(var(--primary),0.1)] p-8 rounded-3xl w-full">
                 <h2 className="text-2xl font-bold mb-2">Revisão Pendente</h2>
-                <p className="text-muted-foreground text-sm mb-8 text-center">
-                  Baseado no seu volume de estudos neste período, o sistema gerará <strong className="text-primary">{dynamicQuestionLimit} perguntas</strong>.
+                <p className="text-muted-foreground text-sm mb-6 text-center">
+                  Configure sua bateria de revisão para consolidar seu conhecimento na memória de longo prazo.
                 </p>
-                <div className="w-full mb-6 text-left border border-border/50 bg-background/50 rounded-2xl p-4">
-                  <p className="text-sm text-foreground/80 leading-relaxed mb-4">
-                    Revisar é o que consolida o conhecimento na memória de longo prazo. O sistema vai puxar os tópicos que você estudou, focando onde você tem mais dificuldade.
-                  </p>
-                  <p className="text-sm text-foreground/80 leading-relaxed">
-                    Você fará <strong>no máximo {dynamicQuestionLimit} perguntas</strong> por sessão para não sobrecarregar sua mente.
-                  </p>
+                
+                <div className="w-full space-y-6 mb-8 text-left">
+                  {/* Select Hub/Matéria */}
+                  <div className="space-y-3">
+                    <label className="text-sm font-semibold block text-foreground">
+                      Focar em alguma matéria específica?
+                    </label>
+                    <select
+                      value={selectedMateria}
+                      onChange={(e) => setSelectedMateria(e.target.value)}
+                      className="w-full p-3.5 bg-background border border-border/50 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer appearance-none"
+                    >
+                      <option value="">Todas as matérias e hubs misturados</option>
+                      {availableMaterias.map(m => (
+                        <option key={m.slug} value={m.slug}>{m.nome}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Slider de Quantidade */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-semibold text-foreground">
+                        Quantidade de Perguntas
+                      </label>
+                      <span className="bg-primary/10 text-primary px-3 py-1 rounded-full font-bold text-sm">
+                        {questionLimit} perguntas
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={1}
+                      max={Math.min(50, Math.max(1, filteredTopicsCount))}
+                      value={questionLimit}
+                      onChange={(e) => setQuestionLimit(Number(e.target.value))}
+                      className="w-full accent-primary"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Você possui <strong className="text-foreground">{filteredTopicsCount}</strong> tópicos estudados {selectedMateria ? 'nessa matéria' : 'no total'}.
+                    </p>
+                  </div>
                 </div>
 
                 <button
                   onClick={() => handleStart(selectedMateria || undefined)}
-                  disabled={!topics || topics.length === 0}
+                  disabled={!topics || topics.length === 0 || filteredTopicsCount === 0}
                   className="w-full py-4 bg-primary text-primary-foreground rounded-xl font-medium text-lg hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:pointer-events-none"
                 >
-                  {(!topics || topics.length === 0) ? "Nenhum tópico encontrado" : "Gerar Bateria do Dia"}
+                  {filteredTopicsCount === 0 ? "Nenhum tópico na seleção" : `Gerar Bateria (${questionLimit})`}
                 </button>
               </div>
             )}
