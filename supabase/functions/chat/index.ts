@@ -257,7 +257,7 @@ serve(async (req) => {
           if (lastUserIdx !== -1) {
             processedMessages[lastUserIdx] = {
               ...processedMessages[lastUserIdx],
-              content: processedMessages[lastUserIdx].content + "\n\n[CRITICAL SYSTEM RULE: THE USER HATES LONG TEXTS. YOUR RESPONSE MUST HAVE AN ABSOLUTE MAXIMUM OF 2 SHORT PARAGRAPHS AND BE STRAIGHT TO THE POINT. BE EXTREMELY BRIEF, NO FLUFF.]"
+              content: processedMessages[lastUserIdx].content + "\n\n[CRITICAL SYSTEM RULE: THE USER HATES LONG TEXTS. YOUR RESPONSE MUST HAVE AN ABSOLUTE MAXIMUM OF 1 SHORT PARAGRAPH. MAXIMUM 3 SENTENCES. BE EXTREMELY BRIEF, NO FLUFF.]"
             };
           }
 
@@ -280,7 +280,7 @@ serve(async (req) => {
               url = "https://api.deepseek.com/chat/completions";
               headers["Authorization"] = `Bearer ${DEEPSEEK_API_KEY}`;
               body.model = modelDef.id;
-              body.max_tokens = 350; // Reduzido drasticamente para forçar concisão física
+              body.max_tokens = 150; // Reduzido agressivamente para forçar output muito curto
               body.messages = [
                 { role: "system", content: finalSystemPrompt },
                 ...processedMessages
@@ -292,7 +292,7 @@ serve(async (req) => {
               body.model = modelDef.id;
               body.system = finalSystemPrompt;
               body.messages = processedMessages;
-              body.max_tokens = 350; // Reduzido drasticamente
+              body.max_tokens = 150; // Reduzido agressivamente
             }
 
             const response = await fetch(url, {
