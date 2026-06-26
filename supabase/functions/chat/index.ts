@@ -257,7 +257,7 @@ serve(async (req) => {
           if (lastUserIdx !== -1) {
             processedMessages[lastUserIdx] = {
               ...processedMessages[lastUserIdx],
-              content: processedMessages[lastUserIdx].content + "\n\n[REGRA CRÍTICA DE SISTEMA: O USUÁRIO ODEIA TEXTOS LONGOS. SUA RESPOSTA DEVE TER NO MÁXIMO ABSOLUTO 2 PARÁGRAFOS CURTOS E DIRETO AO PONTO. SEJA EXTREMAMENTE BREVE, SEM ENROLAÇÃO.]"
+              content: processedMessages[lastUserIdx].content + "\n\n[CRITICAL SYSTEM RULE: THE USER HATES LONG TEXTS. YOUR RESPONSE MUST HAVE AN ABSOLUTE MAXIMUM OF 2 SHORT PARAGRAPHS AND BE STRAIGHT TO THE POINT. BE EXTREMELY BRIEF, NO FLUFF.]"
             };
           }
 
