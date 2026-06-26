@@ -20,7 +20,7 @@ interface CuriosidadeData {
 
 function collectNomes(m: typeof MATERIAS[number]): string[] {
   if (!m.children || m.children.length === 0) return [m.nome];
-  return m.children.flatMap(collectNomes);
+  return [m.nome, ...m.children.flatMap(collectNomes)];
 }
 
 const ALL_SUBJECTS = Array.from(new Set(

@@ -282,8 +282,8 @@ export default function Index() {
   };
 
   // Itens filtrados por tipo E por query — aplicado ANTES de qualquer paginação
-  const focusedHubs = displayedFoco.filter(e => e.config.isCategory).filter(filterByQuery);
-  const focusedMaterias = displayedFoco.filter(e => !e.config.isCategory).filter(filterByQuery);
+  const focusedHubs = displayedFoco.filter(e => e.config.isCategory && !focosPrincipais.includes(e.config.slug)).filter(filterByQuery);
+  const focusedMaterias = displayedFoco.filter(e => !e.config.isCategory && !focosPrincipais.includes(e.config.slug)).filter(filterByQuery);
 
   // Quando há busca ativa, mostrar todos os resultados sem limite
   const visibleHubsFoco = (focoFilterType === 'all' || focoFilterType === 'hubs')

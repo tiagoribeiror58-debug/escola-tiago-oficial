@@ -25,6 +25,8 @@ serve(async (req: Request) => {
     const listaParaAleatorio = todasMaterias?.length > 0 ? todasMaterias.join(", ") : 'Tecnologia, Negócios, Psicologia, Filosofia, Marketing, Inteligência Artificial, História, Economia, Neurociência, Biologia, Física';
     const historicoRecente = temasRecentes?.length > 0 ? `\nAVOID REPEATING these recently shown themes: ${temasRecentes.slice(0, 10).join(", ")}. Generate something DIFFERENT.` : '';
     
+    const antiCliche = `\nCRITICAL ANTI-CLICHE RULE: DO NOT use famous, basic or cliché curiosities (e.g., DO NOT mention the Dunning-Kruger effect for Psychology, the 10,000-hour rule, etc.). Provide extremely obscure, advanced, or lesser-known facts.`;
+
     const expectedFormat = isBatch
       ? `{\n  "curiosidades": [\n    {\n      "tema": "${isSpecific ? temaEspecifico : "Theme 1"}",\n      "texto": "Curiosity 1..."\n    },\n    {\n      "tema": "${isSpecific ? temaEspecifico : "Theme 2"}",\n      "texto": "Curiosity 2..."\n    }\n  ]\n}`
       : `{\n  "tema": "${isSpecific ? temaEspecifico : "Theme"}",\n  "texto": "The text..."\n}`;
@@ -33,14 +35,14 @@ serve(async (req: Request) => {
     ? `You are a high-performance creative educational curator. 
 Your task is to generate ${count} "Did you know?" (Você Sabia?) curiosit${count > 1 ? 'ies' : 'y'} that ${count > 1 ? 'are' : 'is'} extremely interesting, surprising, and educational.
 The curiosit${count > 1 ? 'ies' : 'y'} MUST BE STRICTLY RELATED TO THIS SPECIFIC SUBJECT: ${temaEspecifico}.
-DO NOT generate facts about any other subject.${historicoRecente}
+DO NOT generate facts about any other subject.${historicoRecente}${antiCliche}
 CRITICAL: The output MUST be written entirely in Brazilian Portuguese (pt-BR).
 Respond ONLY with a valid JSON object${isBatch ? ', with the curiosities inside a "curiosidades" array' : ''}.
 Expected format:\n${expectedFormat}`
     : `You are a high-performance creative educational curator. 
 Your task is to generate ${count} "Did you know?" (Você Sabia?) curiosit${count > 1 ? 'ies' : 'y'} that ${count > 1 ? 'are' : 'is'} extremely interesting, surprising, and educational.
 The curiosit${count > 1 ? 'ies' : 'y'} MUST BE STRICTLY RELATED TO ONE OF THESE SPECIFIC SUBJECTS from the user's study app: ${listaParaAleatorio}.
-Pick ${count > 1 ? count + ' DIFFERENT SUBJECTS' : 'ONE subject'} randomly from the list. DO NOT generate facts about Astrophysics, Marine Biology, Astronomy, Astrology, Cosmology or any subject NOT in the list above.${historicoRecente}
+Pick ${count > 1 ? count + ' DIFFERENT SUBJECTS' : 'ONE subject'} randomly from the list. DO NOT generate facts about Astrophysics, Marine Biology, Astronomy, Astrology, Cosmology or any subject NOT in the list above.${historicoRecente}${antiCliche}
 CRITICAL RULES:
 1. The output MUST be written entirely in Brazilian Portuguese (pt-BR).
 ${count > 1 ? '2. EACH ITEM IN THE "curiosidades" ARRAY MUST BE FROM A COMPLETELY DIFFERENT SUBJECT. NEVER REPEAT THE SAME SUBJECT TWICE. EXTREMELY IMPORTANT!' : ''}
