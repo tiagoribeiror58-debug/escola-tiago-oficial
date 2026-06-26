@@ -71,16 +71,6 @@ export function useDailyTopic(filterMateriaSlug?: string) {
     }
 
     if (filteredUncompleted.length > 0) {
-      // Pega apenas o PRIMEIRO tópico não concluído de cada matéria (ordem progressiva)
-      const nextTopicsByMateria = new Map<string, DailyTopic>();
-      for (const t of filteredUncompleted) {
-        if (!nextTopicsByMateria.has(t.materiaSlug)) {
-          nextTopicsByMateria.set(t.materiaSlug, t);
-        }
-      }
-      
-      const nextTopicsArray = Array.from(nextTopicsByMateria.values());
-      
       // Função simples de hash para pseudo-aleatoriedade estável (evita piscadas de StrictMode)
       const pseudoRandom = (str: string, seed: number) => {
         let h = seed;
@@ -90,11 +80,12 @@ export function useDailyTopic(filterMateriaSlug?: string) {
         return h;
       };
 
-      // Embaralha as matérias de forma pseudo-aleatória sem ordem predefinida
-      nextTopicsArray.sort((a, b) => pseudoRandom(a.materiaSlug, refreshCount) - pseudoRandom(b.materiaSlug, refreshCount));
+      // Embaralha TODOS os tópicos não concluídos de forma pseudo-aleatória sem seguir a ordem da ementa
+      const allNextTopics = [...filteredUncompleted];
+      allNextTopics.sort((a, b) => pseudoRandom(a.topico + a.materiaSlug, refreshCount) - pseudoRandom(b.topico + b.materiaSlug, refreshCount));
       
       // Pegamos o primeiro item (que muda a cada refresh devido à mudança no seed)
-      setDailyTopic(nextTopicsArray[0]);
+      setDailyTopic(allNextTopics[0]);
     } else {
       setDailyTopic(null);
     }
