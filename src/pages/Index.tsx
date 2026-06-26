@@ -495,7 +495,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
         {/* Header */}
         <div className="mb-6 sm:mb-8 flex items-center justify-between gap-4">
           <div>
@@ -512,11 +512,30 @@ export default function Index() {
           {renderBadges()}
         </div>
 
-        {/* Meta Diária */}
-        <MetaDiariaCard />
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 items-start">
+          
+          {/* SIDEBAR (Meta Diária e Curiosidades) */}
+          <div className="lg:col-span-4 lg:col-start-9 flex flex-col gap-6 order-1 lg:order-2 lg:sticky lg:top-24">
+            <MetaDiariaCard />
+            
+            {currentTab === 'foco' && !searchQuery && (
+              <div className="flex flex-col gap-3">
+                <CuriosidadeCard materiasAtuais={displayedFoco.map(e => e.config.nome)} />
+                <Link 
+                  to="/curiosidades" 
+                  className="flex items-center justify-center gap-2 w-full py-3 bg-muted/30 hover:bg-muted/50 border border-border/50 rounded-2xl text-sm font-medium transition-all text-muted-foreground hover:text-foreground shadow-sm"
+                >
+                  Explorar Feed de Curiosidades
+                </Link>
+              </div>
+            )}
+          </div>
 
-        {/* Tabs de Navegação */}
-        {!isLoading && (
+          {/* MAIN CONTENT */}
+          <div className="lg:col-span-8 lg:col-start-1 flex flex-col order-2 lg:order-1 w-full">
+
+            {/* Tabs de Navegação */}
+            {!isLoading && (
           <div className="flex items-center p-1.5 bg-muted/30 rounded-[1.25rem] border border-border/50 self-start sm:self-auto w-full mb-8 overflow-x-auto scrollbar-none">
             <button
               onClick={() => { setCurrentTab('foco'); setSearchQuery(''); }}
@@ -567,19 +586,6 @@ export default function Index() {
             className="w-full pl-12 pr-4 py-4 bg-card border border-border/50 rounded-2xl text-[15px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-foreground/30 transition-all shadow-sm"
           />
         </div>
-
-        {/* Curiosidade do Dia */}
-        {currentTab === 'foco' && !searchQuery && (
-          <div className="mb-8 flex flex-col gap-3">
-            <CuriosidadeCard materiasAtuais={displayedFoco.map(e => e.config.nome)} />
-            <Link 
-              to="/curiosidades" 
-              className="flex items-center justify-center gap-2 w-full py-3 bg-muted/30 hover:bg-muted/50 border border-border/50 rounded-2xl text-sm font-medium transition-all text-muted-foreground hover:text-foreground"
-            >
-              Explorar Feed de Curiosidades
-            </Link>
-          </div>
-        )}
 
         {/* Missão Principal Permanente — todos os PINNED_FOREVER */}
         {currentTab === 'foco' && !searchQuery && (
@@ -1098,6 +1104,8 @@ export default function Index() {
             
           </div>
         )}
+          </div> {/* Fim da MAIN CONTENT */}
+        </div> {/* Fim da GRID */}
       </div>
 
       <MateriaDetailModal 
