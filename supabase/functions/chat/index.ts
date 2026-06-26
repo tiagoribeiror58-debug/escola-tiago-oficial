@@ -250,6 +250,17 @@ serve(async (req) => {
           }
 
           // --- 3. STREAMING PRINCIPAL ---
+          // INJEÇÃO AGRESSIVA DE CONCISAMENTO NA ÚLTIMA MENSAGEM DO USUÁRIO
+          // Modelos tendem a esquecer o system prompt, mas respeitam a última instrução.
+          const processedMessages = [...messages];
+          const lastUserIdx = processedMessages.map(m => m.role).lastIndexOf("user");
+          if (lastUserIdx !== -1) {
+            processedMessages[lastUserIdx] = {
+              ...processedMessages[lastUserIdx],
+              content: processedMessages[lastUserIdx].content + "\n\n[REGRA CRÍTICA DE SISTEMA: O USUÁRIO ODEIA TEXTOS LONGOS. SUA RESPOSTA DEVE TER NO MÁXIMO ABSOLUTO 2 PARÁGRAFOS CURTOS E DIRETO AO PONTO. SEJA EXTREMAMENTE BREVE, SEM ENROLAÇÃO.]"
+            };
+          }
+
           let success = false;
           for (const modelDef of MODELS) {
             const isdeepseek = modelDef.provider === "deepseek";
@@ -269,10 +280,10 @@ serve(async (req) => {
               url = "https://api.deepseek.com/chat/completions";
               headers["Authorization"] = `Bearer ${DEEPSEEK_API_KEY}`;
               body.model = modelDef.id;
-              body.max_tokens = 750;
+              body.max_tokens = 350; // Reduzido drasticamente para forçar concisão física
               body.messages = [
                 { role: "system", content: finalSystemPrompt },
-                ...messages
+                ...processedMessages
               ];
             } else {
               url = "https://api.anthropic.com/v1/messages";
@@ -280,8 +291,8 @@ serve(async (req) => {
               headers["anthropic-version"] = "2023-06-01";
               body.model = modelDef.id;
               body.system = finalSystemPrompt;
-              body.messages = messages;
-              body.max_tokens = 750;
+              body.messages = processedMessages;
+              body.max_tokens = 350; // Reduzido drasticamente
             }
 
             const response = await fetch(url, {
