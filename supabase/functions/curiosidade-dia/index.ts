@@ -25,7 +25,7 @@ serve(async (req: Request) => {
     const listaParaAleatorio = todasMaterias?.length > 0 ? todasMaterias.join(", ") : 'Tecnologia, Negócios, Psicologia, Filosofia, Marketing, Inteligência Artificial, História, Economia, Neurociência, Biologia, Física';
     const historicoRecente = temasRecentes?.length > 0 ? `\nAVOID REPEATING these recently shown themes: ${temasRecentes.slice(0, 10).join(", ")}. Generate something DIFFERENT.` : '';
     
-    const antiCliche = `\nCRITICAL ANTI-CLICHE RULE: DO NOT use famous, basic or cliché curiosities (e.g., DO NOT mention the Dunning-Kruger effect for Psychology, the 10,000-hour rule, etc.). Provide extremely obscure, advanced, or lesser-known facts.`;
+    const antiCliche = `\nCRITICAL ANTI-CLICHE RULE: DO NOT use famous, basic, pop-science or cliché curiosities. You are strictly forbidden from generating the most obvious facts about any given subject. Provide ONLY extremely obscure, advanced, niche, or lesser-known facts that even an expert might not know.`;
 
     const expectedFormat = isBatch
       ? `{\n  "curiosidades": [\n    {\n      "tema": "${isSpecific ? temaEspecifico : "Theme 1"}",\n      "texto": "Curiosity 1..."\n    },\n    {\n      "tema": "${isSpecific ? temaEspecifico : "Theme 2"}",\n      "texto": "Curiosity 2..."\n    }\n  ]\n}`
