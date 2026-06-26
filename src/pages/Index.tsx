@@ -598,18 +598,19 @@ export default function Index() {
                   <Rocket className="w-4 h-4" />
                   Missão Principal
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex overflow-x-auto gap-3 pb-4 snap-x scrollbar-none w-full mask-linear-fade">
                   {missaoEstados.map(estado => (
-                    <MateriaCard
-                      key={estado.config.slug}
-                      estado={estado}
-                      onClick={() => handleCardClick(estado)}
-                      isPinned={true}
-                      onTogglePin={() => {}}
-                      isFocoPrincipal={true}
-                      onToggleFocoPrincipal={() => {}}
-                      isMissaoPrincipal={true}
-                    />
+                    <div key={estado.config.slug} className="min-w-[280px] sm:min-w-[320px] snap-start shrink-0">
+                      <MateriaCard
+                        estado={estado}
+                        onClick={() => handleCardClick(estado)}
+                        isPinned={true}
+                        onTogglePin={() => {}}
+                        isFocoPrincipal={true}
+                        onToggleFocoPrincipal={() => {}}
+                        isMissaoPrincipal={true}
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -630,23 +631,24 @@ export default function Index() {
                   <Star className="w-4 h-4" />
                   Objetivo Principal
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex overflow-x-auto gap-3 pb-4 snap-x scrollbar-none w-full mask-linear-fade">
                   {principaisEstados.map(estado => (
-                    <MateriaCard
-                      key={estado.config.slug}
-                      estado={estado}
-                      onClick={() => handleCardClick(estado)}
-                      isPinned={isFixada(estado.config.slug)}
-                      onTogglePin={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                        toggleFixada(estado.config.slug);
-                      }}
-                      isFocoPrincipal={true}
-                      onToggleFocoPrincipal={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                        handleToggleFocoPrincipal(estado.config.slug);
-                      }}
-                    />
+                    <div key={estado.config.slug} className="min-w-[280px] sm:min-w-[320px] snap-start shrink-0">
+                      <MateriaCard
+                        estado={estado}
+                        onClick={() => handleCardClick(estado)}
+                        isPinned={isFixada(estado.config.slug)}
+                        onTogglePin={(e: React.MouseEvent) => {
+                          e.stopPropagation();
+                          toggleFixada(estado.config.slug);
+                        }}
+                        isFocoPrincipal={true}
+                        onToggleFocoPrincipal={(e: React.MouseEvent) => {
+                          e.stopPropagation();
+                          handleToggleFocoPrincipal(estado.config.slug);
+                        }}
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
