@@ -267,7 +267,7 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
         ) : (
           <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium flex-1">
             {summary ? (
-              <div className="prose prose-sm dark:prose-invert max-w-none animate-in fade-in duration-500">
+              <div className="prose prose-sm dark:prose-invert max-w-none animate-in fade-in duration-500 whitespace-pre-wrap">
                 <ReactMarkdown>{summary}</ReactMarkdown>
               </div>
             ) : (

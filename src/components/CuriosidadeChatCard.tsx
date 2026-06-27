@@ -240,7 +240,7 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
         </div>
 
         {/* Curiosidade Principal */}
-        <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium">
+        <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium whitespace-pre-wrap">
           {curiosidade.texto}
         </div>
 
@@ -256,7 +256,7 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
                     "inline-block px-3 py-2 rounded-2xl max-w-[85%] text-left",
                     msg.role === 'user' ? "bg-indigo-500 text-white rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm"
                   )}>
-                    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-0 prose-p:leading-snug">
+                    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-0 prose-p:leading-snug whitespace-pre-wrap">
                       <ReactMarkdown>{cleanContent}</ReactMarkdown>
                     </div>
                   </div>
