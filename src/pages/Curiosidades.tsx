@@ -36,7 +36,8 @@ export default function Curiosidades() {
   const fetchCuriosidades = async (count: number, overrideTema?: string, currentList: CuriosidadeData[] = curiosidades) => {
     try {
       const temaToSend = (overrideTema || temaEspecifico) === "todos" ? null : (overrideTema || temaEspecifico);
-      const temasRecentes = currentList.map(c => c.tema);
+      const historicoSalvo = JSON.parse(localStorage.getItem('curiosidades_vistas') || '[]');
+      const temasRecentes = Array.from(new Set([...historicoSalvo, ...currentList.map(c => c.tema)]));
       
       const { data, error } = await supabase.functions.invoke('curiosidade-dia', {
         body: { 
@@ -55,7 +56,14 @@ export default function Curiosidades() {
         newItems = [data];
       }
 
-      setCuriosidades(prev => [...prev, ...newItems]);
+      setCuriosidades(prev => {
+        const updated = [...prev, ...newItems];
+        // Atualiza histórico de longo prazo com os novos itens
+        const novosTemas = newItems.map(c => c.tema);
+        const novoHistorico = Array.from(new Set([...historicoSalvo, ...novosTemas])).slice(-50); // Lembra os últimos 50
+        localStorage.setItem('curiosidades_vistas', JSON.stringify(novoHistorico));
+        return updated;
+      });
     } catch (e) {
       console.error("Falha ao buscar curiosidades", e);
       toast({

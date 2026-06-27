@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, Filter, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ResumoCard } from '@/components/ResumoCard';
-import { MATERIAS } from '@/lib/materias';
+import { MATERIAS, ALL_TOPICS } from '@/lib/materias';
 import {
   Select,
   SelectContent,
@@ -28,28 +28,6 @@ function collectHubNames(m: typeof MATERIAS[number]): string[] {
 }
 const ALL_SUBJECTS = Array.from(new Set(MATERIAS.flatMap(collectHubNames))).sort();
 
-// Extrai todos os tópicos (folhas) para seleção aleatória
-function getAllTopicsFromMateria(m: typeof MATERIAS[number]): { materiaSlug: string, topico: string, hubNomes: string[] }[] {
-  if (!m.children || m.children.length === 0) {
-    let topicos: string[] = [];
-    if (m.ementa) {
-      topicos = [...m.ementa];
-    }
-    if (m.fases) {
-      m.fases.forEach(f => {
-        if (f.topicos) topicos = [...topicos, ...f.topicos];
-      });
-    }
-    return topicos.map(t => ({ materiaSlug: m.slug, topico: t, hubNomes: [m.nome] }));
-  }
-  return m.children.flatMap(c => {
-    const childTopics = getAllTopicsFromMateria(c);
-    // Propaga o nome do hub pai para facilitar o filtro
-    return childTopics.map(ct => ({ ...ct, hubNomes: [m.nome, ...ct.hubNomes] }));
-  });
-}
-
-const ALL_TOPICS = MATERIAS.flatMap(m => getAllTopicsFromMateria(m));
 
 export default function Resumos() {
   const navigate = useNavigate();

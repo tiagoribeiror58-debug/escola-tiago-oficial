@@ -25,7 +25,11 @@ serve(async (req: Request) => {
     const listaParaAleatorio = todasMaterias?.length > 0 ? todasMaterias.join(", ") : 'Tecnologia, Negócios, Psicologia, Filosofia, Marketing, Inteligência Artificial, História, Economia, Neurociência, Biologia, Física';
     const historicoRecente = temasRecentes?.length > 0 ? `\nAVOID REPEATING these recently shown themes: ${temasRecentes.slice(0, 10).join(", ")}. Generate something DIFFERENT.` : '';
     
-    const antiCliche = `\nCRITICAL ANTI-CLICHE RULE: DO NOT use famous, basic, pop-science or cliché curiosities. You are strictly forbidden from generating the most obvious facts about any given subject. Provide ONLY extremely obscure, advanced, niche, or lesser-known facts that even an expert might not know.`;
+    const randomSeed = Math.floor(Math.random() * 9999999);
+    
+    const antiCliche = `\nCRITICAL ANTI-CLICHE RULE: DO NOT use famous, basic, pop-science or cliché curiosities. You are strictly forbidden from generating the most obvious facts.
+Provide ONLY extremely obscure, advanced, niche, or lesser-known facts.
+Use this Randomization Seed to force yourself into a completely different latent space: ${randomSeed}`;
 
     const expectedFormat = isBatch
       ? `{\n  "curiosidades": [\n    {\n      "tema": "${isSpecific ? temaEspecifico : "Theme 1"}",\n      "texto": "Curiosity 1..."\n    },\n    {\n      "tema": "${isSpecific ? temaEspecifico : "Theme 2"}",\n      "texto": "Curiosity 2..."\n    }\n  ]\n}`
@@ -62,8 +66,8 @@ Expected format:\n${expectedFormat}`;
         "Authorization": `Bearer ${geminiKey}`,
       },
       body: JSON.stringify({
-        model: "deepseek-v4-flash",
-        temperature: 1.1, // maior criatividade e aleatoriedade
+        model: "deepseek-chat",
+        temperature: 1.2, // Equilíbrio ideal entre controle estrutural e criatividade
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userMessage }

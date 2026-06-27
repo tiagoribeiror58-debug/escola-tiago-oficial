@@ -102,3 +102,25 @@ export function urgencia(dias: number | null): 'nova' | 'ok' | 'atencao' | 'urge
   if (dias <= 7) return 'atencao';
   return 'urgente';
 }
+
+export function getAllTopicsFromMateria(m: MateriaConfig): { materiaSlug: string, topico: string, hubNomes: string[], materia: string }[] {
+  if (!m.children || m.children.length === 0) {
+    let topicos: string[] = [];
+    if (m.ementa) {
+      topicos = [...m.ementa];
+    }
+    if (m.fases) {
+      m.fases.forEach(f => {
+        if (f.topicos) topicos = [...topicos, ...f.topicos];
+      });
+    }
+    return topicos.map(t => ({ materiaSlug: m.slug, topico: t, hubNomes: [m.nome], materia: m.nome }));
+  }
+  return m.children.flatMap(c => {
+    const childTopics = getAllTopicsFromMateria(c);
+    // Propaga o nome do hub pai para facilitar o filtro
+    return childTopics.map(ct => ({ ...ct, hubNomes: [m.nome, ...ct.hubNomes] }));
+  });
+}
+
+export const ALL_TOPICS = MATERIAS.flatMap(m => getAllTopicsFromMateria(m));
