@@ -52,6 +52,10 @@ export function SavedCardsDrawer({ type }: { type: 'curiosidades' | 'resumos' })
     }
   };
 
+  const isCuriosidade = type === 'curiosidades';
+  const accentColorText = isCuriosidade ? "text-indigo-500" : "text-emerald-500";
+  const accentColorBg = isCuriosidade ? "bg-indigo-500/50" : "bg-emerald-500/50";
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -63,7 +67,7 @@ export function SavedCardsDrawer({ type }: { type: 'curiosidades' | 'resumos' })
       <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col bg-background/95 backdrop-blur-xl border-l border-border/50 shadow-2xl">
         <SheetHeader className="p-6 border-b border-border/50 bg-muted/10 sticky top-0 z-10">
           <SheetTitle className="flex items-center gap-2 text-foreground/90 font-semibold tracking-tight">
-            <Bookmark className="w-5 h-5 text-indigo-500" />
+            <Bookmark className={`w-5 h-5 ${accentColorText}`} />
             Seu Histórico de Cartões
           </SheetTitle>
         </SheetHeader>
@@ -81,7 +85,7 @@ export function SavedCardsDrawer({ type }: { type: 'curiosidades' | 'resumos' })
             <div className="space-y-6 pb-20">
               {cards.map(card => (
                   <div key={card.id} className="group relative rounded-xl border border-border/50 bg-card shadow-sm overflow-hidden transition-all hover:shadow-md hover:border-border">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500/50" />
+                    <div className={`absolute top-0 left-0 w-1 h-full ${accentColorBg}`} />
                     <div className="p-4 sm:p-5">
                       <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 flex items-center justify-between">
                         <span>{card.topico}</span>
