@@ -33,6 +33,7 @@ export default function Resumos() {
   const [resumos, setResumos] = useState<ResumoItem[]>([]);
   const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
   const [filterMode, setFilterMode] = useState<'materias' | 'hubs'>('materias');
+  const [ordenacao, setOrdenacao] = useState<'aleatorio' | 'sequencial'>('aleatorio');
   const [open, setOpen] = useState(false);
   const [batchSize, setBatchSize] = useState<number>(3);
   const [flashcardsInfo, setFlashcardsInfo] = useState<{ all: Set<string>, due: Set<string> }>({ all: new Set(), due: new Set() });
@@ -70,13 +71,21 @@ export default function Resumos() {
     return Object.entries(groups).sort((a,b) => a[0].localeCompare(b[0]));
   };
 
-  const getRandomTopics = (count: number, filterTema: string, mode: 'materias' | 'hubs', info = flashcardsInfo) => {
+  const getTopics = (count: number, filterTema: string, mode: 'materias' | 'hubs', info = flashcardsInfo, ord = ordenacao, currentResumos: ResumoItem[] = []) => {
     let pool = getAvailableTopicsPool(filterTema, mode, info);
 
     if (pool.length === 0) return [];
     
-    const shuffled = [...pool].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, Math.min(count, shuffled.length)).map(t => ({
+    // Evita duplicatas do que já está na tela
+    const alreadyShown = new Set(currentResumos.map(r => r.topico));
+    pool = pool.filter(p => !alreadyShown.has(p.topico));
+    
+    let resultList = pool;
+    if (ord === 'aleatorio') {
+      resultList = [...pool].sort(() => 0.5 - Math.random());
+    }
+    
+    return resultList.slice(0, Math.min(count, resultList.length)).map(t => ({
       materiaSlug: t.materiaSlug,
       topico: t.topico,
       isFlashcardDue: info.due.has(t.topico)
@@ -85,12 +94,12 @@ export default function Resumos() {
 
   const loadInitial = (qtd: number) => {
     setBatchSize(qtd);
-    setResumos(getRandomTopics(qtd, temaEspecifico));
+    setResumos(getTopics(qtd, temaEspecifico, filterMode, flashcardsInfo, ordenacao, []));
   };
 
   const loadMore = (qtd: number) => {
     setBatchSize(qtd);
-    setResumos(prev => [...prev, ...getRandomTopics(qtd, temaEspecifico, filterMode)]);
+    setResumos(prev => [...prev, ...getTopics(qtd, temaEspecifico, filterMode, flashcardsInfo, ordenacao, prev)]);
   };
 
   const loadSpecificTopic = (materiaSlug: string, topico: string) => {
@@ -101,11 +110,18 @@ export default function Resumos() {
     setTemaEspecifico(val);
     setFilterMode(mode);
     if (resumos.length > 0) {
-      setResumos(getRandomTopics(batchSize, val, mode));
+      setResumos(getTopics(batchSize, val, mode, flashcardsInfo, ordenacao, []));
     } else {
       setResumos([]);
     }
   };
+
+  // Quando a ordenação mudar e já houver resumos na tela, recarrega para aplicar a nova ordem
+  useEffect(() => {
+    if (resumos.length > 0) {
+      setResumos(getTopics(batchSize, temaEspecifico, filterMode, flashcardsInfo, ordenacao, []));
+    }
+  }, [ordenacao]);
 
   useEffect(() => {
     const fetchFlashcards = async () => {
@@ -154,6 +170,21 @@ export default function Resumos() {
                 className={`flex-1 sm:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${filterMode === 'hubs' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Hubs
+              </button>
+            </div>
+
+            <div className="flex bg-muted/50 rounded-lg p-1 w-full sm:w-auto shrink-0 border border-border/50">
+              <button
+                onClick={() => setOrdenacao('aleatorio')}
+                className={`flex-1 sm:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${ordenacao === 'aleatorio' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Aleatório
+              </button>
+              <button
+                onClick={() => setOrdenacao('sequencial')}
+                className={`flex-1 sm:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${ordenacao === 'sequencial' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Sequencial
               </button>
             </div>
             
