@@ -5,13 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { CuriosidadeChatCard } from '@/components/CuriosidadeChatCard';
 import { useToast } from '@/hooks/use-toast';
 import { MATERIAS, ALL_TOPICS } from '@/lib/materias';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const ALL_MATERIAS_LIST = Array.from(new Set(ALL_TOPICS.map(t => t.materia))).sort();
 const ALL_HUBS_LIST = Array.from(new Set(ALL_TOPICS.flatMap(t => t.hubNomes))).sort();
@@ -31,6 +28,7 @@ export default function Curiosidades() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
   const [filterMode, setFilterMode] = useState<'materias' | 'hubs'>('materias');
+  const [open, setOpen] = useState(false);
   const [batchSize, setBatchSize] = useState<number>(3);
 
   const fetchCuriosidades = async (count: number, overrideTema?: string, currentList: CuriosidadeData[] = curiosidades) => {
@@ -136,17 +134,65 @@ export default function Curiosidades() {
             </div>
 
             <div className="flex items-center gap-2 w-full relative">
-              <Select value={temaEspecifico} onValueChange={(val) => handleSearch(val, filterMode)}>
-                <SelectTrigger className="h-9 w-full bg-muted/30 border-border/50">
-                  <SelectValue placeholder={`Filtrar por ${filterMode === 'materias' ? 'matéria' : 'hub'}...`} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="todos">Todos os {filterMode === 'materias' ? 'Matérias' : 'Hubs'}</SelectItem>
-                  {(filterMode === 'materias' ? ALL_MATERIAS_LIST : ALL_HUBS_LIST).map(sub => (
-                    <SelectItem key={sub} value={sub}>{sub}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <button
+                    role="combobox"
+                    aria-expanded={open}
+                    className="flex h-9 w-full items-center justify-between rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {temaEspecifico === 'todos' 
+                      ? `Todos os ${filterMode === 'materias' ? 'Matérias' : 'Hubs'}` 
+                      : temaEspecifico}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[300px] sm:w-[400px] p-0" align="end">
+                  <Command>
+                    <CommandInput placeholder={`Pesquisar ${filterMode === 'materias' ? 'matéria' : 'hub'}...`} />
+                    <CommandList>
+                      <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
+                      <CommandGroup>
+                        <CommandItem
+                          value="todos"
+                          onSelect={() => {
+                            handleSearch('todos', filterMode);
+                            setOpen(false);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              temaEspecifico === 'todos' ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          Todos os {filterMode === 'materias' ? 'Matérias' : 'Hubs'}
+                        </CommandItem>
+                        {(filterMode === 'materias' ? ALL_MATERIAS_LIST : ALL_HUBS_LIST).map((sub) => (
+                          <CommandItem
+                            key={sub}
+                            value={sub}
+                            onSelect={(currentValue) => {
+                              // Shadcn Command envia o value em minúsculo por padrão,
+                              // então usamos o sub original
+                              handleSearch(sub, filterMode);
+                              setOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                temaEspecifico === sub ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {sub}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>
