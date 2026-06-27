@@ -33,6 +33,7 @@ Regras absolutas:
 3. Use no máximo 150 palavras.
 4. Foco total na lógica técnica e analogias práticas.
 5. Se o usuário fizer uma pergunta, responda de forma cirúrgica. Se for o primeiro contato, crie um resumo poderoso do conceito.
+6. CRÍTICO VISUAL: NUNCA crie um parágrafo massivo único. Separe blocos de ideias e parágrafos EXPLICITAMENTE usando duas quebras de linha reais (\\n\\n). Isso é mandatório para legibilidade.
 `;
 
     let finalMessages = [];

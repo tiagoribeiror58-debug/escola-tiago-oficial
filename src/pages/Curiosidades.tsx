@@ -31,7 +31,7 @@ export default function Curiosidades() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [curiosidades, setCuriosidades] = useState<CuriosidadeData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
   const [batchSize, setBatchSize] = useState<number>(3);
@@ -69,38 +69,33 @@ export default function Curiosidades() {
     }
   };
 
-  const loadInitial = async () => {
+  const loadInitial = async (qtd: number) => {
     setIsLoading(true);
-    await fetchCuriosidades(batchSize, "todos", []);
+    setBatchSize(qtd);
+    await fetchCuriosidades(qtd, "todos", []);
     setIsLoading(false);
   };
 
-  const loadMore = async () => {
+  const loadMore = async (qtd: number) => {
     setIsLoadingMore(true);
-    await fetchCuriosidades(batchSize);
+    setBatchSize(qtd);
+    await fetchCuriosidades(qtd);
     setIsLoadingMore(false);
   };
 
   const handleTemaChange = async (val: string) => {
     setTemaEspecifico(val);
     setCuriosidades([]);
-    setIsLoading(true);
-    await fetchCuriosidades(batchSize, val, []);
-    setIsLoading(false);
-  };
-
-  const handleBatchSizeChange = async (val: string) => {
-    const newSize = parseInt(val, 10);
-    setBatchSize(newSize);
-    setCuriosidades([]);
-    setIsLoading(true);
-    await fetchCuriosidades(newSize, temaEspecifico, []);
-    setIsLoading(false);
+    if (curiosidades.length > 0) {
+      // Se já tinha itens, vamos carregar a mesma quantidade
+      setIsLoading(true);
+      await fetchCuriosidades(batchSize, val, []);
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    loadInitial();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Não carrega mais automaticamente no início
   }, []);
 
   return (
@@ -119,7 +114,7 @@ export default function Curiosidades() {
             </h1>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[280px] sm:max-w-[450px] w-full">
+          <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[200px] sm:max-w-[300px] w-full">
             <div className="flex items-center gap-2 w-full">
               <Filter className="w-4 h-4 text-muted-foreground shrink-0" />
               <Select value={temaEspecifico} onValueChange={handleTemaChange}>
@@ -134,44 +129,68 @@ export default function Curiosidades() {
                 </SelectContent>
               </Select>
             </div>
-            <Select value={batchSize.toString()} onValueChange={handleBatchSizeChange}>
-              <SelectTrigger className="h-9 w-24 bg-muted/30 border-border/50 shrink-0">
-                <SelectValue placeholder="Qtd" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="3">3 itens</SelectItem>
-                <SelectItem value="6">6 itens</SelectItem>
-                <SelectItem value="9">9 itens</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
       </header>
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8 flex flex-col gap-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {curiosidades.map((c, i) => (
-            <div key={i} className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-full" style={{ animationDelay: `${(i % 3) * 100}ms` }}>
-              <CuriosidadeChatCard curiosidade={c} />
+        {curiosidades.length === 0 && !isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in duration-700">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground/90 mb-3">
+              Quantos cartões você quer gerar agora?
+            </h2>
+            <p className="text-sm text-muted-foreground mb-8 max-w-md">
+              Selecione a quantidade para começarmos a garimpar fatos incríveis e desconhecidos sobre {temaEspecifico === 'todos' ? 'diversos temas' : temaEspecifico}.
+            </p>
+            <div className="flex items-center gap-4">
+              {[1, 2, 3, 5].map((qtd) => (
+                <button
+                  key={qtd}
+                  onClick={() => loadInitial(qtd)}
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-muted/30 border border-border/50 hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all flex items-center justify-center text-lg sm:text-xl font-semibold text-foreground/70"
+                >
+                  {qtd}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {curiosidades.map((c, i) => (
+              <div key={i} className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-full" style={{ animationDelay: `${(i % 3) * 100}ms` }}>
+                <CuriosidadeChatCard curiosidade={c} />
+              </div>
+            ))}
+          </div>
+        )}
 
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-12 text-muted-foreground/50 gap-4">
+          <div className="flex flex-col items-center justify-center py-12 text-muted-foreground/50 gap-4 w-full">
             <Loader2 className="w-6 h-6 animate-spin" />
             <span className="text-xs font-medium uppercase tracking-widest">Garimpando fatos...</span>
           </div>
-        ) : (
-          <button
-            onClick={loadMore}
-            disabled={isLoadingMore}
-            className="mx-auto flex items-center justify-center gap-2 px-6 py-3 bg-muted/30 hover:bg-muted/50 border border-border/50 rounded-full text-sm font-medium transition-all text-muted-foreground hover:text-foreground disabled:opacity-50"
-          >
-            {isLoadingMore ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-            Carregar Mais
-          </button>
-        )}
+        ) : curiosidades.length > 0 ? (
+          <div className="mt-8 flex flex-col items-center justify-center p-8 bg-muted/10 border border-border/50 rounded-3xl w-full">
+            <h3 className="text-sm font-semibold text-foreground/80 mb-4 uppercase tracking-wider">Quantos mais você quer ver agora?</h3>
+            <div className="flex items-center gap-3">
+              {[1, 2, 3, 5].map((qtd) => (
+                <button
+                  key={qtd}
+                  onClick={() => loadMore(qtd)}
+                  disabled={isLoadingMore}
+                  className="w-12 h-12 rounded-2xl bg-muted/30 border border-border/50 hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all flex items-center justify-center font-medium text-foreground/70 disabled:opacity-50"
+                >
+                  {qtd}
+                </button>
+              ))}
+            </div>
+            {isLoadingMore && (
+               <div className="mt-4 text-xs flex items-center gap-2 text-muted-foreground">
+                 <Loader2 className="w-3 h-3 animate-spin" /> Carregando...
+               </div>
+            )}
+          </div>
+        ) : null}
       </main>
     </div>
   );

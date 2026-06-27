@@ -16,15 +16,18 @@ interface ChatMessage {
 interface Props {
   materiaSlug: string;
   topico: string;
+  isFlashcardDue?: boolean;
 }
 
-export function ResumoCard({ materiaSlug, topico }: Props) {
+export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [summary, setSummary] = useState('');
-  const [isGeneratingCards, setIsGeneratingCards] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isGeneratingCards, setIsGeneratingCards] = useState(false);
+  const [hasRevealed, setHasRevealed] = useState(!isFlashcardDue);
+  const [recallAnswer, setRecallAnswer] = useState('');
   const { toast } = useToast();
   const navigate = useNavigate();
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -201,7 +204,7 @@ export function ResumoCard({ materiaSlug, topico }: Props) {
 
         toast({
           title: "Flashcards Extraídos!",
-          description: `${flashcards.length} cartões foram enviados para a sua memória de longo prazo.`,
+          description: `A IA fatiou o texto e extraiu ${flashcards.length} cartões curtos para sua memória.`,
         });
       } else {
         toast({
@@ -240,17 +243,49 @@ export function ResumoCard({ materiaSlug, topico }: Props) {
           </div>
         </div>
 
-        <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium flex-1">
-          {summary ? (
-            <div className="prose prose-sm dark:prose-invert max-w-none">
-              <ReactMarkdown>{summary}</ReactMarkdown>
+        {!hasRevealed ? (
+          <div className="flex flex-col gap-4 animate-in fade-in zoom-in duration-500 bg-background/40 p-4 rounded-xl border border-primary/20">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                <BrainCircuit className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-bold text-sm text-foreground/90">Active Recall!</h4>
+                <p className="text-xs text-muted-foreground mt-1">Este tópico está vencido nos seus flashcards. O que você lembra sobre isso antes de ler?</p>
+              </div>
             </div>
-          ) : (
-             <div className="flex items-center gap-2 text-muted-foreground">
-               <Loader2 className="w-4 h-4 animate-spin" /> Gerando resumo...
-             </div>
-          )}
-        </div>
+            <textarea
+              value={recallAnswer}
+              onChange={e => setRecallAnswer(e.target.value)}
+              placeholder="Digite aqui o que você lembra (opcional)..."
+              className="resize-none bg-background/60 border border-border/50 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary min-h-[80px]"
+            />
+            <button
+              onClick={() => {
+                setHasRevealed(true);
+                if (recallAnswer.trim()) {
+                  setMessages([{ role: 'user', content: recallAnswer.trim() }]);
+                }
+              }}
+              disabled={isLoading}
+              className="py-2.5 bg-primary text-primary-foreground font-semibold rounded-xl text-sm transition-all hover:brightness-110 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Revelar Resumo'}
+            </button>
+          </div>
+        ) : (
+          <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium flex-1">
+            {summary ? (
+              <div className="prose prose-sm dark:prose-invert max-w-none animate-in fade-in duration-500">
+                <ReactMarkdown>{summary}</ReactMarkdown>
+              </div>
+            ) : (
+               <div className="flex items-center gap-2 text-muted-foreground">
+                 <Loader2 className="w-4 h-4 animate-spin" /> Gerando resumo...
+               </div>
+            )}
+          </div>
+        )}
 
         {messages.length > 0 && (
           <div className="bg-background/40 rounded-xl p-4 border border-border/50 max-h-[250px] overflow-y-auto space-y-4 mt-2">

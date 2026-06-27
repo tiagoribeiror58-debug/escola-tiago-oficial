@@ -10,10 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { supabase } from '@/integrations/supabase/client';
 
 interface ResumoItem {
   materiaSlug: string;
   topico: string;
+  isFlashcardDue?: boolean;
 }
 
 // Extrai todos os hubs (nomes) para o filtro
@@ -51,43 +53,65 @@ export default function Resumos() {
   const [resumos, setResumos] = useState<ResumoItem[]>([]);
   const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
   const [batchSize, setBatchSize] = useState<number>(3);
+  const [flashcardsInfo, setFlashcardsInfo] = useState<{ all: Set<string>, due: Set<string> }>({ all: new Set(), due: new Set() });
 
-  const getRandomTopics = (count: number, filterTema: string) => {
+  const getRandomTopics = (count: number, filterTema: string, info = flashcardsInfo) => {
     let pool = ALL_TOPICS;
     if (filterTema !== "todos") {
       pool = ALL_TOPICS.filter(t => t.hubNomes.includes(filterTema));
     }
+    
+    // Filtro anti-repetição:
+    // Remover tópicos que estão nos flashcards, EXCETO se estiverem vencidos (due)
+    pool = pool.filter(t => {
+      const isSaved = info.all.has(t.topico);
+      const isDue = info.due.has(t.topico);
+      if (isSaved && !isDue) return false; // Remove os já aprendidos/não vencidos
+      return true; // Mantém inéditos e vencidos
+    });
+
     if (pool.length === 0) return [];
     
     const shuffled = [...pool].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, Math.min(count, shuffled.length)).map(t => ({
       materiaSlug: t.materiaSlug,
-      topico: t.topico
+      topico: t.topico,
+      isFlashcardDue: info.due.has(t.topico)
     }));
   };
 
-  const loadInitial = () => {
-    setResumos(getRandomTopics(batchSize, temaEspecifico));
+  const loadInitial = (qtd: number) => {
+    setBatchSize(qtd);
+    setResumos(getRandomTopics(qtd, temaEspecifico));
   };
 
-  const loadMore = () => {
-    setResumos(prev => [...prev, ...getRandomTopics(batchSize, temaEspecifico)]);
+  const loadMore = (qtd: number) => {
+    setBatchSize(qtd);
+    setResumos(prev => [...prev, ...getRandomTopics(qtd, temaEspecifico)]);
   };
 
   const handleTemaChange = (val: string) => {
     setTemaEspecifico(val);
-    setResumos(getRandomTopics(batchSize, val));
-  };
-
-  const handleBatchSizeChange = (val: string) => {
-    const newSize = parseInt(val, 10);
-    setBatchSize(newSize);
-    setResumos(getRandomTopics(newSize, temaEspecifico));
+    if (resumos.length > 0) {
+      setResumos(getRandomTopics(batchSize, val));
+    } else {
+      setResumos([]);
+    }
   };
 
   useEffect(() => {
-    loadInitial();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchFlashcards = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase.from('flashcards').select('topico, next_review_date').eq('user_id', user.id);
+      if (data) {
+        const now = new Date().toISOString();
+        const all = new Set(data.map(d => d.topico));
+        const due = new Set(data.filter(d => d.next_review_date <= now).map(d => d.topico));
+        setFlashcardsInfo({ all, due });
+      }
+    };
+    fetchFlashcards();
   }, []);
 
   return (
@@ -106,7 +130,7 @@ export default function Resumos() {
             </h1>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[280px] sm:max-w-[450px] w-full">
+          <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[200px] sm:max-w-[300px] w-full">
             <div className="flex items-center gap-2 w-full">
               <Filter className="w-4 h-4 text-muted-foreground shrink-0" />
               <Select value={temaEspecifico} onValueChange={handleTemaChange}>
@@ -121,41 +145,56 @@ export default function Resumos() {
                 </SelectContent>
               </Select>
             </div>
-            <Select value={batchSize.toString()} onValueChange={handleBatchSizeChange}>
-              <SelectTrigger className="h-9 w-24 bg-muted/30 border-border/50 shrink-0">
-                <SelectValue placeholder="Qtd" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="3">3 itens</SelectItem>
-                <SelectItem value="6">6 itens</SelectItem>
-                <SelectItem value="9">9 itens</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
       </header>
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8 flex flex-col gap-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-          {resumos.map((r, i) => (
-            <div key={`${r.materiaSlug}-${r.topico}-${i}`} className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-full" style={{ animationDelay: `${(i % 3) * 100}ms` }}>
-              <ResumoCard materiaSlug={r.materiaSlug} topico={r.topico} />
-            </div>
-          ))}
-        </div>
-
         {resumos.length === 0 ? (
-           <div className="flex flex-col items-center justify-center py-12 text-muted-foreground/50 gap-4">
-             <span className="text-sm font-medium">Nenhum tópico encontrado para este filtro.</span>
-           </div>
+          <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in duration-700">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground/90 mb-3">
+              Quantos resumos você quer estudar agora?
+            </h2>
+            <p className="text-sm text-muted-foreground mb-8 max-w-md">
+              Selecione a quantidade de tópicos para mergulhar no conhecimento sobre {temaEspecifico === 'todos' ? 'diversas matérias' : temaEspecifico}.
+            </p>
+            <div className="flex items-center gap-4">
+              {[1, 2, 3, 5].map((qtd) => (
+                <button
+                  key={qtd}
+                  onClick={() => loadInitial(qtd)}
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-muted/30 border border-border/50 hover:bg-emerald-500/10 hover:border-emerald-500/30 hover:text-emerald-500 transition-all flex items-center justify-center text-lg sm:text-xl font-semibold text-foreground/70"
+                >
+                  {qtd}
+                </button>
+              ))}
+            </div>
+          </div>
         ) : (
-          <button
-            onClick={loadMore}
-            className="mx-auto flex items-center justify-center gap-2 px-6 py-3 bg-muted/30 hover:bg-muted/50 border border-border/50 rounded-full text-sm font-medium transition-all text-muted-foreground hover:text-foreground"
-          >
-            <RefreshCw className="w-4 h-4" />
-            Carregar Mais
-          </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+            {resumos.map((r, i) => (
+              <div key={`${r.materiaSlug}-${r.topico}-${i}`} className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-full" style={{ animationDelay: `${(i % 3) * 100}ms` }}>
+                <ResumoCard materiaSlug={r.materiaSlug} topico={r.topico} isFlashcardDue={r.isFlashcardDue} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {resumos.length > 0 && (
+          <div className="mt-8 flex flex-col items-center justify-center p-8 bg-muted/10 border border-border/50 rounded-3xl w-full">
+            <h3 className="text-sm font-semibold text-foreground/80 mb-4 uppercase tracking-wider">Quantos mais você quer ver agora?</h3>
+            <div className="flex items-center gap-3">
+              {[1, 2, 3, 5].map((qtd) => (
+                <button
+                  key={qtd}
+                  onClick={() => loadMore(qtd)}
+                  className="w-12 h-12 rounded-2xl bg-muted/30 border border-border/50 hover:bg-emerald-500/10 hover:border-emerald-500/30 hover:text-emerald-500 transition-all flex items-center justify-center font-medium text-foreground/70"
+                >
+                  {qtd}
+                </button>
+              ))}
+            </div>
+          </div>
         )}
       </main>
     </div>

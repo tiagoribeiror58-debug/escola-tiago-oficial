@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { BookOpen, Loader2, ArrowLeft, ChevronDown, Lightbulb, RefreshCw, Bookmark } from 'lucide-react';
+import { BookOpen, Loader2, ArrowLeft, ChevronDown, Lightbulb, RefreshCw, Bookmark, BrainCircuit } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 
 interface StudyNote {
   id: string;
@@ -29,8 +30,74 @@ function getNoteTypeInfo(nota: StudyNote) {
 
 function NotaItem({ nota }: { nota: StudyNote }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isGeneratingCards, setIsGeneratingCards] = useState(false);
+  const { toast } = useToast();
   const info = getNoteTypeInfo(nota);
   const Icon = info.icon;
+
+  const handleGenerateFlashcards = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isGeneratingCards) return;
+    setIsGeneratingCards(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+      const textoFonte = `${nota.user_reflection}\n\n${nota.ai_complement}`;
+
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/gerar-flashcards`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ 
+          materia_slug: nota.materia_slug, 
+          topico: nota.topico, 
+          texto_fonte: textoFonte
+        }),
+      });
+
+      if (!response.ok) throw new Error("Falha na geração de flashcards");
+
+      const data = await response.json();
+      const flashcards = data.flashcards;
+
+      if (flashcards && flashcards.length > 0) {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        const inserts = flashcards.map((fc: any) => ({
+          user_id: user?.id,
+          materia_slug: nota.materia_slug,
+          topico: nota.topico,
+          front: fc.front,
+          back: fc.back,
+        }));
+
+        const { error } = await supabase.from('flashcards').insert(inserts);
+        if (error) throw error;
+
+        toast({
+          title: "Flashcards Extraídos!",
+          description: `${flashcards.length} cartões foram enviados para a sua memória de longo prazo.`,
+        });
+      } else {
+        toast({
+          title: "Aviso",
+          description: "A IA não conseguiu extrair flashcards desta nota.",
+        });
+      }
+    } catch (e) {
+      console.error(e);
+      toast({
+        title: "Erro",
+        description: "Falha ao extrair flashcards.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGeneratingCards(false);
+    }
+  };
 
   return (
     <div className="bg-card border border-border/50 rounded-2xl shadow-sm overflow-hidden group transition-all hover:border-border/80">
@@ -101,6 +168,17 @@ function NotaItem({ nota }: { nota: StudyNote }) {
                 </div>
               </div>
             )}
+            
+            <div className="flex items-center justify-end pt-2 border-t border-border/30">
+              <button
+                onClick={handleGenerateFlashcards}
+                disabled={isGeneratingCards}
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-background border border-border/50 hover:bg-muted text-foreground rounded-lg text-xs font-medium transition-all shadow-sm disabled:opacity-50"
+              >
+                {isGeneratingCards ? <Loader2 className="w-3 h-3 animate-spin" /> : <BrainCircuit className="w-3 h-3 text-emerald-500" />}
+                Extrair Flashcards
+              </button>
+            </div>
           </div>
         </div>
       </div>

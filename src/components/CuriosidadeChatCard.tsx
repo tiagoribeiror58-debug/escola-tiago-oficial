@@ -208,7 +208,7 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
 
         toast({
           title: "Flashcards Extraídos!",
-          description: `${flashcards.length} cartões foram enviados para a sua memória de longo prazo.`,
+          description: `A IA fatiou o texto e extraiu ${flashcards.length} cartões curtos para sua memória.`,
         });
       } else {
         toast({

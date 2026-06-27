@@ -36,6 +36,7 @@ serve(async (req: Request) => {
 Your task is to generate ${count} "Did you know?" (Você Sabia?) curiosit${count > 1 ? 'ies' : 'y'} that ${count > 1 ? 'are' : 'is'} extremely interesting, surprising, and educational.
 The curiosit${count > 1 ? 'ies' : 'y'} MUST BE STRICTLY RELATED TO THIS SPECIFIC SUBJECT: ${temaEspecifico}.
 DO NOT generate facts about any other subject.${historicoRecente}${antiCliche}
+CRITICAL FORMATTING RULE: The "texto" field MUST NOT be a single massive block of text. You MUST separate ideas into paragraphs using explicit double newlines (\\n\\n) for readability.
 CRITICAL: The output MUST be written entirely in Brazilian Portuguese (pt-BR).
 Respond ONLY with a valid JSON object${isBatch ? ', with the curiosities inside a "curiosidades" array' : ''}.
 Expected format:\n${expectedFormat}`
@@ -43,6 +44,7 @@ Expected format:\n${expectedFormat}`
 Your task is to generate ${count} "Did you know?" (Você Sabia?) curiosit${count > 1 ? 'ies' : 'y'} that ${count > 1 ? 'are' : 'is'} extremely interesting, surprising, and educational.
 The curiosit${count > 1 ? 'ies' : 'y'} MUST BE STRICTLY RELATED TO ONE OF THESE SPECIFIC SUBJECTS from the user's study app: ${listaParaAleatorio}.
 Pick ${count > 1 ? count + ' DIFFERENT SUBJECTS' : 'ONE subject'} randomly from the list. DO NOT generate facts about Astrophysics, Marine Biology, Astronomy, Astrology, Cosmology or any subject NOT in the list above.${historicoRecente}${antiCliche}
+CRITICAL FORMATTING RULE: The "texto" field MUST NOT be a single massive block of text. You MUST separate ideas into paragraphs using explicit double newlines (\\n\\n) for readability.
 CRITICAL RULES:
 1. The output MUST be written entirely in Brazilian Portuguese (pt-BR).
 ${count > 1 ? '2. EACH ITEM IN THE "curiosidades" ARRAY MUST BE FROM A COMPLETELY DIFFERENT SUBJECT. NEVER REPEAT THE SAME SUBJECT TWICE. EXTREMELY IMPORTANT!' : ''}
