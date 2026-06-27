@@ -553,6 +553,13 @@ export default function Index() {
                   <BookOpen className="w-4 h-4" />
                   Feed de Resumos de Tópicos
                 </Link>
+                <Link 
+                  to="/flashcards" 
+                  className="flex items-center justify-center gap-2 w-full py-3 bg-primary/10 hover:bg-primary/20 border border-primary/20 rounded-2xl text-sm font-medium transition-all text-primary shadow-sm"
+                >
+                  <BrainCircuit className="w-4 h-4" />
+                  Gerenciar Flashcards
+                </Link>
               </div>
             )}
           </div>

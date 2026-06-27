@@ -1,17 +1,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Loader2, RefreshCw, Filter } from 'lucide-react';
+import { ArrowLeft, Loader2, RefreshCw, Filter, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CuriosidadeChatCard } from '@/components/CuriosidadeChatCard';
 import { useToast } from '@/hooks/use-toast';
 import { MATERIAS } from '@/lib/materias';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 interface CuriosidadeData {
   tema: string;
@@ -33,12 +27,13 @@ export default function Curiosidades() {
   const [curiosidades, setCuriosidades] = useState<CuriosidadeData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
+  const [temaEspecifico, setTemaEspecifico] = useState<string>("");
+  const [activeSearch, setActiveSearch] = useState<string>("todos");
   const [batchSize, setBatchSize] = useState<number>(3);
 
   const fetchCuriosidades = async (count: number, overrideTema?: string, currentList: CuriosidadeData[] = curiosidades) => {
     try {
-      const temaToSend = (overrideTema || temaEspecifico) === "todos" ? null : (overrideTema || temaEspecifico);
+      const temaToSend = (overrideTema || activeSearch) === "todos" || !(overrideTema || activeSearch).trim() ? null : (overrideTema || activeSearch);
       const temasRecentes = currentList.map(c => c.tema);
       
       const { data, error } = await supabase.functions.invoke('curiosidade-dia', {
@@ -83,14 +78,20 @@ export default function Curiosidades() {
     setIsLoadingMore(false);
   };
 
-  const handleTemaChange = async (val: string) => {
-    setTemaEspecifico(val);
+  const handleSearch = async () => {
+    const searchVal = temaEspecifico.trim() || "todos";
+    setActiveSearch(searchVal);
     setCuriosidades([]);
-    if (curiosidades.length > 0) {
-      // Se já tinha itens, vamos carregar a mesma quantidade
+    if (curiosidades.length > 0 || isLoading) {
       setIsLoading(true);
-      await fetchCuriosidades(batchSize, val, []);
+      await fetchCuriosidades(batchSize, searchVal, []);
       setIsLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -115,19 +116,23 @@ export default function Curiosidades() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[200px] sm:max-w-[300px] w-full">
-            <div className="flex items-center gap-2 w-full">
-              <Filter className="w-4 h-4 text-muted-foreground shrink-0" />
-              <Select value={temaEspecifico} onValueChange={handleTemaChange}>
-                <SelectTrigger className="h-9 w-full bg-muted/30 border-border/50">
-                  <SelectValue placeholder="Filtrar por tema..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="todos">Todos os Temas</SelectItem>
-                  {ALL_SUBJECTS.map(sub => (
-                    <SelectItem key={sub} value={sub}>{sub}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="flex items-center gap-2 w-full relative">
+              <Search className="w-4 h-4 text-muted-foreground absolute left-3" />
+              <Input
+                value={temaEspecifico}
+                onChange={e => setTemaEspecifico(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Pesquisar tema..."
+                className="pl-9 pr-10 h-9 w-full bg-muted/30 border-border/50"
+              />
+              {temaEspecifico && (
+                <button
+                  onClick={handleSearch}
+                  className="absolute right-2 text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
+                >
+                  Buscar
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -140,7 +145,7 @@ export default function Curiosidades() {
               Quantos cartões você quer gerar agora?
             </h2>
             <p className="text-sm text-muted-foreground mb-8 max-w-md">
-              Selecione a quantidade para começarmos a garimpar fatos incríveis e desconhecidos sobre {temaEspecifico === 'todos' ? 'diversos temas' : temaEspecifico}.
+              Selecione a quantidade para começarmos a garimpar fatos incríveis e desconhecidos sobre {activeSearch === 'todos' ? 'diversos temas' : `"${activeSearch}"`}.
             </p>
             <div className="flex items-center gap-4">
               {[1, 2, 3, 5].map((qtd) => (

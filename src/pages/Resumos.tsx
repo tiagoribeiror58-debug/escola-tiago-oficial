@@ -1,15 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Filter, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Filter, RefreshCw, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ResumoCard } from '@/components/ResumoCard';
 import { MATERIAS } from '@/lib/materias';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { supabase } from '@/integrations/supabase/client';
 
 interface ResumoItem {
@@ -51,14 +45,19 @@ const ALL_TOPICS = MATERIAS.flatMap(m => getAllTopicsFromMateria(m));
 export default function Resumos() {
   const navigate = useNavigate();
   const [resumos, setResumos] = useState<ResumoItem[]>([]);
-  const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
+  const [temaEspecifico, setTemaEspecifico] = useState<string>("");
+  const [activeSearch, setActiveSearch] = useState<string>("todos");
   const [batchSize, setBatchSize] = useState<number>(3);
   const [flashcardsInfo, setFlashcardsInfo] = useState<{ all: Set<string>, due: Set<string> }>({ all: new Set(), due: new Set() });
 
   const getRandomTopics = (count: number, filterTema: string, info = flashcardsInfo) => {
     let pool = ALL_TOPICS;
     if (filterTema !== "todos") {
-      pool = ALL_TOPICS.filter(t => t.hubNomes.includes(filterTema));
+      const lowerFilter = filterTema.toLowerCase();
+      pool = ALL_TOPICS.filter(t => 
+        t.topico.toLowerCase().includes(lowerFilter) || 
+        t.hubNomes.some(h => h.toLowerCase().includes(lowerFilter))
+      );
     }
     
     // Filtro anti-repetição:
@@ -90,12 +89,19 @@ export default function Resumos() {
     setResumos(prev => [...prev, ...getRandomTopics(qtd, temaEspecifico)]);
   };
 
-  const handleTemaChange = (val: string) => {
-    setTemaEspecifico(val);
+  const handleSearch = () => {
+    const searchVal = temaEspecifico.trim() || "todos";
+    setActiveSearch(searchVal);
     if (resumos.length > 0) {
-      setResumos(getRandomTopics(batchSize, val));
+      setResumos(getRandomTopics(batchSize, searchVal));
     } else {
       setResumos([]);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -131,19 +137,23 @@ export default function Resumos() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[200px] sm:max-w-[300px] w-full">
-            <div className="flex items-center gap-2 w-full">
-              <Filter className="w-4 h-4 text-muted-foreground shrink-0" />
-              <Select value={temaEspecifico} onValueChange={handleTemaChange}>
-                <SelectTrigger className="h-9 w-full bg-muted/30 border-border/50">
-                  <SelectValue placeholder="Filtrar por tema..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="todos">Todos os Temas</SelectItem>
-                  {ALL_SUBJECTS.map(sub => (
-                    <SelectItem key={sub} value={sub}>{sub}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="flex items-center gap-2 w-full relative">
+              <Search className="w-4 h-4 text-muted-foreground absolute left-3" />
+              <Input
+                value={temaEspecifico}
+                onChange={e => setTemaEspecifico(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Pesquisar tema..."
+                className="pl-9 pr-10 h-9 w-full bg-muted/30 border-border/50"
+              />
+              {temaEspecifico && (
+                <button
+                  onClick={handleSearch}
+                  className="absolute right-2 text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
+                >
+                  Buscar
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -156,7 +166,7 @@ export default function Resumos() {
               Quantos resumos você quer estudar agora?
             </h2>
             <p className="text-sm text-muted-foreground mb-8 max-w-md">
-              Selecione a quantidade de tópicos para mergulhar no conhecimento sobre {temaEspecifico === 'todos' ? 'diversas matérias' : temaEspecifico}.
+              Selecione a quantidade para começarmos a gerar resumos de tópicos sobre {activeSearch === 'todos' ? 'diversos temas' : `"${activeSearch}"`}.
             </p>
             <div className="flex items-center gap-4">
               {[1, 2, 3, 5].map((qtd) => (
