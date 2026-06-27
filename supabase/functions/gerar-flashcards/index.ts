@@ -51,6 +51,7 @@ Exemplo de formato esperado:
           { role: "system", content: systemPrompt },
           { role: "user", content: `TEXTO FONTE:\n\n${texto_fonte}` }
         ],
+        response_format: { type: "json_object" }
       }),
     });
 
@@ -61,14 +62,13 @@ Exemplo de formato esperado:
     }
 
     const data = await response.json();
-    let content = data.choices?.[0]?.message?.content?.trim() || "[]";
-    
-    // Limpar crases caso a IA desobedeça
-    content = content.replace(/^```json/i, '').replace(/^```/i, '').replace(/```$/i, '').trim();
+    const content = data.choices?.[0]?.message?.content?.trim() || "[]";
 
     let flashcards = [];
     try {
-      flashcards = JSON.parse(content);
+      const parsed = JSON.parse(content);
+      // A IA pode retornar { flashcards: [...] } ou diretamente [...]
+      flashcards = Array.isArray(parsed) ? parsed : (parsed.flashcards || []);
     } catch (e) {
       console.error("Erro ao fazer parse do JSON de flashcards:", content);
       throw new Error("IA não retornou um JSON válido");

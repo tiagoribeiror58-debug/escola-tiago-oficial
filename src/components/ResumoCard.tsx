@@ -167,31 +167,22 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
     if (!summary || isGeneratingCards) return;
     setIsGeneratingCards(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/gerar-flashcards`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ 
+      const { data, error: fnError } = await supabase.functions.invoke('gerar-flashcards', {
+        body: { 
           materia_slug: materiaSlug, 
           topico: topico, 
           texto_fonte: summary
-        }),
+        },
       });
 
-      if (!response.ok) throw new Error("Falha na geração de flashcards");
+      if (fnError) throw fnError;
 
-      const data = await response.json();
-      const flashcards = data.flashcards;
+      const flashcards = data?.flashcards;
 
       if (flashcards && flashcards.length > 0) {
         const { data: { user } } = await supabase.auth.getUser();
         
-        const inserts = flashcards.map((fc: any) => ({
+        const inserts = flashcards.map((fc: { front: string; back: string }) => ({
           user_id: user?.id,
           materia_slug: materiaSlug,
           topico: topico,

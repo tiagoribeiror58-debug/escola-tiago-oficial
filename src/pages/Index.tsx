@@ -751,112 +751,119 @@ export default function Index() {
                         </button>
                       </div>
                     )}
-                    {visibleHubsFoco.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-2 mb-3">
-                          <h4 className="text-sm font-medium text-muted-foreground flex-1">Hubs em Foco</h4>
-                          <div className="relative">
-                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
-                            <input
-                              type="text"
-                              value={hubInlineSearch}
-                              onChange={e => setHubInlineSearch(e.target.value)}
-                              placeholder="Buscar hub..."
-                              className="pl-8 pr-3 py-1.5 text-xs bg-muted/40 border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20 transition-all w-36"
-                            />
+                    <div className={cn(
+                      "w-full",
+                      focoFilterType === 'all' && visibleHubsFoco.length > 0 && visibleMateriasFoco.length > 0
+                        ? "grid grid-cols-1 xl:grid-cols-2 gap-6 items-start"
+                        : "flex flex-col gap-6"
+                    )}>
+                      {visibleHubsFoco.length > 0 && (
+                        <div className="w-full">
+                          <div className="flex items-center gap-2 mb-3">
+                            <h4 className="text-sm font-medium text-muted-foreground flex-1">Hubs em Foco</h4>
+                            <div className="relative">
+                              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+                              <input
+                                type="text"
+                                value={hubInlineSearch}
+                                onChange={e => setHubInlineSearch(e.target.value)}
+                                placeholder="Buscar hub..."
+                                className="pl-8 pr-3 py-1.5 text-xs bg-muted/40 border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20 transition-all w-36"
+                              />
+                            </div>
                           </div>
+                          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
+                            <div className={cn("grid gap-3 mb-2", focoFilterType === 'all' ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2")}>
+                              <SortableContext items={visibleHubsFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
+                                {visibleHubsFoco.filter(e => !focosPrincipais.includes(e.config.slug)).filter(e => {
+                                  if (!normalizedHubInline) return true;
+                                  const nome = e.config.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                                  return nome.includes(normalizedHubInline);
+                                }).map(estado => (
+                                  <SortableItem
+                                    key={estado.config.slug}
+                                    id={estado.config.slug}
+                                    estado={estado}
+                                    onClick={() => handleCardClick(estado)}
+                                    isPinned={isFixada(estado.config.slug)}
+                                    onTogglePin={(e: React.MouseEvent) => {
+                                      e.stopPropagation();
+                                      toggleFixada(estado.config.slug);
+                                    }}
+                                    isFocoPrincipal={isFocoPrincipal(estado.config.slug)}
+                                    onToggleFocoPrincipal={(e: React.MouseEvent) => {
+                                      e.stopPropagation();
+                                      toggleFocoPrincipal(estado.config.slug);
+                                    }}
+                                  />
+                                ))}
+                              </SortableContext>
+                            </div>
+                          </DndContext>
+                          {showVerMaisHubs && (
+                            <button
+                              onClick={() => setVisibleLimitFocoHubs(prev => prev + 4)}
+                              className="w-full mb-6 py-2.5 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed border-border hover:bg-muted transition-colors"
+                            >
+                              Ver mais hubs ({Math.min(visibleLimitFocoHubs + 4, filteredFocoHubsTotal)} de {filteredFocoHubsTotal})
+                            </button>
+                          )}
                         </div>
-                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
-                            <SortableContext items={visibleHubsFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
-                              {visibleHubsFoco.filter(e => !focosPrincipais.includes(e.config.slug)).filter(e => {
-                                if (!normalizedHubInline) return true;
-                                const nome = e.config.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                                return nome.includes(normalizedHubInline);
-                              }).map(estado => (
-                                <SortableItem
-                                  key={estado.config.slug}
-                                  id={estado.config.slug}
-                                  estado={estado}
-                                  onClick={() => handleCardClick(estado)}
-                                  isPinned={isFixada(estado.config.slug)}
-                                  onTogglePin={(e: React.MouseEvent) => {
-                                    e.stopPropagation();
-                                    toggleFixada(estado.config.slug);
-                                  }}
-                                  isFocoPrincipal={isFocoPrincipal(estado.config.slug)}
-                                  onToggleFocoPrincipal={(e: React.MouseEvent) => {
-                                    e.stopPropagation();
-                                    toggleFocoPrincipal(estado.config.slug);
-                                  }}
-                                />
-                              ))}
-                            </SortableContext>
+                      )}
+                      {visibleMateriasFoco.length > 0 && (
+                        <div className="w-full">
+                          <div className="flex items-center gap-2 mb-3">
+                            <h4 className="text-sm font-medium text-muted-foreground flex-1">Matérias em Foco</h4>
+                            <div className="relative">
+                              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+                              <input
+                                type="text"
+                                value={materiaInlineSearch}
+                                onChange={e => setMateriaInlineSearch(e.target.value)}
+                                placeholder="Buscar matéria..."
+                                className="pl-8 pr-3 py-1.5 text-xs bg-muted/40 border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20 transition-all w-36"
+                              />
+                            </div>
                           </div>
-                        </DndContext>
-                        {showVerMaisHubs && (
-                          <button
-                            onClick={() => setVisibleLimitFocoHubs(prev => prev + 4)}
-                            className="w-full mb-6 py-2.5 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed border-border hover:bg-muted transition-colors"
-                          >
-                            Ver mais hubs ({Math.min(visibleLimitFocoHubs + 4, filteredFocoHubsTotal)} de {filteredFocoHubsTotal})
-                          </button>
-                        )}
-                      </div>
-                    )}
-                    {visibleMateriasFoco.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-2 mb-3">
-                          <h4 className="text-sm font-medium text-muted-foreground flex-1">Matérias em Foco</h4>
-                          <div className="relative">
-                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
-                            <input
-                              type="text"
-                              value={materiaInlineSearch}
-                              onChange={e => setMateriaInlineSearch(e.target.value)}
-                              placeholder="Buscar matéria..."
-                              className="pl-8 pr-3 py-1.5 text-xs bg-muted/40 border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20 transition-all w-36"
-                            />
-                          </div>
+                          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
+                            <div className={cn("grid gap-3 mb-2", focoFilterType === 'all' ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2")}>
+                              <SortableContext items={visibleMateriasFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
+                                {visibleMateriasFoco.filter(e => !focosPrincipais.includes(e.config.slug)).filter(e => {
+                                  if (!normalizedMateriaInline) return true;
+                                  const nome = e.config.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                                  return nome.includes(normalizedMateriaInline);
+                                }).map(estado => (
+                                  <SortableItem
+                                    key={estado.config.slug}
+                                    id={estado.config.slug}
+                                    estado={estado}
+                                    onClick={() => handleCardClick(estado)}
+                                    isPinned={isFixada(estado.config.slug)}
+                                    onTogglePin={(e: React.MouseEvent) => {
+                                      e.stopPropagation();
+                                      toggleFixada(estado.config.slug);
+                                    }}
+                                    isFocoPrincipal={isFocoPrincipal(estado.config.slug)}
+                                    onToggleFocoPrincipal={(e: React.MouseEvent) => {
+                                      e.stopPropagation();
+                                      toggleFocoPrincipal(estado.config.slug);
+                                    }}
+                                  />
+                                ))}
+                              </SortableContext>
+                            </div>
+                          </DndContext>
+                          {showVerMaisMaterias && (
+                            <button
+                              onClick={() => setVisibleLimitFocoMaterias(prev => prev + 6)}
+                              className="w-full mb-4 py-2.5 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed border-border hover:bg-muted transition-colors"
+                            >
+                              Ver mais matérias ({Math.min(visibleLimitFocoMaterias + 6, filteredFocoMateriasTotal)} de {filteredFocoMateriasTotal})
+                            </button>
+                          )}
                         </div>
-                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndFoco}>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
-                            <SortableContext items={visibleMateriasFoco.map(e => e.config.slug)} strategy={rectSortingStrategy}>
-                              {visibleMateriasFoco.filter(e => !focosPrincipais.includes(e.config.slug)).filter(e => {
-                                if (!normalizedMateriaInline) return true;
-                                const nome = e.config.nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-                                return nome.includes(normalizedMateriaInline);
-                              }).map(estado => (
-                                <SortableItem
-                                  key={estado.config.slug}
-                                  id={estado.config.slug}
-                                  estado={estado}
-                                  onClick={() => handleCardClick(estado)}
-                                  isPinned={isFixada(estado.config.slug)}
-                                  onTogglePin={(e: React.MouseEvent) => {
-                                    e.stopPropagation();
-                                    toggleFixada(estado.config.slug);
-                                  }}
-                                  isFocoPrincipal={isFocoPrincipal(estado.config.slug)}
-                                  onToggleFocoPrincipal={(e: React.MouseEvent) => {
-                                    e.stopPropagation();
-                                    toggleFocoPrincipal(estado.config.slug);
-                                  }}
-                                />
-                              ))}
-                            </SortableContext>
-                          </div>
-                        </DndContext>
-                        {showVerMaisMaterias && (
-                          <button
-                            onClick={() => setVisibleLimitFocoMaterias(prev => prev + 6)}
-                            className="w-full mb-4 py-2.5 rounded-xl text-[13px] font-medium text-muted-foreground border border-dashed border-border hover:bg-muted transition-colors"
-                          >
-                            Ver mais matérias ({Math.min(visibleLimitFocoMaterias + 6, filteredFocoMateriasTotal)} de {filteredFocoMateriasTotal})
-                          </button>
-                        )}
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </>
                 )}
               </>

@@ -90,7 +90,7 @@ Contexto da matéria: ${materiaName} - ${descricaoMateria || ''}`;
 
     // Try to fetch YouTube data if YOUTUBE_API_KEY is available
     const youtubeKey = Deno.env.get("YOUTUBE_API_KEY");
-    let youtube_videos: any[] = [];
+    const youtube_videos: { title: string; thumbnail: string; url: string }[] = [];
     
     if (youtubeKey && parsed.youtube_queries && parsed.youtube_queries.length > 0) {
       try {

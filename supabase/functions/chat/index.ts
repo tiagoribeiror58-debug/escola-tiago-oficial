@@ -272,8 +272,8 @@ serve(async (req) => {
             console.log(`[chat] Tentando modelo: ${modelDef.id} (Provider: ${modelDef.provider})`);
 
             let url = "";
-            let headers: Record<string, string> = { "Content-Type": "application/json" };
-            let body: any = { stream: true };
+            const headers: Record<string, string> = { "Content-Type": "application/json" };
+            const body: Record<string, unknown> = { stream: true };
 
             if (isdeepseek) {
               // Usamos a API compatível com OpenAI do deepseek AI Studio para manter o padrão SSE do frontend!

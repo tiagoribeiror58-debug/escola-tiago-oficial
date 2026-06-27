@@ -41,6 +41,8 @@ export function useReviewFlashcard() {
       let newInterval = 1;
       let newEase = currentEase;
 
+      // SM-2: Progressão padrão dos primeiros acertos é 1d -> 6d -> intervalo * ease
+      // Sem isso, o aluno revisa demais no início (over-reviewing)
       if (rating === 'errado') {
         newInterval = 1;
         newEase = Math.max(1.3, currentEase - 0.2);
@@ -48,9 +50,17 @@ export function useReviewFlashcard() {
         newInterval = Math.max(1, currentInterval * 1.2);
         newEase = Math.max(1.3, currentEase - 0.15);
       } else if (rating === 'bom') {
-        newInterval = Math.max(1, (currentInterval === 0 ? 1 : currentInterval) * currentEase);
+        if (currentInterval <= 1) {
+          newInterval = 6; // Primeiro acerto: pula pra 6 dias
+        } else {
+          newInterval = Math.max(1, currentInterval * currentEase);
+        }
       } else if (rating === 'facil') {
-        newInterval = Math.max(1, (currentInterval === 0 ? 1 : currentInterval) * currentEase * 1.3);
+        if (currentInterval <= 1) {
+          newInterval = 10; // Primeiro acerto fácil: pula mais
+        } else {
+          newInterval = Math.max(1, currentInterval * currentEase * 1.3);
+        }
         newEase = currentEase + 0.15;
       }
 

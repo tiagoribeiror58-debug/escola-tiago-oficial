@@ -189,7 +189,7 @@ export default function Sessao() {
         ? materiaConfig.fases.flatMap(f => f.topicos)
         : (materiaConfig.ementa || []);
         
-      let topicoAtualParaExtrair = ultimaSessao?.proximo_topico || ultimaSessao?.topico || '';
+      const topicoAtualParaExtrair = ultimaSessao?.proximo_topico || ultimaSessao?.topico || '';
       
       // Usa a mesma lógica determinística do buildPrompt para saber qual foi o tópico DESTA sessão
       const resultadoDeterministico = resolverTopicoAtual(ementaFlat, ementaConcluida);
