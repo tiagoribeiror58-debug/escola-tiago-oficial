@@ -34,8 +34,9 @@ export default function Curiosidades() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
+  const [batchSize, setBatchSize] = useState<number>(3);
 
-  const fetchCuriosidades = async (count: number = 3, overrideTema?: string, currentList: CuriosidadeData[] = curiosidades) => {
+  const fetchCuriosidades = async (count: number, overrideTema?: string, currentList: CuriosidadeData[] = curiosidades) => {
     try {
       const temaToSend = (overrideTema || temaEspecifico) === "todos" ? null : (overrideTema || temaEspecifico);
       const temasRecentes = currentList.map(c => c.tema);
@@ -70,13 +71,13 @@ export default function Curiosidades() {
 
   const loadInitial = async () => {
     setIsLoading(true);
-    await fetchCuriosidades(3, "todos", []);
+    await fetchCuriosidades(batchSize, "todos", []);
     setIsLoading(false);
   };
 
   const loadMore = async () => {
     setIsLoadingMore(true);
-    await fetchCuriosidades(3);
+    await fetchCuriosidades(batchSize);
     setIsLoadingMore(false);
   };
 
@@ -84,7 +85,16 @@ export default function Curiosidades() {
     setTemaEspecifico(val);
     setCuriosidades([]);
     setIsLoading(true);
-    await fetchCuriosidades(3, val, []);
+    await fetchCuriosidades(batchSize, val, []);
+    setIsLoading(false);
+  };
+
+  const handleBatchSizeChange = async (val: string) => {
+    const newSize = parseInt(val, 10);
+    setBatchSize(newSize);
+    setCuriosidades([]);
+    setIsLoading(true);
+    await fetchCuriosidades(newSize, temaEspecifico, []);
     setIsLoading(false);
   };
 
@@ -109,17 +119,29 @@ export default function Curiosidades() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-2 max-w-[200px] sm:max-w-[300px] w-full">
-            <Filter className="w-4 h-4 text-muted-foreground shrink-0" />
-            <Select value={temaEspecifico} onValueChange={handleTemaChange}>
-              <SelectTrigger className="h-9 w-full bg-muted/30 border-border/50">
-                <SelectValue placeholder="Filtrar por tema..." />
+          <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[280px] sm:max-w-[450px] w-full">
+            <div className="flex items-center gap-2 w-full">
+              <Filter className="w-4 h-4 text-muted-foreground shrink-0" />
+              <Select value={temaEspecifico} onValueChange={handleTemaChange}>
+                <SelectTrigger className="h-9 w-full bg-muted/30 border-border/50">
+                  <SelectValue placeholder="Filtrar por tema..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todos">Todos os Temas</SelectItem>
+                  {ALL_SUBJECTS.map(sub => (
+                    <SelectItem key={sub} value={sub}>{sub}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Select value={batchSize.toString()} onValueChange={handleBatchSizeChange}>
+              <SelectTrigger className="h-9 w-24 bg-muted/30 border-border/50 shrink-0">
+                <SelectValue placeholder="Qtd" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="todos">Todos os Temas</SelectItem>
-                {ALL_SUBJECTS.map(sub => (
-                  <SelectItem key={sub} value={sub}>{sub}</SelectItem>
-                ))}
+                <SelectItem value="3">3 itens</SelectItem>
+                <SelectItem value="6">6 itens</SelectItem>
+                <SelectItem value="9">9 itens</SelectItem>
               </SelectContent>
             </Select>
           </div>

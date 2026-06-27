@@ -50,6 +50,7 @@ export default function Resumos() {
   const navigate = useNavigate();
   const [resumos, setResumos] = useState<ResumoItem[]>([]);
   const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
+  const [batchSize, setBatchSize] = useState<number>(3);
 
   const getRandomTopics = (count: number, filterTema: string) => {
     let pool = ALL_TOPICS;
@@ -66,16 +67,22 @@ export default function Resumos() {
   };
 
   const loadInitial = () => {
-    setResumos(getRandomTopics(3, temaEspecifico));
+    setResumos(getRandomTopics(batchSize, temaEspecifico));
   };
 
   const loadMore = () => {
-    setResumos(prev => [...prev, ...getRandomTopics(3, temaEspecifico)]);
+    setResumos(prev => [...prev, ...getRandomTopics(batchSize, temaEspecifico)]);
   };
 
   const handleTemaChange = (val: string) => {
     setTemaEspecifico(val);
-    setResumos(getRandomTopics(3, val));
+    setResumos(getRandomTopics(batchSize, val));
+  };
+
+  const handleBatchSizeChange = (val: string) => {
+    const newSize = parseInt(val, 10);
+    setBatchSize(newSize);
+    setResumos(getRandomTopics(newSize, temaEspecifico));
   };
 
   useEffect(() => {
@@ -99,17 +106,29 @@ export default function Resumos() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-2 max-w-[200px] sm:max-w-[300px] w-full">
-            <Filter className="w-4 h-4 text-muted-foreground shrink-0" />
-            <Select value={temaEspecifico} onValueChange={handleTemaChange}>
-              <SelectTrigger className="h-9 w-full bg-muted/30 border-border/50">
-                <SelectValue placeholder="Filtrar por tema..." />
+          <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[280px] sm:max-w-[450px] w-full">
+            <div className="flex items-center gap-2 w-full">
+              <Filter className="w-4 h-4 text-muted-foreground shrink-0" />
+              <Select value={temaEspecifico} onValueChange={handleTemaChange}>
+                <SelectTrigger className="h-9 w-full bg-muted/30 border-border/50">
+                  <SelectValue placeholder="Filtrar por tema..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todos">Todos os Temas</SelectItem>
+                  {ALL_SUBJECTS.map(sub => (
+                    <SelectItem key={sub} value={sub}>{sub}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Select value={batchSize.toString()} onValueChange={handleBatchSizeChange}>
+              <SelectTrigger className="h-9 w-24 bg-muted/30 border-border/50 shrink-0">
+                <SelectValue placeholder="Qtd" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="todos">Todos os Temas</SelectItem>
-                {ALL_SUBJECTS.map(sub => (
-                  <SelectItem key={sub} value={sub}>{sub}</SelectItem>
-                ))}
+                <SelectItem value="3">3 itens</SelectItem>
+                <SelectItem value="6">6 itens</SelectItem>
+                <SelectItem value="9">9 itens</SelectItem>
               </SelectContent>
             </Select>
           </div>
