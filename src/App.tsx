@@ -12,6 +12,7 @@ import Notas from "./pages/Notas.tsx";
 import Auth from "./pages/Auth.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Curiosidades from "./pages/Curiosidades.tsx";
+import Resumos from "./pages/Resumos.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { FloatingChatProvider } from "./contexts/FloatingChatContext.tsx";
 import { FloatingChatWidget } from "./components/FloatingChatWidget.tsx";
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
             <Route path="/notas" element={<ProtectedRoute><Notas /></ProtectedRoute>} />
             <Route path="/curiosidades" element={<ProtectedRoute><Curiosidades /></ProtectedRoute>} />
+            <Route path="/resumos" element={<ProtectedRoute><Resumos /></ProtectedRoute>} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>

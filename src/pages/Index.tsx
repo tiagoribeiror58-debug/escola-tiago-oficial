@@ -527,6 +527,13 @@ export default function Index() {
                 >
                   Explorar Feed de Curiosidades
                 </Link>
+                <Link 
+                  to="/resumos" 
+                  className="flex items-center justify-center gap-2 w-full py-3 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 rounded-2xl text-sm font-medium transition-all text-emerald-600 dark:text-emerald-400 shadow-sm"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  Feed de Resumos de Tópicos
+                </Link>
               </div>
             )}
           </div>
