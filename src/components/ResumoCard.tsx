@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { BookOpen, Loader2, ArrowUp, ArrowRight, BrainCircuit } from 'lucide-react';
+import { BookOpen, Loader2, ArrowUp, ArrowRight, BrainCircuit, Bookmark } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { getMateriaBySlug } from '@/lib/materias';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -23,9 +24,11 @@ export function ResumoCard({ materiaSlug, topico }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [summary, setSummary] = useState('');
   const [isGeneratingCards, setIsGeneratingCards] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
 
   const materia = getMateriaBySlug(materiaSlug);
   const materiaName = materia?.nome || materiaSlug;
@@ -117,6 +120,46 @@ export function ResumoCard({ materiaSlug, topico }: Props) {
     navigate(`/?materia=${materiaSlug}&sub=${encodeURIComponent(topico)}`);
   };
 
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const chatTranscript = messages.map(m => `${m.role === 'user' ? '👤 Você' : '🤖 IA'}: ${m.content}`).join('\n\n');
+      const aiComplementStr = messages.length > 0 
+        ? `*Resumo Original:*\n${summary}\n\n*Discussão:*\n${chatTranscript}`
+        : summary;
+
+      const userReflectionStr = messages.length > 0 
+        ? `Discussão sobre: ${topico}` 
+        : `Tópico: ${topico}`;
+
+      const { error } = await supabase
+        .from('study_notes')
+        .insert({
+          materia_slug: materiaSlug,
+          topico: topico,
+          user_reflection: userReflectionStr,
+          ai_complement: aiComplementStr
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Salvo com sucesso!",
+        description: "O resumo do tópico foi salvo no seu Caderno.",
+      });
+      queryClient.invalidateQueries({ queryKey: ['study_notes'] });
+    } catch (e) {
+      console.error("Erro ao salvar", e);
+      toast({
+        title: "Falha ao salvar",
+        description: "Tente novamente mais tarde.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleGenerateFlashcards = async () => {
     if (!summary || isGeneratingCards) return;
     setIsGeneratingCards(true);
@@ -199,7 +242,9 @@ export function ResumoCard({ materiaSlug, topico }: Props) {
 
         <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium flex-1">
           {summary ? (
-            <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none">{summary}</ReactMarkdown>
+            <div className="prose prose-sm dark:prose-invert max-w-none">
+              <ReactMarkdown>{summary}</ReactMarkdown>
+            </div>
           ) : (
              <div className="flex items-center gap-2 text-muted-foreground">
                <Loader2 className="w-4 h-4 animate-spin" /> Gerando resumo...
@@ -218,7 +263,9 @@ export function ResumoCard({ materiaSlug, topico }: Props) {
                     "inline-block px-3 py-2 rounded-2xl max-w-[85%] text-left",
                     msg.role === 'user' ? "bg-emerald-500 text-white rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm"
                   )}>
-                    <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none prose-p:my-0 prose-p:leading-snug">{cleanContent}</ReactMarkdown>
+                    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-0 prose-p:leading-snug">
+                      <ReactMarkdown>{cleanContent}</ReactMarkdown>
+                    </div>
                   </div>
                 </div>
               );
@@ -260,10 +307,12 @@ export function ResumoCard({ materiaSlug, topico }: Props) {
 
         <div className="flex items-center gap-2 mt-2">
           <button
-            onClick={handleStudy}
-            className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 rounded-xl text-sm font-medium transition-all shadow-sm"
+            onClick={handleSave}
+            disabled={!summary || isSaving}
+            className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
           >
-            Estudo Completo <ArrowRight className="w-4 h-4" />
+            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bookmark className="w-4 h-4" />}
+            Caderno
           </button>
           <button
             onClick={handleGenerateFlashcards}
@@ -274,6 +323,12 @@ export function ResumoCard({ materiaSlug, topico }: Props) {
             Flashcards
           </button>
         </div>
+        <button
+          onClick={handleStudy}
+          className="flex items-center justify-center gap-2 w-full py-2.5 bg-background border border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 rounded-xl text-sm font-medium transition-all shadow-sm mt-1"
+        >
+          Estudo Completo <ArrowRight className="w-4 h-4" />
+        </button>
       </div>
     </div>
   );

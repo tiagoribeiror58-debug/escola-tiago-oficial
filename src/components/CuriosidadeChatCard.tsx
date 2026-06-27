@@ -265,7 +265,9 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
                     "inline-block px-3 py-2 rounded-2xl max-w-[85%] text-left",
                     msg.role === 'user' ? "bg-indigo-500 text-white rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm"
                   )}>
-                    <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none prose-p:my-0 prose-p:leading-snug">{cleanContent}</ReactMarkdown>
+                    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-0 prose-p:leading-snug">
+                      <ReactMarkdown>{cleanContent}</ReactMarkdown>
+                    </div>
                   </div>
                 </div>
               );
