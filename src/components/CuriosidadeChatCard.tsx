@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Lightbulb, Bookmark, Loader2, ArrowUp } from 'lucide-react';
+import { Lightbulb, Bookmark, Loader2, ArrowUp, BrainCircuit } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
@@ -23,6 +23,7 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isGeneratingCards, setIsGeneratingCards] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -166,6 +167,67 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
     }
   };
 
+  const handleGenerateFlashcards = async () => {
+    if (isGeneratingCards) return;
+    setIsGeneratingCards(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/gerar-flashcards`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ 
+          materia_slug: 'Curiosidades', 
+          topico: curiosidade.tema, 
+          texto_fonte: curiosidade.texto
+        }),
+      });
+
+      if (!response.ok) throw new Error("Falha na geração de flashcards");
+
+      const data = await response.json();
+      const flashcards = data.flashcards;
+
+      if (flashcards && flashcards.length > 0) {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        const inserts = flashcards.map((fc: any) => ({
+          user_id: user?.id,
+          materia_slug: 'Curiosidades',
+          topico: curiosidade.tema,
+          front: fc.front,
+          back: fc.back,
+        }));
+
+        const { error } = await supabase.from('flashcards').insert(inserts);
+        if (error) throw error;
+
+        toast({
+          title: "Flashcards Extraídos!",
+          description: `${flashcards.length} cartões foram enviados para a sua memória de longo prazo.`,
+        });
+      } else {
+        toast({
+          title: "Aviso",
+          description: "A IA não conseguiu extrair flashcards deste texto.",
+        });
+      }
+    } catch (e) {
+      console.error(e);
+      toast({
+        title: "Erro",
+        description: "Falha ao extrair flashcards.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGeneratingCards(false);
+    }
+  };
+
   return (
     <div className="relative overflow-hidden bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent border border-indigo-500/20 rounded-[2rem] p-6 shadow-sm flex flex-col gap-4">
       <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
@@ -243,15 +305,25 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
           </button>
         </div>
 
-        {/* Botão Salvar */}
-        <button
-          onClick={handleSave}
-          disabled={isSaving}
-          className="flex items-center justify-center gap-2 w-full py-2.5 bg-background border border-border/50 hover:bg-muted rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50 mt-2"
-        >
-          {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bookmark className="w-4 h-4" />}
-          Salvar no Caderno
-        </button>
+        {/* Botões Finais */}
+        <div className="flex items-center gap-2 mt-2">
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
+          >
+            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bookmark className="w-4 h-4" />}
+            Caderno
+          </button>
+          <button
+            onClick={handleGenerateFlashcards}
+            disabled={isGeneratingCards}
+            className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
+          >
+            {isGeneratingCards ? <Loader2 className="w-4 h-4 animate-spin" /> : <BrainCircuit className="w-4 h-4" />}
+            Flashcards
+          </button>
+        </div>
       </div>
     </div>
   );

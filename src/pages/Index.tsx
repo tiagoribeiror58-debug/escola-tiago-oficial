@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useTodosEstadosFlat, useSessoes, useEmentaConcluida, useMetricasRevisao } from '@/hooks/useSessoes';
+import { usePendingFlashcards } from '@/hooks/useFlashcards';
 import { useMateriasFoco } from '@/hooks/useMateriasFoco';
 import { useMateriasFixadas } from '@/hooks/useMateriasFixadas';
 import { useMateriaFocoPrincipal, PINNED_FOREVER } from '@/hooks/useMateriaFocoPrincipal';
 import MateriaCard from '@/components/MateriaCard';
 import { CuriosidadeCard } from '@/components/CuriosidadeCard';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookOpen, Library, Flame, Play, ChevronRight, ChevronDown, Pin, Star, Rocket } from 'lucide-react';
+import { BookOpen, Library, Flame, Play, ChevronRight, ChevronDown, Pin, Star, Rocket, ArrowRight } from 'lucide-react';
 import { MateriaEstado } from '@/types';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -118,6 +119,7 @@ export default function Index() {
   const { foco, toggleFoco, isFocado } = useMateriasFoco();
   const { focoPrincipal, focosPrincipais, toggleFocoPrincipal, isFocoPrincipal } = useMateriaFocoPrincipal();
   const { data: sessoes } = useSessoes();
+  const { data: flashcards } = usePendingFlashcards();
   const { data: metricasRevisao } = useMetricasRevisao();
   const averageRetention = metricasRevisao && metricasRevisao.length > 0
     ? Math.round(metricasRevisao.reduce((acc, m) => acc + m.score, 0) / metricasRevisao.length)
@@ -507,10 +509,27 @@ export default function Index() {
           </div>
         </div>
 
-        {/* Badges Mobile */}
         <div className="sm:hidden flex items-center gap-2 overflow-x-auto pb-4 mb-4 -mx-4 px-4 scrollbar-none">
           {renderBadges()}
         </div>
+
+        {flashcards && flashcards.length > 0 && (
+          <div 
+            onClick={() => navigate('/flashcards')}
+            className="mb-8 w-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-3xl p-6 sm:p-8 flex items-center justify-between cursor-pointer hover:shadow-lg hover:scale-[1.01] transition-all"
+          >
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold mb-1 flex items-center gap-2">
+                <BrainCircuit className="w-6 h-6" />
+                Memória de Longo Prazo
+              </h2>
+              <p className="text-primary-foreground/90 text-sm sm:text-base">
+                Você tem {flashcards.length} {flashcards.length === 1 ? 'flashcard pendente' : 'flashcards pendentes'} para revisar hoje.
+              </p>
+            </div>
+            <ArrowRight className="w-8 h-8 opacity-50" />
+          </div>
+        )}
 
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 items-start">
           
