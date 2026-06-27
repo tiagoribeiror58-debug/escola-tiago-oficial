@@ -52,8 +52,6 @@ export function SavedCardsDrawer({ type }: { type: 'curiosidades' | 'resumos' })
     }
   };
 
-  };
-
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
