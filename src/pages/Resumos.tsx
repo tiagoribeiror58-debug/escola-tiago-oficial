@@ -9,6 +9,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from '@/integrations/supabase/client';
 import { SavedCardsDrawer } from '@/components/SavedCardsDrawer';
+import { TopicSelector } from '@/components/TopicSelector';
 
 const ALL_MATERIAS_LIST = Array.from(new Set(ALL_TOPICS.map(t => t.materia))).sort();
 const ALL_HUBS_LIST = Array.from(new Set(ALL_TOPICS.flatMap(t => t.hubNomes))).sort();
@@ -35,8 +36,6 @@ export default function Resumos() {
   const [open, setOpen] = useState(false);
   const [batchSize, setBatchSize] = useState<number>(3);
   const [flashcardsInfo, setFlashcardsInfo] = useState<{ all: Set<string>, due: Set<string> }>({ all: new Set(), due: new Set() });
-  const [topicSearchOpen, setTopicSearchOpen] = useState(false);
-  const [topicSearchOpenMore, setTopicSearchOpenMore] = useState(false);
 
   const getAvailableTopicsPool = (filterTema: string, mode: 'materias' | 'hubs', info = flashcardsInfo) => {
     let pool = ALL_TOPICS;
@@ -221,42 +220,11 @@ export default function Resumos() {
             </div>
 
             <div className="flex items-center gap-2 w-full sm:w-[300px] relative">
-              <Popover open={topicSearchOpen} onOpenChange={setTopicSearchOpen}>
-                <PopoverTrigger asChild>
-                  <button
-                    role="combobox"
-                    aria-expanded={topicSearchOpen}
-                    className="flex h-9 w-full items-center justify-between rounded-md border border-border/50 bg-background px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    Tópico específico...
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[300px] sm:w-[400px] max-h-[80vh] p-0" align="end">
-                  <Command>
-                    <CommandInput placeholder="Pesquisar em todos os hubs..." />
-                    <CommandList className="max-h-[60vh] overflow-y-auto">
-                      <CommandEmpty>Nenhum tópico encontrado.</CommandEmpty>
-                      {getGroupedAllTopics().map(([hubName, topics]) => (
-                        <CommandGroup key={hubName} heading={hubName}>
-                          {topics.map((t) => (
-                            <CommandItem
-                              key={`${hubName}-${t.topico}`}
-                              value={t.topico}
-                              onSelect={() => {
-                                loadSpecificTopic(t.materiaSlug, t.topico);
-                                setTopicSearchOpen(false);
-                              }}
-                            >
-                              {t.topico}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      ))}
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+              <TopicSelector 
+                onSelect={(materiaSlug, topico) => {
+                  loadSpecificTopic(materiaSlug, topico);
+                }}
+              />
             </div>
           </div>
         </div>
