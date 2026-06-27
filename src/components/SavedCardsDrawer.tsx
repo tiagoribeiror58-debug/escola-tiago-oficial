@@ -5,19 +5,18 @@ import { Bookmark, Loader2 } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ReactMarkdown from 'react-markdown';
 
-interface Flashcard {
+interface StudyNote {
   id: string;
   topico: string;
-  front: string;
-  back: string;
+  user_reflection: string;
+  ai_complement: string;
   created_at: string;
 }
 
-export function SavedCardsDrawer() {
+export function SavedCardsDrawer({ type }: { type: 'curiosidades' | 'resumos' }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [cards, setCards] = useState<Flashcard[]>([]);
+  const [cards, setCards] = useState<StudyNote[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [revealedCards, setRevealedCards] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (isOpen) {
@@ -30,11 +29,19 @@ export function SavedCardsDrawer() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      const { data, error } = await supabase
-        .from('flashcards')
+      let query = supabase
+        .from('study_notes')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
+      
+      if (type === 'curiosidades') {
+        query = query.eq('materia_slug', 'curiosidades');
+      } else {
+        query = query.neq('materia_slug', 'curiosidades');
+      }
+
+      const { data, error } = await query;
         
       if (error) throw error;
       setCards(data || []);
@@ -45,11 +52,6 @@ export function SavedCardsDrawer() {
     }
   };
 
-  const toggleReveal = (id: string) => {
-    const next = new Set(revealedCards);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    setRevealedCards(next);
   };
 
   return (
@@ -79,9 +81,7 @@ export function SavedCardsDrawer() {
             </div>
           ) : (
             <div className="space-y-6 pb-20">
-              {cards.map(card => {
-                const isRevealed = revealedCards.has(card.id);
-                return (
+              {cards.map(card => (
                   <div key={card.id} className="group relative rounded-xl border border-border/50 bg-card shadow-sm overflow-hidden transition-all hover:shadow-md hover:border-border">
                     <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500/50" />
                     <div className="p-4 sm:p-5">
@@ -89,29 +89,12 @@ export function SavedCardsDrawer() {
                         <span>{card.topico}</span>
                       </div>
                       
-                      <div className="prose prose-sm dark:prose-invert max-w-none mb-4 whitespace-pre-wrap leading-relaxed text-foreground/90 font-medium">
-                        <ReactMarkdown>{card.front}</ReactMarkdown>
+                      <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap leading-relaxed text-foreground/90 font-medium">
+                        <ReactMarkdown>{card.ai_complement}</ReactMarkdown>
                       </div>
-
-                      {isRevealed ? (
-                        <div className="mt-4 pt-4 border-t border-border/50 animate-in slide-in-from-top-2 duration-300">
-                          <div className="text-xs font-semibold uppercase tracking-wider text-emerald-500/80 mb-2">Verso (Resposta)</div>
-                          <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap leading-relaxed text-foreground/80">
-                            <ReactMarkdown>{card.back}</ReactMarkdown>
-                          </div>
-                        </div>
-                      ) : null}
-
-                      <button 
-                        onClick={() => toggleReveal(card.id)}
-                        className="mt-2 w-full py-2 px-4 rounded-lg bg-muted/50 hover:bg-muted text-sm font-medium text-foreground/80 transition-colors border border-border/30"
-                      >
-                        {isRevealed ? "Ocultar Resposta" : "Revelar Resposta (Active Recall)"}
-                      </button>
                     </div>
                   </div>
-                );
-              })}
+                ))}
             </div>
           )}
         </ScrollArea>

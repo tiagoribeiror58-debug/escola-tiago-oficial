@@ -117,7 +117,7 @@ export default function Curiosidades() {
               Explorar Curiosidades
             </h1>
             <div className="ml-2 hidden sm:block">
-              <SavedCardsDrawer />
+              <SavedCardsDrawer type="curiosidades" />
             </div>
           </div>
 

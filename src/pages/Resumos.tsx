@@ -60,6 +60,17 @@ export default function Resumos() {
     return pool;
   };
 
+  const getGroupedAllTopics = () => {
+    const groups: Record<string, typeof ALL_TOPICS> = {};
+    ALL_TOPICS.forEach(t => {
+      t.hubNomes.forEach(hub => {
+        if (!groups[hub]) groups[hub] = [];
+        groups[hub].push(t);
+      });
+    });
+    return Object.entries(groups).sort((a,b) => a[0].localeCompare(b[0]));
+  };
+
   const getRandomTopics = (count: number, filterTema: string, mode: 'materias' | 'hubs', info = flashcardsInfo) => {
     let pool = getAvailableTopicsPool(filterTema, mode, info);
 
@@ -127,7 +138,7 @@ export default function Resumos() {
               Explorar Resumos
             </h1>
             <div className="ml-2 hidden sm:block">
-              <SavedCardsDrawer />
+              <SavedCardsDrawer type="resumos" />
             </div>
           </div>
 
@@ -208,6 +219,45 @@ export default function Resumos() {
                 </PopoverContent>
               </Popover>
             </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-[300px] relative">
+              <Popover open={topicSearchOpen} onOpenChange={setTopicSearchOpen}>
+                <PopoverTrigger asChild>
+                  <button
+                    role="combobox"
+                    aria-expanded={topicSearchOpen}
+                    className="flex h-9 w-full items-center justify-between rounded-md border border-border/50 bg-background px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Tópico específico...
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[300px] sm:w-[400px] max-h-[80vh] p-0" align="end">
+                  <Command>
+                    <CommandInput placeholder="Pesquisar em todos os hubs..." />
+                    <CommandList className="max-h-[60vh] overflow-y-auto">
+                      <CommandEmpty>Nenhum tópico encontrado.</CommandEmpty>
+                      {getGroupedAllTopics().map(([hubName, topics]) => (
+                        <CommandGroup key={hubName} heading={hubName}>
+                          {topics.map((t) => (
+                            <CommandItem
+                              key={`${hubName}-${t.topico}`}
+                              value={t.topico}
+                              onSelect={() => {
+                                loadSpecificTopic(t.materiaSlug, t.topico);
+                                setTopicSearchOpen(false);
+                              }}
+                            >
+                              {t.topico}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      ))}
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
         </div>
       </header>
@@ -233,42 +283,6 @@ export default function Resumos() {
               ))}
             </div>
 
-            <div className="mt-8 pt-8 border-t border-border/50 w-full max-w-md">
-              <p className="text-sm font-medium text-foreground/80 mb-4 uppercase tracking-wider">Ou escolha um tópico específico:</p>
-              <Popover open={topicSearchOpen} onOpenChange={setTopicSearchOpen}>
-                <PopoverTrigger asChild>
-                  <button
-                    role="combobox"
-                    aria-expanded={topicSearchOpen}
-                    className="flex h-10 w-full items-center justify-between rounded-md border border-border/50 bg-background px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    Selecionar tópico manualmente...
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[300px] sm:w-[400px] p-0" align="center">
-                  <Command>
-                    <CommandInput placeholder="Pesquisar tópico..." />
-                    <CommandList>
-                      <CommandEmpty>Nenhum tópico encontrado.</CommandEmpty>
-                      <CommandGroup>
-                        {getAvailableTopicsPool(temaEspecifico, filterMode).slice(0, 100).map((t) => (
-                          <CommandItem
-                            key={t.topico}
-                            value={t.topico}
-                            onSelect={() => {
-                              loadSpecificTopic(t.materiaSlug, t.topico);
-                              setTopicSearchOpen(false);
-                            }}
-                          >
-                            {t.topico}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
             </div>
           </div>
         ) : (
@@ -294,44 +308,6 @@ export default function Resumos() {
                   {qtd}
                 </button>
               ))}
-            </div>
-            
-            <div className="mt-6 pt-6 border-t border-border/30 w-full max-w-sm">
-              <p className="text-xs text-center font-medium text-muted-foreground mb-3 uppercase tracking-wider">Ou escolha um tópico específico:</p>
-              <Popover open={topicSearchOpenMore} onOpenChange={setTopicSearchOpenMore}>
-                <PopoverTrigger asChild>
-                  <button
-                    role="combobox"
-                    aria-expanded={topicSearchOpenMore}
-                    className="flex h-9 w-full items-center justify-between rounded-md border border-border/50 bg-background px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    Selecionar tópico manualmente...
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[300px] sm:w-[400px] p-0" align="center">
-                  <Command>
-                    <CommandInput placeholder="Pesquisar tópico..." />
-                    <CommandList>
-                      <CommandEmpty>Nenhum tópico encontrado.</CommandEmpty>
-                      <CommandGroup>
-                        {getAvailableTopicsPool(temaEspecifico, filterMode).slice(0, 100).map((t) => (
-                          <CommandItem
-                            key={t.topico}
-                            value={t.topico}
-                            onSelect={() => {
-                              loadSpecificTopic(t.materiaSlug, t.topico);
-                              setTopicSearchOpenMore(false);
-                            }}
-                          >
-                            {t.topico}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
             </div>
           </div>
         )}
