@@ -9,7 +9,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DeckCards } from '@/components/DeckCards';
 import { SavedCardsDrawer } from '@/components/SavedCardsDrawer';
+import { TopicSelector } from '@/components/TopicSelector';
 
 const ALL_MATERIAS_LIST = Array.from(new Set(ALL_TOPICS.map(t => t.materia))).sort();
 const ALL_HUBS_LIST = Array.from(new Set(ALL_TOPICS.flatMap(t => t.hubNomes))).sort();
@@ -29,8 +31,11 @@ export default function Curiosidades() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
   const [filterMode, setFilterMode] = useState<'materias' | 'hubs'>('materias');
+  const [ordenacao, setOrdenacao] = useState<'aleatorio' | 'sequencial'>('aleatorio');
   const [open, setOpen] = useState(false);
   const [batchSize, setBatchSize] = useState<number>(3);
+
+
 
   const fetchCuriosidades = async (count: number, overrideTema?: string, currentList: CuriosidadeData[] = curiosidades) => {
     try {
@@ -38,9 +43,15 @@ export default function Curiosidades() {
       const historicoSalvo = JSON.parse(localStorage.getItem('curiosidades_vistas') || '[]');
       const temasRecentes = Array.from(new Set([...historicoSalvo, ...currentList.map(c => c.tema)]));
       
+      let finalCount = count;
+
+      // O backend já cuida da aleatoriedade e o temasRecentes cuida para não repetir,
+      // então mesmo no modo sequencial/aleatório, passamos o temaToSend e deixamos
+      // a IA gerar sem repetir o que já está no histórico.
+      
       const { data, error } = await supabase.functions.invoke('curiosidade-dia', {
         body: { 
-          count,
+          count: finalCount,
           temaEspecifico: temaToSend,
           temasRecentes
         }
@@ -57,9 +68,9 @@ export default function Curiosidades() {
 
       setCuriosidades(prev => {
         const updated = [...prev, ...newItems];
-        // Atualiza histórico de longo prazo com os novos itens
+        // Atualiza histórico de longo prazo sem limite de tamanho
         const novosTemas = newItems.map(c => c.tema);
-        const novoHistorico = Array.from(new Set([...historicoSalvo, ...novosTemas])).slice(-50); // Lembra os últimos 50
+        const novoHistorico = Array.from(new Set([...historicoSalvo, ...novosTemas]));
         localStorage.setItem('curiosidades_vistas', JSON.stringify(novoHistorico));
         return updated;
       });
@@ -98,6 +109,12 @@ export default function Curiosidades() {
     }
   };
 
+  const handleResetHistory = () => {
+    localStorage.removeItem('curiosidades_vistas');
+    setCuriosidades([]);
+    toast({ title: "Histórico zerado", description: "As curiosidades antigas podem aparecer novamente." });
+  };
+
   useEffect(() => {
     // Não carrega mais automaticamente no início
   }, []);
@@ -116,6 +133,13 @@ export default function Curiosidades() {
             <h1 className="text-sm font-semibold tracking-wide text-foreground/90 hidden sm:flex items-center gap-2">
               Explorar Curiosidades
             </h1>
+            <button
+              onClick={handleResetHistory}
+              title="Zerar Histórico de Vistos"
+              className="p-1.5 rounded-full hover:bg-muted/50 text-muted-foreground transition-colors"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
             <div className="ml-2 hidden sm:block">
               <SavedCardsDrawer type="curiosidades" />
             </div>
@@ -134,6 +158,21 @@ export default function Curiosidades() {
                 className={`flex-1 sm:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${filterMode === 'hubs' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Hubs
+              </button>
+            </div>
+
+            <div className="flex bg-muted/50 rounded-lg p-1 w-full sm:w-auto shrink-0 border border-border/50">
+              <button
+                onClick={() => setOrdenacao('aleatorio')}
+                className={`flex-1 sm:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${ordenacao === 'aleatorio' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Aleatório
+              </button>
+              <button
+                onClick={() => setOrdenacao('sequencial')}
+                className={`flex-1 sm:flex-none px-3 py-1.5 text-xs font-medium rounded-md transition-all ${ordenacao === 'sequencial' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+              >
+                Sequencial
               </button>
             </div>
 
@@ -198,6 +237,15 @@ export default function Curiosidades() {
                 </PopoverContent>
               </Popover>
             </div>
+
+            <div className="flex items-center gap-2 w-full sm:w-[300px] relative">
+              <TopicSelector 
+                onSelect={(materiaSlug, topico) => {
+                  setCuriosidades([]);
+                  fetchCuriosidades(1, topico, []);
+                }}
+              />
+            </div>
           </div>
         </div>
       </header>
@@ -224,13 +272,11 @@ export default function Curiosidades() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <DeckCards>
             {curiosidades.map((c, i) => (
-              <div key={i} className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-full" style={{ animationDelay: `${(i % 3) * 100}ms` }}>
-                <CuriosidadeChatCard curiosidade={c} />
-              </div>
+              <CuriosidadeChatCard key={i} curiosidade={c} />
             ))}
-          </div>
+          </DeckCards>
         )}
 
         {isLoading ? (

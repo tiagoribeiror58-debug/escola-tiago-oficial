@@ -8,6 +8,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from '@/integrations/supabase/client';
+import { DeckCards } from '@/components/DeckCards';
 import { SavedCardsDrawer } from '@/components/SavedCardsDrawer';
 import { TopicSelector } from '@/components/TopicSelector';
 
@@ -48,12 +49,16 @@ export default function Resumos() {
       }
     }
     
+    const historicoSalvo = JSON.parse(localStorage.getItem('resumos_vistos') || '[]');
+    const vistosSet = new Set<string>(historicoSalvo);
+
     // Filtro anti-repetição:
-    // Remover tópicos que estão nos flashcards, EXCETO se estiverem vencidos (due)
+    // Remover tópicos que estão nos flashcards ou que já foram vistos, EXCETO se estiverem vencidos (due)
     pool = pool.filter(t => {
       const isSaved = info.all.has(t.topico);
       const isDue = info.due.has(t.topico);
-      if (isSaved && !isDue) return false; // Remove os já aprendidos/não vencidos
+      const isVisto = vistosSet.has(t.topico);
+      if ((isSaved || isVisto) && !isDue) return false; // Remove os já aprendidos/vistos não vencidos
       return true; // Mantém inéditos e vencidos
     });
 
@@ -85,7 +90,15 @@ export default function Resumos() {
       resultList = [...pool].sort(() => 0.5 - Math.random());
     }
     
-    return resultList.slice(0, Math.min(count, resultList.length)).map(t => ({
+    const selectedTopics = resultList.slice(0, Math.min(count, resultList.length));
+    
+    // Adiciona os selecionados ao histórico
+    const historicoSalvo = JSON.parse(localStorage.getItem('resumos_vistos') || '[]');
+    const novosTemas = selectedTopics.map(t => t.topico);
+    const novoHistorico = Array.from(new Set([...historicoSalvo, ...novosTemas]));
+    localStorage.setItem('resumos_vistos', JSON.stringify(novoHistorico));
+
+    return selectedTopics.map(t => ({
       materiaSlug: t.materiaSlug,
       topico: t.topico,
       isFlashcardDue: info.due.has(t.topico)
@@ -113,6 +126,13 @@ export default function Resumos() {
       setResumos(getTopics(batchSize, val, mode, flashcardsInfo, ordenacao, []));
     } else {
       setResumos([]);
+    }
+  };
+
+  const handleResetHistory = () => {
+    localStorage.removeItem('resumos_vistos');
+    if (resumos.length > 0) {
+      setResumos(getTopics(batchSize, temaEspecifico, filterMode, flashcardsInfo, ordenacao, []));
     }
   };
 
@@ -152,6 +172,13 @@ export default function Resumos() {
             <h1 className="text-sm font-semibold tracking-wide text-foreground/90 hidden sm:flex items-center gap-2">
               Explorar Resumos
             </h1>
+            <button
+              onClick={handleResetHistory}
+              title="Zerar Histórico de Vistos"
+              className="p-1.5 rounded-full hover:bg-muted/50 text-muted-foreground transition-colors"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
             <div className="ml-2 hidden sm:block">
               <SavedCardsDrawer type="resumos" />
             </div>
@@ -284,13 +311,11 @@ export default function Resumos() {
 
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          <DeckCards>
             {resumos.map((r, i) => (
-              <div key={`${r.materiaSlug}-${r.topico}-${i}`} className="animate-in fade-in slide-in-from-bottom-4 duration-700 h-full" style={{ animationDelay: `${(i % 3) * 100}ms` }}>
-                <ResumoCard materiaSlug={r.materiaSlug} topico={r.topico} isFlashcardDue={r.isFlashcardDue} />
-              </div>
+              <ResumoCard key={`${r.materiaSlug}-${r.topico}-${i}`} materiaSlug={r.materiaSlug} topico={r.topico} isFlashcardDue={r.isFlashcardDue} />
             ))}
-          </div>
+          </DeckCards>
         )}
 
         {resumos.length > 0 && (
