@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, ChevronsUpDown, Check, ListTree, Loader2, Plus } from 'lucide-react';
+import { ArrowLeft, ChevronsUpDown, Check, ListTree, Loader2, Plus, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ResumoCard } from '@/components/ResumoCard';
 import { ALL_TOPICS, MATERIAS } from '@/lib/materias';
@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { supabase } from '@/integrations/supabase/client';
-import { DeckCards } from '@/components/DeckCards';
+
 import { SavedCardsDrawer } from '@/components/SavedCardsDrawer';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { TopicTreeMenu } from '@/components/TopicTreeMenu';
@@ -147,6 +147,10 @@ export default function Resumos() {
     setSheetOpen(false);
   };
 
+  const removeCard = (indexToRemove: number) => {
+    setResumos(prev => prev.filter((_, i) => i !== indexToRemove));
+  };
+
   const handleNextSequential = (materiaSlug: string, topicoAtual: string) => {
     const pool = ALL_TOPICS.filter(t => t.materiaSlug === materiaSlug);
     const currIdx = pool.findIndex(t => t.topico === topicoAtual);
@@ -191,7 +195,7 @@ export default function Resumos() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col selection:bg-emerald-500/20 pb-20">
+    <div className="min-h-screen w-full bg-background flex flex-col selection:bg-emerald-500/20 pb-20">
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
@@ -234,6 +238,7 @@ export default function Resumos() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[250px] sm:max-w-[420px] w-full">
+
             <div className="flex bg-muted/50 rounded-lg p-1 w-full sm:w-auto shrink-0 border border-border/50">
               <button
                 onClick={() => { setFilterMode('materias'); setTemaEspecifico('todos'); handleSearch('todos', 'materias'); }}
@@ -351,17 +356,44 @@ export default function Resumos() {
             </div>
           </div>
         ) : (
-          <DeckCards>
-            {resumos.map((r, i) => (
-              <ResumoCard 
-                key={`${r.materiaSlug}-${r.topico}-${i}`} 
-                materiaSlug={r.materiaSlug} 
-                topico={r.topico} 
-                isFlashcardDue={r.isFlashcardDue}
-                onNextSequentialTopic={() => handleNextSequential(r.materiaSlug, r.topico)}
-              />
-            ))}
-          </DeckCards>
+          <div className="flex flex-col gap-8 pb-32">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 animate-in fade-in duration-500 items-start">
+              {resumos.map((r, i) => (
+                <div key={`${r.materiaSlug}-${r.topico}-${i}`} className="relative group max-w-2xl mx-auto w-full">
+                  <button 
+                    onClick={() => removeCard(i)}
+                    className="absolute -top-3 -right-3 z-10 w-8 h-8 bg-background border border-border/50 text-muted-foreground hover:text-destructive rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:scale-110"
+                    title="Esconder card"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                  <div className="h-[750px] rounded-[2rem] shadow-xl overflow-hidden bg-background border border-border/50">
+                    <ResumoCard 
+                      materiaSlug={r.materiaSlug} 
+                      topico={r.topico} 
+                      isFlashcardDue={r.isFlashcardDue}
+                      onNextSequentialTopic={() => handleNextSequential(r.materiaSlug, r.topico)}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+              <div className="flex items-center gap-3 bg-background/90 backdrop-blur-md p-3 rounded-full border border-border/50 shadow-xl">
+                <span className="text-xs font-semibold text-muted-foreground pl-3 pr-1 uppercase tracking-wider hidden sm:block">Gerar +</span>
+                {[1, 2, 3, 4, 5].map((qtd) => (
+                  <button
+                    key={qtd}
+                    onClick={() => loadMore(qtd)}
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-muted/50 hover:bg-primary hover:text-primary-foreground border border-border/50 transition-all flex items-center justify-center text-sm sm:text-base font-semibold shadow-sm hover:scale-105"
+                  >
+                    {qtd}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </div>

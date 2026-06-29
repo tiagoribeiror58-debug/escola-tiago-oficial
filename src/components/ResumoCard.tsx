@@ -409,46 +409,56 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
             {isLoading && !summary ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
           </button>
           <button
-            onClick={handleMarkAsDone}
-            disabled={!summary || isMarkingDone}
-            title="Marcar como Concluído"
-            className="flex items-center justify-center p-2.5 bg-background border border-border/50 hover:bg-emerald-500/20 text-emerald-500 rounded-xl transition-all shadow-sm disabled:opacity-50 shrink-0"
-          >
-            {isMarkingDone ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-          </button>
-          <button
             onClick={handleSave}
-            disabled={!summary || isSaving}
-            className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
+            disabled={!summary || isSaving || isSavedToNotebook}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm border",
+              isSavedToNotebook
+                ? "bg-muted text-muted-foreground border-border/50 cursor-default"
+                : "bg-background border-border/50 hover:bg-muted text-foreground disabled:opacity-50"
+            )}
           >
             {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bookmark className="w-4 h-4" />}
-            Caderno
+            {isSavedToNotebook ? "Salvo" : "Caderno"}
           </button>
+          
           <button
             onClick={handleGenerateFlashcards}
-            disabled={!summary || isGeneratingCards}
-            className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
+            disabled={!summary || isGeneratingCards || flashcardsCreated}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm border",
+              flashcardsCreated 
+                ? "bg-muted text-muted-foreground border-border/50 cursor-default" 
+                : "bg-background border-border/50 hover:bg-muted text-foreground disabled:opacity-50"
+            )}
           >
             {isGeneratingCards ? <Loader2 className="w-4 h-4 animate-spin" /> : <BrainCircuit className="w-4 h-4" />}
             Flashcards
           </button>
-        </div>
-        <div className="flex items-center gap-2 mt-1">
+          
           <button
-            onClick={handleStudy}
-            className="flex flex-1 items-center justify-center gap-2 py-2.5 bg-background border border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 rounded-xl text-sm font-medium transition-all shadow-sm"
+            onClick={handleMarkAsDone}
+            disabled={!summary || isMarkingDone || isDone}
+            title={isDone ? "Já marcado como concluído" : "Marcar como Concluído"}
+            className={cn(
+              "flex items-center justify-center p-2.5 rounded-xl transition-all shadow-sm border shrink-0",
+              isDone
+                ? "bg-muted text-muted-foreground border-border/50 cursor-default"
+                : "bg-background border-border/50 hover:bg-muted text-foreground disabled:opacity-50"
+            )}
           >
-            Estudo
+            {isMarkingDone ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
           </button>
-          {onNextSequentialTopic && (
-            <button
-              onClick={onNextSequentialTopic}
-              className="flex flex-1 items-center justify-center gap-2 py-2.5 bg-emerald-500 text-white hover:bg-emerald-600 rounded-xl text-sm font-medium transition-all shadow-sm"
-            >
-              Próximo <ArrowRight className="w-4 h-4" />
-            </button>
-          )}
         </div>
+
+        {onNextSequentialTopic && (
+          <button
+            onClick={onNextSequentialTopic}
+            className="flex items-center justify-center gap-2 w-full py-2.5 bg-primary/90 hover:bg-primary text-primary-foreground rounded-xl text-sm font-semibold transition-all shadow-sm mt-1"
+          >
+            Próximo <ArrowRight className="w-4 h-4" />
+          </button>
+        )}
       </div>
     </div>
   );

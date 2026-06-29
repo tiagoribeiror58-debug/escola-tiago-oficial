@@ -15,13 +15,7 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
   const [expandedMaterias, setExpandedMaterias] = useState<Set<string>>(new Set());
   const [cachedTopics, setCachedTopics] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
-  const [favoriteHubs, setFavoriteHubs] = useState<string[]>(() => {
-    try {
-      return JSON.parse(localStorage.getItem('favorite_hubs') || '[]');
-    } catch {
-      return [];
-    }
-  });
+  const [favoriteHubs, setFavoriteHubs] = useState<string[]>([]);
 
   // Fetch cached topics
   useEffect(() => {
@@ -29,15 +23,24 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return;
 
-      const { data } = await supabase
+      const { data: cacheData } = await supabase
         .from('ai_content_cache')
         .select('materia_slug, topico')
         .eq('tipo', tipo)
         .eq('user_id', session.user.id);
       
-      if (data) {
-        const cacheSet = new Set(data.map(d => `${d.materia_slug}:${d.topico}`));
+      if (cacheData) {
+        const cacheSet = new Set(cacheData.map(d => `${d.materia_slug}:${d.topico}`));
         setCachedTopics(cacheSet);
+      }
+
+      const { data: favs } = await supabase
+        .from('favorite_hubs')
+        .select('hub_name')
+        .eq('user_id', session.user.id);
+      
+      if (favs) {
+        setFavoriteHubs(favs.map(f => f.hub_name));
       }
     };
 
@@ -114,15 +117,25 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
     });
   };
 
-  const toggleFavoriteHub = (hubName: string, e: React.MouseEvent) => {
+  const toggleFavoriteHub = async (hubName: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return;
+    
+    const isFavorite = favoriteHubs.includes(hubName);
+    
     setFavoriteHubs(prev => {
-      const next = prev.includes(hubName)
+      return isFavorite
         ? prev.filter(h => h !== hubName)
         : [...prev, hubName];
-      localStorage.setItem('favorite_hubs', JSON.stringify(next));
-      return next;
     });
+
+    if (isFavorite) {
+      await supabase.from('favorite_hubs').delete().match({ user_id: session.user.id, hub_name: hubName });
+    } else {
+      await supabase.from('favorite_hubs').insert({ user_id: session.user.id, hub_name: hubName });
+    }
   };
 
   const toggleMateria = (materia: string) => {

@@ -432,10 +432,10 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
             onClick={handleSave}
             disabled={!summary || isSaving || isSavedToNotebook}
             className={cn(
-              "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm",
+              "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm border",
               isSavedToNotebook
-                ? "bg-amber-500 text-white cursor-default"
-                : "bg-background border border-border/50 hover:bg-amber-500/10 text-amber-500 disabled:opacity-50"
+                ? "bg-muted text-muted-foreground border-border/50 cursor-default"
+                : "bg-background border-border/50 hover:bg-muted text-foreground disabled:opacity-50"
             )}
           >
             {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bookmark className="w-4 h-4" />}
@@ -446,10 +446,10 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
             onClick={handleGenerateFlashcards}
             disabled={!summary || isGeneratingCards || flashcardsCreated}
             className={cn(
-              "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm",
+              "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm border",
               flashcardsCreated 
-                ? "bg-indigo-500 text-white cursor-default" 
-                : "bg-background border border-border/50 hover:bg-indigo-500/10 text-indigo-500 disabled:opacity-50"
+                ? "bg-muted text-muted-foreground border-border/50 cursor-default" 
+                : "bg-background border-border/50 hover:bg-muted text-foreground disabled:opacity-50"
             )}
           >
             {isGeneratingCards ? <Loader2 className="w-4 h-4 animate-spin" /> : <BrainCircuit className="w-4 h-4" />}
@@ -461,10 +461,10 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
             disabled={!summary || isMarkingDone || isDone}
             title={isDone ? "Já marcado como concluído" : "Marcar como Concluído"}
             className={cn(
-              "flex items-center justify-center p-2.5 rounded-xl transition-all shadow-sm shrink-0",
+              "flex items-center justify-center p-2.5 rounded-xl transition-all shadow-sm border shrink-0",
               isDone
-                ? "bg-emerald-500 text-white cursor-default"
-                : "bg-background border border-border/50 hover:bg-emerald-500/20 text-emerald-500 disabled:opacity-50"
+                ? "bg-muted text-muted-foreground border-border/50 cursor-default"
+                : "bg-background border-border/50 hover:bg-muted text-foreground disabled:opacity-50"
             )}
           >
             {isMarkingDone ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
@@ -474,7 +474,7 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
         {onNextSequentialTopic && (
           <button
             onClick={onNextSequentialTopic}
-            className="flex items-center justify-center gap-2 w-full py-2.5 bg-indigo-500 text-white hover:bg-indigo-600 rounded-xl text-sm font-medium transition-all shadow-sm mt-1"
+            className="flex items-center justify-center gap-2 w-full py-2.5 bg-primary/90 hover:bg-primary text-primary-foreground rounded-xl text-sm font-semibold transition-all shadow-sm mt-1"
           >
             Próxima Curiosidade <ArrowRight className="w-4 h-4" />
           </button>
