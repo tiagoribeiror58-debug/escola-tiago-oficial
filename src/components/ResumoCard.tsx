@@ -28,6 +28,9 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
   const [isSaving, setIsSaving] = useState(false);
   const [isGeneratingCards, setIsGeneratingCards] = useState(false);
   const [isMarkingDone, setIsMarkingDone] = useState(false);
+  const [isSavedToNotebook, setIsSavedToNotebook] = useState(false);
+  const [flashcardsCreated, setFlashcardsCreated] = useState(false);
+  const [isDone, setIsDone] = useState(false);
   const [hasRevealed, setHasRevealed] = useState(!isFlashcardDue);
   const [recallAnswer, setRecallAnswer] = useState('');
   const { toast } = useToast();
@@ -179,9 +182,10 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
       if (error) throw error;
 
       toast({
-        title: "Salvo com sucesso!",
-        description: "O resumo do tópico foi salvo no seu Caderno.",
+        title: "Salvo no Caderno",
+        description: "Você pode ver este resumo na página de Notas.",
       });
+      setIsSavedToNotebook(true);
       queryClient.invalidateQueries({ queryKey: ['study_notes'] });
     } catch (e) {
       console.error("Erro ao salvar", e);
@@ -219,6 +223,7 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
         title: "Concluído!",
         description: "Tópico marcado como visto e salvo no banco.",
       });
+      setIsDone(true);
     } catch (e) {
       console.error(e);
       toast({
@@ -262,9 +267,10 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
         if (error) throw error;
 
         toast({
-          title: "Flashcards Extraídos!",
-          description: `A IA fatiou o texto e extraiu ${flashcards.length} cartões curtos para sua memória.`,
+          title: "Flashcards Gerados",
+          description: `Foram criados ${flashcards.length} cards para revisão.`,
         });
+        setFlashcardsCreated(true);
       } else {
         toast({
           title: "Aviso",
