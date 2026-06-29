@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -71,6 +72,35 @@ Regras absolutas:
 
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content?.trim() || "";
+
+    // Salvar no cache do banco de dados apenas se for o resumo inicial (não um chat)
+    if (!isChat) {
+      const supabaseClient = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+        { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
+      );
+
+      const { data: userData } = await supabaseClient.auth.getUser();
+      if (userData?.user) {
+        // Encontrar o materia_slug correto (usamos o nome recebido, podemos normalizar para slug ou salvar como text mesmo,
+        // no frontend normalizamos). Aqui vamos salvar o nome exato recebido.
+        const materia_slug = materia.toLowerCase().replace(/\\s+/g, '-');
+        
+        await supabaseClient
+          .from('ai_content_cache')
+          .upsert(
+            { 
+              user_id: userData.user.id,
+              materia_slug: materia_slug,
+              topico: topico,
+              tipo: 'resumo',
+              content: content 
+            },
+            { onConflict: 'user_id, materia_slug, topico, tipo' }
+          );
+      }
+    }
 
     return new Response(JSON.stringify({ texto: content }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

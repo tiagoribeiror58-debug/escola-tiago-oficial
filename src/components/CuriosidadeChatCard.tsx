@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Lightbulb, Bookmark, Loader2, ArrowUp, BrainCircuit } from 'lucide-react';
+import { Lightbulb, Bookmark, Loader2, ArrowUp, BrainCircuit, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import ReactMarkdown from 'react-markdown';
+import { getMateriaBySlug } from '@/lib/materias';
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -12,21 +13,87 @@ interface ChatMessage {
 }
 
 interface Props {
-  curiosidade: {
-    tema: string;
-    texto: string;
-  };
+  materiaSlug: string;
+  topico: string;
 }
 
-export function CuriosidadeChatCard({ curiosidade }: Props) {
+export function CuriosidadeChatCard({ materiaSlug, topico }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isGeneratingCards, setIsGeneratingCards] = useState(false);
+  const [summary, setSummary] = useState('');
+  
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  const materia = getMateriaBySlug(materiaSlug);
+  const materiaName = materia?.nome || materiaSlug;
+
+  const fetchInitialCuriosity = async (forceRegenerate = false) => {
+    try {
+      setIsLoading(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!forceRegenerate && session?.user) {
+        // Tentar ler do cache primeiro
+        const { data: cacheData } = await supabase
+          .from('ai_content_cache')
+          .select('content')
+          .eq('user_id', session.user.id)
+          .eq('materia_slug', materiaSlug.toLowerCase().replace(/\s+/g, '-'))
+          .eq('topico', topico)
+          .eq('tipo', 'curiosidade')
+          .maybeSingle();
+
+        if (cacheData && cacheData.content) {
+          setSummary(cacheData.content);
+          setIsLoading(false);
+          return;
+        }
+      }
+
+      // Se não achou ou forçou, chama a IA
+      const response = await supabase.functions.invoke('curiosidade-dia', {
+        body: { 
+          count: 1,
+          materiaSlug,
+          topico
+        }
+      });
+
+      if (response.error) throw response.error;
+
+      const data = response.data;
+      if (data && Array.isArray(data)) {
+        setSummary(data[0].texto);
+      } else if (data && data.texto) {
+        setSummary(data.texto);
+      } else {
+        setSummary("Não foi possível gerar a curiosidade.");
+      }
+    } catch (e) {
+      console.error(e);
+      setSummary("Não foi possível carregar a curiosidade no momento.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setSummary('');
+    setMessages([]);
+    setIsLoading(true);
+    fetchInitialCuriosity();
+  }, [materiaSlug, topico]);
+
+  const handleRegenerate = () => {
+    setSummary('');
+    setMessages([]);
+    fetchInitialCuriosity(true);
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -47,7 +114,7 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-      const systemPrompt = `O usuário acabou de ler a seguinte curiosidade sobre o tema "${curiosidade.tema}": "${curiosidade.texto}". 
+      const systemPrompt = `O usuário acabou de ler a seguinte curiosidade sobre o tema "${topico}": "${summary}". 
       Sua missão é responder de forma ultra-concisa (máx 1 ou 2 parágrafos) a qualquer pergunta ou comentário sobre essa curiosidade. Seja um especialista instigante. NUNCA RETORNE <chips>.`;
 
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`, {
@@ -132,18 +199,18 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
     try {
       const chatTranscript = messages.map(m => `${m.role === 'user' ? '👤 Você' : '🤖 IA'}: ${m.content}`).join('\n\n');
       const aiComplementStr = messages.length > 0 
-        ? `*Curiosidade Original:*\n${curiosidade.texto}\n\n*Discussão:*\n${chatTranscript}`
-        : curiosidade.texto;
+        ? `*Curiosidade Original:*\n${summary}\n\n*Discussão:*\n${chatTranscript}`
+        : summary;
 
       const userReflectionStr = messages.length > 0 
-        ? `Discussão sobre: ${curiosidade.tema}` 
-        : `Tema: ${curiosidade.tema}`;
+        ? `Discussão sobre: ${topico}` 
+        : `Tema: ${topico}`;
 
       const { error } = await supabase
         .from('study_notes')
         .insert({
           materia_slug: 'curiosidades',
-          topico: 'Você Sabia?',
+          topico: topico, // antes era 'Você Sabia?' fixo, agora usa o tópico real
           user_reflection: userReflectionStr,
           ai_complement: aiComplementStr
         });
@@ -168,14 +235,14 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
   };
 
   const handleGenerateFlashcards = async () => {
-    if (isGeneratingCards) return;
+    if (isGeneratingCards || !summary) return;
     setIsGeneratingCards(true);
     try {
       const { data, error: fnError } = await supabase.functions.invoke('gerar-flashcards', {
         body: { 
           materia_slug: 'Curiosidades', 
-          topico: curiosidade.tema, 
-          texto_fonte: curiosidade.texto
+          topico: topico, 
+          texto_fonte: summary
         },
       });
 
@@ -189,7 +256,7 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
         const inserts = flashcards.map((fc: { front: string; back: string }) => ({
           user_id: user?.id,
           materia_slug: 'Curiosidades',
-          topico: curiosidade.tema,
+          topico: topico,
           front: fc.front,
           back: fc.back,
         }));
@@ -199,7 +266,7 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
 
         toast({
           title: "Flashcards Extraídos!",
-          description: `A IA fatiou o texto e extraiu ${flashcards.length} cartões curtos para sua memória.`,
+          description: `A IA fatiou a curiosidade e extraiu ${flashcards.length} cartões curtos para sua memória.`,
         });
       } else {
         toast({
@@ -220,33 +287,38 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
   };
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent border border-indigo-500/20 rounded-[2rem] p-6 shadow-sm flex flex-col gap-4">
+    <div className="relative overflow-hidden bg-gradient-to-br from-indigo-500/10 via-purple-500/5 to-transparent border border-indigo-500/20 rounded-[2rem] p-6 shadow-sm flex flex-col gap-4 h-full">
       <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
         <Lightbulb className="w-24 h-24 text-indigo-500" />
       </div>
 
       <div className="relative z-10 flex flex-col h-full gap-4">
-        {/* Header */}
         <div className="flex items-center gap-2">
           <div className="p-2 bg-indigo-500/20 rounded-xl">
             <Lightbulb className="w-5 h-5 text-indigo-500" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-foreground">Você Sabia?</h3>
+            <h3 className="text-sm font-bold text-foreground">{topico}</h3>
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-              {curiosidade.tema}
+              {materiaName} - Você Sabia?
             </p>
           </div>
         </div>
 
-        {/* Curiosidade Principal */}
-        <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium whitespace-pre-wrap">
-          {curiosidade.texto}
+        <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium flex-1">
+          {summary ? (
+            <div className="prose prose-sm dark:prose-invert max-w-none animate-in fade-in duration-500 whitespace-pre-wrap">
+              <ReactMarkdown>{summary}</ReactMarkdown>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Loader2 className="w-4 h-4 animate-spin" /> Gerando curiosidade...
+            </div>
+          )}
         </div>
 
-        {/* Chat Area */}
         {messages.length > 0 && (
-          <div className="bg-background/40 rounded-xl p-4 border border-border/50 max-h-[300px] overflow-y-auto space-y-4">
+          <div className="bg-background/40 rounded-xl p-4 border border-border/50 max-h-[250px] overflow-y-auto space-y-4 mt-2">
             {messages.map((msg, i) => {
               const cleanContent = msg.content.replace(/<chips>[\s\S]*?(?:<\/chips>|$)/ig, '').trim();
               if (!cleanContent) return null;
@@ -256,14 +328,14 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
                     "inline-block px-3 py-2 rounded-2xl max-w-[85%] text-left",
                     msg.role === 'user' ? "bg-indigo-500 text-white rounded-br-sm" : "bg-muted text-foreground rounded-bl-sm"
                   )}>
-                    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-0 prose-p:leading-snug whitespace-pre-wrap">
+                    <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-0 prose-p:leading-snug">
                       <ReactMarkdown>{cleanContent}</ReactMarkdown>
                     </div>
                   </div>
                 </div>
               );
             })}
-            {isLoading && (
+            {isLoading && messages[messages.length - 1]?.role === 'user' && (
               <div className="text-left">
                 <div className="inline-block px-3 py-2 rounded-2xl bg-muted text-muted-foreground rounded-bl-sm">
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -274,8 +346,7 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
           </div>
         )}
 
-        {/* Input */}
-        <div className="flex items-end gap-2 relative z-10">
+        <div className="flex items-end gap-2 relative z-10 mt-2">
           <textarea
             value={input}
             onChange={e => setInput(e.target.value)}
@@ -285,32 +356,40 @@ export function CuriosidadeChatCard({ curiosidade }: Props) {
                 handleSend();
               }
             }}
-            placeholder="Pergunte algo sobre isso..."
-            className="flex-1 resize-none bg-background/60 border border-border/50 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 min-h-[44px] max-h-[100px]"
+            placeholder="Comentar ou perguntar sobre isso..."
+            disabled={!summary || isLoading}
+            className="flex-1 resize-none bg-background/60 border border-border/50 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 min-h-[44px] max-h-[100px] disabled:opacity-50"
             rows={1}
           />
           <button
             onClick={handleSend}
-            disabled={!input.trim() || isLoading}
+            disabled={!input.trim() || isLoading || !summary}
             className="p-2.5 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 disabled:opacity-50 transition-colors shrink-0 h-[44px] w-[44px] flex items-center justify-center"
           >
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
+            {isLoading && summary && messages[messages.length - 1]?.role === 'user' ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowUp className="w-4 h-4" />}
           </button>
         </div>
 
-        {/* Botões Finais */}
         <div className="flex items-center gap-2 mt-2">
           <button
+            onClick={handleRegenerate}
+            disabled={!summary || isLoading}
+            title="Regenerar com IA"
+            className="flex items-center justify-center p-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl transition-all shadow-sm disabled:opacity-50 shrink-0"
+          >
+            {isLoading && !summary ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+          </button>
+          <button
             onClick={handleSave}
-            disabled={isSaving}
-            className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
+            disabled={!summary || isSaving}
+            className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
           >
             {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bookmark className="w-4 h-4" />}
             Caderno
           </button>
           <button
             onClick={handleGenerateFlashcards}
-            disabled={isGeneratingCards}
+            disabled={!summary || isGeneratingCards}
             className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
           >
             {isGeneratingCards ? <Loader2 className="w-4 h-4 animate-spin" /> : <BrainCircuit className="w-4 h-4" />}

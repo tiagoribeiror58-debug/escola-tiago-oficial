@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -18,9 +19,11 @@ serve(async (req: Request) => {
       throw new Error("Missing DEEPSEEK_API_KEY");
     }
 
-    const { materiasAtuais, temaEspecifico, todasMaterias, temasRecentes, count = 1 } = await req.json().catch(() => ({ materiasAtuais: [], temaEspecifico: null, todasMaterias: [], temasRecentes: [], count: 1 }));
+    const { materiasAtuais, temaEspecifico, todasMaterias, temasRecentes, count = 1, materiaSlug, topico } = await req.json().catch(() => ({ materiasAtuais: [], temaEspecifico: null, todasMaterias: [], temasRecentes: [], count: 1 }));
 
-    const isSpecific = !!temaEspecifico;
+    // Se materiaSlug e topico forem passados, usamos eles como o "tema especifico"
+    const isSpecific = !!temaEspecifico || !!topico;
+    const actualTheme = topico || temaEspecifico;
     const isBatch = count > 1;
     const listaParaAleatorio = todasMaterias?.length > 0 ? todasMaterias.join(", ") : 'Tecnologia, Negócios, Psicologia, Filosofia, Marketing, Inteligência Artificial, História, Economia, Neurociência, Biologia, Física';
     const historicoRecente = temasRecentes?.length > 0 ? `\nAVOID REPEATING these recently shown themes: ${temasRecentes.slice(0, 10).join(", ")}. Generate something DIFFERENT.` : '';
@@ -32,13 +35,13 @@ Provide ONLY extremely obscure, advanced, niche, or lesser-known facts.
 Use this Randomization Seed to force yourself into a completely different latent space: ${randomSeed}`;
 
     const expectedFormat = isBatch
-      ? `{\n  "curiosidades": [\n    {\n      "tema": "${isSpecific ? temaEspecifico : "Theme 1"}",\n      "texto": "Curiosity 1..."\n    },\n    {\n      "tema": "${isSpecific ? temaEspecifico : "Theme 2"}",\n      "texto": "Curiosity 2..."\n    }\n  ]\n}`
-      : `{\n  "tema": "${isSpecific ? temaEspecifico : "Theme"}",\n  "texto": "The text..."\n}`;
+      ? `{\n  "curiosidades": [\n    {\n      "tema": "${isSpecific ? actualTheme : "Theme 1"}",\n      "texto": "Curiosity 1..."\n    },\n    {\n      "tema": "${isSpecific ? actualTheme : "Theme 2"}",\n      "texto": "Curiosity 2..."\n    }\n  ]\n}`
+      : `{\n  "tema": "${isSpecific ? actualTheme : "Theme"}",\n  "texto": "The text..."\n}`;
 
     const systemPrompt = isSpecific 
     ? `You are a high-performance creative educational curator. 
 Your task is to generate ${count} "Did you know?" (Você Sabia?) curiosit${count > 1 ? 'ies' : 'y'} that ${count > 1 ? 'are' : 'is'} extremely interesting, surprising, and educational.
-The curiosit${count > 1 ? 'ies' : 'y'} MUST BE STRICTLY RELATED TO THIS SPECIFIC SUBJECT: ${temaEspecifico}.
+The curiosit${count > 1 ? 'ies' : 'y'} MUST BE STRICTLY RELATED TO THIS SPECIFIC SUBJECT: ${actualTheme}.
 DO NOT generate facts about any other subject.${historicoRecente}${antiCliche}
 CRITICAL FORMATTING RULE: The "texto" field MUST NOT be a single massive block of text. You MUST separate ideas into paragraphs using explicit double newlines (\\n\\n) for readability.
 CRITICAL: The output MUST be written entirely in Brazilian Portuguese (pt-BR).
@@ -56,7 +59,7 @@ Respond ONLY with a valid JSON object${isBatch ? ', with the curiosities inside 
 Expected format:\n${expectedFormat}`;
 
     const userMessage = isSpecific
-      ? `Tell me ${count} incredible new 'Did you know?' right now about ${temaEspecifico}. ${count > 1 ? 'They' : 'It'} must be DIFFERENT from what was already shown. Remember to translate to Brazilian Portuguese. Return only the JSON.`
+      ? `Tell me ${count} incredible new 'Did you know?' right now about ${actualTheme}. ${count > 1 ? 'They' : 'It'} must be DIFFERENT from what was already shown. Remember to translate to Brazilian Portuguese. Return only the JSON.`
       : `Tell me ${count} incredible new 'Did you know?' right now about subjects randomly chosen from this list: ${listaParaAleatorio}. Do NOT invent subjects outside this list. Must be DIFFERENT from what was recently shown. Remember to translate to Brazilian Portuguese. Return only the JSON.`;
 
     const response = await fetch("https://api.deepseek.com/chat/completions", {
@@ -96,6 +99,34 @@ Expected format:\n${expectedFormat}`;
       parsed = JSON.parse(content);
       if (isBatch) {
         parsed = Array.isArray(parsed) ? parsed : (parsed.curiosidades || []);
+      }
+
+      // Salvar no cache apenas se for um tema específico com materiaSlug e topico e não for batch 
+      // (na verdade curiosidade-dia pode ser chamada individualmente)
+      if (!isBatch && materiaSlug && topico && parsed.texto) {
+        const supabaseClient = createClient(
+          Deno.env.get('SUPABASE_URL') ?? '',
+          Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+          { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
+        );
+
+        const { data: userData } = await supabaseClient.auth.getUser();
+        if (userData?.user) {
+          const mSlug = materiaSlug.toLowerCase().replace(/\\s+/g, '-');
+          
+          await supabaseClient
+            .from('ai_content_cache')
+            .upsert(
+              { 
+                user_id: userData.user.id,
+                materia_slug: mSlug,
+                topico: topico,
+                tipo: 'curiosidade',
+                content: parsed.texto 
+              },
+              { onConflict: 'user_id, materia_slug, topico, tipo' }
+            );
+        }
       }
     } catch (e) {
       console.error("Failed to parse JSON:", content);

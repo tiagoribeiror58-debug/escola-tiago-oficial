@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { BookOpen, Loader2, ArrowUp, ArrowRight, BrainCircuit, Bookmark } from 'lucide-react';
+import { BookOpen, Loader2, ArrowUp, ArrowRight, BrainCircuit, Bookmark, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -36,35 +36,65 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
   const materia = getMateriaBySlug(materiaSlug);
   const materiaName = materia?.nome || materiaSlug;
 
-  useEffect(() => {
-    const fetchInitialSummary = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        const token = session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  const fetchInitialSummary = async (forceRegenerate = false) => {
+    try {
+      setIsLoading(true);
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-        const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/resumo-topico`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ materia: materiaName, topico }),
-        });
+      if (!forceRegenerate && session?.user) {
+        // Tentar ler do cache primeiro
+        const { data: cacheData } = await supabase
+          .from('ai_content_cache')
+          .select('content')
+          .eq('user_id', session.user.id)
+          .eq('materia_slug', materiaSlug.toLowerCase().replace(/\\s+/g, '-'))
+          .eq('topico', topico)
+          .eq('tipo', 'resumo')
+          .maybeSingle();
 
-        if (!response.ok) throw new Error("Falha na chamada inicial");
-
-        const data = await response.json();
-        setSummary(data.texto);
-      } catch (e) {
-        console.error(e);
-        setSummary("Não foi possível carregar o resumo no momento.");
-      } finally {
-        setIsLoading(false);
+        if (cacheData && cacheData.content) {
+          setSummary(cacheData.content);
+          setIsLoading(false);
+          return;
+        }
       }
-    };
 
+      // Se não achou ou forçou, chama a IA
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/resumo-topico`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ materia: materiaName, topico, forceGenerate: forceRegenerate }),
+      });
+
+      if (!response.ok) throw new Error("Falha na chamada inicial");
+
+      const data = await response.json();
+      setSummary(data.texto);
+    } catch (e) {
+      console.error(e);
+      setSummary("Não foi possível carregar o resumo no momento.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Resetar estado ao trocar de tópico
+    setSummary('');
+    setMessages([]);
+    setIsLoading(true);
     fetchInitialSummary();
   }, [materiaName, topico]);
+
+  const handleRegenerate = () => {
+    setSummary('');
+    setMessages([]);
+    fetchInitialSummary(true);
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -332,6 +362,14 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
         </div>
 
         <div className="flex items-center gap-2 mt-2">
+          <button
+            onClick={handleRegenerate}
+            disabled={!summary || isLoading}
+            title="Regenerar com IA"
+            className="flex items-center justify-center p-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl transition-all shadow-sm disabled:opacity-50 shrink-0"
+          >
+            {isLoading && !summary ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+          </button>
           <button
             onClick={handleSave}
             disabled={!summary || isSaving}
