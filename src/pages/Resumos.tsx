@@ -197,8 +197,9 @@ export default function Resumos() {
   return (
     <div className="min-h-screen w-full bg-background flex flex-col selection:bg-emerald-500/20 pb-20">
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 min-h-[4rem] py-3 sm:py-0 sm:h-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="flex items-center justify-between w-full sm:w-auto">
+            <div className="flex items-center gap-2">
             <button
               onClick={() => navigate(-1)}
               className="p-2 -ml-2 rounded-full hover:bg-muted/50 transition-colors text-muted-foreground shrink-0"
@@ -235,9 +236,10 @@ export default function Resumos() {
             <div className="ml-1 hidden sm:block">
               <SavedCardsDrawer type="resumos" />
             </div>
+            </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[250px] sm:max-w-[420px] w-full">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto max-w-none sm:max-w-[550px]">
 
             <div className="flex bg-muted/50 rounded-lg p-1 w-full sm:w-auto shrink-0 border border-border/50">
               <button
