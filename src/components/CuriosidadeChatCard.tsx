@@ -43,7 +43,7 @@ export function CuriosidadeChatCard({ materiaSlug, topico }: Props) {
           .from('ai_content_cache')
           .select('content')
           .eq('user_id', session.user.id)
-          .eq('materia_slug', materiaSlug.toLowerCase().replace(/\s+/g, '-'))
+          .eq('materia_slug', materiaSlug)
           .eq('topico', topico)
           .eq('tipo', 'curiosidade')
           .maybeSingle();

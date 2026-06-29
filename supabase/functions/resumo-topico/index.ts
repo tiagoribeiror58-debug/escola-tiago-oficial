@@ -18,7 +18,7 @@ serve(async (req: Request) => {
       throw new Error("Missing DEEPSEEK_API_KEY");
     }
 
-    const { materia, topico, messages } = await req.json();
+    const { materia, topico, messages, forceGenerate, materiaSlug } = await req.json();
 
     if (!materia || !topico) {
        throw new Error("Missing materia or topico");
@@ -74,7 +74,7 @@ Regras absolutas:
     const content = data.choices?.[0]?.message?.content?.trim() || "";
 
     // Salvar no cache do banco de dados apenas se for o resumo inicial (não um chat)
-    if (!isChat) {
+    if (!isChat && materiaSlug) {
       const supabaseClient = createClient(
         Deno.env.get('SUPABASE_URL') ?? '',
         Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -83,16 +83,12 @@ Regras absolutas:
 
       const { data: userData } = await supabaseClient.auth.getUser();
       if (userData?.user) {
-        // Encontrar o materia_slug correto (usamos o nome recebido, podemos normalizar para slug ou salvar como text mesmo,
-        // no frontend normalizamos). Aqui vamos salvar o nome exato recebido.
-        const materia_slug = materia.toLowerCase().replace(/\\s+/g, '-');
-        
         await supabaseClient
           .from('ai_content_cache')
           .upsert(
             { 
               user_id: userData.user.id,
-              materia_slug: materia_slug,
+              materia_slug: materiaSlug,
               topico: topico,
               tipo: 'resumo',
               content: content 

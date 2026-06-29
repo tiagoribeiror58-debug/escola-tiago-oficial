@@ -14,6 +14,7 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
   const [expandedHubs, setExpandedHubs] = useState<Set<string>>(new Set());
   const [expandedMaterias, setExpandedMaterias] = useState<Set<string>>(new Set());
   const [cachedTopics, setCachedTopics] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch cached topics
   useEffect(() => {
@@ -82,6 +83,15 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
     return Array.from(hubMap.values()).sort((a, b) => a.nome.localeCompare(b.nome));
   }, []);
 
+  const filteredTopicsList = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const query = searchQuery.toLowerCase();
+    return ALL_TOPICS.filter(t => 
+      t.topico.toLowerCase().includes(query) || 
+      t.materia.toLowerCase().includes(query)
+    );
+  }, [searchQuery]);
+
   const toggleHub = (hub: string) => {
     setExpandedHubs(prev => {
       const next = new Set(prev);
@@ -101,73 +111,118 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
   };
 
   return (
-    <div className="w-full h-full overflow-y-auto pr-2 custom-scrollbar">
-      <div className="space-y-1">
-        {hubs.map(hub => {
-          const isHubExpanded = expandedHubs.has(hub.nome);
-          const materiasList = Array.from(hub.materias.values()).sort((a, b) => a.nome.localeCompare(b.nome));
-          
-          return (
-            <div key={hub.nome} className="mb-2">
-              <button
-                onClick={() => toggleHub(hub.nome)}
-                className="flex items-center justify-between w-full p-2 hover:bg-accent rounded-md text-left transition-colors font-semibold"
-              >
-                <div className="flex items-center">
-                  {isHubExpanded ? <ChevronDown className="w-4 h-4 mr-2" /> : <ChevronRight className="w-4 h-4 mr-2" />}
-                  {hub.nome}
-                </div>
-              </button>
+    <div className="w-full h-full flex flex-col gap-3">
+      <div className="px-2">
+        <input
+          type="text"
+          placeholder="Pesquisar tópicos..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full h-9 rounded-md border border-border/50 bg-background px-3 py-1 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+        />
+      </div>
+
+      <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+        {searchQuery.trim() ? (
+          <div className="space-y-1">
+            {filteredTopicsList.length === 0 ? (
+              <p className="text-xs text-muted-foreground p-2 text-center">Nenhum tópico encontrado.</p>
+            ) : (
+              filteredTopicsList.map(t => {
+                const isCached = cachedTopics.has(`${t.materiaSlug}:${t.topico}`);
+                const isSelected = selectedTopico === t.topico;
+                return (
+                  <button
+                    key={`${t.materiaSlug}-${t.topico}`}
+                    onClick={() => onSelectTopic(t.materiaSlug, t.topico)}
+                    className={cn(
+                      "flex items-center justify-between w-full p-2 text-sm rounded-md transition-colors text-left group",
+                      isSelected ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent/50 text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    <div>
+                      <div className="font-medium text-foreground truncate max-w-[220px]">{t.topico}</div>
+                      <div className="text-[10px] text-muted-foreground truncate max-w-[220px]">{t.materia}</div>
+                    </div>
+                    {isCached ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 opacity-80" />
+                    ) : (
+                      <Sparkles className="w-3 h-3 text-muted-foreground/50 shrink-0 group-hover:text-primary/50" />
+                    )}
+                  </button>
+                );
+              })
+            )}
+          </div>
+        ) : (
+          <div className="space-y-1">
+            {hubs.map(hub => {
+              const isHubExpanded = expandedHubs.has(hub.nome);
+              const materiasList = Array.from(hub.materias.values()).sort((a, b) => a.nome.localeCompare(b.nome));
               
-              {isHubExpanded && (
-                <div className="pl-4 mt-1 border-l ml-2 space-y-1 border-border/50">
-                  {materiasList.map(materia => {
-                    const isMateriaExpanded = expandedMaterias.has(materia.nome);
-                    
-                    return (
-                      <div key={materia.nome}>
-                        <button
-                          onClick={() => toggleMateria(materia.nome)}
-                          className="flex items-center w-full p-2 hover:bg-accent rounded-md text-left transition-colors text-sm font-medium text-muted-foreground hover:text-foreground"
-                        >
-                          {isMateriaExpanded ? <ChevronDown className="w-4 h-4 mr-2" /> : <ChevronRight className="w-4 h-4 mr-2" />}
-                          {materia.nome}
-                        </button>
+              return (
+                <div key={hub.nome} className="mb-2">
+                  <button
+                    onClick={() => toggleHub(hub.nome)}
+                    className="flex items-center justify-between w-full p-2 hover:bg-accent rounded-md text-left transition-colors font-semibold"
+                  >
+                    <div className="flex items-center">
+                      {isHubExpanded ? <ChevronDown className="w-4 h-4 mr-2" /> : <ChevronRight className="w-4 h-4 mr-2" />}
+                      {hub.nome}
+                    </div>
+                  </button>
+                  
+                  {isHubExpanded && (
+                    <div className="pl-4 mt-1 border-l ml-2 space-y-1 border-border/50">
+                      {materiasList.map(materia => {
+                        const isMateriaExpanded = expandedMaterias.has(materia.nome);
                         
-                        {isMateriaExpanded && (
-                          <div className="pl-6 mt-1 space-y-1">
-                            {materia.topicos.map(t => {
-                              const isCached = cachedTopics.has(`${t.materiaSlug}:${t.topico}`);
-                              const isSelected = selectedTopico === t.topico;
-                              
-                              return (
-                                <button
-                                  key={`${t.materiaSlug}-${t.topico}`}
-                                  onClick={() => onSelectTopic(t.materiaSlug, t.topico)}
-                                  className={cn(
-                                    "flex items-center justify-between w-full p-2 text-sm rounded-md transition-colors text-left group",
-                                    isSelected ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent/50 text-muted-foreground hover:text-foreground"
-                                  )}
-                                >
-                                  <span className="truncate pr-2">{t.topico}</span>
-                                  {isCached ? (
-                                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 opacity-80" />
-                                  ) : (
-                                    <Sparkles className="w-3 h-3 text-muted-foreground/50 shrink-0 group-hover:text-primary/50" />
-                                  )}
-                                </button>
-                              );
-                            })}
+                        return (
+                          <div key={materia.nome}>
+                            <button
+                              onClick={() => toggleMateria(materia.nome)}
+                              className="flex items-center w-full p-2 hover:bg-accent rounded-md text-left transition-colors text-sm font-medium text-muted-foreground hover:text-foreground"
+                            >
+                              {isMateriaExpanded ? <ChevronDown className="w-4 h-4 mr-2" /> : <ChevronRight className="w-4 h-4 mr-2" />}
+                              {materia.nome}
+                            </button>
+                            
+                            {isMateriaExpanded && (
+                              <div className="pl-6 mt-1 space-y-1">
+                                {materia.topicos.map(t => {
+                                  const isCached = cachedTopics.has(`${t.materiaSlug}:${t.topico}`);
+                                  const isSelected = selectedTopico === t.topico;
+                                  
+                                  return (
+                                    <button
+                                      key={`${t.materiaSlug}-${t.topico}`}
+                                      onClick={() => onSelectTopic(t.materiaSlug, t.topico)}
+                                      className={cn(
+                                        "flex items-center justify-between w-full p-2 text-sm rounded-md transition-colors text-left group",
+                                        isSelected ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent/50 text-muted-foreground hover:text-foreground"
+                                      )}
+                                    >
+                                      <span className="truncate pr-2">{t.topico}</span>
+                                      {isCached ? (
+                                        <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 opacity-80" />
+                                      ) : (
+                                        <Sparkles className="w-3 h-3 text-muted-foreground/50 shrink-0 group-hover:text-primary/50" />
+                                      )}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          );
-        })}
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

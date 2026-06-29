@@ -48,7 +48,7 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
           .from('ai_content_cache')
           .select('content')
           .eq('user_id', session.user.id)
-          .eq('materia_slug', materiaSlug.toLowerCase().replace(/\\s+/g, '-'))
+          .eq('materia_slug', materiaSlug)
           .eq('topico', topico)
           .eq('tipo', 'resumo')
           .maybeSingle();
@@ -67,7 +67,7 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ materia: materiaName, topico, forceGenerate: forceRegenerate }),
+        body: JSON.stringify({ materia: materiaName, topico, forceGenerate: forceRegenerate, materiaSlug }),
       });
 
       if (!response.ok) throw new Error("Falha na chamada inicial");
