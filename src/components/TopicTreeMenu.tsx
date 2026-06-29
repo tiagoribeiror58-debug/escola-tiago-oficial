@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { ALL_TOPICS } from '@/lib/materias';
-import { ChevronRight, ChevronDown, CheckCircle2, Sparkles } from 'lucide-react';
+import { ChevronRight, ChevronDown, CheckCircle2, Sparkles, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -15,6 +15,13 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
   const [expandedMaterias, setExpandedMaterias] = useState<Set<string>>(new Set());
   const [cachedTopics, setCachedTopics] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
+  const [favoriteHubs, setFavoriteHubs] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('favorite_hubs') || '[]');
+    } catch {
+      return [];
+    }
+  });
 
   // Fetch cached topics
   useEffect(() => {
@@ -80,8 +87,14 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
       hubData.materias.get(t.materia)!.topicos.push(t);
     });
     
-    return Array.from(hubMap.values()).sort((a, b) => a.nome.localeCompare(b.nome));
-  }, []);
+    return Array.from(hubMap.values()).sort((a, b) => {
+      const aFav = favoriteHubs.includes(a.nome);
+      const bFav = favoriteHubs.includes(b.nome);
+      if (aFav && !bFav) return -1;
+      if (!aFav && bFav) return 1;
+      return a.nome.localeCompare(b.nome);
+    });
+  }, [favoriteHubs]);
 
   const filteredTopicsList = useMemo(() => {
     if (!searchQuery.trim()) return [];
@@ -97,6 +110,17 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
       const next = new Set(prev);
       if (next.has(hub)) next.delete(hub);
       else next.add(hub);
+      return next;
+    });
+  };
+
+  const toggleFavoriteHub = (hubName: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setFavoriteHubs(prev => {
+      const next = prev.includes(hubName)
+        ? prev.filter(h => h !== hubName)
+        : [...prev, hubName];
+      localStorage.setItem('favorite_hubs', JSON.stringify(next));
       return next;
     });
   };
@@ -158,19 +182,33 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
           <div className="space-y-1">
             {hubs.map(hub => {
               const isHubExpanded = expandedHubs.has(hub.nome);
+              const isFavorite = favoriteHubs.includes(hub.nome);
               const materiasList = Array.from(hub.materias.values()).sort((a, b) => a.nome.localeCompare(b.nome));
               
               return (
                 <div key={hub.nome} className="mb-2">
-                  <button
+                  <div
                     onClick={() => toggleHub(hub.nome)}
-                    className="flex items-center justify-between w-full p-2 hover:bg-accent rounded-md text-left transition-colors font-semibold"
+                    className="flex items-center justify-between w-full p-2 hover:bg-accent rounded-md text-left transition-colors font-semibold cursor-pointer group/hub"
                   >
                     <div className="flex items-center">
                       {isHubExpanded ? <ChevronDown className="w-4 h-4 mr-2" /> : <ChevronRight className="w-4 h-4 mr-2" />}
                       {hub.nome}
                     </div>
-                  </button>
+                    <button
+                      onClick={(e) => toggleFavoriteHub(hub.nome, e)}
+                      className="p-1 rounded-md hover:bg-muted text-muted-foreground transition-all shrink-0"
+                    >
+                      <Star
+                        className={cn(
+                          "w-3.5 h-3.5 transition-all",
+                          isFavorite 
+                            ? "fill-yellow-500 text-yellow-500 scale-110" 
+                            : "opacity-0 group-hover/hub:opacity-100 hover:text-yellow-500"
+                        )}
+                      />
+                    </button>
+                  </div>
                   
                   {isHubExpanded && (
                     <div className="pl-4 mt-1 border-l ml-2 space-y-1 border-border/50">
