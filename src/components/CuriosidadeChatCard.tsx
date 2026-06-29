@@ -23,8 +23,11 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isSavedToNotebook, setIsSavedToNotebook] = useState(false);
   const [isGeneratingCards, setIsGeneratingCards] = useState(false);
+  const [flashcardsCreated, setFlashcardsCreated] = useState(false);
   const [isMarkingDone, setIsMarkingDone] = useState(false);
+  const [isDone, setIsDone] = useState(false);
   const [summary, setSummary] = useState('');
   
   const { toast } = useToast();
@@ -52,6 +55,7 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
 
         if (cacheData && cacheData.content) {
           setSummary(cacheData.content);
+          setIsDone(true);
           setIsLoading(false);
           return;
         }
@@ -87,6 +91,9 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
   useEffect(() => {
     setSummary('');
     setMessages([]);
+    setIsDone(false);
+    setIsSavedToNotebook(false);
+    setFlashcardsCreated(false);
     setIsLoading(true);
     fetchInitialCuriosity();
   }, [materiaSlug, topico]);
@@ -212,7 +219,7 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
         .from('study_notes')
         .insert({
           materia_slug: 'curiosidades',
-          topico: topico, // antes era 'Você Sabia?' fixo, agora usa o tópico real
+          topico: topico,
           user_reflection: userReflectionStr,
           ai_complement: aiComplementStr
         });
@@ -223,6 +230,7 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
         title: "Salvo com sucesso!",
         description: "A curiosidade e a conversa estão no seu Caderno.",
       });
+      setIsSavedToNotebook(true);
       queryClient.invalidateQueries({ queryKey: ['study_notes'] });
     } catch (e) {
       console.error("Erro ao salvar", e);
@@ -256,9 +264,10 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
         if (error) throw error;
       }
 
+      setIsDone(true);
       toast({
         title: "Concluído!",
-        description: "Curiosidade marcada como vista e salva no banco.",
+        description: "Curiosidade marcada como vista.",
       });
     } catch (e) {
       console.error(e);
@@ -302,6 +311,7 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
         const { error } = await supabase.from('flashcards').insert(inserts);
         if (error) throw error;
 
+        setFlashcardsCreated(true);
         toast({
           title: "Flashcards Extraídos!",
           description: `A IA fatiou a curiosidade e extraiu ${flashcards.length} cartões curtos para sua memória.`,
@@ -417,29 +427,47 @@ export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic
           >
             {isLoading && !summary ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
           </button>
-          <button
-            onClick={handleMarkAsDone}
-            disabled={!summary || isMarkingDone}
-            title="Marcar como Concluído"
-            className="flex items-center justify-center p-2.5 bg-background border border-border/50 hover:bg-indigo-500/20 text-indigo-500 rounded-xl transition-all shadow-sm disabled:opacity-50 shrink-0"
-          >
-            {isMarkingDone ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-          </button>
+          
           <button
             onClick={handleSave}
-            disabled={!summary || isSaving}
-            className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
+            disabled={!summary || isSaving || isSavedToNotebook}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm",
+              isSavedToNotebook
+                ? "bg-amber-500 text-white cursor-default"
+                : "bg-background border border-border/50 hover:bg-amber-500/10 text-amber-500 disabled:opacity-50"
+            )}
           >
             {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bookmark className="w-4 h-4" />}
-            Caderno
+            {isSavedToNotebook ? "Salvo" : "Caderno"}
           </button>
+          
           <button
             onClick={handleGenerateFlashcards}
-            disabled={!summary || isGeneratingCards}
-            className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
+            disabled={!summary || isGeneratingCards || flashcardsCreated}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm",
+              flashcardsCreated 
+                ? "bg-indigo-500 text-white cursor-default" 
+                : "bg-background border border-border/50 hover:bg-indigo-500/10 text-indigo-500 disabled:opacity-50"
+            )}
           >
             {isGeneratingCards ? <Loader2 className="w-4 h-4 animate-spin" /> : <BrainCircuit className="w-4 h-4" />}
             Flashcards
+          </button>
+          
+          <button
+            onClick={handleMarkAsDone}
+            disabled={!summary || isMarkingDone || isDone}
+            title={isDone ? "Já marcado como concluído" : "Marcar como Concluído"}
+            className={cn(
+              "flex items-center justify-center p-2.5 rounded-xl transition-all shadow-sm shrink-0",
+              isDone
+                ? "bg-emerald-500 text-white cursor-default"
+                : "bg-background border border-border/50 hover:bg-emerald-500/20 text-emerald-500 disabled:opacity-50"
+            )}
+          >
+            {isMarkingDone ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
           </button>
         </div>
 

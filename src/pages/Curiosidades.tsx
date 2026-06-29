@@ -131,10 +131,7 @@ export default function Curiosidades() {
   };
 
   const loadSpecificTopic = (materiaSlug: string, topico: string) => {
-    setCuriosidades(prev => {
-      if (prev.some(p => p.topico === topico)) return prev;
-      return [...prev, { materiaSlug, topico }];
-    });
+    setCuriosidades([{ materiaSlug, topico }]);
     setSheetOpen(false);
   };
 
@@ -263,9 +260,11 @@ export default function Curiosidades() {
                     aria-expanded={open}
                     className="flex h-9 w-full items-center justify-between rounded-md border border-border/50 bg-muted/30 px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {temaEspecifico === 'todos' 
-                      ? `Todos os ${filterMode === 'materias' ? 'Matérias' : 'Hubs'}` 
-                      : temaEspecifico}
+                    <span className="truncate flex-1 text-left">
+                      {temaEspecifico === 'todos' 
+                        ? `Todos os ${filterMode === 'materias' ? 'Matérias' : 'Hubs'}` 
+                        : temaEspecifico}
+                    </span>
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </button>
                 </PopoverTrigger>
@@ -350,24 +349,6 @@ export default function Curiosidades() {
               />
             ))}
           </DeckCards>
-        )}
-
-        {/* Floating Action Bar para Mobile/Desktop */}
-        {curiosidades.length > 0 && (
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-background/90 backdrop-blur-md border border-border/50 shadow-2xl rounded-full px-6 py-3 flex items-center gap-4 animate-in slide-in-from-bottom-10">
-             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Adicionar +</span>
-             <div className="flex items-center gap-2">
-              {[1, 2, 3].map((qtd) => (
-                <button
-                  key={qtd}
-                  onClick={() => loadMore(qtd)}
-                  className="w-10 h-10 rounded-full bg-muted border border-border/50 hover:bg-indigo-500 hover:text-white hover:border-indigo-500 transition-all flex items-center justify-center font-bold text-foreground shadow-sm"
-                >
-                  {qtd}
-                </button>
-              ))}
-             </div>
-          </div>
         )}
       </main>
     </div>
