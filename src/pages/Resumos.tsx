@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, RefreshCw, ChevronsUpDown, Check, ListTree, Loader2 } from 'lucide-react';
+import { ArrowLeft, ChevronsUpDown, Check, ListTree, Loader2, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ResumoCard } from '@/components/ResumoCard';
 import { ALL_TOPICS, MATERIAS } from '@/lib/materias';
@@ -11,9 +11,11 @@ import { DeckCards } from '@/components/DeckCards';
 import { SavedCardsDrawer } from '@/components/SavedCardsDrawer';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { TopicTreeMenu } from '@/components/TopicTreeMenu';
+import { useToast } from '@/hooks/use-toast';
 
-const ALL_MATERIAS_LIST = Array.from(new Set(ALL_TOPICS.map(t => t.materia))).sort();
-const ALL_HUBS_LIST = Array.from(new Set(ALL_TOPICS.flatMap(t => t.hubNomes))).sort();
+// A Ordem real do MATERIAS preservada
+const ALL_MATERIAS_LIST = Array.from(new Set(ALL_TOPICS.map(t => t.materia)));
+const ALL_HUBS_LIST = Array.from(new Set(ALL_TOPICS.flatMap(t => t.hubNomes)));
 
 interface ResumoItem {
   materiaSlug: string;
@@ -23,7 +25,18 @@ interface ResumoItem {
 
 export default function Resumos() {
   const navigate = useNavigate();
-  const [resumos, setResumos] = useState<ResumoItem[]>([]);
+  const { toast } = useToast();
+  
+  // Persistência do Feed (Deck state)
+  const [resumos, setResumos] = useState<ResumoItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('active_resumos_session');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
   const [filterMode, setFilterMode] = useState<'materias' | 'hubs'>('materias');
   const [ordenacao, setOrdenacao] = useState<'aleatorio' | 'sequencial'>('aleatorio');
@@ -31,8 +44,52 @@ export default function Resumos() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [batchSize, setBatchSize] = useState<number>(3);
   const [flashcardsInfo, setFlashcardsInfo] = useState<{ all: Set<string>, due: Set<string> }>({ all: new Set(), due: new Set() });
+  const [cachedTopics, setCachedTopics] = useState<Set<string>>(new Set());
 
-  const getAvailableTopicsPool = (filterTema: string, mode: 'materias' | 'hubs', info = flashcardsInfo) => {
+  useEffect(() => {
+    localStorage.setItem('active_resumos_session', JSON.stringify(resumos));
+  }, [resumos]);
+
+  useEffect(() => {
+    const fetchCache = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return;
+
+      const { data } = await supabase
+        .from('ai_content_cache')
+        .select('topico')
+        .eq('tipo', 'resumo')
+        .eq('user_id', session.user.id);
+      
+      if (data) {
+        setCachedTopics(new Set(data.map(d => d.topico)));
+      }
+    };
+
+    fetchCache();
+
+    const channel = supabase
+      .channel('resumos_cache_changes')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'ai_content_cache', filter: "tipo=eq.resumo" },
+        (payload) => {
+          const newRow = payload.new as { topico: string };
+          setCachedTopics(prev => {
+            const next = new Set(prev);
+            next.add(newRow.topico);
+            return next;
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const getAvailableTopicsPool = (filterTema: string, mode: 'materias' | 'hubs', info = flashcardsInfo, vistos = cachedTopics) => {
     let pool = ALL_TOPICS;
     if (filterTema !== "todos") {
       if (mode === 'materias') {
@@ -42,13 +99,10 @@ export default function Resumos() {
       }
     }
     
-    const historicoSalvo = JSON.parse(localStorage.getItem('resumos_vistos') || '[]');
-    const vistosSet = new Set<string>(historicoSalvo);
-
     pool = pool.filter(t => {
       const isSaved = info.all.has(t.topico);
       const isDue = info.due.has(t.topico);
-      const isVisto = vistosSet.has(t.topico);
+      const isVisto = vistos.has(t.topico);
       if ((isSaved || isVisto) && !isDue) return false;
       return true;
     });
@@ -70,11 +124,6 @@ export default function Resumos() {
     }
     
     const selectedTopics = resultList.slice(0, Math.min(count, resultList.length));
-    
-    const historicoSalvo = JSON.parse(localStorage.getItem('resumos_vistos') || '[]');
-    const novosTemas = selectedTopics.map(t => t.topico);
-    const novoHistorico = Array.from(new Set([...historicoSalvo, ...novosTemas]));
-    localStorage.setItem('resumos_vistos', JSON.stringify(novoHistorico));
 
     return selectedTopics.map(t => ({
       materiaSlug: t.materiaSlug,
@@ -94,8 +143,31 @@ export default function Resumos() {
   };
 
   const loadSpecificTopic = (materiaSlug: string, topico: string) => {
-    setResumos([{ materiaSlug, topico, isFlashcardDue: flashcardsInfo.due.has(topico) }]);
+    setResumos(prev => {
+      if (prev.some(p => p.topico === topico)) return prev;
+      return [...prev, { materiaSlug, topico, isFlashcardDue: flashcardsInfo.due.has(topico) }];
+    });
     setSheetOpen(false);
+  };
+
+  const handleNextSequential = (materiaSlug: string, topicoAtual: string) => {
+    const pool = ALL_TOPICS.filter(t => t.materiaSlug === materiaSlug);
+    const currIdx = pool.findIndex(t => t.topico === topicoAtual);
+    if (currIdx >= 0 && currIdx < pool.length - 1) {
+      const nextTopic = pool[currIdx + 1];
+
+      setResumos(prev => {
+        if (prev.some(p => p.topico === nextTopic.topico)) {
+          toast({ title: "Aviso", description: "O próximo tópico já está no seu baralho atual!" });
+          return prev;
+        }
+        return [...prev, { materiaSlug: nextTopic.materiaSlug, topico: nextTopic.topico, isFlashcardDue: flashcardsInfo.due.has(nextTopic.topico) }];
+      });
+      
+      toast({ title: "Tópico adicionado", description: `"${nextTopic.topico}" foi adicionado à fila.` });
+    } else {
+      toast({ title: "Fim da Matéria", description: "Não há mais tópicos disponíveis nesta matéria." });
+    }
   };
 
   const handleSearch = (val: string, mode: 'materias' | 'hubs') => {
@@ -103,23 +175,8 @@ export default function Resumos() {
     setFilterMode(mode);
     if (resumos.length > 0) {
       setResumos(getTopics(batchSize, val, mode, flashcardsInfo, ordenacao, []));
-    } else {
-      setResumos([]);
     }
   };
-
-  const handleResetHistory = () => {
-    localStorage.removeItem('resumos_vistos');
-    if (resumos.length > 0) {
-      setResumos(getTopics(batchSize, temaEspecifico, filterMode, flashcardsInfo, ordenacao, []));
-    }
-  };
-
-  useEffect(() => {
-    if (resumos.length > 0) {
-      setResumos(getTopics(batchSize, temaEspecifico, filterMode, flashcardsInfo, ordenacao, []));
-    }
-  }, [ordenacao]);
 
   useEffect(() => {
     const fetchFlashcards = async () => {
@@ -137,7 +194,7 @@ export default function Resumos() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col selection:bg-emerald-500/20">
+    <div className="min-h-screen bg-background flex flex-col selection:bg-emerald-500/20 pb-20">
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
@@ -150,28 +207,19 @@ export default function Resumos() {
             <h1 className="text-sm font-semibold tracking-wide text-foreground/90 hidden sm:flex items-center gap-2">
               Explorar Resumos
             </h1>
-            <button
-              onClick={handleResetHistory}
-              title="Zerar Histórico de Vistos"
-              className="p-1.5 rounded-full hover:bg-muted/50 text-muted-foreground transition-colors"
-            >
-              <RefreshCw className="w-4 h-4" />
-            </button>
 
-            {/* Nova feature oculta no Sheet lateral */}
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
               <SheetTrigger asChild>
                 <button
                   title="Abrir ementa e árvore de tópicos"
-                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-md hover:bg-muted/50 text-muted-foreground transition-colors text-xs font-semibold border border-border/40"
+                  className="p-2 rounded-full hover:bg-muted/50 text-muted-foreground transition-colors ml-2"
                 >
-                  <ListTree className="w-4 h-4 text-emerald-500" />
-                  Ementa
+                  <ListTree className="w-5 h-5 text-emerald-500" />
                 </button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[340px] sm:w-[400px] p-0 flex flex-col">
                 <SheetHeader className="p-4 border-b border-border/30 bg-muted/10 shrink-0">
-                  <SheetTitle className="text-sm font-semibold">Tópicos e Ementa</SheetTitle>
+                  <SheetTitle className="text-sm font-semibold">Ementa de Matérias</SheetTitle>
                 </SheetHeader>
                 <div className="flex-1 overflow-hidden p-3">
                   <TopicTreeMenu
@@ -296,7 +344,7 @@ export default function Resumos() {
                 <button
                   key={qtd}
                   onClick={() => loadInitial(qtd)}
-                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-muted/30 border border-border/50 hover:bg-emerald-500/10 hover:border-emerald-500/30 hover:text-emerald-500 transition-all flex items-center justify-center text-lg sm:text-xl font-semibold text-foreground/70"
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-muted/30 border border-border/50 hover:bg-emerald-500/10 hover:border-emerald-500/30 hover:text-emerald-500 transition-all flex items-center justify-center text-lg sm:text-xl font-semibold text-foreground/70 shadow-sm hover:scale-105"
                 >
                   {qtd}
                 </button>
@@ -310,26 +358,28 @@ export default function Resumos() {
                 key={`${r.materiaSlug}-${r.topico}-${i}`} 
                 materiaSlug={r.materiaSlug} 
                 topico={r.topico} 
-                isFlashcardDue={r.isFlashcardDue} 
+                isFlashcardDue={r.isFlashcardDue}
+                onNextSequentialTopic={() => handleNextSequential(r.materiaSlug, r.topico)}
               />
             ))}
           </DeckCards>
         )}
 
+        {/* Floating Action Bar para Mobile/Desktop */}
         {resumos.length > 0 && (
-          <div className="mt-8 flex flex-col items-center justify-center p-8 bg-muted/10 border border-border/50 rounded-3xl w-full">
-            <h3 className="text-sm font-semibold text-foreground/80 mb-4 uppercase tracking-wider">Quantos mais você quer ver agora?</h3>
-            <div className="flex items-center gap-3">
-              {[1, 2, 3, 5].map((qtd) => (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-background/90 backdrop-blur-md border border-border/50 shadow-2xl rounded-full px-6 py-3 flex items-center gap-4 animate-in slide-in-from-bottom-10">
+             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Adicionar +</span>
+             <div className="flex items-center gap-2">
+              {[1, 2, 3].map((qtd) => (
                 <button
                   key={qtd}
                   onClick={() => loadMore(qtd)}
-                  className="w-12 h-12 rounded-2xl bg-muted/30 border border-border/50 hover:bg-emerald-500/10 hover:border-emerald-500/30 hover:text-emerald-500 transition-all flex items-center justify-center font-medium text-foreground/70"
+                  className="w-10 h-10 rounded-full bg-muted border border-border/50 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-all flex items-center justify-center font-bold text-foreground shadow-sm"
                 >
                   {qtd}
                 </button>
               ))}
-            </div>
+             </div>
           </div>
         )}
       </main>

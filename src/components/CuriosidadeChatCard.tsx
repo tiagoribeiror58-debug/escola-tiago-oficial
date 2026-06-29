@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Lightbulb, Bookmark, Loader2, ArrowUp, BrainCircuit, RefreshCw } from 'lucide-react';
+import { Lightbulb, Bookmark, Loader2, ArrowUp, BrainCircuit, RefreshCw, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
@@ -15,14 +15,16 @@ interface ChatMessage {
 interface Props {
   materiaSlug: string;
   topico: string;
+  onNextSequentialTopic?: () => void;
 }
 
-export function CuriosidadeChatCard({ materiaSlug, topico }: Props) {
+export function CuriosidadeChatCard({ materiaSlug, topico, onNextSequentialTopic }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isGeneratingCards, setIsGeneratingCards] = useState(false);
+  const [isMarkingDone, setIsMarkingDone] = useState(false);
   const [summary, setSummary] = useState('');
   
   const { toast } = useToast();
@@ -234,6 +236,42 @@ export function CuriosidadeChatCard({ materiaSlug, topico }: Props) {
     }
   };
 
+  const handleMarkAsDone = async () => {
+    setIsMarkingDone(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user && summary) {
+        const { error } = await supabase
+          .from('ai_content_cache')
+          .upsert(
+            { 
+              user_id: session.user.id,
+              materia_slug: materiaSlug,
+              topico: topico,
+              tipo: 'curiosidade',
+              content: summary 
+            },
+            { onConflict: 'user_id,materia_slug,topico,tipo' }
+          );
+        if (error) throw error;
+      }
+
+      toast({
+        title: "Concluído!",
+        description: "Curiosidade marcada como vista e salva no banco.",
+      });
+    } catch (e) {
+      console.error(e);
+      toast({
+        title: "Erro",
+        description: "Falha ao marcar como concluído.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsMarkingDone(false);
+    }
+  };
+
   const handleGenerateFlashcards = async () => {
     if (isGeneratingCards || !summary) return;
     setIsGeneratingCards(true);
@@ -305,7 +343,7 @@ export function CuriosidadeChatCard({ materiaSlug, topico }: Props) {
           </div>
         </div>
 
-        <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium flex-1">
+        <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium flex-1 overflow-y-auto min-h-0 pr-2 custom-scrollbar">
           {summary ? (
             <div className="prose prose-sm dark:prose-invert max-w-none animate-in fade-in duration-500 whitespace-pre-wrap">
               <ReactMarkdown>{summary}</ReactMarkdown>
@@ -380,6 +418,14 @@ export function CuriosidadeChatCard({ materiaSlug, topico }: Props) {
             {isLoading && !summary ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
           </button>
           <button
+            onClick={handleMarkAsDone}
+            disabled={!summary || isMarkingDone}
+            title="Marcar como Concluído"
+            className="flex items-center justify-center p-2.5 bg-background border border-border/50 hover:bg-indigo-500/20 text-indigo-500 rounded-xl transition-all shadow-sm disabled:opacity-50 shrink-0"
+          >
+            {isMarkingDone ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+          </button>
+          <button
             onClick={handleSave}
             disabled={!summary || isSaving}
             className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
@@ -396,6 +442,15 @@ export function CuriosidadeChatCard({ materiaSlug, topico }: Props) {
             Flashcards
           </button>
         </div>
+
+        {onNextSequentialTopic && (
+          <button
+            onClick={onNextSequentialTopic}
+            className="flex items-center justify-center gap-2 w-full py-2.5 bg-indigo-500 text-white hover:bg-indigo-600 rounded-xl text-sm font-medium transition-all shadow-sm mt-1"
+          >
+            Próxima Curiosidade <ArrowRight className="w-4 h-4" />
+          </button>
+        )}
       </div>
     </div>
   );

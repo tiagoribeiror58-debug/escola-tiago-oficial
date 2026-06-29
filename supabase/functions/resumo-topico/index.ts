@@ -83,7 +83,7 @@ Regras absolutas:
 
       const { data: userData } = await supabaseClient.auth.getUser();
       if (userData?.user) {
-        await supabaseClient
+        const { error: upsertError } = await supabaseClient
           .from('ai_content_cache')
           .upsert(
             { 
@@ -93,8 +93,14 @@ Regras absolutas:
               tipo: 'resumo',
               content: content 
             },
-            { onConflict: 'user_id, materia_slug, topico, tipo' }
+            { onConflict: 'user_id,materia_slug,topico,tipo' }
           );
+          
+        if (upsertError) {
+          console.error("Erro ao salvar cache de resumo:", upsertError);
+        } else {
+          console.log("Resumo salvo no cache com sucesso.");
+        }
       }
     }
 

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { BookOpen, Loader2, ArrowUp, ArrowRight, BrainCircuit, Bookmark, RefreshCw } from 'lucide-react';
+import { BookOpen, Loader2, ArrowUp, ArrowRight, BrainCircuit, Bookmark, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -17,15 +17,17 @@ interface Props {
   materiaSlug: string;
   topico: string;
   isFlashcardDue?: boolean;
+  onNextSequentialTopic?: () => void;
 }
 
-export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
+export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequentialTopic }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [summary, setSummary] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isGeneratingCards, setIsGeneratingCards] = useState(false);
+  const [isMarkingDone, setIsMarkingDone] = useState(false);
   const [hasRevealed, setHasRevealed] = useState(!isFlashcardDue);
   const [recallAnswer, setRecallAnswer] = useState('');
   const { toast } = useToast();
@@ -193,6 +195,42 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
     }
   };
 
+  const handleMarkAsDone = async () => {
+    setIsMarkingDone(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user && summary) {
+        const { error } = await supabase
+          .from('ai_content_cache')
+          .upsert(
+            { 
+              user_id: session.user.id,
+              materia_slug: materiaSlug,
+              topico: topico,
+              tipo: 'resumo',
+              content: summary 
+            },
+            { onConflict: 'user_id,materia_slug,topico,tipo' }
+          );
+        if (error) throw error;
+      }
+
+      toast({
+        title: "Concluído!",
+        description: "Tópico marcado como visto e salvo no banco.",
+      });
+    } catch (e) {
+      console.error(e);
+      toast({
+        title: "Erro",
+        description: "Falha ao marcar como concluído.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsMarkingDone(false);
+    }
+  };
+
   const handleGenerateFlashcards = async () => {
     if (!summary || isGeneratingCards) return;
     setIsGeneratingCards(true);
@@ -295,7 +333,7 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
             </button>
           </div>
         ) : (
-          <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium flex-1">
+          <div className="text-sm sm:text-[15px] leading-relaxed text-foreground/90 font-medium flex-1 overflow-y-auto min-h-0 pr-2 custom-scrollbar">
             {summary ? (
               <div className="prose prose-sm dark:prose-invert max-w-none animate-in fade-in duration-500 whitespace-pre-wrap">
                 <ReactMarkdown>{summary}</ReactMarkdown>
@@ -371,6 +409,14 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
             {isLoading && !summary ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
           </button>
           <button
+            onClick={handleMarkAsDone}
+            disabled={!summary || isMarkingDone}
+            title="Marcar como Concluído"
+            className="flex items-center justify-center p-2.5 bg-background border border-border/50 hover:bg-emerald-500/20 text-emerald-500 rounded-xl transition-all shadow-sm disabled:opacity-50 shrink-0"
+          >
+            {isMarkingDone ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+          </button>
+          <button
             onClick={handleSave}
             disabled={!summary || isSaving}
             className="flex items-center justify-center gap-2 flex-1 py-2.5 bg-background border border-border/50 hover:bg-muted text-foreground rounded-xl text-sm font-medium transition-all shadow-sm disabled:opacity-50"
@@ -387,12 +433,22 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue }: Props) {
             Flashcards
           </button>
         </div>
-        <button
-          onClick={handleStudy}
-          className="flex items-center justify-center gap-2 w-full py-2.5 bg-background border border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 rounded-xl text-sm font-medium transition-all shadow-sm mt-1"
-        >
-          Estudo Completo <ArrowRight className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-2 mt-1">
+          <button
+            onClick={handleStudy}
+            className="flex flex-1 items-center justify-center gap-2 py-2.5 bg-background border border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 rounded-xl text-sm font-medium transition-all shadow-sm"
+          >
+            Estudo
+          </button>
+          {onNextSequentialTopic && (
+            <button
+              onClick={onNextSequentialTopic}
+              className="flex flex-1 items-center justify-center gap-2 py-2.5 bg-emerald-500 text-white hover:bg-emerald-600 rounded-xl text-sm font-medium transition-all shadow-sm"
+            >
+              Próximo <ArrowRight className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

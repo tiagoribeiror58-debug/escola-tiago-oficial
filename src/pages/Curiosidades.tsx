@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, RefreshCw, ChevronsUpDown, Check, ListTree, Loader2 } from 'lucide-react';
+import { ArrowLeft, ChevronsUpDown, Check, ListTree, Loader2, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CuriosidadeChatCard } from '@/components/CuriosidadeChatCard';
-import { ALL_TOPICS } from '@/lib/materias';
+import { ALL_TOPICS, MATERIAS } from '@/lib/materias';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
@@ -11,9 +11,10 @@ import { DeckCards } from '@/components/DeckCards';
 import { SavedCardsDrawer } from '@/components/SavedCardsDrawer';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { TopicTreeMenu } from '@/components/TopicTreeMenu';
+import { useToast } from '@/hooks/use-toast';
 
-const ALL_MATERIAS_LIST = Array.from(new Set(ALL_TOPICS.map(t => t.materia))).sort();
-const ALL_HUBS_LIST = Array.from(new Set(ALL_TOPICS.flatMap(t => t.hubNomes))).sort();
+const ALL_MATERIAS_LIST = Array.from(new Set(ALL_TOPICS.map(t => t.materia)));
+const ALL_HUBS_LIST = Array.from(new Set(ALL_TOPICS.flatMap(t => t.hubNomes)));
 
 interface CuriosidadeItem {
   materiaSlug: string;
@@ -22,15 +23,69 @@ interface CuriosidadeItem {
 
 export default function Curiosidades() {
   const navigate = useNavigate();
-  const [curiosidades, setCuriosidades] = useState<CuriosidadeItem[]>([]);
+  const { toast } = useToast();
+  
+  const [curiosidades, setCuriosidades] = useState<CuriosidadeItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('active_curiosidades_session');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const [temaEspecifico, setTemaEspecifico] = useState<string>("todos");
   const [filterMode, setFilterMode] = useState<'materias' | 'hubs'>('materias');
   const [ordenacao, setOrdenacao] = useState<'aleatorio' | 'sequencial'>('aleatorio');
   const [open, setOpen] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [batchSize, setBatchSize] = useState<number>(3);
+  const [cachedTopics, setCachedTopics] = useState<Set<string>>(new Set());
 
-  const getAvailableTopicsPool = (filterTema: string, mode: 'materias' | 'hubs') => {
+  useEffect(() => {
+    localStorage.setItem('active_curiosidades_session', JSON.stringify(curiosidades));
+  }, [curiosidades]);
+
+  useEffect(() => {
+    const fetchCache = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return;
+
+      const { data } = await supabase
+        .from('ai_content_cache')
+        .select('topico')
+        .eq('tipo', 'curiosidade')
+        .eq('user_id', session.user.id);
+      
+      if (data) {
+        setCachedTopics(new Set(data.map(d => d.topico)));
+      }
+    };
+
+    fetchCache();
+
+    const channel = supabase
+      .channel('curiosidades_cache_changes')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'ai_content_cache', filter: "tipo=eq.curiosidade" },
+        (payload) => {
+          const newRow = payload.new as { topico: string };
+          setCachedTopics(prev => {
+            const next = new Set(prev);
+            next.add(newRow.topico);
+            return next;
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const getAvailableTopicsPool = (filterTema: string, mode: 'materias' | 'hubs', vistos = cachedTopics) => {
     let pool = ALL_TOPICS;
     if (filterTema !== "todos") {
       if (mode === 'materias') {
@@ -40,11 +95,7 @@ export default function Curiosidades() {
       }
     }
     
-    const historicoSalvo = JSON.parse(localStorage.getItem('curiosidades_vistas') || '[]');
-    const vistosSet = new Set<string>(historicoSalvo);
-
-    // Filtro anti-repetição
-    pool = pool.filter(t => !vistosSet.has(t.topico));
+    pool = pool.filter(t => !vistos.has(t.topico));
     return pool;
   };
 
@@ -62,11 +113,6 @@ export default function Curiosidades() {
     }
     
     const selectedTopics = resultList.slice(0, Math.min(count, resultList.length));
-    
-    const historicoSalvo = JSON.parse(localStorage.getItem('curiosidades_vistas') || '[]');
-    const novosTemas = selectedTopics.map(t => t.topico);
-    const novoHistorico = Array.from(new Set([...historicoSalvo, ...novosTemas]));
-    localStorage.setItem('curiosidades_vistas', JSON.stringify(novoHistorico));
 
     return selectedTopics.map(t => ({
       materiaSlug: t.materiaSlug,
@@ -85,8 +131,31 @@ export default function Curiosidades() {
   };
 
   const loadSpecificTopic = (materiaSlug: string, topico: string) => {
-    setCuriosidades([{ materiaSlug, topico }]);
+    setCuriosidades(prev => {
+      if (prev.some(p => p.topico === topico)) return prev;
+      return [...prev, { materiaSlug, topico }];
+    });
     setSheetOpen(false);
+  };
+
+  const handleNextSequential = (materiaSlug: string, topicoAtual: string) => {
+    const pool = ALL_TOPICS.filter(t => t.materiaSlug === materiaSlug);
+    const currIdx = pool.findIndex(t => t.topico === topicoAtual);
+    if (currIdx >= 0 && currIdx < pool.length - 1) {
+      const nextTopic = pool[currIdx + 1];
+
+      setCuriosidades(prev => {
+        if (prev.some(p => p.topico === nextTopic.topico)) {
+          toast({ title: "Aviso", description: "O próximo tópico já está no seu baralho atual!" });
+          return prev;
+        }
+        return [...prev, { materiaSlug: nextTopic.materiaSlug, topico: nextTopic.topico }];
+      });
+      
+      toast({ title: "Tópico adicionado", description: `"${nextTopic.topico}" adicionado à fila.` });
+    } else {
+      toast({ title: "Fim da Matéria", description: "Não há mais tópicos disponíveis nesta matéria." });
+    }
   };
 
   const handleSearch = (val: string, mode: 'materias' | 'hubs') => {
@@ -94,26 +163,11 @@ export default function Curiosidades() {
     setFilterMode(mode);
     if (curiosidades.length > 0) {
       setCuriosidades(getTopics(batchSize, val, mode, ordenacao, []));
-    } else {
-      setCuriosidades([]);
     }
   };
-
-  const handleResetHistory = () => {
-    localStorage.removeItem('curiosidades_vistas');
-    if (curiosidades.length > 0) {
-      setCuriosidades(getTopics(batchSize, temaEspecifico, filterMode, ordenacao, []));
-    }
-  };
-
-  useEffect(() => {
-    if (curiosidades.length > 0) {
-      setCuriosidades(getTopics(batchSize, temaEspecifico, filterMode, ordenacao, []));
-    }
-  }, [ordenacao]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col selection:bg-indigo-500/20">
+    <div className="min-h-screen bg-background flex flex-col selection:bg-indigo-500/20 pb-20">
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
@@ -126,23 +180,14 @@ export default function Curiosidades() {
             <h1 className="text-sm font-semibold tracking-wide text-foreground/90 hidden sm:flex items-center gap-2">
               Explorar Curiosidades
             </h1>
-            <button
-              onClick={handleResetHistory}
-              title="Zerar Histórico de Vistos"
-              className="p-1.5 rounded-full hover:bg-muted/50 text-muted-foreground transition-colors"
-            >
-              <RefreshCw className="w-4 h-4" />
-            </button>
 
-            {/* Sheet Lateral Oculto */}
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
               <SheetTrigger asChild>
                 <button
                   title="Abrir ementa e árvore de tópicos"
-                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-md hover:bg-muted/50 text-muted-foreground transition-colors text-xs font-semibold border border-border/40"
+                  className="p-2 rounded-full hover:bg-muted/50 text-muted-foreground transition-colors ml-2"
                 >
-                  <ListTree className="w-4 h-4 text-indigo-500" />
-                  Ementa
+                  <ListTree className="w-5 h-5 text-indigo-500" />
                 </button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[340px] sm:w-[400px] p-0 flex flex-col">
@@ -165,6 +210,21 @@ export default function Curiosidades() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 max-w-[250px] sm:max-w-[420px] w-full">
+            {curiosidades.length > 0 && (
+               <div className="hidden lg:flex bg-muted/50 rounded-lg p-1 mr-2 border border-border/50 items-center">
+                 <span className="text-[10px] uppercase font-bold text-muted-foreground px-2">Gerar</span>
+                 {[1, 2, 3].map((qtd) => (
+                   <button
+                     key={qtd}
+                     onClick={() => loadMore(qtd)}
+                     className="w-7 h-7 rounded-md hover:bg-indigo-500/10 hover:text-indigo-500 transition-colors flex items-center justify-center text-xs font-semibold text-foreground/70"
+                   >
+                     +{qtd}
+                   </button>
+                 ))}
+               </div>
+            )}
+
             <div className="flex bg-muted/50 rounded-lg p-1 w-full sm:w-auto shrink-0 border border-border/50">
               <button
                 onClick={() => { setFilterMode('materias'); setTemaEspecifico('todos'); handleSearch('todos', 'materias'); }}
@@ -272,7 +332,7 @@ export default function Curiosidades() {
                 <button
                   key={qtd}
                   onClick={() => loadInitial(qtd)}
-                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-muted/30 border border-border/50 hover:bg-indigo-500/10 hover:border-indigo-500/30 hover:text-indigo-500 transition-all flex items-center justify-center text-lg sm:text-xl font-semibold text-foreground/70"
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-muted/30 border border-border/50 hover:bg-indigo-500/10 hover:border-indigo-500/30 hover:text-indigo-500 transition-all flex items-center justify-center text-lg sm:text-xl font-semibold text-foreground/70 shadow-sm hover:scale-105"
                 >
                   {qtd}
                 </button>
@@ -286,25 +346,27 @@ export default function Curiosidades() {
                 key={`${c.materiaSlug}-${c.topico}-${i}`} 
                 materiaSlug={c.materiaSlug} 
                 topico={c.topico} 
+                onNextSequentialTopic={() => handleNextSequential(c.materiaSlug, c.topico)}
               />
             ))}
           </DeckCards>
         )}
 
+        {/* Floating Action Bar para Mobile/Desktop */}
         {curiosidades.length > 0 && (
-          <div className="mt-8 flex flex-col items-center justify-center p-8 bg-muted/10 border border-border/50 rounded-3xl w-full">
-            <h3 className="text-sm font-semibold text-foreground/80 mb-4 uppercase tracking-wider">Quantos mais você quer ver agora?</h3>
-            <div className="flex items-center gap-3">
-              {[1, 2, 3, 5].map((qtd) => (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-background/90 backdrop-blur-md border border-border/50 shadow-2xl rounded-full px-6 py-3 flex items-center gap-4 animate-in slide-in-from-bottom-10">
+             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Adicionar +</span>
+             <div className="flex items-center gap-2">
+              {[1, 2, 3].map((qtd) => (
                 <button
                   key={qtd}
                   onClick={() => loadMore(qtd)}
-                  className="w-12 h-12 rounded-2xl bg-muted/30 border border-border/50 hover:bg-indigo-500/10 hover:border-indigo-500/30 hover:text-indigo-500 transition-all flex items-center justify-center font-medium text-foreground/70"
+                  className="w-10 h-10 rounded-full bg-muted border border-border/50 hover:bg-indigo-500 hover:text-white hover:border-indigo-500 transition-all flex items-center justify-center font-bold text-foreground shadow-sm"
                 >
                   {qtd}
                 </button>
               ))}
-            </div>
+             </div>
           </div>
         )}
       </main>

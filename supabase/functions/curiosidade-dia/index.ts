@@ -114,7 +114,7 @@ Expected format:\n${expectedFormat}`;
         if (userData?.user) {
           const mSlug = materiaSlug.toLowerCase().replace(/\\s+/g, '-');
           
-          await supabaseClient
+          const { error: upsertError } = await supabaseClient
             .from('ai_content_cache')
             .upsert(
               { 
@@ -124,8 +124,14 @@ Expected format:\n${expectedFormat}`;
                 tipo: 'curiosidade',
                 content: parsed.texto 
               },
-              { onConflict: 'user_id, materia_slug, topico, tipo' }
+              { onConflict: 'user_id,materia_slug,topico,tipo' }
             );
+            
+          if (upsertError) {
+            console.error("Erro ao salvar cache de curiosidade:", upsertError);
+          } else {
+            console.log("Curiosidade salva no cache com sucesso.");
+          }
         }
       }
     } catch (e) {
