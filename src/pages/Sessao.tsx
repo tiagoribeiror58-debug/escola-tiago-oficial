@@ -31,6 +31,7 @@ export default function Sessao() {
   const location = useLocation();
   const resumeKey = searchParams.get('resume');
   const sub = searchParams.get('sub');
+  const returnTo = searchParams.get('returnTo');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const materiaConfig = getMateriaBySlug(slug || '');
@@ -62,10 +63,11 @@ export default function Sessao() {
         prev.set('resume', sessionKey);
         if (sub) prev.set('sub', sub);
         if (modo) prev.set('modo', modo);
+        if (returnTo) prev.set('returnTo', returnTo);
         return prev;
       }, { replace: true });
     }
-  }, [resumeKey, sessionKey, setSearchParams, sub, modo]);
+  }, [resumeKey, sessionKey, setSearchParams, sub, modo, returnTo]);
 
   const ementaFlat = materiaConfig?.fases
     ? materiaConfig.fases.flatMap(f => f.topicos)
@@ -320,14 +322,14 @@ export default function Sessao() {
       toast.success('Sessão salva ✓');
       setSaving(false);
       playSuccessSound();
-      navigate(`/?materia=${slug}`);
+      navigate(returnTo || `/?materia=${slug}`);
     } catch (err) {
       console.error(err);
       toast.error('Erro ao salvar — tente novamente');
       isSavingRef.current = false; // libera o lock para permitir retry
       setSaving(false);
     }
-  }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey, modo, navigate, resumedSessionData, ementaConcluida, materiaConfig, sub]);
+  }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey, modo, navigate, resumedSessionData, ementaConcluida, materiaConfig, sub, returnTo]);
 
   // doPausar: salva snapshot parcial no banco com decisao_proxima='Pausada'
   // DIFERENTE do doEncerrar: NÃO deleta as chat_messages, preservando o histórico para retomada.
@@ -404,14 +406,14 @@ export default function Sessao() {
 
       toast.success('Sessão pausada');
       setSaving(false);
-      navigate(`/?materia=${slug}`);
+      navigate(returnTo || `/?materia=${slug}`);
     } catch (err) {
       console.error(err);
       toast.error('Erro ao pausar — tente novamente');
       isSavingRef.current = false;
       setSaving(false);
     }
-  }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey, resumedSessionData, ementaConcluida, materiaConfig, sub, navigate]);
+  }, [slug, ultimaSessao, queryClient, sessionKey, resumeKey, resumedSessionData, ementaConcluida, materiaConfig, sub, navigate, returnTo]);
 
   const handlePausar = useCallback(() => {
     doPausar();
@@ -471,7 +473,7 @@ export default function Sessao() {
           Você precisa concluir ao menos 1 tópico desta matéria para gerar perguntas de revisão/avaliação.
         </p>
         <button
-          onClick={() => navigate(`/?materia=${slug}`)}
+          onClick={() => navigate(returnTo || `/?materia=${slug}`)}
           className="mt-6 px-5 py-2.5 bg-primary text-primary-foreground rounded-xl font-medium transition-transform active:scale-95"
         >
           Voltar ao Roadmap
@@ -489,7 +491,7 @@ export default function Sessao() {
             if (!isAlreadyCompleted && messageCount > 0) {
               handlePausar();
             } else {
-              navigate(`/?materia=${slug}`);
+              navigate(returnTo || `/?materia=${slug}`);
             }
           }}
           className="p-1.5 -ml-1.5 rounded-lg hover:bg-muted transition-colors shrink-0"

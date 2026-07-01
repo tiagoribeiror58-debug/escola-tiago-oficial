@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { BookOpen, Loader2, ArrowUp, ArrowRight, BrainCircuit, Bookmark, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { BookOpen, Loader2, ArrowUp, ArrowRight, BrainCircuit, Bookmark, RefreshCw, CheckCircle2, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { getMateriaBySlug } from '@/lib/materias';
 import { useQueryClient } from '@tanstack/react-query';
@@ -35,6 +35,7 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
   const [recallAnswer, setRecallAnswer] = useState('');
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   const bottomRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
 
@@ -155,7 +156,8 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
   };
 
   const handleStudy = () => {
-    navigate(`/?materia=${materiaSlug}&sub=${encodeURIComponent(topico)}`);
+    const currentPath = location.pathname + location.search;
+    navigate(`/sessao/${materiaSlug}?sub=${encodeURIComponent(topico)}&returnTo=${encodeURIComponent(currentPath)}`);
   };
 
   const handleSave = async () => {
@@ -428,6 +430,18 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
             {isSavedToNotebook ? "Salvo" : "Caderno"}
           </button>
           
+          <button
+            onClick={handleStudy}
+            title="Estudar este tópico profundamente"
+            className={cn(
+              "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm border",
+              "bg-primary/10 border-primary/20 hover:bg-primary/20 text-primary"
+            )}
+          >
+            <Play className="w-4 h-4 fill-current" />
+            Estudar
+          </button>
+
           <button
             onClick={handleGenerateFlashcards}
             disabled={!summary || isGeneratingCards || flashcardsCreated}
