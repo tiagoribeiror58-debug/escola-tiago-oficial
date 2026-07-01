@@ -407,7 +407,7 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
           </button>
         </div>
 
-        <div className="flex items-center gap-2 mt-2">
+        <div className="flex flex-wrap items-center gap-2 mt-2">
           <button
             onClick={handleRegenerate}
             disabled={!summary || isLoading}
@@ -435,7 +435,7 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
             title="Estudar este tópico profundamente"
             className={cn(
               "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm border",
-              "bg-primary/10 border-primary/20 hover:bg-primary/20 text-primary"
+              "bg-background border-border/50 hover:bg-muted text-foreground"
             )}
           >
             <Play className="w-4 h-4 fill-current" />
