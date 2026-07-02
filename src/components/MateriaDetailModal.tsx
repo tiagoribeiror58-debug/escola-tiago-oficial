@@ -391,13 +391,7 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                               )}>
                                 {/* Indicador Visual */}
                                 <div className="flex flex-col items-center">
-                                  <button 
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      if (!isVisible) return;
-                                      playPopSound();
-                                      onOpenChange(false);
-                                      
+                                  {(() => {
                                       let url = `/sessao/${config.slug}?sub=${encodeURIComponent(step)}`;
                                       if (isPaused) {
                                         const sessaoPausada = sessoesMateria.find(s => s.decisao_proxima === 'Pausada' && (normLocal(s.topico) === normLocal(step)));
@@ -406,23 +400,35 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                         const sessaoConc = sessoesMateria.find(s => !!s.session_key && (normLocal(s.topico) === normLocal(step)));
                                         if (sessaoConc?.session_key) url = `/sessao/${config.slug}?resume=${sessaoConc.session_key}`;
                                       }
-                                      navigate(url);
-                                    }}
-                                    className={cn(
-                                      "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] font-bold transition-all duration-200 z-10",
-                                      isVisible && "hover:scale-110",
-                                      !isVisible && "opacity-40 grayscale cursor-default",
-                                      isCompleted
-                                        ? "bg-[hsl(var(--success)/0.15)] border-[hsl(var(--success)/0.4)] text-[hsl(var(--success))]"
-                                        : isPaused
-                                        ? "bg-[hsl(var(--warning)/0.15)] border-[hsl(var(--warning)/0.5)] text-[hsl(var(--warning))] ring-2 ring-[hsl(var(--warning)/0.25)] ring-offset-1 ring-offset-background"
-                                        : isCurrent
-                                        ? "bg-primary/15 border-primary/50 text-primary ring-2 ring-primary/25 ring-offset-1 ring-offset-background"
-                                        : "bg-muted/20 border-border/40 text-muted-foreground/50"
-                                    )}
-                                  >
-                                    {isCompleted ? '✓' : isPaused ? <Pause className="w-3 h-3 fill-current" /> : isCurrent ? '●' : (idx + 1)}
-                                  </button>
+                                      
+                                      return (
+                                        <Link 
+                                          to={url}
+                                          onClick={(e) => {
+                                            if (!isVisible) {
+                                              e.preventDefault();
+                                              return;
+                                            }
+                                            playPopSound();
+                                            onOpenChange(false);
+                                          }}
+                                          className={cn(
+                                            "w-6 h-6 rounded-full flex items-center justify-center shrink-0 border text-[10px] font-bold transition-all duration-200 z-10",
+                                            isVisible && "hover:scale-110",
+                                            !isVisible && "opacity-40 grayscale cursor-default pointer-events-none",
+                                            isCompleted
+                                              ? "bg-[hsl(var(--success)/0.15)] border-[hsl(var(--success)/0.4)] text-[hsl(var(--success))]"
+                                              : isPaused
+                                              ? "bg-[hsl(var(--warning)/0.15)] border-[hsl(var(--warning)/0.5)] text-[hsl(var(--warning))] ring-2 ring-[hsl(var(--warning)/0.25)] ring-offset-1 ring-offset-background"
+                                              : isCurrent
+                                              ? "bg-primary/15 border-primary/50 text-primary ring-2 ring-primary/25 ring-offset-1 ring-offset-background"
+                                              : "bg-muted/20 border-border/40 text-muted-foreground/50"
+                                          )}
+                                        >
+                                          {isCompleted ? '✓' : isPaused ? <Pause className="w-3 h-3 fill-current" /> : isCurrent ? '●' : (idx + 1)}
+                                        </Link>
+                                      );
+                                  })()}
                                   {/* Linha conectora (não aparece no último item) */}
                                   {!isLast && (
                                     <div className={cn(
@@ -679,19 +685,19 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                 {selectedSub && (isSelectedSubCompleted || isSelectedSubPaused) && (
                   <div className="flex gap-2 mt-2 w-full">
                     {isSelectedSubCompleted && (
-                      <button
+                      <Link
+                        to={`/sessao/${config?.slug}?sub=${encodeURIComponent(selectedSub || '')}&modo=revisao`}
                         onClick={(e) => {
                           e.stopPropagation();
                           if (config && selectedSub) {
                             playPopSound();
                             onOpenChange(false);
-                            navigate(`/sessao/${config.slug}?sub=${encodeURIComponent(selectedSub)}&modo=revisao`);
                           }
                         }}
                         className="flex-1 py-3 rounded-xl bg-blue-500/10 text-blue-500 border border-blue-500/30 hover:bg-blue-500/20 font-semibold text-[13px] flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
                       >
                         Revisar (Active Recall)
-                      </button>
+                      </Link>
                     )}
                     <button
                       onClick={(e) => {

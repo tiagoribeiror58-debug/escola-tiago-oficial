@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Bookmark, Loader2 } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ReactMarkdown from 'react-markdown';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { BookOpen } from 'lucide-react';
 
 interface StudyNote {
@@ -101,16 +101,14 @@ export function SavedCardsDrawer({ type }: { type: 'curiosidades' | 'resumos' })
                       
                       {type === 'resumos' && card.materia_slug && (
                         <div className="mt-4 pt-4 border-t border-border/50">
-                          <button
-                            onClick={() => {
-                              setIsOpen(false);
-                              navigate(`/?materia=${card.materia_slug}&sub=${encodeURIComponent(card.topico)}`);
-                            }}
+                          <Link
+                            to={`/?materia=${card.materia_slug}&sub=${encodeURIComponent(card.topico)}`}
+                            onClick={() => setIsOpen(false)}
                             className="flex items-center gap-2 text-xs font-semibold text-emerald-500 hover:text-emerald-600 transition-colors w-full justify-center bg-emerald-500/10 hover:bg-emerald-500/20 py-2 rounded-lg"
                           >
                             <BookOpen className="w-4 h-4" />
                             Estudar Completo
-                          </button>
+                          </Link>
                         </div>
                       )}
                     </div>

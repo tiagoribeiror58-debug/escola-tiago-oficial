@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { BookOpen, Loader2, ArrowUp, ArrowRight, BrainCircuit, Bookmark, RefreshCw, CheckCircle2, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { getMateriaBySlug } from '@/lib/materias';
 import { useQueryClient } from '@tanstack/react-query';
@@ -430,8 +430,8 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
             {isSavedToNotebook ? "Salvo" : "Caderno"}
           </button>
           
-          <button
-            onClick={handleStudy}
+          <Link
+            to={`/sessao/${materiaSlug}?sub=${encodeURIComponent(topico)}&returnTo=${encodeURIComponent(location.pathname + location.search)}`}
             title="Estudar este tópico profundamente"
             className={cn(
               "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm border",
@@ -440,7 +440,7 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
           >
             <Play className="w-4 h-4 fill-current" />
             Estudar
-          </button>
+          </Link>
 
           <button
             onClick={handleGenerateFlashcards}

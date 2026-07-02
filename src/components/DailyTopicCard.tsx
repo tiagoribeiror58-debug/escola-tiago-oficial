@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Sparkles, ArrowRight, RefreshCw, Check, ChevronsUpDown } from 'lucide-react';
 import { useDailyTopic } from '@/hooks/useDailyTopic';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -114,8 +114,7 @@ export function DailyTopicCard() {
         </div>
       )}
 
-      <div className="w-full bg-card/30 hover:bg-card/60 border border-border/40 rounded-3xl p-6 relative overflow-hidden transition-all duration-300 group cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-6"
-        onClick={() => navigate(`/sessao/${dailyTopic.materiaSlug}?sub=${encodeURIComponent(dailyTopic.topico)}`)}
+      <Link to={`/sessao/${dailyTopic.materiaSlug}?sub=${encodeURIComponent(dailyTopic.topico)}`} className="w-full bg-card/30 hover:bg-card/60 border border-border/40 rounded-3xl p-6 relative overflow-hidden transition-all duration-300 group cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-6"
       >
       <div className="space-y-2 flex-1">
         <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
@@ -137,7 +136,7 @@ export function DailyTopicCard() {
       <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-foreground/5 text-muted-foreground group-hover:bg-foreground group-hover:text-background transition-all duration-300">
         <ArrowRight className="w-5 h-5 -translate-x-0.5 group-hover:translate-x-0 transition-transform duration-300" />
       </div>
-      </div>
+      </Link>
     </div>
   );
 }

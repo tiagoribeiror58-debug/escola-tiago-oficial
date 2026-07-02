@@ -12,20 +12,29 @@ export interface Flashcard {
   next_review_date: string;
 }
 
-export function usePendingFlashcards() {
+export function usePendingFlashcards(materiaSlug?: string, topico?: string) {
   return useQuery({
-    queryKey: ['pending-flashcards'],
+    queryKey: ['pending-flashcards', materiaSlug, topico],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
 
-      const { data, error } = await supabase
+      let query = supabase
         .from('flashcards')
         .select('*')
         .eq('user_id', user.id)
         .lte('next_review_date', new Date().toISOString())
         .order('next_review_date', { ascending: true })
         .limit(50);
+
+      if (materiaSlug && materiaSlug !== 'all') {
+        query = query.eq('materia_slug', materiaSlug);
+      }
+      if (topico && topico !== 'all') {
+        query = query.eq('topico', topico);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       return data as Flashcard[];
