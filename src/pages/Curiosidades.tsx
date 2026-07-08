@@ -332,42 +332,17 @@ export default function Curiosidades() {
           </div>
         ) : (
           <div className="flex flex-col gap-8 pb-32">
-            <div className="relative w-full max-w-2xl mx-auto h-[750px] animate-in fade-in duration-500 perspective-[1000px]">
-              {curiosidades.map((c, i) => {
-                const isTop = i === 0;
-                const zIndex = curiosidades.length - i;
-                const scale = Math.max(0.9, 1 - i * 0.05);
-                const translateY = i * 20;
-                const opacity = i > 3 ? 0 : 1 - (i * 0.15);
-
-                return (
-                <div 
-                  key={`${c.materiaSlug}-${c.topico}-${i}`} 
-                  className={cn(
-                    "absolute inset-0 w-full transition-all duration-500 ease-out",
-                    !isTop && "pointer-events-none select-none"
-                  )}
-                  style={{
-                    zIndex,
-                    transform: `translateY(${translateY}px) scale(${scale})`,
-                    transformOrigin: 'top center',
-                    opacity,
-                  }}
-                >
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 animate-in fade-in duration-500 items-start">
+              {curiosidades.map((c, i) => (
+                <div key={`${c.materiaSlug}-${c.topico}-${i}`} className="relative group max-w-2xl mx-auto w-full">
                   <button 
                     onClick={() => removeCard(i)}
-                    className={cn(
-                      "absolute -top-4 -right-4 z-20 w-12 h-12 bg-background border-2 border-border text-muted-foreground hover:text-destructive hover:border-destructive hover:bg-destructive/10 rounded-full flex items-center justify-center transition-all shadow-xl",
-                      isTop ? "opacity-100 scale-100 hover:scale-110" : "opacity-0 scale-50 pointer-events-none"
-                    )}
-                    title={isTop ? "Descartar cartão" : ""}
+                    className="absolute -top-3 -right-3 z-10 w-8 h-8 bg-background border border-border/50 text-muted-foreground hover:text-destructive rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm hover:scale-110"
+                    title="Esconder card"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-4 h-4" />
                   </button>
-                  <div className={cn(
-                    "h-[750px] rounded-[2rem] shadow-2xl overflow-hidden bg-background border border-border/50 transition-colors",
-                    isTop ? "ring-2 ring-primary/20 shadow-primary/5" : "brightness-[0.95] dark:brightness-75"
-                  )}>
+                  <div className="h-[750px] rounded-[2rem] shadow-xl overflow-hidden bg-background border border-border/50">
                     <CuriosidadeChatCard 
                       materiaSlug={c.materiaSlug} 
                       topico={c.topico} 
@@ -375,16 +350,7 @@ export default function Curiosidades() {
                     />
                   </div>
                 </div>
-              )})}
-            </div>
-            
-            <div className="flex justify-center mt-12 animate-in fade-in slide-in-from-bottom-4">
-               <button 
-                 onClick={() => removeCard(0)} 
-                 className="px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-2xl shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 text-lg"
-               >
-                 Próxima Curiosidade
-               </button>
+              ))}
             </div>
             
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
