@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { action, materiaSlug, completedTopics, n, questionText, userAnswer, topico, forceAnswer } = await req.json();
+    const { action, materiaSlug, completedTopics, n, questionText, userAnswer, topico, forceAnswer, topicos, materias, userConclusion, debateHistory } = await req.json();
 
     const DEEPSEEK_API_KEY = Deno.env.get("DEEPSEEK_API_KEY");
     if (!DEEPSEEK_API_KEY) {
@@ -134,6 +134,220 @@ NÃO retorne markdown, nem \`\`\`json. Apenas o JSON puro, sem formatação extr
           model: "deepseek-chat",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.3,
+        }),
+      });
+
+      if (!resp.ok) throw new Error(await resp.text());
+      const data = await resp.json();
+      let content = data.choices[0].message.content.trim();
+      if (content.startsWith('```json')) content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+
+      return new Response(content, { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // --- FEAT-4: Método Feynman - Explicação Simplificada ---
+    if (action === "feynman_explain") {
+      const prompt = `Você é um mentor aplicando o Método Feynman. Explique o tópico "${topico}" da matéria "${materiaSlug || 'Geral'}" como se estivesse ensinando para uma criança de 10 anos.
+
+REGRAS:
+1. Use linguagem ultra-simples, sem jargões técnicos
+2. Use analogias do cotidiano (comida, brinquedos, escola, futebol)
+3. Máximo 120 palavras
+4. Quebre em 2-3 parágrafos curtos
+5. No final, NÃO faça perguntas. Apenas explique.
+
+Retorne APENAS um JSON:
+{"explanation": "sua explicação simplificada aqui"}
+
+NÃO retorne markdown, nem \`\`\`json. Apenas o JSON puro.`;
+
+      const resp = await fetch("https://api.deepseek.com/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.7,
+        }),
+      });
+
+      if (!resp.ok) throw new Error(await resp.text());
+      const data = await resp.json();
+      let content = data.choices[0].message.content.trim();
+      if (content.startsWith('```json')) content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+
+      return new Response(content, { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // --- FEAT-4: Método Feynman - Avaliação da Reexplicação ---
+    if (action === "feynman_evaluate") {
+      const prompt = `O aluno está praticando o Método Feynman. Ele leu uma explicação simplificada sobre "${topico}" e agora tentou reexplicar com suas próprias palavras.
+
+Reexplicação do aluno: ${userAnswer}
+
+Avalie se o aluno demonstrou compreensão real do conceito. Retorne um JSON:
+{
+  "status": "correto" | "parcial" | "errado",
+  "feedback": "..."
+}
+
+REGRAS:
+1. "correto": O aluno capturou a essência do conceito, mesmo com palavras diferentes
+2. "parcial": O aluno entendeu parte, mas há lacunas importantes. Aponte qual lacuna específica
+3. "errado": O aluno não demonstrou compreensão. Reexplique de forma ainda mais simples
+4. Feedback sempre didático, com analogias simples, máx 100 palavras
+
+NÃO retorne markdown, nem \`\`\`json. Apenas o JSON puro.`;
+
+      const resp = await fetch("https://api.deepseek.com/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.3,
+        }),
+      });
+
+      if (!resp.ok) throw new Error(await resp.text());
+      const data = await resp.json();
+      let content = data.choices[0].message.content.trim();
+      if (content.startsWith('```json')) content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+
+      return new Response(content, { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // --- FEAT-5: Quiz Interleaving - Perguntas Mistas ---
+    if (action === "generate_mixed") {
+      const topicsList = topicos || completedTopics || [];
+      const materiasList = materias || [materiaSlug || 'Geral'];
+      const totalQuestions = n || 6;
+      const perMateria = Math.ceil(totalQuestions / materiasList.length);
+
+      const prompt = `Gere exatamente ${totalQuestions} perguntas de revisão (Active Recall) distribuídas igualmente entre estas matérias/tópicos:
+
+${materiasList.map((m: string, i: number) => `Matéria ${i+1}: "${m}" - Tópicos: [${topicsList.filter((_: string, idx: number) => idx % materiasList.length === i).join(', ') || 'qualquer tópico da matéria'}]`).join('\n')}
+
+Gere ~${perMateria} perguntas por matéria. As perguntas devem ser diretas, focando na essência.
+Retorne APENAS um JSON válido:
+[
+  { "materia": "nome da matéria", "topico": "tópico específico", "text": "a pergunta", "dica": "dica sutil" }
+]
+NÃO retorne markdown, nem \`\`\`json. Apenas o array JSON puro.`;
+
+      const resp = await fetch("https://api.deepseek.com/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.7,
+        }),
+      });
+
+      if (!resp.ok) throw new Error(await resp.text());
+      const data = await resp.json();
+      let content = data.choices[0].message.content.trim();
+      if (content.startsWith('```json')) content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+
+      return new Response(content, { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // --- FEAT-6: Warmup Questions (Q-SQ3R) ---
+    if (action === "warmup_questions") {
+      const prompt = `Gere 4 perguntas-guia para um aluno que está prestes a estudar o tópico "${topico}" da matéria "${materiaSlug || 'Geral'}".
+
+Essas perguntas devem:
+1. Preparar a mente do aluno para o que ele vai aprender
+2. Direcionar a atenção para os conceitos mais importantes
+3. Ser perguntas que o conteúdo do tópico vai responder
+4. Usar linguagem simples e direta
+
+Retorne APENAS um JSON:
+[
+  {"question": "pergunta 1", "hint": "por que essa pergunta é importante"},
+  {"question": "pergunta 2", "hint": "..."},
+  {"question": "pergunta 3", "hint": "..."},
+  {"question": "pergunta 4", "hint": "..."}
+]
+NÃO retorne markdown, nem \`\`\`json. Apenas o array JSON puro.`;
+
+      const resp = await fetch("https://api.deepseek.com/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.6,
+        }),
+      });
+
+      if (!resp.ok) throw new Error(await resp.text());
+      const data = await resp.json();
+      let content = data.choices[0].message.content.trim();
+      if (content.startsWith('```json')) content = content.replace(/```json/g, '').replace(/```/g, '').trim();
+
+      return new Response(content, { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
+    // --- FEAT-10: Modo Adversarial (IA te Contesta) ---
+    if (action === "adversarial") {
+      const conclusion = userConclusion || userAnswer;
+      const history = debateHistory || [];
+      const round = history.length + 1;
+
+      let prompt = '';
+      if (round === 1) {
+        prompt = `O aluno está estudando "${topico}" da matéria "${materiaSlug || 'Geral'}" e apresentou esta conclusão:
+
+"${conclusion}"
+
+Você é um debatedor intelectual rigoroso. Seu trabalho é ATACAR essa conclusão com o contra-argumento mais forte possível. Encontre falhas lógicas, exceções, ou perspectivas opostas.
+
+REGRAS:
+1. Seja respeitoso mas incisivo
+2. Apresente UM contra-argumento forte e bem fundamentado
+3. Máximo 100 palavras
+4. Termine com uma pergunta desafiadora para o aluno rebater
+
+Retorne APENAS um JSON:
+{"counterargument": "seu contra-argumento aqui", "challenge_question": "pergunta para o aluno rebater"}
+NÃO retorne markdown, nem \`\`\`json. Apenas o JSON puro.`;
+      } else if (round <= 3) {
+        const historyStr = history.map((h: any, i: number) => `Rodada ${i+1}: Aluno: "${h.user}" | IA: "${h.ai}"`).join('\n');
+        prompt = `Debate sobre "${topico}". Histórico:
+${historyStr}
+
+Nova resposta do aluno: "${conclusion}"
+
+${round === 3 ? 'Esta é a ÚLTIMA rodada. Dê seu VEREDITO FINAL.' : 'Continue o debate com outro contra-argumento.'}
+
+${round === 3 ? `Retorne JSON: {"counterargument": "análise final", "verdict": "resistiu" | "falhou", "verdict_explanation": "explicação do veredito em 1 frase"}` : `Retorne JSON: {"counterargument": "contra-argumento", "challenge_question": "pergunta"}`}
+NÃO retorne markdown, nem \`\`\`json. Apenas o JSON puro.`;
+      }
+
+      const resp = await fetch("https://api.deepseek.com/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${DEEPSEEK_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.5,
         }),
       });
 

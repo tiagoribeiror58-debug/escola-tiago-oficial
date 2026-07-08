@@ -48,11 +48,8 @@ export function useSessoes() {
 export function calcularOfensiva(sessoes: Sessao[]): number {
   if (!sessoes || sessoes.length === 0) return 0;
   
-  // Extrai datas únicas (formato YYYY-MM-DD ajustado para o timezone local do usuário)
-  const datasUnicas = [...new Set(sessoes.map(s => {
-    const d = new Date(s.data);
-    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
-  }))].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+  // Extrai datas únicas (formato YYYY-MM-DD, que já vem correto do banco se for Date type, ou usamos split se for timestamp)
+  const datasUnicas = [...new Set(sessoes.map(s => s.data.split('T')[0]))].sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
 
   if (datasUnicas.length === 0) return 0;
 

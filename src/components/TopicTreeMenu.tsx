@@ -3,6 +3,7 @@ import { ALL_TOPICS } from '@/lib/materias';
 import { ChevronRight, ChevronDown, CheckCircle2, Sparkles, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { useFavoriteHubs, useToggleFavoriteHub } from '@/hooks/useFavoriteHubs';
 
 interface TopicTreeMenuProps {
   onSelectTopic: (materiaSlug: string, topico: string) => void;
@@ -15,7 +16,9 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
   const [expandedMaterias, setExpandedMaterias] = useState<Set<string>>(new Set());
   const [cachedTopics, setCachedTopics] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
-  const [favoriteHubs, setFavoriteHubs] = useState<string[]>([]);
+  
+  const { data: favoriteHubs = [] } = useFavoriteHubs();
+  const toggleFavorite = useToggleFavoriteHub();
 
   // Fetch cached topics
   useEffect(() => {
@@ -34,13 +37,9 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
         setCachedTopics(cacheSet);
       }
 
-      const { data: favs } = await supabase
-        .from('favorite_hubs')
-        .select('hub_name')
-        .eq('user_id', session.user.id);
-      
-      if (favs) {
-        setFavoriteHubs(favs.map(f => f.hub_name));
+      if (cacheData) {
+        const cacheSet = new Set(cacheData.map(d => `${d.materia_slug}:${d.topico}`));
+        setCachedTopics(cacheSet);
       }
     };
 
@@ -117,25 +116,10 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
     });
   };
 
-  const toggleFavoriteHub = async (hubName: string, e: React.MouseEvent) => {
+  const handleToggleFavoriteHub = (hubName: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.user) return;
-    
     const isFavorite = favoriteHubs.includes(hubName);
-    
-    setFavoriteHubs(prev => {
-      return isFavorite
-        ? prev.filter(h => h !== hubName)
-        : [...prev, hubName];
-    });
-
-    if (isFavorite) {
-      await supabase.from('favorite_hubs').delete().match({ user_id: session.user.id, hub_name: hubName });
-    } else {
-      await supabase.from('favorite_hubs').insert({ user_id: session.user.id, hub_name: hubName });
-    }
+    toggleFavorite.mutate({ hubName, isFavorite });
   };
 
   const toggleMateria = (materia: string) => {
@@ -209,7 +193,7 @@ export function TopicTreeMenu({ onSelectTopic, tipo, selectedTopico }: TopicTree
                       {hub.nome}
                     </div>
                     <button
-                      onClick={(e) => toggleFavoriteHub(hub.nome, e)}
+                      onClick={(e) => handleToggleFavoriteHub(hub.nome, e)}
                       className="p-1 rounded-md hover:bg-muted text-muted-foreground transition-all shrink-0"
                     >
                       <Star
