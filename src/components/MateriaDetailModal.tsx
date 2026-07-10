@@ -15,7 +15,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useTopicosEmergentes } from '@/hooks/useTopicosEmergentes';
 import { useFloatingChat } from '@/contexts/FloatingChatContext';
 import { useSettings } from '@/hooks/useSettings';
-
+import { ResumoCard } from '@/components/ResumoCard';
 
 interface Props {
   estado: MateriaEstado | null;
@@ -440,51 +440,77 @@ export default function MateriaDetailModal({ estado, open, onOpenChange }: Props
                                 </div>
 
                               {/* Conteúdo */}
-                              <div className="flex-1 pb-4 flex gap-2 items-start">
-                                <div className="flex-1 min-w-0 transition-all duration-500">
-                                  <button 
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      if (!isVisible) return;
-                                      playPopSound();
-                                      setSelectedSub(step);
-                                    }}
-                                    className={cn(
-                                      "text-sm font-medium text-left leading-tight transition-all duration-300 w-full",
-                                      isVisible ? "hover:text-primary cursor-pointer" : "cursor-default",
-                                      !isVisible && "blur-sm select-none opacity-50",
-                                      isCompleted ? "text-foreground" : isCurrent || isPaused ? "text-foreground" : "text-muted-foreground"
+                              <div className="flex-1 pb-4 flex flex-col w-full">
+                                <div className="flex gap-2 items-start w-full">
+                                  <div className="flex-1 min-w-0 transition-all duration-500">
+                                    <button 
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        if (!isVisible) return;
+                                        playPopSound();
+                                        setSelectedSub(selectedSub === step ? null : step);
+                                      }}
+                                      className={cn(
+                                        "text-sm font-medium text-left leading-tight transition-all duration-300 w-full flex items-center justify-between",
+                                        isVisible ? "hover:text-primary cursor-pointer" : "cursor-default",
+                                        !isVisible && "blur-sm select-none opacity-50",
+                                        isCompleted ? "text-foreground" : isCurrent || isPaused ? "text-foreground" : "text-muted-foreground"
+                                      )}
+                                    >
+                                      <span className="flex-1">{step}</span>
+                                      {isVisible && (
+                                        <ChevronDown className={cn(
+                                          "w-4 h-4 transition-transform duration-300 opacity-50 shrink-0 ml-2",
+                                          selectedSub === step && "rotate-180 opacity-100 text-primary"
+                                        )} />
+                                      )}
+                                    </button>
+                                    {isPaused && (
+                                      <p className={cn("text-[10px] text-[hsl(var(--warning))] font-medium uppercase mt-1 tracking-wider transition-all duration-300", !isVisible && "blur-[2px] opacity-50")}>
+                                        Sessão pausada
+                                      </p>
                                     )}
-                                  >
-                                    {step}
-                                  </button>
-                                  {isPaused && (
-                                    <p className={cn("text-[10px] text-[hsl(var(--warning))] font-medium uppercase mt-1 tracking-wider transition-all duration-300", !isVisible && "blur-[2px] opacity-50")}>
-                                      Sessão pausada
-                                    </p>
-                                  )}
-                                  {isCurrent && !isPaused && (
-                                    <p className="text-[10px] text-primary font-medium uppercase mt-1 tracking-wider">
-                                      Próximo tópico
-                                    </p>
-                                  )}
-                                  {isCompleted && (
-                                    <p className={cn("text-[10px] text-[hsl(var(--success))] font-medium uppercase mt-1 tracking-wider transition-all duration-300", !isVisible && "blur-[2px] opacity-50")}>
-                                      Concluído
-                                    </p>
+                                    {isCurrent && !isPaused && (
+                                      <p className="text-[10px] text-primary font-medium uppercase mt-1 tracking-wider">
+                                        Próximo tópico
+                                      </p>
+                                    )}
+                                    {isCompleted && (
+                                      <p className={cn("text-[10px] text-[hsl(var(--success))] font-medium uppercase mt-1 tracking-wider transition-all duration-300", !isVisible && "blur-[2px] opacity-50")}>
+                                        Concluído
+                                      </p>
+                                    )}
+                                  </div>
+                                  {!isCompleted && !isCurrent && !effectiveDisableFogOfWar && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        toggleTopicVisibility(step);
+                                      }}
+                                      className="p-1.5 opacity-0 group-hover:opacity-100 transition-opacity rounded hover:bg-muted ml-2 shrink-0"
+                                      title={unhiddenTopics.has(step) ? "Ocultar tópico" : "Revelar tópico"}
+                                    >
+                                      {unhiddenTopics.has(step) ? <Eye className="w-4 h-4 text-muted-foreground" /> : <EyeOff className="w-4 h-4 text-muted-foreground/40" />}
+                                    </button>
                                   )}
                                 </div>
-                                {!isCompleted && !isCurrent && !effectiveDisableFogOfWar && (
-                                  <button
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      toggleTopicVisibility(step);
-                                    }}
-                                    className="p-1.5 opacity-0 group-hover:opacity-100 transition-opacity rounded hover:bg-muted ml-2"
-                                    title={unhiddenTopics.has(step) ? "Ocultar tópico" : "Revelar tópico"}
-                                  >
-                                    {unhiddenTopics.has(step) ? <Eye className="w-4 h-4 text-muted-foreground" /> : <EyeOff className="w-4 h-4 text-muted-foreground/40" />}
-                                  </button>
+
+                                {/* Card de Resumo do Tópico em modo Accordion */}
+                                {selectedSub === step && (
+                                  <div className="w-full h-[500px] sm:h-[600px] mt-4 mb-2 animate-in slide-in-from-top-2 fade-in duration-300">
+                                    <ResumoCard 
+                                      materiaSlug={config.slug} 
+                                      topico={step} 
+                                      onNextSequentialTopic={() => {
+                                        const nextIdx = idx + 1;
+                                        if (nextIdx < flatEmenta.length) {
+                                          setSelectedSub(flatEmenta[nextIdx]);
+                                        } else {
+                                          setSelectedSub(null);
+                                        }
+                                      }}
+                                    />
+                                  </div>
                                 )}
                               </div>
                               </div>
