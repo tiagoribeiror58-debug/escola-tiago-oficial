@@ -7,6 +7,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { getMateriaBySlug } from '@/lib/materias';
 import { useQueryClient } from '@tanstack/react-query';
+import { useSessoes } from '@/hooks/useSessoes';
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -38,9 +39,20 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
   const location = useLocation();
   const bottomRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+  const { data: todasSessoes } = useSessoes();
 
   const materia = getMateriaBySlug(materiaSlug);
   const materiaName = materia?.nome || materiaSlug;
+
+  const sessaoPausada = todasSessoes?.find(s => 
+    s.materia === materiaSlug &&
+    s.topico === topico &&
+    s.decisao_proxima === 'Pausada'
+  );
+
+  const studyUrl = sessaoPausada?.session_key
+    ? `/sessao/${materiaSlug}?resume=${sessaoPausada.session_key}&returnTo=${encodeURIComponent(location.pathname + location.search)}`
+    : `/sessao/${materiaSlug}?sub=${encodeURIComponent(topico)}&returnTo=${encodeURIComponent(location.pathname + location.search)}`;
 
   const fetchInitialSummary = async (forceRegenerate = false) => {
     try {
@@ -153,11 +165,6 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleStudy = () => {
-    const currentPath = location.pathname + location.search;
-    navigate(`/sessao/${materiaSlug}?sub=${encodeURIComponent(topico)}&returnTo=${encodeURIComponent(currentPath)}`);
   };
 
   const handleSave = async () => {
@@ -431,15 +438,17 @@ export function ResumoCard({ materiaSlug, topico, isFlashcardDue, onNextSequenti
           </button>
           
           <Link
-            to={`/sessao/${materiaSlug}?sub=${encodeURIComponent(topico)}&returnTo=${encodeURIComponent(location.pathname + location.search)}`}
-            title="Estudar este tópico profundamente"
+            to={studyUrl}
+            title={sessaoPausada ? "Retomar sessão pausada" : "Estudar este tópico profundamente"}
             className={cn(
               "flex-1 flex items-center justify-center gap-2 p-2.5 rounded-xl transition-all text-sm font-semibold shadow-sm border",
-              "bg-background border-border/50 hover:bg-muted text-foreground"
+              sessaoPausada 
+                ? "bg-[hsl(var(--warning)/0.1)] text-[hsl(var(--warning))] border-[hsl(var(--warning)/0.3)] hover:bg-[hsl(var(--warning)/0.2)]" 
+                : "bg-background border-border/50 hover:bg-muted text-foreground"
             )}
           >
             <Play className="w-4 h-4 fill-current" />
-            Estudar
+            {sessaoPausada ? "Retomar" : "Estudar"}
           </Link>
 
           <button
